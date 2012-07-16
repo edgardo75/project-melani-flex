@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+				xmlns:s="library://ns.adobe.com/flex/spark"
+				xmlns:mx="library://ns.adobe.com/flex/mx"
+				xmlns:components="components.*"
+				width="400" height="246" currentState="Login" horizontalAlign="center"
+				showCloseButton="false" title="Login" verticalAlign="middle"				
+				layout.Login="absolute">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<mx:states>
+		<s:State name="Login"/>
+		<s:State name="CambiarPass"/>
+	</mx:states>
+	<components:CambiarPassword includeIn="CambiarPass" horizontalCenter="4" verticalCenter="-25" width="379" height="215">		
+	</components:CambiarPassword>
+	<mx:Form x="69" y="12" width="271" height="100" dropShadowVisible="false" includeIn="Login">
+		<mx:FormItem label="Usuario:">
+			<mx:TextInput id="txtusuario"/>
+		</mx:FormItem>
+		<mx:FormItem id="txt" label="Password:">
+			<mx:TextInput id="txtpassword"/>
+		</mx:FormItem>
+	</mx:Form>
+	<s:Button includeIn="Login" id="btnaceptar" width="121" icon="assets/login.gif"			  
+			  x.Login="151" y.Login="131"/>
+	
+</mx:TitleWindow>

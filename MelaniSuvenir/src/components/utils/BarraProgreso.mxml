@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TileGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="390" height="36"
+		 showEffect="{zoom}"
+		 hideEffect="{zoom}"
+		 creationComplete="titlewindow1_creationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void
+			{
+				progress.setProgress(1,0);
+				
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<mx:Zoom id="zoom"></mx:Zoom>
+	</fx:Declarations>
+	
+		<mx:ProgressBar id="progress" width="343" label="Espere Por Favor!!!" indeterminate="true"
+						mode="manual"/>	
+	
+	
+</s:TileGroup>

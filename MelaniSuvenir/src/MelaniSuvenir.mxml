@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   xmlns:components="components.*"
+			   minWidth="955" minHeight="600"
+			   creationComplete="application1_creationCompleteHandler(event)">
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	
+	</fx:Declarations>
+	<!-- Define the menu; dataProvider is the default MenuBar property.
+	Because this uses an XML data provider, specify the labelField and
+	showRoot properties. -->
+	<mx:MenuBar id="myMenuBar" x="10" y="6" width="935" fontFamily="Verdana" fontSize="16"
+				fontWeight="bold" itemClick="myMenuBar_itemClickHandler(event)" labelField="@label">
+		<fx:XMLList>
+			<menuitem label="Clientes">
+				<menuitem type="separator"/>
+				<menuitem label="Cargar Datos Personales"/>
+				<menuitem type="separator"/>
+				<menuitem label="Cargar Datos Completo"/>
+				<menuitem type="separator"/>
+			</menuitem>
+			<menuitem label="Productos">
+				<menuitem type="separator"/>
+				<menuitem label="Cargar Productos"/>
+				<menuitem type="separator"/>			
+			</menuitem>
+			<menuitem label="Ordenes de Compra">
+				<menuitem type="separator"/>
+				<menuitem label="Ordenes"/>
+				<menuitem type="separator"/>
+				<menuitem label="Ver Ordenes"/>
+				<menuitem type="separator"/>
+			</menuitem>
+			<menuitem label="Informes">
+				<menuitem type="separator"/>
+				<menuitem label="Clientes"/>
+				<menuitem type="separator"/>
+				<menuitem label="Productos"/>
+				<menuitem type="separator"/>
+			</menuitem>
+			<menuitem label="Ayuda">
+				<menuitem type="separator"/>
+				<menuitem label="Acerca de...."/>
+				<menuitem type="separator"/>
+				<menuitem label="Contactenos"/>
+				<menuitem type="separator"/>				
+			</menuitem>
+		</fx:XMLList>
+	</mx:MenuBar>
+	<mx:Panel id="panelCentral" x="10" y="29" width="935" height="551">
+		<components:comboAllStreets>
+		</components:comboAllStreets>
+	</mx:Panel>
+	
+	<fx:Script>
+		<![CDATA[			
+			import components.datosProducto;
+			import components.guardarDatosPersonalCliente;
+			
+			import flash.net.navigateToURL;
+			
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.events.MenuEvent;
+			
+			
+			protected function myMenuBar_itemClickHandler(event:MenuEvent):void
+			{
+				if(event.item.@label =="Cargar Datos Personales"){
+					panelCentral.removeAllChildren();
+					panelCentral.addChild(new guardarDatosPersonalCliente());						
+				}
+				if(event.item.@label=="Cargar Productos"){
+					panelCentral.removeAllChildren();
+					panelCentral.addChild(new datosProducto());
+				}
+				if(event.item.@label=="Clientes"){
+					verInformeCliente();
+				}
+				if(event.item.@label=="Productos"){
+					verInformeProductos();				
+				}
+				if(event.item.@label =="Acerca de...."){
+					Alert.show("          MELANI SUVENIR © 2011  -  TODOS LOS DERECHOS RESERVADOS     ");						
+				}
+			}
+			protected function verInformeCliente():void{
+				var source:String="http://localhost:11080/WebMelani/ShowReportClient";
+				var urlReq:URLRequest=new URLRequest(source);
+				navigateToURL(urlReq,"_blank");
+			
+			}
+			protected function application1_creationCompleteHandler(event:FlexEvent):void
+			{
+			
+			}
+			protected function verInformeProductos():void{
+				var source:String="http://localhost:11080/WebMelani/ShowReportProductos2"
+				var urlReq:URLRequest=new URLRequest(source);
+				navigateToURL(urlReq,"_blank");
+			}
+			
+		]]>
+	</fx:Script>
+	
+</s:Application>
