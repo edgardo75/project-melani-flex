@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:controls="com.adobe.flex.extras.controls.*"
+		 width="302" height="100" creationComplete="group1_creationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			protected function mskdocu_enterHandler(event:FlexEvent):void
+			{
+				cli.getCustomerDocNumber(int(mskdocu.text));
+				
+			}
+			
+			protected function operation1_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("Error "+event.fault.toString());
+				
+			}
+			
+			protected function operation1_resultHandler(event:ResultEvent):void
+			{
+				var cliente:XMLList;
+				cliente = new XMLList(event.result);
+				
+				//xmlcli.source=new XMLListCollection(cliente).child("item");
+				Alert.show(cliente.toString());
+				lblapellidoynombre.text=String(cliente.nombre+" "+cliente.apellido).toUpperCase();
+				lblnocli.text=cliente.id;
+				
+				
+				
+				
+			}
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				mskdocu.setFocus();
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:WebService wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"
+					  id="cli" showBusyCursor="true">
+			<s:operation fault="operation1_faultHandler(event)"
+						 result="operation1_resultHandler(event)" 
+						 name="getCustomerDocNumber">
+				
+			</s:operation>
+			
+		</s:WebService>
+		<s:XMLListCollection id="xmlcli"/>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Label x="20" y="21" height="15" fontSize="14" fontWeight="bold" text="Documento:"/>
+	<controls:MaskedTextInput id="mskdocu" x="110" y="14" enter="mskdocu_enterHandler(event)"
+							  fontSize="18" inputMask="########" maxChars="8" restrict="0-9"
+							  toolTip="Ingrese Número de Documento!!!"/>
+	<s:Label x="21" y="49" fontSize="14" fontWeight="bold" text="Nombre:"/>
+	<s:Label id="lblapellidoynombre" x="80" y="40" width="200" fontFamily="Verdana" fontSize="15"
+			 verticalAlign="bottom"/>
+	<s:Label x="20" y="74" fontSize="14" fontWeight="bold" text="Cliente N°:"/>
+	<s:Label id="lblnocli" x="94" y="65" width="124" fontFamily="Verdana" fontSize="15"
+			 verticalAlign="bottom"/>
+</s:Group>

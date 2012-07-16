@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:controls="com.adobe.flex.extras.controls.*"
+		 width="612" height="364" toolTip="FORMULARIO PARA AGREGAR" creationComplete="group1_creationCompleteHandler(event)" xmlns:components="com.hillelcoren.components.*">
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";		
+		@namespace controls "com.adobe.flex.extras.controls.*";
+		
+		.myFormItemLabelStyle {
+			color: #333399;
+			fontSize: 20;
+		}
+		
+		
+	</fx:Style>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+		<mx:StringValidator id="descV" source="{txtdescripcion}"
+							property="text" minLength="2" maxLength="80"
+							required="true" requiredFieldError="Debe Ingresar la descripción y/o nombre del producto"/>
+		<mx:WebService id="servicesProducto" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?WSDL"
+					   
+					   showBusyCursor="true"
+					   useProxy="false">
+			<mx:operation name="addProducto"
+						  resultFormat="object"
+						  result="producto_resultHandler(event)"
+						  fault="producto_faultHandler(event)">				
+			</mx:operation>
+			
+			
+		</mx:WebService>
+	</fx:Declarations>
+	
+	
+	<fx:Script>
+		<![CDATA[
+			import flashx.textLayout.formats.Float;
+			
+			import mx.collections.XMLListCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			[Bindable]
+				private var cantIni:int;
+			[Bindable]
+				private var cantDisp:int;
+			[Bindable]
+				private var codProducto:String;
+			
+			
+			
+			//---------------------------------------------------------------------
+		
+			//----------------------------------------------------------------------
+			
+			private function tranferirFocus(keyPress:KeyboardEvent):void{
+				
+				if(keyPress.keyCode==Keyboard.ENTER){
+					//------------------------------------------------------
+					if(keyPress.currentTarget.toString().indexOf("txtdescripcion")!=-1){
+						focusManager.setFocus(txtcodigoproducto);
+						
+					}
+					//------------------------------------------------------
+					if(keyPress.currentTarget.toString().indexOf("txtcodigoproducto")!=-1)
+						focusManager.setFocus(txtpreciounitario);
+					//------------------------------------------------------
+					if(keyPress.currentTarget.toString().indexOf("txtcantidadinicial")!=-1)
+						focusManager.setFocus(txtcantidadisponible);
+					//------------------------------------------------------				
+					if(keyPress.currentTarget.toString().indexOf("txtpreciounitario")!=-1)
+						focusManager.setFocus(txtcantidadinicial);
+					//------------------------------------------------------
+					if(keyPress.currentTarget.toString().indexOf("txtcantidadisponible")!=-1)
+						focusManager.setFocus(btnGuardarProducto);
+				
+				}	
+			
+			}
+			protected function btnClose_clickHandler(event:MouseEvent):void
+			{
+				this.removeAllElements();				
+			}
+			
+			protected function btnGuardarProducto_clickHandler(event:MouseEvent):void
+			{
+				//------------------------------------------------------------------
+				
+				codProducto=txtcodigoproducto.text;
+				//------------------------------------------------------------------
+				
+				if(txtpreciounitario.text.length==0){
+					Alert.show("DEBE INGRESAR EL PRECIO DEL PRODUCTO");
+					
+					return;
+				}
+					
+				
+				if(txtcantidadinicial.text.length==0)
+					cantIni=0;
+				else
+					cantIni=int(txtcantidadinicial.text.toString());
+				//------------------------------------------------------------------
+				if(txtcantidadisponible.text.length==0)
+					cantDisp=0;
+					else
+					cantDisp=int(txtcantidadisponible.text.toString());
+				//------------------------------------------------------------------
+				//Alert.show(getDatos().toString());
+				servicesProducto.addProducto(getDatos());
+				
+			}
+			protected function getDatos():String{
+				
+				
+				var producto:String="<producto>\n"+
+				"<idproducto>0</idproducto>\n"+
+				"<descripcion>"+txtdescripcion.text.toUpperCase()+"</descripcion>\n"+
+				"<preciounitario>"+txtpreciounitario.text+"</preciounitario>\n"+
+				"<codproducto>"+codProducto.toUpperCase()+"</codproducto>\n"+
+				"<cantidadinicial>"+cantIni+"</cantidadinicial>\n"+
+				"<cantidaddisponible>"+cantDisp+"</cantidaddisponible>\n"+
+				"<fechaCarga></fechaCarga>\n"+
+				"<img>0</img>\n" +
+				"</producto>\n";
+					
+				return producto;	
+				
+			}
+			protected function producto_resultHandler(event:ResultEvent):void{
+				var indice:Number;
+				indice = new Number(event.result.toString());
+				switch(indice)
+				{
+					case 0:
+					{
+						Alert.show("NO PASÓ NADA");
+						
+						break;
+					}
+					case -1:
+					{
+						Alert.show("ERROR EN EL SERVIDOR!!!");
+						break;
+					}
+					case -2:
+					{
+						Alert.show("ERROR EN EL SERVIDOR!!!");
+						break;
+					}
+					case -5:
+					{
+						Alert.show("YA HAY UN PRODUCTO CON LA MISMA DESCRIPCIÓN, IMPOSIBLE ALMACENAR");
+						break;
+					}	
+					case -6:
+					{
+						Alert.show("YA HAY UN PRODUCTO CON EL MISMO CODIGO INTERNO, IMPOSIBLE ALMACENAR");
+						break;
+					}							
+						
+						
+					default:
+					{
+						Alert.show("OPERACIÓN EXITOSA PRODUCTO Nº "+indice);						
+						limpiarFormulario();
+						//servicesProducto.searchAllProductos();
+						break;
+					}
+				}
+			
+			}
+			protected function limpiarFormulario():void{
+				
+				txtdescripcion.text="";
+				txtcantidadinicial.text="";
+				txtcantidadisponible.text="";
+				txtpreciounitario.text="";
+				cantDisp=0;
+				cantIni=0;
+				txtcodigoproducto.text="";
+				
+					
+			
+			
+			}
+			protected function producto_faultHandler(event:FaultEvent):void{
+				Alert.show("SE PRODUJO UN ERROR CON EL PRODUCTO, REVISE");			
+			}
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				//servicesProducto.searchAllProductos();
+				
+				focusManager.setFocus(txtdescripcion);
+				txtcantidadinicial.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtcantidadisponible.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtcodigoproducto.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtdescripcion.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtpreciounitario.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				btnGuardarProducto.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				
+			}
+			
+			
+			
+		]]>
+	</fx:Script>
+	
+	
+	
+		
+	
+	<mx:Form id="frmProductos" width="561" height="285" fontFamily="Verdana" fontWeight="bold"
+			 horizontalCenter="0" textAlign="left" verticalCenter="7">
+		<mx:FormItem backgroundAlpha="0.85" textAlign="left">
+			<s:FormHeading label="Productos" color="#FD0505" fontSize="21"/>
+		</mx:FormItem>
+		<mx:FormItem label="Descripcion" labelStyleName="myFormItemLabelStyle">
+			<mx:TextInput id="txtdescripcion" width="214" fontFamily="Verdana" fontSize="18"
+						  fontWeight="bold"
+						  tabIndex="0"
+						  toolTip="Ingresar la descripción del producto!!!"
+						   
+						  />			
+		</mx:FormItem>
+		<mx:FormItem label="Codigo Producto Interno" labelStyleName="myFormItemLabelStyle">
+			<mx:TextInput tabIndex="1" toolTip="Optativo ingreso codigo producto interno!!!" id="txtcodigoproducto" width="213" fontFamily="Verdana" fontSize="18"
+						  fontWeight="bold" maxChars="100"/>			
+		</mx:FormItem>
+		<mx:FormItem label="Precio Unitario" labelStyleName="myFormItemLabelStyle">
+			<mx:TextInput tabIndex="2" maxChars="5" toolTip="Ingrese precion unitario!!!" id="txtpreciounitario" fontFamily="Verdana" fontSize="20"
+									  fontWeight="bold" restrict="0-9." />
+		</mx:FormItem>
+		<mx:FormItem label="Cantidad Inicial" labelStyleName="myFormItemLabelStyle">
+			<controls:MaskedTextInput tabIndex="3" toolTip="Ingrese cantidad inicial!!!" id="txtcantidadinicial" fontFamily="Verdana" fontSize="20"
+									  inputMask="#####" fontWeight="bold" restrict="0-9" />
+		</mx:FormItem>
+		<mx:FormItem label="Cantidad Disponible" labelStyleName="myFormItemLabelStyle">
+			<controls:MaskedTextInput tabIndex="4" toolTip="Ingrese cantidad disponible" id="txtcantidadisponible" fontFamily="Verdana" fontSize="20"
+									  inputMask="#####" fontWeight="bold" restrict="0-9" />
+		</mx:FormItem>
+	</mx:Form>
+	<s:Button tabIndex="5" toolTip="Enviar los datos al Servidor!!!" id="btnClose" x="564" y="14" width="23" height="23"
+			  click="btnClose_clickHandler(event)" icon="assets/icon_close(1).png"/>
+	<s:Button id="btnGuardarProducto" x="271" y="333" label="Guardar"
+			  click="btnGuardarProducto_clickHandler(event)"/>
+</s:Group>
