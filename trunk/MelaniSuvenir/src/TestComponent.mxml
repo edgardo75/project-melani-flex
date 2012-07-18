@@ -3,9 +3,12 @@
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
 			   xmlns:components="components.*"
-			   minWidth="955" minHeight="600">
+			   xmlns:components2="components.GrfxGuru-Adobe-Flex-4.5-Components-86959eb.com.uibuzz.components.*"
+			   minWidth="955" minHeight="600" xmlns:components3="components.com.uibuzz.components.*">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+		
 	</fx:Declarations>
 	<components:getClient x="204" y="92">
 	</components:getClient>
