@@ -3,7 +3,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
-		 width="302" height="100" creationComplete="group1_creationCompleteHandler(event)">
+		 width="356" height="100" creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Script>
 		<![CDATA[
 			import mx.controls.Alert;
@@ -29,7 +29,9 @@
 				cliente = new XMLList(event.result);
 				
 				//xmlcli.source=new XMLListCollection(cliente).child("item");
-				Alert.show(cliente.toString());
+				if(event.result.toString().indexOf("Cliente no encontrado")!=-1)
+					Alert.show("CLIENTE NO ENCOTRADO");
+				
 				lblapellidoynombre.text=String(cliente.nombre+" "+cliente.apellido).toUpperCase();
 				lblnocli.text=cliente.id;
 				
@@ -60,12 +62,12 @@
 	</fx:Declarations>
 	<s:Label x="20" y="21" height="15" fontSize="14" fontWeight="bold" text="Documento:"/>
 	<controls:MaskedTextInput id="mskdocu" x="110" y="14" enter="mskdocu_enterHandler(event)"
-							  fontSize="18" inputMask="########" maxChars="8" restrict="0-9"
+							  fontSize="18" inputMask="##########" maxChars="10" restrict="0-9"
 							  toolTip="Ingrese Número de Documento!!!"/>
 	<s:Label x="21" y="49" fontSize="14" fontWeight="bold" text="Nombre:"/>
-	<s:Label id="lblapellidoynombre" x="80" y="40" width="200" fontFamily="Verdana" fontSize="15"
-			 verticalAlign="bottom"/>
-	<s:Label x="20" y="74" fontSize="14" fontWeight="bold" text="Cliente N°:"/>
-	<s:Label id="lblnocli" x="94" y="65" width="124" fontFamily="Verdana" fontSize="15"
-			 verticalAlign="bottom"/>
+	<s:Label id="lblapellidoynombre" x="82" y="47" width="266" fontFamily="Verdana" fontSize="15"
+			 fontWeight="bold" verticalAlign="middle"/>
+	<s:Label x="20" y="75" fontSize="14" fontWeight="bold" text="Cliente N°:"/>
+	<s:Label id="lblnocli" x="96" y="73" width="124" fontFamily="Verdana" fontSize="15"
+			 fontWeight="bold" verticalAlign="middle"/>
 </s:Group>
