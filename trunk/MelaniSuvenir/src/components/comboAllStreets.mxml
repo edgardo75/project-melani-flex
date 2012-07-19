@@ -27,7 +27,7 @@
 			{	
 				
 				xmlListStreet=XML(event.result.toString());
-				//Alert.show(xmlListStreet.toString().length);
+				Alert.show(xmlListStreet.toString());
 				//Alert.show(cmbStreet.selectedItems.length.toString());
 				collectionStreet.refresh();
 				cmbStreet.dataProvider=collectionStreet;

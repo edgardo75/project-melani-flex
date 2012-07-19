@@ -4,23 +4,138 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:components="com.hillelcoren.components.*"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
-		 width="400" height="300">
+		 width="400" height="300" initialize="group1_initializeHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import flexunit.utils.ArrayList;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import org.flexunit.internals.matchers.Each;
+			[Bindable]
+				private var xmlproduct:XMLList;
+			
+			[Bindable]
+				private var dp:Array=[];
+			
+			protected function operation1_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("ERROR "+event.fault.toString());
+				
+			}
+			
+			protected function operation1_resultHandler(event:ResultEvent):void
+			{
+				xmlproduct=new XMLList(event.result);
+				
+				//txtproducto.dataProvider=productlist;
+				cmbproduct.dataProvider=productlist;
+				//Alert.show(xmlproduct.toString());
+			
+				
+				
+			}
+			
+			protected function group1_initializeHandler(event:FlexEvent):void
+			{
+				productosWs.searchAllProductos();
+				cmbproduct.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				txtpreciop.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				mskcantidad.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				cmbproduct.selectedItemId=1;
+			}
+			//--------------------------------------------------------------------------------------
+			private function addadglistpedprod(codigoId:int,txtprecio:String,cantidad:String,descripcion:String):void{
+				
+				
+				if(dp.length==0)
+					dp=[{id:codigoId,name:descripcion,countt:cantidad,price:txtprecio}];
+				else
+					dp.push({id:codigoId,name:descripcion,countt:cantidad,price:txtprecio});
+					//arrayDg.addItem(dp);
+			
+			
+				arrayDg.source=dp;
+				
+				
+
+					
+				
+				
+					
+				
+				
+				//arrayDg=[{id:codigoId,name:descripcion,countt:cantidad,price:txtprecio}];
+				
+				adglistpedprod.dataProvider=arrayDg;
+			
+			}
+			//--------------------------------------------------------------------------------------
+			private function transferirFocus(KeyPress:KeyboardEvent):void{
+				
+				if(KeyPress.keyCode==Keyboard.ENTER){
+					if(KeyPress.currentTarget.toString().indexOf("cmbproduct")!=-1){
+							focusManager.setFocus(txtpreciop);
+							txtpreciop.text=cmbproduct.selectedItem.precio;
+					
+					}
+					if(KeyPress.currentTarget.toString().indexOf("mskcantidad")!=-1){
+						
+						addadglistpedprod(cmbproduct.selectedItem.id,txtpreciop.text,mskcantidad.text,cmbproduct.selectedItem.descripcion);
+					
+					}
+					if(KeyPress.currentTarget.toString().indexOf("txtpreciop")!=-1)
+						focusManager.setFocus(mskcantidad);
+						
+				
+				}
+			
+			
+			}
+			
+		]]>
+	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:WebService id="productosWs" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?wsdl"
+					  showBusyCursor="true">
+			<s:operation name="searchAllProductos"
+						 fault="operation1_faultHandler(event)"
+						 result="operation1_resultHandler(event)">
+				
+			</s:operation>
+		</s:WebService>
+		<s:XMLListCollection id="productlist" source="{xmlproduct.producto}"/>
+		<s:ArrayCollection id="arrayDg"/>
 	</fx:Declarations>
 	<s:Label x="54" y="37" text="Producto:"/>
-	<components:AdvancedAutoComplete id="txtproducto" x="109" y="24" width="206">
+	<components:AdvancedAutoComplete id="txtproducto" x="364" y="36" width="27"
+									 labelField="descripcion"
+									 verticalScrollPolicy="auto"
+									 matchType="beginning"
+									 >
 	</components:AdvancedAutoComplete>
-	<s:Label x="55" y="75" text="Precio:"/>
+	<s:Label x="55" y="75" text="Precio: $"/>
 	<s:TextInput id="txtpreciop" x="109" y="65"/>
 	<s:Label x="55" y="116" text="Cantidad:"/>
-	<controls:MaskedTextInput id="mskcantidad" x="111" y="106" width="55"/>
+	<controls:MaskedTextInput id="mskcantidad" x="111" y="106" width="55" restrict="0-9"/>
 	<mx:AdvancedDataGrid id="adglistpedprod" x="29" y="135" width="351" height="131"
 						 designViewDataType="tree">
 		<mx:columns>
-			<mx:AdvancedDataGridColumn dataField="col1" headerText="Column 1"/>
-			<mx:AdvancedDataGridColumn dataField="col2" headerText="Column 2"/>
-			<mx:AdvancedDataGridColumn dataField="col3" headerText="Column 3"/>
+			<mx:AdvancedDataGridColumn dataField="id"  headerText="Codigo"/>
+			<mx:AdvancedDataGridColumn dataField="name" headerText="Descripcion"/>
+			<mx:AdvancedDataGridColumn dataField="countt" headerText="Cantidad"/>
+			<mx:AdvancedDataGridColumn dataField="price" headerText="Precio"/>
 		</mx:columns>
 	</mx:AdvancedDataGrid>
+	<components:AutoComplete id="cmbproduct" x="109" y="26"
+							 matchType="beginning"
+							 labelField="descripcion"
+							 allowDuplicates="false"
+							 dropDownRowCount="10">
+	</components:AutoComplete>
 </s:Group>
