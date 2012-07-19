@@ -10,6 +10,8 @@
 		
 		
 	</fx:Declarations>
-	<components:getClient x="204" y="92">
+	<components:getClient x="193" y="36">
 	</components:getClient>
+	<components:productosPedidos x="193" y="144">
+	</components:productosPedidos>
 </s:Application>
