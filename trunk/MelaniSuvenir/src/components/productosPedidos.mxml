@@ -4,7 +4,7 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:components="com.hillelcoren.components.*"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
-		 width="400" height="300" initialize="group1_initializeHandler(event)">
+		 width="458" height="300" initialize="group1_initializeHandler(event)">
 	<fx:Script>
 		<![CDATA[
 			import flexunit.utils.ArrayList;
@@ -50,13 +50,28 @@
 			}
 			//--------------------------------------------------------------------------------------
 			private function addadglistpedprod(codigoId:int,txtprecio:String,cantidad:String,descripcion:String):void{
+				var subtot:Number;
+				var b:Boolean=false;
+				subtot=Number(Number(txtprecio)*Number(cantidad));
 				
 				
 				if(dp.length==0)
-					dp=[{id:codigoId,name:descripcion,countt:cantidad,price:txtprecio}];
-				else
-					dp.push({id:codigoId,name:descripcion,countt:cantidad,price:txtprecio});
-					//arrayDg.addItem(dp);
+					dp=[{id:codigoId,name:descripcion,countt:cantidad,price:txtprecio,subtotal:subtot}];
+				else{
+					
+						for (var index in dp){
+								
+							if(dp[index].name==descripcion){
+								dp[index].countt =dp[index].countt+cantidad;
+								dp[index].subtotal=dp[index].subtotal+subtot;
+								b=true;
+							
+							}
+						}
+					if(!b)					
+						dp.push({id:codigoId,name:descripcion,countt:cantidad,price:txtprecio,subtotal:subtot});
+						//arrayDg.addItem(dp);
+					}
 			
 			
 				arrayDg.source=dp;
@@ -113,23 +128,18 @@
 		<s:ArrayCollection id="arrayDg"/>
 	</fx:Declarations>
 	<s:Label x="54" y="37" text="Producto:"/>
-	<components:AdvancedAutoComplete id="txtproducto" x="364" y="36" width="27"
-									 labelField="descripcion"
-									 verticalScrollPolicy="auto"
-									 matchType="beginning"
-									 >
-	</components:AdvancedAutoComplete>
 	<s:Label x="55" y="75" text="Precio: $"/>
 	<s:TextInput id="txtpreciop" x="109" y="65"/>
 	<s:Label x="55" y="116" text="Cantidad:"/>
 	<controls:MaskedTextInput id="mskcantidad" x="111" y="106" width="55" restrict="0-9"/>
-	<mx:AdvancedDataGrid id="adglistpedprod" x="29" y="135" width="351" height="131"
+	<mx:AdvancedDataGrid id="adglistpedprod" x="33" y="136" width="395" height="131"
 						 designViewDataType="tree">
 		<mx:columns>
-			<mx:AdvancedDataGridColumn dataField="id"  headerText="Codigo"/>
+			<mx:AdvancedDataGridColumn dataField="id"  headerText="Codigo" width="15"/>
 			<mx:AdvancedDataGridColumn dataField="name" headerText="Descripcion"/>
 			<mx:AdvancedDataGridColumn dataField="countt" headerText="Cantidad"/>
 			<mx:AdvancedDataGridColumn dataField="price" headerText="Precio"/>
+			<mx:AdvancedDataGridColumn dataField="subtotal" headerText="SubTotal"/>
 		</mx:columns>
 	</mx:AdvancedDataGrid>
 	<components:AutoComplete id="cmbproduct" x="109" y="26"
