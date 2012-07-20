@@ -4,7 +4,7 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:components="com.hillelcoren.components.*"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
-		 width="458" height="300" initialize="group1_initializeHandler(event)">
+		 width="694" height="380" initialize="group1_initializeHandler(event)">
 	<fx:Script>
 		<![CDATA[
 			import flexunit.utils.ArrayList;
@@ -32,9 +32,9 @@
 			{
 				xmlproduct=new XMLList(event.result);
 				
-				//txtproducto.dataProvider=productlist;
+				
 				cmbproduct.dataProvider=productlist;
-				//Alert.show(xmlproduct.toString());
+				Alert.show(xmlproduct.toString());
 			
 				
 				
@@ -49,28 +49,33 @@
 				cmbproduct.selectedItemId=1;
 			}
 			//--------------------------------------------------------------------------------------
-			private function addadglistpedprod(codigoId:int,txtprecio:String,cantidad:String,descripcion:String):void{
+			private function addadglistpedprod(codigoId:String,txtprecio:String,cantidad:String,descripcion:String):void{
 				var subtot:Number;
 				var b:Boolean=false;
-				subtot=Number(Number(txtprecio)*Number(cantidad));
+				//var cant:int=0;
+				subtot=Number(Number(Number(Number(txtprecio).toFixed(2))*Number(cantidad)).toFixed(2));
 				
 				
 				if(dp.length==0)
 					dp=[{id:codigoId,name:descripcion,countt:cantidad,price:txtprecio,subtotal:subtot}];
 				else{
 					
-						for (var index in dp){
+						for(var i:int=0;i<dp.length;i++){	
+					//for (var index in dp){
 								
-							if(dp[index].name==descripcion){
-								dp[index].countt =dp[index].countt+cantidad;
-								dp[index].subtotal=dp[index].subtotal+subtot;
+							if(dp[i].name==descripcion){
+								dp[i].countt=int(dp[i].countt)+int(cantidad);
+								//cant=int(dp[i].countt);
+								//cant=cant+int(cantidad);
+								//dp[i].countt=cant;
+								dp[i].subtotal=dp[i].subtotal+subtot;
 								b=true;
 							
 							}
 						}
 					if(!b)					
 						dp.push({id:codigoId,name:descripcion,countt:cantidad,price:txtprecio,subtotal:subtot});
-						//arrayDg.addItem(dp);
+						
 					}
 			
 			
@@ -131,15 +136,15 @@
 	<s:Label x="55" y="75" text="Precio: $"/>
 	<s:TextInput id="txtpreciop" x="109" y="65"/>
 	<s:Label x="55" y="116" text="Cantidad:"/>
-	<controls:MaskedTextInput id="mskcantidad" x="111" y="106" width="55" restrict="0-9"/>
-	<mx:AdvancedDataGrid id="adglistpedprod" x="33" y="136" width="395" height="131"
-						 designViewDataType="tree">
+	<controls:MaskedTextInput id="mskcantidad" x="111" y="106" width="55" restrict="0-9" maxChars="3"/>
+	<mx:AdvancedDataGrid id="adglistpedprod" x="16" y="155" width="645" height="195"
+						 designViewDataType="flat">
 		<mx:columns>
-			<mx:AdvancedDataGridColumn dataField="id"  headerText="Codigo" width="15"/>
-			<mx:AdvancedDataGridColumn dataField="name" headerText="Descripcion"/>
-			<mx:AdvancedDataGridColumn dataField="countt" headerText="Cantidad"/>
-			<mx:AdvancedDataGridColumn dataField="price" headerText="Precio"/>
-			<mx:AdvancedDataGridColumn dataField="subtotal" headerText="SubTotal"/>
+			<mx:AdvancedDataGridColumn dataField="id"  headerText="Codigo" width="40"/>
+			<mx:AdvancedDataGridColumn dataField="name" headerText="Descripcion" width="80"/>
+			<mx:AdvancedDataGridColumn dataField="countt" headerText="Cantidad" width="30"/>
+			<mx:AdvancedDataGridColumn dataField="price" headerText="Precio" width="40" editable="true"/>
+			<mx:AdvancedDataGridColumn dataField="subtotal" headerText="SubTotal" width="50" color="red"/>
 		</mx:columns>
 	</mx:AdvancedDataGrid>
 	<components:AutoComplete id="cmbproduct" x="109" y="26"
