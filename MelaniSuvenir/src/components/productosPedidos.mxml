@@ -11,13 +11,16 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.events.AdvancedDataGridEvent;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
 			import org.flexunit.internals.matchers.Each;
 			
+			import spark.components.DataGrid;
 			import spark.events.ListEvent;
 			[Bindable]
 				private var xmlproduct:XMLList;
@@ -37,7 +40,7 @@
 				
 				
 				cmbproduct.dataProvider=productlist;
-				Alert.show(xmlproduct.toString());
+				
 			
 				
 				
@@ -45,13 +48,76 @@
 			
 			protected function group1_initializeHandler(event:FlexEvent):void
 			{
+				//-------------------------------------------------------------------------------------------
 				productosWs.searchAllProductos();
 				cmbproduct.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txtpreciop.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				mskcantidad.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				adglistpedprod.addEventListener(AdvancedDataGridEvent.ITEM_EDIT_END,itemEditEndHandler);
 				cmbproduct.selectedItemId=1;
+				//-------------------------------------------------------------------------------------------
 			}
-			//--------------------------------------------------------------------------------------
+			//------------------------------------------------------------------------------------------------
+			protected function itemEditEndHandler(event:AdvancedDataGridEvent):void
+			{
+				// get a reference to the datagrid
+				var grid:AdvancedDataGrid = event.target as AdvancedDataGrid;
+				// get a reference to the name of the property in the
+				// underlying object corresponding to the cell that's being edited
+				var field:String = event.dataField;
+				// get a reference to the row number (the index in the 
+				// dataprovider of the row that's being edited)
+				var row:Number = Number(event.rowIndex);
+				// get a reference to the column number of
+				// the cell that's being edited
+				var col:int = event.columnIndex;
+				
+				
+				if (grid != null)
+				{
+					
+					// gets the value (pre-edit) from the grid's dataprovider
+					var oldValue:Number = Number(grid.dataProvider.getItemAt(row)[field]);
+					// you could also use the following line to get the value
+					// directly from the cellrenderer that's showing the value
+					// in the datagrid -- it's the same value.
+					// That way you wouldn't need a reference to the DataGrid.
+					//var oldValue = event.itemRenderer.data[field];
+					// get the value (post-edit) from the item editor
+					var newValue:Number = Number(grid.itemEditorInstance[grid.columns[col].editorDataField]);
+					
+					// check if the value has changed
+					if (newValue != oldValue)
+					{
+						// do actions that should happen when the data changes
+						// Note that in this case, the dataprovider
+						// hasn't been updated yet, so you can't do any
+						// actions that require the dataprovider to have 
+						// the new data
+						//Alert.show(newValue+" "+oldValue+" "+col+" "+grid.selectedItem.subtotal);
+						if(col==2){
+							var priceValue:Number=(grid.selectedItem.price);
+							//Alert.show(newValue+" "+priceValue);
+							grid.selectedItem.subtotal=newValue*priceValue;
+						
+							
+						
+						}else{
+							var cannt:Number=(grid.selectedItem.countt);
+							//Alert.show(newValue+" "+cannt);
+							grid.selectedItem.subtotal=newValue*cannt;
+						
+						}
+						arrayDg.refresh();
+						
+							
+							//grid.selectedItem.SubTotal=Number(newValue*grid.Number(grid.dataProvider.ge));
+					}
+				}
+				grid.selectedIndex=row;
+			}
+
+			//------------------------------------------------------------------------------------------------
 			private function addadglistpedprod(codigoId:String,txtprecio:String,cantidad:String,descripcion:String):void{
 				var subtot:Number;
 				var b:Boolean=false;
@@ -86,13 +152,6 @@
 				arrayDg.refresh();
 				
 				
-
-					
-				
-				
-					
-				
-				
 				//arrayDg=[{id:codigoId,name:descripcion,countt:cantidad,price:txtprecio}];
 				
 				adglistpedprod.dataProvider=arrayDg;
@@ -102,7 +161,7 @@
 			private function transferirFocus(KeyPress:KeyboardEvent):void{
 				
 				if(KeyPress.keyCode==Keyboard.ENTER){
-					if(KeyPress.currentTarget.toString().indexOf("cmbproduct")!=-1){
+					if(cmbproduct.text!=""&&KeyPress.currentTarget.toString().indexOf("cmbproduct")!=-1){
 							focusManager.setFocus(txtpreciop);
 							txtpreciop.text=cmbproduct.selectedItem.precio;
 					
@@ -122,34 +181,24 @@
 			}
 			//---------------------------------------------------------------------------------
 			
-			//---------------------------------------------------------------------------------------
-			protected function adglistpedprod_itemDoubleClickHandler(event:ListEvent):void
+			
+			//-------------------------------------------------------------------------------------
+			
+			
+			protected function adglistpedprod_dataChangeHandler(event:FlexEvent):void
 			{
-				if (String("")!="undefined")
-					Alert.show("SEGURO DE REMOVER ELEMENTO ", "",
-						Alert.YES | Alert.CANCEL , this,
-						removerElemento, null,  Alert.YES );
 				
-			}
-			//---------------------------------------------------------------------------------------
-			protected function removerElemento(eventObj:CloseEvent):void{
-				if (eventObj.detail==Alert.YES) {
-					var pos:int=-1;
-					
-					var idProduct:String=adglistpedprod.selectedItem.id;
-					for (var i:int=0;i<arrayDg.length&&pos==-1;i++){
-						var prod:String =arrayDg.getItemAt(i).id;
-						if (idProduct==prod) pos= i;
-						
-					}
-					
-					if (pos!=-1) arrayDg.removeItemAt(pos);
-					arrayDg.refresh();
-				}
-				
+				Alert.show("DATOS CAMBIADOS!!!");
 				
 			}
 			//-------------------------------------------------------------------------------------
+			
+			protected function adglistpedprod_itemDoubleClickHandler(event:mx.events.ListEvent):void
+			{
+				// TODO Auto-generated method stub
+				Alert.show(event.rowIndex.toString(10)+" ");
+				
+			}
 			
 		]]>
 	</fx:Script>
@@ -172,14 +221,16 @@
 	<s:Label x="55" y="116" text="Cantidad:"/>
 	<controls:MaskedTextInput id="mskcantidad" x="111" y="106" width="55" restrict="0-9" maxChars="3"/>
 	<mx:AdvancedDataGrid id="adglistpedprod" x="23" y="155" width="645" height="195"
-						 designViewDataType="flat" rowCount="8" itemDoubleClick="adglistpedprod_itemDoubleClickHandler(event)">
+						 designViewDataType="flat" rowCount="8" doubleClickEnabled="true" 
+						 dataChange="adglistpedprod_dataChangeHandler(event)" editable="item group summary"
+						 itemDoubleClick="adglistpedprod_itemDoubleClickHandler(event)">
 		<mx:columns>
-			<mx:AdvancedDataGridColumn dataField="id"  headerText="Codigo" width="40"/>
-			<mx:AdvancedDataGridColumn dataField="name" headerText="Descripcion" width="80"/>
-			<mx:AdvancedDataGridColumn dataField="countt" headerText="Cantidad" width="30" editable="true"
+			<mx:AdvancedDataGridColumn dataField="id"  headerText="Codigo" width="40" editable="false"/>
+			<mx:AdvancedDataGridColumn dataField="name" headerText="Descripcion" width="80" editable="false"/>
+			<mx:AdvancedDataGridColumn dataField="countt" headerText="Cantidad" width="30" editable="true" 
 									   />
-			<mx:AdvancedDataGridColumn dataField="price" headerText="Precio" width="40" editable="true" e/>
-			<mx:AdvancedDataGridColumn dataField="subtotal" headerText="SubTotal" width="50" color="red"/>
+			<mx:AdvancedDataGridColumn dataField="price" headerText="Precio" width="40" editable="true"/>
+			<mx:AdvancedDataGridColumn dataField="subtotal" headerText="SubTotal" width="50" color="red" editable="false"/>
 		</mx:columns>
 	</mx:AdvancedDataGrid>
 	<components:AutoComplete id="cmbproduct" x="109" y="26"
