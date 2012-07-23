@@ -11,11 +11,14 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
 			import org.flexunit.internals.matchers.Each;
+			
+			import spark.events.ListEvent;
 			[Bindable]
 				private var xmlproduct:XMLList;
 			
@@ -80,6 +83,7 @@
 			
 			
 				arrayDg.source=dp;
+				arrayDg.refresh();
 				
 				
 
@@ -116,6 +120,36 @@
 			
 			
 			}
+			//---------------------------------------------------------------------------------
+			
+			//---------------------------------------------------------------------------------------
+			protected function adglistpedprod_itemDoubleClickHandler(event:ListEvent):void
+			{
+				if (String("")!="undefined")
+					Alert.show("SEGURO DE REMOVER ELEMENTO ", "",
+						Alert.YES | Alert.CANCEL , this,
+						removerElemento, null,  Alert.YES );
+				
+			}
+			//---------------------------------------------------------------------------------------
+			protected function removerElemento(eventObj:CloseEvent):void{
+				if (eventObj.detail==Alert.YES) {
+					var pos:int=-1;
+					
+					var idProduct:String=adglistpedprod.selectedItem.id;
+					for (var i:int=0;i<arrayDg.length&&pos==-1;i++){
+						var prod:String =arrayDg.getItemAt(i).id;
+						if (idProduct==prod) pos= i;
+						
+					}
+					
+					if (pos!=-1) arrayDg.removeItemAt(pos);
+					arrayDg.refresh();
+				}
+				
+				
+			}
+			//-------------------------------------------------------------------------------------
 			
 		]]>
 	</fx:Script>
@@ -137,13 +171,14 @@
 	<s:TextInput id="txtpreciop" x="109" y="65"/>
 	<s:Label x="55" y="116" text="Cantidad:"/>
 	<controls:MaskedTextInput id="mskcantidad" x="111" y="106" width="55" restrict="0-9" maxChars="3"/>
-	<mx:AdvancedDataGrid id="adglistpedprod" x="16" y="155" width="645" height="195"
-						 designViewDataType="flat">
+	<mx:AdvancedDataGrid id="adglistpedprod" x="23" y="155" width="645" height="195"
+						 designViewDataType="flat" rowCount="8" itemDoubleClick="adglistpedprod_itemDoubleClickHandler(event)">
 		<mx:columns>
 			<mx:AdvancedDataGridColumn dataField="id"  headerText="Codigo" width="40"/>
 			<mx:AdvancedDataGridColumn dataField="name" headerText="Descripcion" width="80"/>
-			<mx:AdvancedDataGridColumn dataField="countt" headerText="Cantidad" width="30"/>
-			<mx:AdvancedDataGridColumn dataField="price" headerText="Precio" width="40" editable="true"/>
+			<mx:AdvancedDataGridColumn dataField="countt" headerText="Cantidad" width="30" editable="true"
+									   />
+			<mx:AdvancedDataGridColumn dataField="price" headerText="Precio" width="40" editable="true" e/>
 			<mx:AdvancedDataGridColumn dataField="subtotal" headerText="SubTotal" width="50" color="red"/>
 		</mx:columns>
 	</mx:AdvancedDataGrid>
