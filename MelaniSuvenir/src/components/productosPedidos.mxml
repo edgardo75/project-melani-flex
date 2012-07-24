@@ -27,24 +27,24 @@
 			
 			[Bindable]
 				private var dp:Array=[];
-			
+			[Bindable]
+				private var totGral:Number;
+			//---------------------------------------------------------------------------
 			protected function operation1_faultHandler(event:FaultEvent):void
 			{
 				Alert.show("ERROR "+event.fault.toString());
 				
 			}
+			//---------------------------------------------------------------------------
 			
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
 				xmlproduct=new XMLList(event.result);
-				
-				
+					
 				cmbproduct.dataProvider=productlist;
-				
-			
-				
-				
+						
 			}
+			//--------------------------------------------------------------------------
 			
 			protected function group1_initializeHandler(event:FlexEvent):void
 			{
@@ -55,6 +55,7 @@
 				mskcantidad.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				adglistpedprod.addEventListener(AdvancedDataGridEvent.ITEM_EDIT_END,itemEditEndHandler);
 				cmbproduct.selectedItemId=1;
+				totGral=0;
 				//-------------------------------------------------------------------------------------------
 			}
 			//------------------------------------------------------------------------------------------------
@@ -109,20 +110,19 @@
 						
 						}
 						arrayDg.refresh();
-						
 							
-							//grid.selectedItem.SubTotal=Number(newValue*grid.Number(grid.dataProvider.ge));
 					}
 				}
-				grid.selectedIndex=row;
+				
 			}
 
 			//------------------------------------------------------------------------------------------------
 			private function addadglistpedprod(codigoId:String,txtprecio:String,cantidad:String,descripcion:String):void{
 				var subtot:Number;
 				var b:Boolean=false;
-				//var cant:int=0;
+				
 				subtot=Number(Number(Number(Number(txtprecio).toFixed(2))*Number(cantidad)).toFixed(2));
+				totGral=Number(Number(totGral.toFixed(2))+Number(subtot.toFixed(2)));
 				
 				
 				if(dp.length==0)
@@ -130,13 +130,11 @@
 				else{
 					
 						for(var i:int=0;i<dp.length;i++){	
-					//for (var index in dp){
+					
 								
 							if(dp[i].name==descripcion){
 								dp[i].countt=int(dp[i].countt)+int(cantidad);
-								//cant=int(dp[i].countt);
-								//cant=cant+int(cantidad);
-								//dp[i].countt=cant;
+					
 								dp[i].subtotal=dp[i].subtotal+subtot;
 								b=true;
 							
@@ -150,11 +148,9 @@
 			
 				arrayDg.source=dp;
 				arrayDg.refresh();
-				
-				
-				//arrayDg=[{id:codigoId,name:descripcion,countt:cantidad,price:txtprecio}];
-				
+							
 				adglistpedprod.dataProvider=arrayDg;
+				lblTotGral.text=String(totGral.toFixed(2));
 			
 			}
 			//--------------------------------------------------------------------------------------
@@ -196,10 +192,23 @@
 			protected function adglistpedprod_itemDoubleClickHandler(event:mx.events.ListEvent):void
 			{
 				// TODO Auto-generated method stub
-				Alert.show(event.rowIndex.toString(10)+" ");
+				Alert.show("Está seguro de eliminar el Registro actual?","Confirmar Eliminación", Alert.YES | Alert.NO, this, delRowHandler, null, Alert.NO);
+					
 				
 			}
+			//--------------------------------------------------------------------------------------
+			protected function delRowHandler(evt:CloseEvent):void{
+				
+				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
+				
+				totGral=Number(totGral.toFixed(2))-Number(Number(adglistpedprod.selectedItem.subtotal).toFixed(2));
+				lblTotGral.text=totGral.toFixed(2);
+				
+				adglistpedprod.dataProvider.removeItemAt(adglistpedprod.selectedIndex);
 			
+			
+			}
+			//--------------------------------------------------------------------------------------
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -213,30 +222,48 @@
 			</s:operation>
 		</s:WebService>
 		<s:XMLListCollection id="productlist" source="{xmlproduct.producto}"/>
+		<mx:CurrencyFormatter id="cf" currencySymbol="$" alignSymbol="left" precision="2" useThousandsSeparator="true"
+							  useNegativeSign="true"/>
+		<mx:NumberFormatter id="nf" precision="0" rounding="none"/>
 		<s:ArrayCollection id="arrayDg"/>
 	</fx:Declarations>
-	<s:Label x="54" y="37" text="Producto:"/>
-	<s:Label x="55" y="75" text="Precio: $"/>
-	<s:TextInput id="txtpreciop" x="109" y="65"/>
-	<s:Label x="55" y="116" text="Cantidad:"/>
-	<controls:MaskedTextInput id="mskcantidad" x="111" y="106" width="55" restrict="0-9" maxChars="3"/>
-	<mx:AdvancedDataGrid id="adglistpedprod" x="23" y="155" width="645" height="195"
-						 designViewDataType="flat" rowCount="8" doubleClickEnabled="true" 
-						 dataChange="adglistpedprod_dataChangeHandler(event)" editable="item group summary"
-						 itemDoubleClick="adglistpedprod_itemDoubleClickHandler(event)">
+	<s:Label x="27" y="25" fontFamily="Verdana" fontSize="16" text="Producto:"/>
+	<s:Label x="32" y="58" fontFamily="Verdana" fontSize="16" text="Precio $:"/>
+	<s:TextInput id="txtpreciop" x="107" y="46" width="187" fontSize="16" fontWeight="bold"
+				 maxChars="6" restrict="0-9."/>
+	<s:Label x="23" y="99" fontFamily="Verdana" fontSize="16" text="Cantidad:"/>
+	<controls:MaskedTextInput id="mskcantidad" x="108" y="89" width="55" fontFamily="Verdana"
+							  fontSize="16" fontWeight="bold" maxChars="3" restrict="0-9"/>
+	<mx:AdvancedDataGrid id="adglistpedprod" x="23" y="127" width="645" height="195"
+						 dataChange="adglistpedprod_dataChangeHandler(event)"
+						 designViewDataType="flat" doubleClickEnabled="true"
+						 editable="item group summary" fontFamily="Verdana" fontSize="15"
+						 itemDoubleClick="adglistpedprod_itemDoubleClickHandler(event)" rowCount="8">
 		<mx:columns>
-			<mx:AdvancedDataGridColumn dataField="id"  headerText="Codigo" width="40" editable="false"/>
-			<mx:AdvancedDataGridColumn dataField="name" headerText="Descripcion" width="80" editable="false"/>
-			<mx:AdvancedDataGridColumn dataField="countt" headerText="Cantidad" width="30" editable="true" 
-									   />
-			<mx:AdvancedDataGridColumn dataField="price" headerText="Precio" width="40" editable="true"/>
-			<mx:AdvancedDataGridColumn dataField="subtotal" headerText="SubTotal" width="50" color="red" editable="false"/>
+			<mx:AdvancedDataGridColumn width="40" dataField="id" editable="false"
+									   fontFamily="Verdana" headerText="Codigo" resizable="false"
+									   textAlign="left" textDecoration="none"/>
+			<mx:AdvancedDataGridColumn width="80" dataField="name" editable="false"
+									   fontFamily="Verdana" headerText="Descripcion"
+									   resizable="false" textAlign="left"/>
+			<mx:AdvancedDataGridColumn width="30" dataField="countt" editable="true"
+									   fontFamily="Verdana" headerText="Cantidad" resizable="false"
+									   sortable="false" textAlign="center"/>
+			<mx:AdvancedDataGridColumn width="40" dataField="price" draggable="false" editable="true"
+									   fontFamily="Verdana" formatter="{cf}" headerText="Precio"
+									   resizable="false" sortable="false" textAlign="center"/>
+			<mx:AdvancedDataGridColumn width="50" color="red" dataField="subtotal" draggable="false"
+									   editable="false" fontFamily="Verdana" fontWeight="bold"
+									   formatter="{cf}" headerText="SubTotal" resizable="false"
+									   sortable="false" textAlign="right"/>
 		</mx:columns>
 	</mx:AdvancedDataGrid>
-	<components:AutoComplete id="cmbproduct" x="109" y="26"
-							 matchType="beginning"
-							 labelField="descripcion"
-							 allowDuplicates="false"
-							 dropDownRowCount="10">
+	<components:AutoComplete id="cmbproduct" x="107" y="11" width="203" allowDuplicates="false"
+							 dropDownRowCount="10" fontSize="16" fontWeight="bold"
+							 labelField="descripcion" matchType="beginning">
 	</components:AutoComplete>
+	<s:Label x="447" y="325" color="#1D7F03" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+			 text="TOTAL $ " verticalAlign="top"/>
+	<s:Label id="lblTotGral" x="540" y="322" width="124" color="#127B1A" fontFamily="Verdana"
+			 fontSize="16" fontWeight="bold" textAlign="right" verticalAlign="bottom"/>
 </s:Group>
