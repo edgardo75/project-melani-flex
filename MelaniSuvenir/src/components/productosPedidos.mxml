@@ -234,7 +234,7 @@
 	<s:Label x="23" y="99" fontFamily="Verdana" fontSize="16" text="Cantidad:"/>
 	<controls:MaskedTextInput id="mskcantidad" x="108" y="89" width="55" fontFamily="Verdana"
 							  fontSize="16" fontWeight="bold" maxChars="3" restrict="0-9"/>
-	<mx:AdvancedDataGrid id="adglistpedprod" x="23" y="127" width="645" height="195"
+	<mx:AdvancedDataGrid id="adglistpedprod" x="23" y="127" width="645" height="199" alternatingItemColors="[#938989, white]"
 						 dataChange="adglistpedprod_dataChangeHandler(event)"
 						 designViewDataType="flat" doubleClickEnabled="true"
 						 editable="item group summary" fontFamily="Verdana" fontSize="15"
@@ -262,8 +262,8 @@
 							 dropDownRowCount="10" fontSize="16" fontWeight="bold"
 							 labelField="descripcion" matchType="beginning">
 	</components:AutoComplete>
-	<s:Label x="447" y="325" color="#1D7F03" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="447" y="334" color="#1D7F03" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL $ " verticalAlign="top"/>
-	<s:Label id="lblTotGral" x="540" y="322" width="124" color="#127B1A" fontFamily="Verdana"
+	<s:Label id="lblTotGral" x="540" y="331" width="124" color="#127B1A" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" textAlign="right" verticalAlign="bottom"/>
 </s:Group>
