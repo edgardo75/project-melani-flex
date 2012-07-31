@@ -62,6 +62,8 @@
 				adglistpedprod.addEventListener(AdvancedDataGridEvent.ITEM_EDIT_END,itemEditEndHandler);
 				cmbproduct.selectedItemId=1;
 				totGral=0;
+				totGralDesc=0;
+				precio_desc=0;
 				//-------------------------------------------------------------------------------------------
 			}
 			//------------------------------------------------------------------------------------------------
@@ -183,7 +185,7 @@
 							txtpreciop.text=cmbproduct.selectedItem.precio;
 					
 					}
-					if(KeyPress.currentTarget.toString().indexOf("mskcantidad")!=-1){
+					if(KeyPress.currentTarget.toString().indexOf("mskcantidad")!=-1&&Number(mskcantidad.text)>0){
 						
 						addadglistpedprod(cmbproduct.selectedItem.id,txtpreciop.text,mskcantidad.text,cmbproduct.selectedItem.descripcion,txtdescuento.text);	
 					
@@ -250,21 +252,36 @@
 			}
 			//--------------------------------------------------------------------------------------
 			protected function delRowHandler(evt:CloseEvent):void{
-				
+				var desc_parcial:Number=0;
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 				
 					totGral=Number(totGral.toFixed(2))-Number(Number(adglistpedprod.selectedItem.subtotal).toFixed(2));
 					if(Number(adglistpedprod.selectedItem.porc_desc)==0.0){
-						
-						
+						desc_parcial=totGral*totGralDesc/100;	
+						totGralDesc=totGral-desc_parcial;
+					}else{
+						totGralDesc=Number(totGralDesc.toFixed(2))-Number(Number(adglistpedprod.selectedItem.porc_desc).toFixed(2));
+					
 					}
-						totGralDesc=
-					totGralDesc=Number(totGralDesc.toFixed(2))-Number(Number(adglistpedprod.selectedItem.porc_desc).toFixed(2));
-						//lblTotDesc.text=totGralDesc.toFixed(2);
+					
+						
+					
+						lblTotDesc.text=totGralDesc.toFixed(2);
 						lblTotGral.text=totGral.toFixed(2);
 						
 				
 				adglistpedprod.dataProvider.removeItemAt(adglistpedprod.selectedIndex);
+				
+				arrayDg.refresh();
+				
+				if(arrayDg.length==0){
+						totGral=0;
+						totGralDesc=0;
+						precio_desc=0;
+						txtdescuento.text="0.0";
+						
+				
+				}
 			
 			
 			}
