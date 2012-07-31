@@ -4,7 +4,7 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:components="com.hillelcoren.components.*"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
-		 width="792" height="534" initialize="group1_initializeHandler(event)">
+		 width="844" height="534" initialize="group1_initializeHandler(event)">
 	<fx:Script>
 		<![CDATA[
 			import flexunit.utils.ArrayList;
@@ -130,16 +130,18 @@
 							precio=Number(Number(grid.selectedItem.price).toFixed(2));
 							porcentajedescuento=newValue;
 							
-							precio_descueto=precio*porcentajedescuento/100;
+							precio_descueto=precio*(porcentajedescuento/100);
 							
-							Alert.show(String(porcentajedescuento)+" "+String(grid.selectedItem.price));
+							//Alert.show(String(porcentajedescuento)+" "+String(grid.selectedItem.price));
 							
-							totGralDesc=totGralDesc+precio_descueto;
+							totGralDesc=Number(totGralDesc+precio_descueto);
 							
 							grid.selectedItem.prec_descuento=Number(precio-precio_descueto).toFixed(2);
 							
 							grid.selectedItem.subtotal=Number(Number(grid.selectedItem.subtotal).toFixed(2))-precio_descueto;
+							
 							totGral=totGral-precio_descueto;
+							
 							lblTotDesc.text=String(totGralDesc.toFixed(2));
 							lblTotGral.text=String(totGral.toFixed(2));
 								
@@ -154,7 +156,7 @@
 			}
 
 			//------------------------------------------------------------------------------------------------
-			private function addadglistpedprod(codigoId:String,txtprecio:String,cantidad:String,descripcion:String,desc_porc:String):void{
+			private function addadglistpedprod(idprod:String,codigoId:String,txtprecio:String,cantidad:String,descripcion:String,desc_porc:String):void{
 				var subtot:Number;
 				var b:Boolean=false;
 				var p_desc:Number=0.0;
@@ -166,7 +168,7 @@
 				
 				
 				if(dp.length==0){
-					dp=[{id:codigoId,name:descripcion,countt:cantidad,price:txtprecio,porc_desc:desc_porc,prec_descuento:p_desc,subtotal:subtot}];
+					dp=[{idproduct:idprod,id:codigoId,name:descripcion,countt:cantidad,price:txtprecio,porc_desc:desc_porc,prec_descuento:p_desc,subtotal:subtot}];
 					totGralDesc=totGralDesc+Number(Number(desc_porc).toFixed(2));
 				}else{
 					
@@ -186,7 +188,7 @@
 							//------------------------------------------------------------------
 						}
 					if(!b)					
-						dp.push({id:codigoId,name:descripcion,countt:cantidad,price:txtprecio,porc_desc:desc_porc,prec_descuento:p_desc,subtotal:subtot});
+						dp.push({idproduct:idprod,id:codigoId,name:descripcion,countt:cantidad,price:txtprecio,porc_desc:desc_porc,prec_descuento:p_desc,subtotal:subtot});
 						
 					}
 			
@@ -211,7 +213,7 @@
 					}
 					if(KeyPress.currentTarget.toString().indexOf("mskcantidad")!=-1&&Number(mskcantidad.text)>0){
 						
-						addadglistpedprod(cmbproduct.selectedItem.id,txtpreciop.text,mskcantidad.text,cmbproduct.selectedItem.descripcion,txtdescuento.text);	
+						addadglistpedprod(cmbproduct.selectedItem.idproduct,cmbproduct.selectedItem.id,txtpreciop.text,mskcantidad.text,cmbproduct.selectedItem.descripcion,txtdescuento.text);	
 					
 					}
 					if(KeyPress.currentTarget.toString().indexOf("txtpreciop")!=-1)
@@ -277,27 +279,34 @@
 			//--------------------------------------------------------------------------------------
 			protected function delRowHandler(evt:CloseEvent):void{
 				var desc_parcial:Number=0;
+				//----------------------------------------------------------------------------------
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 				
 					totGral=Number(totGral.toFixed(2))-Number(Number(adglistpedprod.selectedItem.subtotal).toFixed(2));
-					if(Number(adglistpedprod.selectedItem.porc_desc)==0.0){
-						desc_parcial=totGral*totGralDesc/100;	
-						totGralDesc=totGral-desc_parcial;
-					}else{
-						totGralDesc=Number(totGralDesc.toFixed(2))-Number(Number(adglistpedprod.selectedItem.porc_desc).toFixed(2));
 					
-					}
+					if(Number(adglistpedprod.selectedItem.porc_desc)>0.0){
+						
+						desc_parcial=Number(adglistpedprod.selectedItem.price)*(Number(adglistpedprod.selectedItem.porc_desc)/100);	
+						totGralDesc=totGralDesc-desc_parcial;
+						//totGralDesc=Number(totGralDesc.toFixed(2))-Number(Number(desc_parcial).toFixed(2));
 					
+					}			
+					
+					
+				//---------------------------------------------------------------------------------	
+			
 						
 					
 						lblTotDesc.text=totGralDesc.toFixed(2);
 						lblTotGral.text=totGral.toFixed(2);
 						
-				
+				//---------------------------------------------------------------------------------
+						
 				adglistpedprod.dataProvider.removeItemAt(adglistpedprod.selectedIndex);
 				
 				arrayDg.refresh();
 				
+				//-------------------------------------------------------------------------------
 				if(arrayDg.length==0){
 						totGral=0;
 						totGralDesc=0;
@@ -307,10 +316,12 @@
 						txtpreciop.text="";
 						mskcantidad.text="";					
 						btnremover.enabled=false;
+						lblTotDesc.text="0.0";
+						lblTotGral.text="0.0";
 						
 				
 				}
-			
+				//------------------------------------------------------------------------------
 			
 			}
 			//--------------------------------------------------------------------------------------
@@ -337,6 +348,8 @@
 				txtpreciop.text="";
 				mskcantidad.text="";					
 				btnremover.enabled=false;
+				lblTotDesc.text="0.0";
+				lblTotGral.text="0.0";
 				//--------------------------------------------------------
 				
 			
@@ -376,41 +389,47 @@
 						 itemDoubleClick="adglistpedprod_itemDoubleClickHandler(event)" rowCount="8"
 						 variableRowHeight="true">
 		<mx:columns>
-			<mx:AdvancedDataGridColumn width="50" dataField="id" editable="false"
-									   fontFamily="Verdana" headerText="Codigo" resizable="false"
-									   textAlign="left" textDecoration="none"/>
-			<mx:AdvancedDataGridColumn width="80" dataField="name" editable="false"
-									   fontFamily="Verdana" headerText="Descripcion"
+			<mx:AdvancedDataGridColumn id="idproducto" visible="false" dataField="idproduct"/>
+				
+			
+			<mx:AdvancedDataGridColumn  width="52" dataField="id" editable="false"
+									   fontFamily="Verdana" fontSize="10" headerText="Codigo"
+									   resizable="false" textAlign="left" textDecoration="none"/>
+			<mx:AdvancedDataGridColumn width="84" dataField="name" editable="false"
+									   fontFamily="Verdana" fontSize="10" headerText="Descripcion"
 									   resizable="false" textAlign="left"/>
-			<mx:AdvancedDataGridColumn width="30" dataField="countt" editable="true"
-									   fontFamily="Verdana" headerText="Cantidad" resizable="false"
-									   sortable="false" textAlign="center"/>
-			<mx:AdvancedDataGridColumn width="40" dataField="price" draggable="false" editable="true"
-									   fontFamily="Verdana" formatter="{cf}" headerText="Precio"
+			<mx:AdvancedDataGridColumn width="35" dataField="countt" editable="true"
+									   fontFamily="Verdana" fontSize="10" headerText="Cantidad"
 									   resizable="false" sortable="false" textAlign="center"/>
-			<mx:AdvancedDataGridColumn editable="true" dataField="porc_desc" fontFamily="Verdana" fontSize="16"
+			<mx:AdvancedDataGridColumn width="45" dataField="price" draggable="false" editable="true"
+									   fontFamily="Verdana" fontSize="10" formatter="{cf}"
+									   headerText="PrecioU" resizable="false" sortable="false"
+									   textAlign="center"/>
+			<mx:AdvancedDataGridColumn editable="true" dataField="porc_desc" fontFamily="Verdana" fontSize="10"
 									   headerText="% Descuento" resizable="false" sortable="false"
-									   textAlign="center" width="26"/>
-			<mx:AdvancedDataGridColumn dataField="prec_descuento" formatter="{cf}" headerText="Precio Desc" width="26"/>
-			<mx:AdvancedDataGridColumn width="50" color="red" dataField="subtotal" draggable="false"
-									   editable="false" fontFamily="Verdana" fontWeight="bold"
-									   formatter="{cf}" headerText="SubTotal" resizable="false"
-									   sortable="false" textAlign="right"/>
+									   textAlign="center" width="33"/>
+			<mx:AdvancedDataGridColumn width="33" dataField="prec_descuento" editable="false"
+									   fontFamily="Verdana" fontSize="10" formatter="{cf}"
+									   headerText="Precio Desc"/>
+			<mx:AdvancedDataGridColumn width="52" color="red" dataField="subtotal" draggable="false"
+									   editable="false" fontFamily="Verdana" fontSize="10"
+									   fontWeight="bold" formatter="{cf}" headerText="SubTotal"
+									   resizable="false" sortable="false" textAlign="right"/>
 		</mx:columns>
 	</mx:AdvancedDataGrid>
 	<components:AutoComplete id="cmbproduct" x="107" y="11" width="203" allowDuplicates="false"
 							 dropDownRowCount="10" fontSize="16" fontWeight="bold"
 							 labelField="descripcion" matchType="beginning">
 	</components:AutoComplete>
-	<s:Label x="461" y="380" color="#1D7F03" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="495" y="380" color="#1D7F03" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL GRAL $:" verticalAlign="top"/>
-	<s:Label id="lblTotGral" x="599" y="377" width="124" color="#127B1A" fontFamily="Verdana"
+	<s:Label id="lblTotGral" x="631" y="377" width="124" color="#127B1A" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
 	<s:Label x="264" y="101" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
 	<controls:MaskedTextInput text="0.0" maxChars="3" x="381" y="92" width="43" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingrese un porcentaje de descuento"/>
-	<s:Label x="408" y="350" color="#E2AA14" fontFamily="Verdana" fontSize="16"
+	<s:Label x="440" y="350" color="#E2AA14" fontFamily="Verdana" fontSize="16"
 			 text="TOTAL DESCUENTOS $:"/>
-	<s:Label id="lblTotDesc" x="596" y="348" width="127" color="#F9BD05" fontFamily="Verdana"
+	<s:Label id="lblTotDesc" x="628" y="348" width="127" color="#F9BD05" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
 	<s:Button id="btnremover" x="25" y="343" label="Remover" click="btnremover_clickHandler(event)"
 			  enabled="false" toolTip="Elimina todos Los productos del Listado!!!"/>
