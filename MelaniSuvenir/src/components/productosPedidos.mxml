@@ -4,7 +4,7 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:components="com.hillelcoren.components.*"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
-		 width="748" height="534" initialize="group1_initializeHandler(event)">
+		 width="792" height="534" initialize="group1_initializeHandler(event)">
 	<fx:Script>
 		<![CDATA[
 			import flexunit.utils.ArrayList;
@@ -80,7 +80,9 @@
 				// get a reference to the column number of
 				// the cell that's being edited
 				var col:int = event.columnIndex;
-				var precio_desc:Number=0;
+				var precio_descueto:Number=0;
+				var precio:Number=0;
+				var porcentajedescuento:Number=0;
 				
 				
 				
@@ -114,16 +116,36 @@
 							
 						
 						}else{
-							var cannt:Number=(grid.selectedItem.countt);
-							//Alert.show(newValue+" "+cannt);
-							grid.selectedItem.subtotal=newValue*cannt;
+							if(col!=4){
+								var cannt:Number=(grid.selectedItem.countt);
+								//Alert.show(newValue+" "+cannt);
+								grid.selectedItem.subtotal=newValue*cannt;
+							}
+							
 						
 						}
+						
 						if(col==4){
-							precio_desc=Number(Number(grid.selectedItem.price).toFixed(2))*Number(Number(grid.selectedItem.porc_desc).toFixed(2))/100;
-							grid.selectedItem.prec_descuent=Number(Number(grid.selectedItem.price).toFixed(2))-precio_desc;
+							
+							precio=Number(Number(grid.selectedItem.price).toFixed(2));
+							porcentajedescuento=newValue;
+							
+							precio_descueto=precio*porcentajedescuento/100;
+							
+							Alert.show(String(porcentajedescuento)+" "+String(grid.selectedItem.price));
+							
+							totGralDesc=totGralDesc+precio_descueto;
+							
+							grid.selectedItem.prec_descuento=Number(precio-precio_descueto).toFixed(2);
+							
+							grid.selectedItem.subtotal=Number(Number(grid.selectedItem.subtotal).toFixed(2))-precio_descueto;
+							totGral=totGral-precio_descueto;
+							lblTotDesc.text=String(totGralDesc.toFixed(2));
+							lblTotGral.text=String(totGral.toFixed(2));
+								
 						
 						}
+						
 						arrayDg.refresh();
 							
 					}
@@ -168,10 +190,12 @@
 						
 					}
 			
-			
+			//-------------------------------------------------------------------------		
 				arrayDg.source=dp;
 				arrayDg.refresh();
-							
+			//-------------------------------------------------------------------------
+				btnremover.enabled=true;
+				
 				adglistpedprod.dataProvider=arrayDg;
 				lblTotGral.text=String(totGral.toFixed(2));
 			
@@ -279,6 +303,10 @@
 						totGralDesc=0;
 						precio_desc=0;
 						txtdescuento.text="0.0";
+						mskcantidad.setFocus();
+						txtpreciop.text="";
+						mskcantidad.text="";					
+						btnremover.enabled=false;
 						
 				
 				}
@@ -286,6 +314,35 @@
 			
 			}
 			//--------------------------------------------------------------------------------------
+			
+			protected function btnremover_clickHandler(event:MouseEvent):void
+			{
+				if(arrayDg.length>0)
+					Alert.show("Esta seguro de remover los productos Listados?","Confirmar Eliminación", Alert.YES | Alert.NO, this, removerListadoPedidos, null, Alert.NO);
+				
+			}
+			//--------------------------------------------------------------------------------------
+			protected function removerListadoPedidos(cls:CloseEvent):void{
+					
+				adglistpedprod.dataProvider.removeItems();
+				arrayDg.removeAll();
+				arrayDg.refresh();
+				//----------------------------------------------------------
+				totGral=0;
+				totGralDesc=0;
+				precio_desc=0;
+				txtdescuento.text="0.0";
+				cmbproduct.text="";
+				cmbproduct.setFocus();
+				txtpreciop.text="";
+				mskcantidad.text="";					
+				btnremover.enabled=false;
+				//--------------------------------------------------------
+				
+			
+			
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -301,7 +358,7 @@
 		<s:XMLListCollection id="productlist" source="{xmlproduct.producto}"/>
 		<mx:CurrencyFormatter id="cf" currencySymbol="$" alignSymbol="left" precision="2" useThousandsSeparator="true"
 							  useNegativeSign="true"/>
-		<mx:NumberFormatter id="nf" precision="0" rounding="none"/>
+		<mx:NumberFormatter id="nf" precision="2" rounding="none" useThousandsSeparator="false" decimalSeparatorFrom="true"/>
 		<s:ArrayCollection id="arrayDg"/>
 	</fx:Declarations>
 	<s:Label x="27" y="25" fontFamily="Verdana" fontSize="16" text="Producto:"/>
@@ -311,7 +368,7 @@
 	<s:Label x="23" y="99" fontFamily="Verdana" fontSize="16" text="Cantidad:"/>
 	<controls:MaskedTextInput id="mskcantidad" x="108" y="89" width="55" fontFamily="Verdana"
 							  fontSize="16" fontWeight="bold" maxChars="3" restrict="0-9"/>
-	<mx:AdvancedDataGrid id="adglistpedprod" x="23" y="127" width="706" height="199"
+	<mx:AdvancedDataGrid id="adglistpedprod" x="23" y="127" width="747" height="199"
 						 alternatingItemColors="[#f7eb9e, white]"
 						 dataChange="adglistpedprod_dataChangeHandler(event)"
 						 designViewDataType="flat" doubleClickEnabled="true"
@@ -319,7 +376,7 @@
 						 itemDoubleClick="adglistpedprod_itemDoubleClickHandler(event)" rowCount="8"
 						 variableRowHeight="true">
 		<mx:columns>
-			<mx:AdvancedDataGridColumn width="40" dataField="id" editable="false"
+			<mx:AdvancedDataGridColumn width="50" dataField="id" editable="false"
 									   fontFamily="Verdana" headerText="Codigo" resizable="false"
 									   textAlign="left" textDecoration="none"/>
 			<mx:AdvancedDataGridColumn width="80" dataField="name" editable="false"
@@ -333,8 +390,8 @@
 									   resizable="false" sortable="false" textAlign="center"/>
 			<mx:AdvancedDataGridColumn editable="true" dataField="porc_desc" fontFamily="Verdana" fontSize="16"
 									   headerText="% Descuento" resizable="false" sortable="false"
-									   textAlign="center" width="20"/>
-			<mx:AdvancedDataGridColumn dataField="prec_descuento" formatter="{cf}" headerText="Precio Desc" width="20"/>
+									   textAlign="center" width="26"/>
+			<mx:AdvancedDataGridColumn dataField="prec_descuento" formatter="{cf}" headerText="Precio Desc" width="26"/>
 			<mx:AdvancedDataGridColumn width="50" color="red" dataField="subtotal" draggable="false"
 									   editable="false" fontFamily="Verdana" fontWeight="bold"
 									   formatter="{cf}" headerText="SubTotal" resizable="false"
@@ -355,4 +412,6 @@
 			 text="TOTAL DESCUENTOS $:"/>
 	<s:Label id="lblTotDesc" x="596" y="348" width="127" color="#F9BD05" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
+	<s:Button id="btnremover" x="25" y="343" label="Remover" click="btnremover_clickHandler(event)"
+			  enabled="false" toolTip="Elimina todos Los productos del Listado!!!"/>
 </s:Group>
