@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:components="components.*"
+		 width="924" height="618">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:WebService id="servicePresupuesto" wsdl="http://localhost:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="true">
+			<s:operation>
+				
+			</s:operation>
+		</s:WebService>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			public function getDatosXML():String{
+			 var datosXML:String="<presupuesto>\n"+
+					 "<idpresupuesto>0</idpresupuesto>"+
+					 "<observaciones>Presupuesto dado por alta</observaciones>"+
+					 "<id_usuario_expidio>0</id_usuario_expidio>"+
+					 "<fvalidez>10/10/2012</fvalidez>"+
+					 "<fpresupuesto>20/20/2012</fpresupuesto>"+
+					 "<total>0</total>"+
+					 "<nombre>juan</nombre>"+
+					 "<apellido>perez</apellido>"+
+					 "<iva>21.00</iva>"+
+					 "<descuentototal>100.50</descuentototal>"+
+					 "<detallepresupuesto>"+
+						 "<itemdetallespresupuesto>"+
+							 "<precio>21.00</precio>"+
+							 "<precio_desc>21.00</precio_desc>"+
+							 "<subtotal>0</subtotal>"+
+							 "<descuento>10.00</descuento>"+
+							 "<cantidad>1530</cantidad>"+
+							 "<fk_id_producto>4</fk_id_producto>"+
+							 "<fk_id_presupuesto>0</fk_id_presupuesto>"+	
+						 "</itemdetallespresupuesto>"+						 
+					 "</detallepresupuesto>"+	
+				 "</presupuesto>";
+			
+				return datosXML;
+			}
+			//------------------------------------------------------------------------------------
+			protected function btnguardar_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				Alert.show("Desea Los Datos del Presupuesto?","Confirmar Operación", Alert.YES | Alert.NO, this, GuardarPresupuesto, null, Alert.NO);
+			}
+			//------------------------------------------------------------------------------------
+			private function GuardarPresupuesto(evt:CloseEvent):void{
+				
+				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
+			
+			
+			
+			}
+			
+		]]>
+	</fx:Script>
+	<s:Label x="335" y="12" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+			 text="PRESUPEUSTO MELANI"/>
+	<s:BorderContainer x="42" y="32" width="430" height="105">
+		<s:Label x="37" y="33" text="Nombre"/>
+		<s:Label x="37" y="60" text="Apellido"/>
+		<s:TextInput id="txtnombre" x="87" y="23"/>
+		<s:TextInput id="txtapellido" x="88" y="51"/>
+		<mx:DateField id="dtdvalidez" x="275" y="43"/>
+		<s:Label x="275" y="24" text="Fecha Validez"/>
+	</s:BorderContainer>
+	<components:productosPedidos x="39" y="145" height="418">
+	</components:productosPedidos>
+	<s:TextArea id="txtobservaciones" x="576" y="12" width="333" height="125"/>
+	<s:Button id="btnguardar" x="417" y="571" width="91" height="33" label="Guardar"
+			  click="btnguardar_clickHandler(event)"/>
+</s:Group>
