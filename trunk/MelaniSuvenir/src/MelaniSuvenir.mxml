@@ -3,7 +3,7 @@
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
 			   xmlns:components="components.*"
-			   minWidth="955" minHeight="600"
+			   width="1043" height="712" minWidth="955" minHeight="600"
 			   creationComplete="application1_creationCompleteHandler(event)">
 	
 	<fx:Declarations>
@@ -13,7 +13,7 @@
 	<!-- Define the menu; dataProvider is the default MenuBar property.
 	Because this uses an XML data provider, specify the labelField and
 	showRoot properties. -->
-	<mx:MenuBar id="myMenuBar" x="10" y="6" width="935" fontFamily="Verdana" fontSize="16"
+	<mx:MenuBar id="myMenuBar" x="10" y="6" width="1009" fontFamily="Verdana" fontSize="16"
 				fontWeight="bold" itemClick="myMenuBar_itemClickHandler(event)" labelField="@label">
 		<fx:XMLList>
 			<menuitem label="Clientes">
@@ -26,6 +26,11 @@
 			<menuitem label="Productos">
 				<menuitem type="separator"/>
 				<menuitem label="Cargar Productos"/>
+				<menuitem type="separator"/>			
+			</menuitem>
+			<menuitem label="Presupuestos">
+				<menuitem type="separator"/>
+				<menuitem label="Cargar Presupuesto"/>
 				<menuitem type="separator"/>			
 			</menuitem>
 			<menuitem label="Ordenes de Compra">
@@ -41,6 +46,8 @@
 				<menuitem type="separator"/>
 				<menuitem label="Productos"/>
 				<menuitem type="separator"/>
+				<menuitem label="Barrios"/>
+				<menuitem type="separator"/>
 			</menuitem>
 			<menuitem label="Ayuda">
 				<menuitem type="separator"/>
@@ -51,13 +58,12 @@
 			</menuitem>
 		</fx:XMLList>
 	</mx:MenuBar>
-	<mx:Panel id="panelCentral" x="10" y="29" width="935" height="551">
-		<components:comboAllStreets>
-		</components:comboAllStreets>
+	<mx:Panel id="panelCentral" x="10" y="38" width="1009" height="660">
 	</mx:Panel>
 	
 	<fx:Script>
 		<![CDATA[			
+			import components.GuardarPresupuesto;
 			import components.datosProducto;
 			import components.guardarDatosPersonalCliente;
 			
@@ -78,18 +84,25 @@
 					panelCentral.removeAllChildren();
 					panelCentral.addChild(new datosProducto());
 				}
+				if(event.item.@label=="Cargar Presupuesto"){
+					panelCentral.removeAllChildren();
+					panelCentral.addChild(new GuardarPresupuesto());
+				}
 				if(event.item.@label=="Clientes"){
 					verInformeCliente();
 				}
 				if(event.item.@label=="Productos"){
 					verInformeProductos();				
 				}
+				if(event.item.@label=="Barrios"){
+					verInformeBarrios();
+				}
 				if(event.item.@label =="Acerca de...."){
 					Alert.show("          MELANI SUVENIR © 2011  -  TODOS LOS DERECHOS RESERVADOS     ");						
 				}
 			}
 			protected function verInformeCliente():void{
-				var source:String="http://localhost:11080/WebMelani/ShowReportClient";
+				var source:String="http://localhost:8080/WebMelani/ShowReportClient";
 				var urlReq:URLRequest=new URLRequest(source);
 				navigateToURL(urlReq,"_blank");
 			
@@ -99,9 +112,15 @@
 			
 			}
 			protected function verInformeProductos():void{
-				var source:String="http://localhost:11080/WebMelani/ShowReportProductos2"
+				var source:String="http://localhost:8080/WebMelani/ShowReportProductos"
 				var urlReq:URLRequest=new URLRequest(source);
 				navigateToURL(urlReq,"_blank");
+			}
+			protected function verInformeBarrios():void{
+				var source:String="http://localhost:8080/WebMelani/ShowReportBarrios"
+				var urlReq:URLRequest=new URLRequest(source);
+				navigateToURL(urlReq,"_blank");
+			
 			}
 			
 		]]>

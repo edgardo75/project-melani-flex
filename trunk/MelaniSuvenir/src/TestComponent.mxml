@@ -12,6 +12,6 @@
 	</fx:Declarations>
 	<components:getClient x="193" y="36">
 	</components:getClient>
-	<components:productosPedidos x="193" y="144">
-	</components:productosPedidos>
+	<components:GuardarPresupuesto x="89" y="144">
+	</components:GuardarPresupuesto>
 </s:Application>
