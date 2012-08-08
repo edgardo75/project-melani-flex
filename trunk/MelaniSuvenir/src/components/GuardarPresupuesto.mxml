@@ -3,7 +3,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:components="components.*"
-		 width="924" height="648" creationComplete="group1_creationCompleteHandler(event)">
+		 width="924" height="598" creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:WebService id="servicePresupuesto" wsdl="http://localhost:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="true">
@@ -15,40 +15,44 @@
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import flash.net.navigateToURL;
+			
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			
+			//--------------------------------------------------------------------------------
 			public function getDatosXML():String{
 			 var datosXML:String="<presupuesto>\n"+
-					 "<idpresupuesto>0</idpresupuesto>"+
-					 "<observaciones>"+txtobservaciones.text+"</observaciones>"+
-					 "<id_usuario_expidio>0</id_usuario_expidio>"+
-					 "<fvalidez>"+dtdvalidez.text+"</fvalidez>"+
-					 "<fpresupuesto>"+new Date()+"</fpresupuesto>"+
-					 "<total>0</total>"+
-					 "<nombre>juan</nombre>"+
-					 "<apellido>perez</apellido>"+
-					 "<iva>21.00</iva>"+
-					 "<descuentototal>100.50</descuentototal>"+
-					 "<detallepresupuesto>";
+					 "<idpresupuesto>0</idpresupuesto>\n"+
+					 "<observaciones>"+txtobservaciones.text+"</observaciones>\n"+
+					 "<id_usuario_expidio>0</id_usuario_expidio>\n"+
+					 "<fvalidez>10/10/2012</fvalidez>\n"+
+					 "<fpresupuesto>10/10/2012</fpresupuesto>\n"+
+					 "<total>"+productordered.lblTotGral.text+"</total>\n"+
+					 "<nombre>"+txtnombre.text.toUpperCase()+"</nombre>\n"+
+					 "<apellido>"+txtapellido.text.toUpperCase()+"</apellido>\n"+
+					 "<iva>21.00</iva>\n"+
+					 "<descuentototal>"+productordered.lblTotDesc.text+"</descuentototal>\n"+
+					 "<detallepresupuesto>\n";
 					 	for(var i:int=0;i<productordered.arrayDg.length;i++){
 							
-							datosXML+="<itemdetallespresupuesto>"+
-								"<precio>21.00</precio>"+
-								"<precio_desc>21.00</precio_desc>"+
-								"<subtotal>0</subtotal>"+
-								"<descuento>10.00</descuento>"+
-								"<cantidad>1530</cantidad>"+
-								"<fk_id_producto>4</fk_id_producto>"+
-								"<fk_id_presupuesto>0</fk_id_presupuesto>"+	
-								"</itemdetallespresupuesto>";
+							datosXML+="<itemdetallespresupuesto>\n"+
+								"<precio>"+productordered.arrayDg[i].price+"</precio>\n"+
+								"<precio_desc>"+productordered.arrayDg[i].prec_descuento+"</precio_desc>\n"+
+								"<subtotal>"+productordered.arrayDg[i].subtotal+"</subtotal>\n"+
+								"<descuento>"+productordered.arrayDg[i].porc_desc+"</descuento>\n"+
+								"<cantidad>"+productordered.arrayDg[i].countt+"</cantidad>\n"+
+								"<fk_id_producto>"+productordered.arrayDg[i].idproduct+"</fk_id_producto>\n"+
+								"<fk_id_presupuesto>0</fk_id_presupuesto>\n"+	
+								"</itemdetallespresupuesto>\n";
 						
 						}
 						 						 
-			datosXML+=		 "</detallepresupuesto>"+	
-				 "</presupuesto>";
+			datosXML+=		 "</detallepresupuesto>\n"+	
+				 "</presupuesto>\n";
 			
 				return datosXML;
 			}
@@ -56,31 +60,33 @@
 			protected function btnguardar_clickHandler(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
-				
-				Alert.show("Desea Los Datos del Presupuesto?","Confirmar Operación", Alert.YES | Alert.NO, this, guardarpresupuesto, null, Alert.NO);
+				if(productordered.arrayDg.length>0)
+				   Alert.show("Desea Los Datos del Presupuesto?","Confirmar Operación", Alert.YES | Alert.NO, this, guardarpresupuesto, null, Alert.NO);
+				else
+					Alert.show("NO HAY PRODUCTOS LISTADOS!!!");
 			}
 			//------------------------------------------------------------------------------------
 			private function guardarpresupuesto(evt:CloseEvent):void{
 				
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
+				
+				//Alert.show(getDatosXML().toString());
+				servicePresupuesto.addBudgets(getDatosXML());
+				
 			
 			
 			
 			}
-			
+			//------------------------------------------------------------------------------------
 			protected function group1_creationCompleteHandler(event:FlexEvent):void
 			{
-				agregarDias(60);
+				
 				txtnombre.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txtapellido.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txtobservaciones.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txtnombre.setFocus();
 			}
-			private function agregarDias(dias:Number):void{
-				
-			
-			
-			}
+			//------------------------------------------------------------------------------------
 			private function transferirFocus(KeyPress:KeyboardEvent):void{
 				if(KeyPress.keyCode==Keyboard.ENTER){
 					if(KeyPress.target.toString().indexOf("txtnombre")!=-1){
@@ -94,35 +100,50 @@
 			
 			
 			}
-			
+			//--------------------------------------------------------------------------------------
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
-				// TODO Auto-generated method stub
+				var result:uint=uint(event.result.toString());	
+				
+				
+				switch(result>0){
+					case 0:Alert.show("HUBO UN ERROR EN EL SERVIDOR VERIFIQUE!!!");
+						break;
+					case -2:Alert.show("SE PRODUJO UN ERROR AL PROCESAR LOS DATOS, VERIFIQUE!!!");
+						break;
+					default:{
+						var source=String="http://localhost:8080/WebMelani/ShowReportPresupuesto?presnro="+result;
+						var urlReq:URLRequest= new URLRequest(source);
+						navigateToURL(urlReq,"_blank");
+					
+					}
+					
+				}
+					
 				
 			}
-			
+			//--------------------------------------------------------------------------------------
 			protected function operation1_faultHandler(event:FaultEvent):void
 			{
-				// TODO Auto-generated method stub
+				Alert.show(event.fault.toString());
 				
 			}
+			//-------------------------------------------------------------------------------------
 			
 		]]>
 	</fx:Script>
 	<s:Label x="335" y="12" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="PRESUPUESTO MELANI" textDecoration="underline"/>
-	<s:BorderContainer x="40" y="54" width="430" height="105">
+	<s:BorderContainer x="39" y="57" width="430" height="105">
 		<s:Label x="25" y="32" fontSize="16" text="Nombre:"/>
 		<s:Label x="25" y="69" fontSize="16" text="Apellido:"/>
-		<s:TextInput id="txtnombre" x="87" y="23" width="180" maxChars="40" restrict="azAZ "/>
-		<s:TextInput id="txtapellido" x="88" y="62" width="179" maxChars="40" restrict="azAZ "/>
-		<mx:DateField id="dtdvalidez" x="295" y="53" width="112" formatString="DD/MM/YYYY"/>
-		<s:Label x="295" y="35" fontSize="16" text="Fecha Validez"/>
+		<s:TextInput id="txtnombre" x="87" y="23" width="180" maxChars="40" restrict="a-z A-Z "/>
+		<s:TextInput id="txtapellido" x="88" y="62" width="179" maxChars="40" restrict="a-z A-Z "/>
 	</s:BorderContainer>
-	<components:productosPedidos id="productordered" x="39" y="169" height="418">
+	<components:productosPedidos id="productordered" x="39" y="164" height="401">
 	</components:productosPedidos>
-	<s:TextArea id="txtobservaciones" restrict="azAZ " x="550" y="39" width="333" height="125" maxChars="255"/>
-	<s:Button id="btnguardar" x="417" y="599" width="91" height="33" label="Guardar"
-			  click="btnguardar_clickHandler(event)"/>
+	<s:TextArea id="txtobservaciones" restrict="a-z A-Z 0-9.,_-" x="550" y="39" width="333" height="125" maxChars="255"/>
+	<s:Button id="btnguardar" x="418" y="561" width="91" height="33" label="Guardar"
+			  click="btnguardar_clickHandler(event)" enabled="true"/>
 	<s:Label x="551" y="24" fontSize="16" fontWeight="normal" text="Observaciones"/>
 </s:Group>
