@@ -206,6 +206,7 @@
 			private function transferirFocus(KeyPress:KeyboardEvent):void{
 				
 				if(KeyPress.keyCode==Keyboard.ENTER){
+					
 					if(cmbproduct.text!=""&&KeyPress.currentTarget.toString().indexOf("cmbproduct")!=-1){
 							focusManager.setFocus(txtpreciop);
 							txtpreciop.text=cmbproduct.selectedItem.precio;
@@ -333,7 +334,7 @@
 				
 			}
 			//--------------------------------------------------------------------------------------
-			protected function removerListadoPedidos(cls:CloseEvent):void{
+			public function removerListadoPedidos(cls:CloseEvent):void{
 					
 				adglistpedprod.dataProvider.removeItems();
 				arrayDg.removeAll();
