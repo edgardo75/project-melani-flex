@@ -13,7 +13,7 @@
 	<!-- Define the menu; dataProvider is the default MenuBar property.
 	Because this uses an XML data provider, specify the labelField and
 	showRoot properties. -->
-	<mx:MenuBar id="myMenuBar" x="10" y="3" width="1009" fontFamily="Verdana" fontSize="16"
+	<mx:MenuBar id="myMenuBar" x="10" y="3" width="1023" fontFamily="Verdana" fontSize="16"
 				fontWeight="bold" itemClick="myMenuBar_itemClickHandler(event)" labelField="@label">
 		<fx:XMLList>
 			<menuitem label="Clientes">

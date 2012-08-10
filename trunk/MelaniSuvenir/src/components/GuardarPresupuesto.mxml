@@ -12,6 +12,8 @@
 				
 			</s:operation>
 		</s:WebService>
+		<mx:StringValidator required="true" source="{txtnombre}" property="text" minLength="2" maxLength="40"/>
+		<mx:StringValidator required="true" source="{txtapellido}" property="text" minLength="2" maxLength="20"  />
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
@@ -25,6 +27,12 @@
 			
 			//--------------------------------------------------------------------------------
 			public function getDatosXML():String{
+				var totGraDescuento:Number=0;
+				
+				
+				
+				//--------------------------------------------------------------------------------------
+				
 			 var datosXML:String="<presupuesto>\n"+
 					 "<idpresupuesto>0</idpresupuesto>\n"+
 					 "<observaciones>"+txtobservaciones.text+"</observaciones>\n"+
@@ -35,17 +43,18 @@
 					 "<nombre>"+txtnombre.text.toUpperCase()+"</nombre>\n"+
 					 "<apellido>"+txtapellido.text.toUpperCase()+"</apellido>\n"+
 					 "<iva>21.00</iva>\n"+
-					 "<descuentototal>"+productordered.lblTotDesc.text+"</descuentototal>\n"+
+					 "<descuentototal>"+productordered.lblTotDesc.text+"</descuentototal>\n"+							
+					 "<porc_descuento_total>"+productordered.porc_desc_total+"</porc_descuento_total>\n"+
 					 "<detallepresupuesto>\n";
-					 	for(var i:int=0;i<productordered.arrayDg.length;i++){
+					 	for(var ii:int=0;ii<productordered.arrayDg.length;ii++){
 							
 							datosXML+="<itemdetallespresupuesto>\n"+
-								"<precio>"+productordered.arrayDg[i].price+"</precio>\n"+
-								"<precio_desc>"+productordered.arrayDg[i].prec_descuento+"</precio_desc>\n"+
-								"<subtotal>"+productordered.arrayDg[i].subtotal+"</subtotal>\n"+
-								"<descuento>"+productordered.arrayDg[i].porc_desc+"</descuento>\n"+
-								"<cantidad>"+productordered.arrayDg[i].countt+"</cantidad>\n"+
-								"<fk_id_producto>"+productordered.arrayDg[i].idproduct+"</fk_id_producto>\n"+
+								"<precio>"+productordered.arrayDg[ii].price+"</precio>\n"+
+								"<precio_desc>"+productordered.arrayDg[ii].prec_descuento+"</precio_desc>\n"+
+								"<subtotal>"+Number(productordered.arrayDg[ii].subtotal).toFixed(2)+"</subtotal>\n"+
+								"<descuento>"+productordered.arrayDg[ii].porc_desc+"</descuento>\n"+
+								"<cantidad>"+productordered.arrayDg[ii].countt+"</cantidad>\n"+
+								"<fk_id_producto>"+productordered.arrayDg[ii].idproduct+"</fk_id_producto>\n"+
 								"<fk_id_presupuesto>0</fk_id_presupuesto>\n"+	
 								"</itemdetallespresupuesto>\n";
 						
@@ -70,7 +79,15 @@
 				
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 				
-				//Alert.show(getDatosXML().toString());
+				for(var i:int=0;i<productordered.arrayDg.length;i++){
+					if(productordered.porc_d>0 && productordered.arrayDg[i].porc_desc!=0 && productordered.porc_d!=0){
+						Alert.show("Error al procesar los datos, descuento total o por productos, corrija!!!");
+						return;
+					}
+				
+				}
+				//Alert.show(getDatosXML());
+				btnguardar.enabled=false;
 				servicePresupuesto.addBudgets(getDatosXML());
 				
 			
@@ -90,10 +107,13 @@
 			private function transferirFocus(KeyPress:KeyboardEvent):void{
 				if(KeyPress.keyCode==Keyboard.ENTER){
 					if(KeyPress.target.toString().indexOf("txtnombre")!=-1){
-							txtapellido.setFocus();
+						txtapellido.setFocus();
+						txtnombre.text.toUpperCase();
 					}
 					if(KeyPress.target.toString().indexOf("txtapellido")!=-1){
+						    
 							productordered.cmbproduct.setFocus();
+							txtapellido.text.toUpperCase();
 					}
 				
 				}
@@ -112,15 +132,31 @@
 					case -2:Alert.show("SE PRODUJO UN ERROR AL PROCESAR LOS DATOS, VERIFIQUE!!!");
 						break;
 					default:{
-						var source=String="http://localhost:8080/WebMelani/ShowReportPresupuesto?presnro="+result;
+						var source:String="http://localhost:8080/WebMelani/ShowReportPresupuesto?presnro="+result;
 						var urlReq:URLRequest= new URLRequest(source);
 						navigateToURL(urlReq,"_blank");
+						blanquearTodosLosControles();
 					
 					}
 					
 				}
 					
 				
+			}
+			//--------------------------------------------------------------------------------------
+			private function blanquearTodosLosControles():void{
+				var cls:CloseEvent;		
+						txtapellido.text="";
+						txtnombre.text="";
+						txtobservaciones.text="";
+						txtnombre.setFocus();
+						productordered.removerListadoPedidos(cls);
+						
+						if(btnguardar.enabled==false)
+							 btnguardar.enabled=true;
+						if(productordered.btnremover.enabled==false)
+							productordered.btnremover.enabled=true;
+			
 			}
 			//--------------------------------------------------------------------------------------
 			protected function operation1_faultHandler(event:FaultEvent):void
@@ -132,17 +168,18 @@
 			
 		]]>
 	</fx:Script>
+	
 	<s:Label x="335" y="12" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="PRESUPUESTO MELANI" textDecoration="underline"/>
 	<s:BorderContainer x="39" y="57" width="430" height="105">
 		<s:Label x="25" y="32" fontSize="16" text="Nombre:"/>
 		<s:Label x="25" y="69" fontSize="16" text="Apellido:"/>
 		<s:TextInput id="txtnombre" x="87" y="23" width="180" maxChars="40" restrict="a-z A-Z "/>
-		<s:TextInput id="txtapellido" x="88" y="62" width="179" maxChars="40" restrict="a-z A-Z "/>
+		<s:TextInput  id="txtapellido" x="88" y="62" width="179" maxChars="20" restrict="a-z A-Z "/>
 	</s:BorderContainer>
 	<components:productosPedidos id="productordered" x="39" y="164" height="401">
 	</components:productosPedidos>
-	<s:TextArea id="txtobservaciones" restrict="a-z A-Z 0-9.,_-" x="550" y="39" width="333" height="125" maxChars="255"/>
+	<s:TextArea id="txtobservaciones"  x="550" y="39" width="333" height="125" maxChars="255"/>
 	<s:Button id="btnguardar" x="418" y="561" width="91" height="33" label="Guardar"
 			  click="btnguardar_clickHandler(event)" enabled="true"/>
 	<s:Label x="551" y="24" fontSize="16" fontWeight="normal" text="Observaciones"/>
