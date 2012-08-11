@@ -26,11 +26,7 @@
 			import mx.rpc.events.ResultEvent;
 			
 			//--------------------------------------------------------------------------------
-			public function getDatosXML():String{
-				var totGraDescuento:Number=0;
-				
-				
-				
+			public function getDatosXML():String{				
 				//--------------------------------------------------------------------------------------
 				
 			 var datosXML:String="<presupuesto>\n"+
@@ -135,6 +131,7 @@
 						var source:String="http://localhost:8080/WebMelani/ShowReportPresupuesto?presnro="+result;
 						var urlReq:URLRequest= new URLRequest(source);
 						navigateToURL(urlReq,"_blank");
+						Alert.show("Presupuesto N° "+result+" Generado correctamente!!!");
 						blanquearTodosLosControles();
 					
 					}
