@@ -1,28 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="300">
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:controls="com.adobe.flex.extras.controls.*"
+		 width="426" height="300">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<mx:HRule x="28" y="30" width="337" height="0"/>
-	<s:Label x="113" y="12" text="VER PRESUPUESTOS MELANI"/>
-	<s:DataGrid x="28" y="38" width="346" height="92" requestedRowCount="4">
-		<s:columns>
-			<s:ArrayList>
-				<s:GridColumn dataField="dataField1" headerText="Column 1"></s:GridColumn>
-				<s:GridColumn dataField="dataField2" headerText="Column 2"></s:GridColumn>
-				<s:GridColumn dataField="dataField3" headerText="Column 3"></s:GridColumn>
-			</s:ArrayList>
-		</s:columns>
-		<s:typicalItem>
-			<fx:Object dataField1="Sample Data" dataField2="Sample Data" dataField3="Sample Data"></fx:Object>
-		</s:typicalItem>
-		<s:ArrayList>
-			<fx:Object dataField1="data1" dataField2="data1" dataField3="data1"></fx:Object>
-			<fx:Object dataField1="data2" dataField2="data2" dataField3="data2"></fx:Object>
-			<fx:Object dataField1="data3" dataField2="data3" dataField3="data3"></fx:Object>
-			<fx:Object dataField1="data4" dataField2="data4" dataField3="data4"></fx:Object>
-		</s:ArrayList>
-	</s:DataGrid>
+	<s:Label x="113" y="12" fontFamily="Verdana" fontWeight="bold" text="VER PRESUPUESTOS MELANI"
+			 textDecoration="underline"/>
+	<mx:AdvancedDataGrid id="adgPresupuestos" x="18" y="34" height="92" designViewDataType="flat">
+		<mx:columns>
+			<mx:AdvancedDataGridColumn dataField="id" headerText="N°"/>
+			<mx:AdvancedDataGridColumn dataField="totalGral" headerText="Total"/>
+			<mx:AdvancedDataGridColumn dataField="totalDesc" headerText="Descuento"/>
+			<mx:AdvancedDataGridColumn dataField="porcentaje" headerText="Porcentaje"/>
+		</mx:columns>
+	</mx:AdvancedDataGrid>
+	<s:Button id="first_btn" x="19" y="134" width="50" label="First"
+			  click="first_clickHandler(event)" enabled="false"/>
+	<s:Button id="prev_btn" x="71" y="134" width="46" label="Prev"
+			  click="prev_btn_clickHandler(event)" enabled="false"/>
+	<s:Button id="next_btn" x="120" y="134" width="50" label="Next"
+			  click="next_btn_clickHandler(event)" enabled="false"/>
+	<s:Button id="last_btn" x="174" y="134" width="47" label="Last" click="last_clickHandler(event)"
+			  enabled="false"/>
+	<s:BorderContainer x="328" y="33" width="88" height="93">
+		<controls:MaskedTextInput id="mskidpresupuesto" x="10" y="24" width="68" toolTip="Ingrese Número de Presupuesto"/>
+		<s:Label x="10" y="10" text="Buscar"/>
+	</s:BorderContainer>
+	<mx:AdvancedDataGrid id="adgdetallespresupuesto" x="19" y="170" height="88"
+						 designViewDataType="flat">
+		<mx:columns>
+			<mx:AdvancedDataGridColumn dataField="descripcion" headerText="Descripcion"/>
+			<mx:AdvancedDataGridColumn dataField="cantidad" headerText="Cantidad"/>
+			<mx:AdvancedDataGridColumn dataField="precio" headerText="Precio"/>
+		</mx:columns>
+	</mx:AdvancedDataGrid>
+	<s:Button id="btnImprimir" x="332" y="170" label="Imprimir"/>
+	<s:Button id="btnExportar" x="332" y="210" label="Exportar"/>
 </s:Group>
