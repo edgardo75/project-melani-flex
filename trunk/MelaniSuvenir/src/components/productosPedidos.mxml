@@ -4,7 +4,7 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:components="com.hillelcoren.components.*"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
-		 width="844" height="534" initialize="group1_initializeHandler(event)">
+		 width="844" height="448" initialize="group1_initializeHandler(event)">
 	<fx:Script>
 		<![CDATA[
 			import flashx.textLayout.formats.Float;
@@ -39,6 +39,10 @@
 				public var porc_d:Number;
 			[Bindable]
 				public var porc_desc_total:Number=0;
+			[Bindable]
+				public var desc_resto:Number=0;
+			[Bindable]
+				public var tot_recargo:Number=0;
 			
 			//---------------------------------------------------------------------------
 			protected function operation1_faultHandler(event:FaultEvent):void
@@ -65,6 +69,7 @@
 				txtpreciop.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txtdescuento.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				mskcantidad.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				mskrecargo.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				adglistpedprod.addEventListener(AdvancedDataGridEvent.ITEM_EDIT_END,itemEditEndHandler);
 				
 
@@ -74,6 +79,7 @@
 				precio_desc=0;
 				porc_d=0;
 				porc_desc_total=0;
+				
 				//-------------------------------------------------------------------------------------------
 			}
 			//------------------------------------------------------------------------------------------------
@@ -90,10 +96,11 @@
 				// get a reference to the column number of
 				// the cell that's being edited
 				var col:int = event.columnIndex;
-				var precio_descueto:Number=0;
+				var precio_descontado_result_porcentaje:Number=0;
 				var precio:Number=0;
 				var porcentajedescuento:Number=0;
 				var decimal:Number=Math.pow(10,2);
+				var temptot:Number=0;
 				
 				
 				
@@ -114,26 +121,121 @@
 					if (newValue != oldValue)
 					{
 						
+						
 						// do actions that should happen when the data changes
 						// Note that in this case, the dataprovider
 						// hasn't been updated yet, so you can't do any
 						// actions that require the dataprovider to have 
 						// the new data
 						//Alert.show(newValue+" "+oldValue+" "+col+" "+grid.selectedItem.subtotal);
-						if(col==2){
+						if(col==4){
 							var priceValue:Number=(grid.selectedItem.price);
-							//Alert.show(newValue+" "+priceValue);
-							grid.selectedItem.subtotal=newValue*priceValue;
+							var subtot1:Number=(grid.selectedItem.subtotal);
+							
+							if(newValue>0){
+								
+								if(grid.selectedItem.prec_descuento>0)
+									
+									grid.selectedItem.subtotal=grid.selectedItem.countt*Number(Number(grid.selectedItem.prec_descuento).toFixed(2));								
+								else
+									grid.selectedItem.subtotal=newValue*grid.selectedItem.countt;
+								
+							
+								
+								if(arrayDg.length==1){
+									totGral=Number(newValue*grid.selectedItem.countt);
+									if(Number(lbldescuento.text)!=0)
+										lblTotApagar.text=Number(totGral-totGralDesc).toFixed(2);
+								}else{
+									temptot=temptot+(newValue*grid.selectedItem.countt);
+									
+									for(var i:int=0;i<arrayDg.length;i++){
+										if(String(arrayDg[i].name).toLowerCase()!=String(grid.selectedItem.name).toLowerCase()){
+											temptot=temptot+(arrayDg[i].price*arrayDg[i].countt);											
+										}
+									
+									}
+									
+									
+									totGral=temptot;
+									Alert.show(totGral.toFixed(2)+" "+lblTotApagar.text);
+										if(Number(lbldescuento.text)!=0)
+											lblTotApagar.text=Number(totGral+Number(lbldescuento.text)).toFixed(2);
+								}
+								
+							
 							arrayDg.refresh();
+							}
 						
 							
 						
 						}else{
-							if(col!=5){
+							if(col==3){
 								var cannt:Number=(grid.selectedItem.countt);
-								//Alert.show(newValue+" "+cannt);
-								grid.selectedItem.subtotal=newValue*cannt;
-								arrayDg.refresh();
+								var subtot:Number=(grid.selectedItem.subtotal);
+								
+								
+								
+								if(newValue>0){
+									
+									if(grid.selectedItem.prec_descuento>0){
+									
+										
+										grid.selectedItem.subtotal=newValue*Number(Number(grid.selectedItem.prec_descuento).toFixed(2));
+										
+										
+										
+										
+										
+									}else{
+										grid.selectedItem.subtotal=newValue*grid.selectedItem.price;
+									}
+									
+									
+									
+								
+										if(arrayDg.length==1){
+											totGral=Number(grid.selectedItem.price*newValue);
+											if(Number(lbldescuento.text)!=0){
+												//lbldescuento.text=String(-Number(totGral-grid.selectedItem.subtotal).toFixed(2));
+												lblTotApagar.text=Number(String(totGral-totGralDesc)).toFixed(2);
+											}
+										}else{
+											
+											
+											
+											//Alert.show(totGral+" "+grid.selectedItem.price+" "+newValue);
+											
+											//totGral=totGral+Number(Number(grid.selectedItem.price*newValue).toFixed(2))/2;
+											
+											temptot=temptot+(grid.selectedItem.price*newValue);
+											
+											for(var ii:int=0;ii<arrayDg.length;i++){
+												if(String(arrayDg[ii].name).toLowerCase()!=String(grid.selectedItem.name).toLowerCase()){
+													temptot=temptot+(arrayDg[i].price*arrayDg[i].countt);
+												
+												}
+											
+											}
+											
+										
+											totGral=temptot;
+											
+										
+											
+												if(Number(lbldescuento.text)!=0){
+												
+													lblTotApagar.text=Number(String(totGral + Number(lbldescuento.text))).toFixed(2);
+												}
+										}
+											
+									
+									
+									
+									
+									arrayDg.refresh();
+								}
+								
 							}
 							
 						
@@ -141,35 +243,34 @@
 						
 						
 						if(col==5 && porc_d==0 && oldValue==0){
-							
+							var subtotal:Number=grid.selectedItem.subtotal;
 								
 							
 							
-							precio=Number(Number(grid.selectedItem.price).toFixed(2));
+							precio=Number(Number(grid.selectedItem.price));
 							porcentajedescuento=newValue;
 							
-							precio_descueto=Number(Number(precio*(porcentajedescuento/100)).toFixed(2));
+							precio_descontado_result_porcentaje=Number(Number(grid.selectedItem.subtotal*(porcentajedescuento/100)));
+													
 							
-							//Alert.show(String(porcentajedescuento)+" "+String(grid.selectedItem.price)+" "+precio_descueto+" "+String(Math.round(decimal*precio_descueto)/decimal)+" "+Math.floor(Number(precio_descueto.toFixed(2))).toFixed(2)));
+							totGralDesc=Number(totGralDesc+Number(precio_descontado_result_porcentaje));
 							
+							grid.selectedItem.prec_descuento=Number(precio-Number(Number(grid.selectedItem.price*(porcentajedescuento/100)))).toFixed(2);
 							
-							totGralDesc=Number(totGralDesc+Number(precio_descueto.toFixed(2)));
+							grid.selectedItem.subtotal=grid.selectedItem.subtotal-precio_descontado_result_porcentaje;
 							
-							grid.selectedItem.prec_descuento=Number(precio-precio_descueto).toFixed(2);
-							
-							grid.selectedItem.subtotal=Number(Number(grid.selectedItem.prec_descuento).toFixed(2))*int(grid.selectedItem.countt);
-							
-							totGral=totGral-precio_descueto;
-							
-							//--------------------------------------------calculo el porcentaje total por productos
-							
-								porc_desc_total = porc_desc_total + Number(Number(newValue).toFixed(2));
+						
+								
+							//-------------------------------------------------------------------------------------
 								
 							
 							
-							
-								lblTotDesc.text=String(totGralDesc.toFixed(2));
-								lblTotGral.text=String(totGral.toFixed(2));
+								
+								
+								lbldescuento.text=Number(Number(-totGralDesc)).toFixed(2);
+								lblTotGral.text=String(totGral);
+								
+								lblTotApagar.text=Number(Number(lblTotGral.text)-Number(totGralDesc.toFixed(2))).toFixed(2);
 							
 								arrayDg.refresh();
 								
@@ -181,6 +282,7 @@
 						
 							
 					}
+					lblTotGral.text=String(totGral.toFixed(2));
 				}
 				
 			}
@@ -204,7 +306,7 @@
 					totGralDesc=totGralDesc+Number(Number(desc_porc).toFixed(2));
 				}else{
 					
-						for(var i:int=0;i<dp.length;i++){	
+						for(var i:int=0;i<dp.length && !b;i++){	
 					
 							//------------------------------------------------------------------					
 							if(dp[i].name==descripcion){
@@ -232,6 +334,13 @@
 				
 				adglistpedprod.dataProvider=arrayDg;
 				lblTotGral.text=String(totGral.toFixed(2));
+				
+				if(Number(lblTotApagar.text)!=0){
+						lblTotApagar.text=Number(Number(lblTotGral.text)-totGralDesc).toFixed(2);
+				
+				}
+				
+					
 				mskcantidad.text="";
 				txtpreciop.text="";
 				
@@ -240,7 +349,7 @@
 			}
 			//--------------------------------------------------------------------------------------
 			private function transferirFocus(KeyPress:KeyboardEvent):void{
-				
+				var b:Boolean=false;
 				if(KeyPress.keyCode==Keyboard.ENTER){
 					
 					if(cmbproduct.text!=""&&KeyPress.currentTarget.toString().indexOf("cmbproduct")!=-1){
@@ -249,22 +358,58 @@
 					
 					}
 					if(KeyPress.currentTarget.toString().indexOf("mskcantidad")!=-1&&Number(mskcantidad.text)>0){
-						
-						addadglistpedprod(cmbproduct.selectedItem.idproduct,cmbproduct.selectedItem.id,txtpreciop.text,mskcantidad.text,cmbproduct.selectedItem.descripcion,txtdescuento.text);	
-					
+						for (var i:int=0;i<arrayDg.length && !b;i++){
+							
+								if((String(arrayDg[i].name).toUpperCase()==String(cmbproduct.text).toUpperCase()) && Number(arrayDg[i].price) != Number(txtpreciop.text)){
+									Alert.show("Imposible Cargar, este Item se encuentra cargado con un Precio diferente, corrija!!!");
+									b=true;
+									
+								}
+								
+						}
+						if(b.valueOf()){
+							
+							return;
+						}else{		
+							
+							addadglistpedprod(cmbproduct.selectedItem.idproduct,cmbproduct.selectedItem.id,txtpreciop.text,mskcantidad.text,cmbproduct.selectedItem.descripcion,txtdescuento.text);	
+						}
 					}
 					if(KeyPress.currentTarget.toString().indexOf("txtpreciop")!=-1)
 						focusManager.setFocus(mskcantidad);
 					
 					if(KeyPress.currentTarget.toString().indexOf("txtdescuento")!=-1 && Number(Number(txtdescuento.text).toFixed(2))>0){
 					//	addadglistpedprod(cmbproduct.selectedItem.id,txtpreciop.text,mskcantidad.text,cmbproduct.selectedItem.descripcion,txtdescuento);
-						Alert.show("Desea Agregar el Descuento al Listado?","Confirmar Operación", Alert.YES | Alert.NO, this, calcularDescuentoTotal, null, Alert.NO);
+						Alert.show("Desea Agregar el Descuento al Listado?","Confirmar Operación", Alert.YES | Alert.NO, this, calcularDescuentoTotal, null, Alert.YES);
 						
 					
 					}
+					if(KeyPress.currentTarget.toString().indexOf("mskrecargo")!=-1)
+						Alert.show("Desea Agregar el Recargo al Listado?","Confirmar Operación", Alert.YES | Alert.NO, this, calcularRecargo, null, Alert.YES);
 							
 				
 				}
+			
+			
+			}
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			private function calcularRecargo(evt:CloseEvent):void{
+				
+				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
+				var recargo:Number=0;
+			
+				if(Number(mskrecargo.text)==0){
+					tot_recargo=0;
+					lbltotalconrecargo.text="0.0";
+				}else{
+					    tot_recargo=tot_recargo+Number(mskrecargo.text);
+						recargo=tot_recargo*totGral/100;
+						lbltotalconrecargo.text=Number(totGral+recargo).toFixed(2);
+					
+					
+				
+				}
+				
 			
 			
 			}
@@ -308,21 +453,17 @@
 					
 				}
 				 tot_desc= Number(Number(lblTotGral.text).toFixed(2))*porc_d/100;
-				lblTotDesc.text=String(Number(Number(lblTotGral.text)-tot_desc).toFixed(2));
+				 
+				 
+				
+				 
+						lbldescuento.text=Number(Number(-tot_desc)).toFixed(2);
+						lblTotApagar.text=String(Number(Number(lblTotGral.text)-tot_desc).toFixed(2));
 				
 			
 			}
 			//---------------------------------------------------------------------------------
-			/*private function calcularDescuento(precio:String,desc_p:String):Number{
-					//calculo descuento de toda la ficha de productos pedidos
-				var calc_precioDescuento:Number;
-				
-				porc_descuento=Number(Number(desc_p).toFixed(2));
-				calc_precioDescuento=Number(Number(Number(precio).toFixed(2))*Number(Number(porc_descuento).toFixed(2))/100);
-					
-				return Number(Number(Number(precio).toFixed(2))-calc_precioDescuento);	
-			
-			}*/
+		
 			
 			
 			//-------------------------------------------------------------------------------------
@@ -346,26 +487,44 @@
 			//--------------------------------------------------------------------------------------
 			protected function delRowHandler(evt:CloseEvent):void{
 				var desc_parcial:Number=0;
+				var recargo:Number=0;
 				//----------------------------------------------------------------------------------
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 				
 					totGral=Number(totGral.toFixed(2))-Number(Number(adglistpedprod.selectedItem.subtotal).toFixed(2));
 					
+					
 					if(Number(adglistpedprod.selectedItem.porc_desc)>0.0){
 						
 						desc_parcial=Number(adglistpedprod.selectedItem.price)*(Number(adglistpedprod.selectedItem.porc_desc)/100);	
 						totGralDesc=totGralDesc-desc_parcial;
-						//totGralDesc=Number(totGralDesc.toFixed(2))-Number(Number(desc_parcial).toFixed(2));
+						desc_resto=totGral-totGralDesc;
+						
+						
 					
-					}			
+					}	
+					
+					
+					//----------------------------------------Recargo si hay-------------------------------
+					if(tot_recargo>0){
+						
+						recargo=tot_recargo*totGral/100;
+						lbltotalconrecargo.text=Number(totGral+recargo).toFixed(2);
+					
+					}
+						
+					
 					
 					
 				//---------------------------------------------------------------------------------	
 			
 						
 					
-						lblTotDesc.text=totGralDesc.toFixed(2);
+						lblTotApagar.text=totGralDesc.toFixed(2);
 						lblTotGral.text=totGral.toFixed(2);
+						lbldescuento.text=Number(desc_resto).toFixed(2);
+						
+					
 						
 				//---------------------------------------------------------------------------------
 						
@@ -384,10 +543,14 @@
 						txtpreciop.text="";
 						mskcantidad.text="";					
 						btnremover.enabled=false;
-						lblTotDesc.text="0.0";
+						lblTotApagar.text="0.0";
 						lblTotGral.text="0.0";
 						porc_d=0;
-						porc_desc_total=0;						
+						porc_desc_total=0;		
+						lbldescuento.text="0.0";
+						lbltotalconrecargo.text="0.0";
+						desc_resto=0;
+						tot_recargo=0;
 				
 				}
 				//------------------------------------------------------------------------------
@@ -419,10 +582,16 @@
 				txtpreciop.text="";
 				mskcantidad.text="";					
 				btnremover.enabled=false;
-				lblTotDesc.text="0.0";
+				lblTotApagar.text="0.0";
 				lblTotGral.text="0.0";
 				porc_d=0;
 				porc_desc_total=0;
+				lbldescuento.text="0.0";
+				lbltotalconrecargo.text="0.0";
+				desc_resto=0;
+				tot_recargo=0;
+				
+				
 				
 				
 				//--------------------------------------------------------
@@ -430,6 +599,8 @@
 			
 			
 			}
+			
+			
 			
 		]]>
 	</fx:Script>
@@ -449,14 +620,14 @@
 		<mx:NumberFormatter id="nf" precision="2" rounding="none" useThousandsSeparator="false" decimalSeparatorFrom="true"/>
 		<s:ArrayCollection id="arrayDg"/>
 	</fx:Declarations>
-	<s:Label x="27" y="25" fontFamily="Verdana" fontSize="16" text="Producto:"/>
-	<s:Label x="32" y="58" fontFamily="Verdana" fontSize="16" text="Precio $:"/>
-	<s:TextInput id="txtpreciop" x="107" y="46" width="187" fontSize="16" fontWeight="bold"
+	<s:Label x="27" y="14" fontFamily="Verdana" fontSize="16" text="Producto:"/>
+	<s:Label x="32" y="39" fontFamily="Verdana" fontSize="16" text="Precio $:"/>
+	<s:TextInput id="txtpreciop" x="108" y="31" width="187" fontSize="16" fontWeight="bold"
 				 maxChars="6" restrict="0-9."/>
-	<s:Label x="23" y="99" fontFamily="Verdana" fontSize="16" text="Cantidad:"/>
-	<controls:MaskedTextInput id="mskcantidad" x="108" y="89" width="55" fontFamily="Verdana"
+	<s:Label x="23" y="67" fontFamily="Verdana" fontSize="16" text="Cantidad:"/>
+	<controls:MaskedTextInput id="mskcantidad" x="108" y="58" width="55" fontFamily="Verdana"
 							  fontSize="16" fontWeight="bold" maxChars="3" restrict="0-9"/>
-	<mx:AdvancedDataGrid id="adglistpedprod" x="23" y="127" width="747" height="199"
+	<mx:AdvancedDataGrid id="adglistpedprod" x="25" y="86" width="747" height="134"
 						 alternatingItemColors="[#f7eb9e, white]"
 						 dataChange="adglistpedprod_dataChangeHandler(event)"
 						 designViewDataType="flat" doubleClickEnabled="true"
@@ -492,20 +663,32 @@
 									   resizable="false" sortable="false" textAlign="right"/>
 		</mx:columns>
 	</mx:AdvancedDataGrid>
-	<components:AutoComplete id="cmbproduct" x="107" y="11" width="203" allowDuplicates="false"
+	<components:AutoComplete id="cmbproduct" x="108" y="1" width="203" allowDuplicates="false"
 							 dropDownRowCount="10" fontSize="16" fontWeight="bold"
 							 labelField="descripcion" matchType="beginning">
 	</components:AutoComplete>
-	<s:Label x="495" y="380" color="#1D7F03" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="510" y="230" color="#1D7F03" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL GRAL $:" verticalAlign="top"/>
-	<s:Label id="lblTotGral" x="631" y="377" width="124" color="#127B1A" fontFamily="Verdana"
+	<s:Label id="lblTotGral" x="645" y="228" width="124" color="#127B1A" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
-	<s:Label x="264" y="101" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
-	<controls:MaskedTextInput text="0.0" maxChars="3" x="381" y="92" width="43" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingrese un porcentaje de descuento"/>
-	<s:Label x="440" y="350" color="#E2AA14" fontFamily="Verdana" fontSize="16"
-			 text="TOTAL DESCUENTOS $:"/>
-	<s:Label id="lblTotDesc" x="628" y="348" width="127" color="#F9BD05" fontFamily="Verdana"
+	<s:Label x="264" y="69" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
+	<controls:MaskedTextInput text="0.0" maxChars="3" x="381" y="58" width="43" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingrese un porcentaje de descuento"/>
+	<s:Label x="481" y="264" color="#E2AA14" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+			 text="TOTAL A PAGAR $:"/>
+	<s:Label id="lblTotApagar" x="641" y="264" width="127" color="#F9BD05" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
-	<s:Button id="btnremover" x="25" y="343" label="Remover Todo" click="btnremover_clickHandler(event)"
+	<s:Button id="btnremover" x="25" y="233" label="Remover Todo" click="btnremover_clickHandler(event)"
 			  enabled="false" toolTip="Elimina todos Los productos del Listado!!!"/>
+	<s:Label x="514" y="247" width="135" height="14" color="#F84B07" fontFamily="Verdana"
+			 fontSize="16" fontWeight="bold" text="DESCUENTO $:"/>
+	<s:Label id="lbldescuento" x="644" y="247" width="125" color="#F84B07" fontFamily="Verdana"
+			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
+	<s:Label x="425" y="286" width="223" color="#04667F" fontFamily="Verdana" fontSize="16"
+			 fontWeight="bold" text="TOTAL CON RECARGO $:" textAlign="right"/>
+	<s:Label id="lbltotalconrecargo" x="645" y="284" width="124" color="#04667F" fontFamily="Verdana"
+			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
+	<s:Label x="436" y="315" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="TOTAL CON RECARGO %:"
+			 textAlign="right"/>
+	<controls:MaskedTextInput id="mskrecargo" x="645" y="308" width="49" fontFamily="Verdana"
+							  fontSize="16" restrict="0-9."/>
 </s:Group>

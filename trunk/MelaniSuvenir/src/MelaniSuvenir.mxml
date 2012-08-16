@@ -3,7 +3,7 @@
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
 			   xmlns:components="components.*"
-			   width="1043" height="676" minWidth="955" minHeight="600"
+			   width="1263" height="694" minWidth="955" minHeight="600"
 			   creationComplete="application1_creationCompleteHandler(event)">
 	
 	<fx:Declarations>
@@ -13,7 +13,7 @@
 	<!-- Define the menu; dataProvider is the default MenuBar property.
 	Because this uses an XML data provider, specify the labelField and
 	showRoot properties. -->
-	<mx:MenuBar id="myMenuBar" x="10" y="3" width="1023" fontFamily="Verdana" fontSize="16"
+	<mx:MenuBar id="myMenuBar" x="10" y="3" width="1243" fontFamily="Verdana" fontSize="13"
 				fontWeight="bold" itemClick="myMenuBar_itemClickHandler(event)" labelField="@label">
 		<fx:XMLList>
 			<menuitem label="Clientes">
@@ -58,7 +58,7 @@
 			</menuitem>
 		</fx:XMLList>
 	</mx:MenuBar>
-	<mx:Panel id="panelCentral" x="10" y="26" width="1023" height="640">
+	<mx:Panel id="panelCentral" x="10" y="25" width="1243" height="656">
 	</mx:Panel>
 	
 	<fx:Script>
