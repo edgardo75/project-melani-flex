@@ -85,9 +85,9 @@
 					}
 				
 				}
-				Alert.show(getDatosXML());
+				//Alert.show(getDatosXML());
 				btnguardar.enabled=false;
-				//servicePresupuesto.addBudgets(getDatosXML());
+				servicePresupuesto.addBudgets(getDatosXML());
 				
 			
 			
@@ -131,10 +131,11 @@
 					case -2:Alert.show("SE PRODUJO UN ERROR AL PROCESAR LOS DATOS, VERIFIQUE!!!");
 						break;
 					default:{
-						var source:String="http://localhost:8080/WebMelani/ShowReportPresupuesto?presnro="+result;
-						var urlReq:URLRequest= new URLRequest(source);
-						navigateToURL(urlReq,"_blank");
 						Alert.show("Presupuesto N° "+result+" Generado correctamente!!!");
+						/*var source:String="http://localhost:8080/WebMelani/ShowReportPresupuesto?presnro="+result;
+						var urlReq:URLRequest= new URLRequest(source);
+						navigateToURL(urlReq,"_blank");*/
+						
 						blanquearTodosLosControles();
 					
 					}
@@ -161,7 +162,7 @@
 			//--------------------------------------------------------------------------------------
 			protected function operation1_faultHandler(event:FaultEvent):void
 			{
-				Alert.show(event.fault.toString());
+				Alert.show("ERROR!!! "+event.fault.toString());
 				
 			}
 			//-------------------------------------------------------------------------------------
