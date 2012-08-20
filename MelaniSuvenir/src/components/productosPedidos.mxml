@@ -54,9 +54,20 @@
 			
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
-				xmlproduct=new XMLList(event.result);
-					
-				cmbproduct.dataProvider=productlist;
+				//Alert.show(event.result.toString());
+				if(String(event.result.toString())=="LA CONSULTA NO ARROJÓ RESULTADOS")
+					Alert.show("LA CONSULTA NO ARROJÓ RESULTADOS");
+				else{
+					if(String(event.result.toString())=="NADA"){
+							Alert.show("FALLÓ LA CONEXION CON LA BASE DE DATOS, REVISE LOS SERVICIOS SI SE HAN INICIADO CORRECTAMENTE.");
+						}else{
+							xmlproduct=new XMLList(event.result);							
+							cmbproduct.dataProvider=productlist;						
+					    }
+				}
+				
+				
+				
 						
 			}
 			//--------------------------------------------------------------------------
@@ -158,7 +169,7 @@
 									
 									
 									totGral=temptot;
-									Alert.show(totGral.toFixed(2)+" "+lblTotApagar.text);
+									
 										if(Number(lbldescuento.text)!=0)
 											lblTotApagar.text=Number(totGral+Number(lbldescuento.text)).toFixed(2);
 								}

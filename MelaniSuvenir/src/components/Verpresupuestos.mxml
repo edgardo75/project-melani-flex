@@ -7,6 +7,147 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			[Bindable]
+			private var indexPage:int=0;
+			[Bindable]
+			private static var SIZEPAGE:int=100;
+			[Bindable]
+			private var totalReg:int=0;
+			[Bindable]
+			private static var TOTALPAGES:int=0;
+			[Bindable]
+			private var pageEnum:int=0;
+			
+			protected function first_clickHandler(event:MouseEvent):void
+			{
+				if(indexPage==0){
+					first_btn.enabled=false;
+					prev_btn.enabled=false;
+					last_btn.enabled=true;
+					next_btn.enabled=true;
+				}else{
+					indexPage=0;
+					wscalles.paginadoFirebird(indexPage,SIZEPAGE);
+					first_btn.enabled=false;
+					prev_btn.enabled=false;
+					last_btn.enabled=true;
+					next_btn.enabled=true;
+					
+					
+				}
+				
+			}
+			protected function prev_btn_clickHandler(event:MouseEvent):void
+			{
+				
+				if(indexPage==0)
+					first_clickHandler(event);
+				else{
+					indexPage--;
+					if(last_btn.enabled==false){
+						last_btn.enabled=true;
+						next_btn.enabled=true;
+					}
+					if(indexPage==0){
+						first_btn.enabled=false;
+						prev_btn.enabled=false;
+						last_btn.enabled=true;
+						next_btn.enabled=true;
+						
+					}
+					
+					wscalles.paginadoFirebird(indexPage,SIZEPAGE);
+					
+					
+				}
+				
+			}
+			protected function next_btn_clickHandler(event:MouseEvent):void
+			{
+				
+				if(indexPage==TOTALPAGES)
+					last_clickHandler(event);
+				else{
+					indexPage++;
+					if(first_btn.enabled==false){
+						first_btn.enabled=true;
+						prev_btn.enabled=true;
+					}
+					if(indexPage==TOTALPAGES){
+						last_btn.enabled=false;
+						next_btn.enabled=false;
+						first_btn.enabled=true;
+						prev_btn.enabled=true;
+					}
+					
+					wscalles.paginadoFirebird(indexPage,SIZEPAGE);
+					
+				}
+				
+			}
+			protected function last_clickHandler(event:MouseEvent):void
+			{
+				if(indexPage==TOTALPAGES){
+					last_btn.enabled=false;
+					next_btn.enabled=false;
+					first_btn.enabled=true;
+					prev_btn.enabled=true;
+				}else{
+					indexPage=TOTALPAGES;
+					wscalles.paginadoFirebird(indexPage,SIZEPAGE);
+					last_btn.enabled=false;
+					next_btn.enabled=false;
+					first_btn.enabled=true;
+					prev_btn.enabled=true;
+					
+					
+				}
+				
+			}
+			
+			protected function operation1_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function operation1_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function operation2_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function operation2_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function operation3_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function operation3_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+		]]>
+	</fx:Script>
 	<mx:HRule x="28" y="30" width="337" height="0"/>
 	<s:Label x="113" y="12" fontFamily="Verdana" fontWeight="bold" text="VER PRESUPUESTOS MELANI"
 			 textDecoration="underline"/>
@@ -40,4 +181,16 @@
 	</mx:AdvancedDataGrid>
 	<s:Button id="btnImprimir" x="332" y="170" label="Imprimir"/>
 	<s:Button id="btnExportar" x="332" y="210" label="Exportar"/>
+	<s:WebService wsdl="http://localhost:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="true" >
+		<s:operation name="getRecordCount" result="operation1_resultHandler(event)"
+					 fault="operation1_faultHandler(event)">
+			
+		</s:operation>
+		<s:operation name="selectPresupuestoOfTheDay" result="operation2_resultHandler(event)" fault="operation2_faultHandler(event)">
+			
+		</s:operation>
+		<s:operation name="verPresupuestos" result="operation3_resultHandler(event)" fault="operation3_faultHandler(event)">
+			
+		</s:operation>
+	</s:WebService>
 </s:Group>
