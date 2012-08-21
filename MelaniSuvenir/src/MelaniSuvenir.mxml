@@ -31,7 +31,9 @@
 			<menuitem label="Presupuestos">
 				<menuitem type="separator"/>
 				<menuitem label="Cargar Presupuesto"/>
-				<menuitem type="separator"/>			
+				<menuitem type="separator"/>
+				<menuitem label="Ver Presupuestos"/>
+				<menuitem type="separator"/>
 			</menuitem>
 			<menuitem label="Ordenes de Compra">
 				<menuitem type="separator"/>
@@ -64,6 +66,7 @@
 	<fx:Script>
 		<![CDATA[			
 			import components.GuardarPresupuesto;
+			import components.Verpresupuestos;
 			import components.datosProducto;
 			import components.guardarDatosPersonalCliente;
 			
@@ -87,6 +90,10 @@
 				if(event.item.@label=="Cargar Presupuesto"){
 					panelCentral.removeAllChildren();
 					panelCentral.addChild(new GuardarPresupuesto());
+				}
+				if(event.item.@label=="Ver Presupuestos"){
+					panelCentral.removeAllChildren();
+					panelCentral.addChild(new Verpresupuestos());
 				}
 				if(event.item.@label=="Clientes"){
 					verInformeCliente();

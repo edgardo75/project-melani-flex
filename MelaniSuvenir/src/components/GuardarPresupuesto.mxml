@@ -132,9 +132,9 @@
 						break;
 					default:{
 						Alert.show("Presupuesto N° "+result+" Generado correctamente!!!");
-						/*var source:String="http://localhost:8080/WebMelani/ShowReportPresupuesto?presnro="+result;
+						var source:String="http://localhost:8080/WebMelani/ShowReportPresupuesto?presnro="+result;
 						var urlReq:URLRequest= new URLRequest(source);
-						navigateToURL(urlReq,"_blank");*/
+						navigateToURL(urlReq,"_blank");
 						
 						blanquearTodosLosControles();
 					
