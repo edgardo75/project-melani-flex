@@ -3,7 +3,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
-		 width="578" height="372" creationComplete="group1_creationCompleteHandler(event)">
+		 width="666" height="444" creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:WebService id="wspresupuestos" wsdl="http://localhost:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="true" >
@@ -17,7 +17,10 @@
 			<s:operation name="verPresupuestosPaginados" result="operation3_resultHandler(event)" fault="operation3_faultHandler(event)">
 				
 			</s:operation>
-			
+			<s:operation name="searchOneBudget" result="operation4_resultHandler(event)" fault="operation4_faultHandler(event)">
+				
+				
+			</s:operation>
 		</s:WebService>
 		<s:XMLListCollection id="listpresupuestos" source="{xmlPresupuesto.presupuesto}"/>
 		
@@ -25,9 +28,10 @@
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import assets.DataGridUtil;
+			
 			import com.as3xls.xls.ExcelFile;
 			import com.as3xls.xls.Sheet;
-			import assets.DataGridUtil;
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
@@ -35,6 +39,7 @@
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.events.ListEvent;
+			import mx.events.ScrollEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
@@ -57,7 +62,7 @@
 			
 			private var fileReference:FileReference;  
 			
-			
+			//---------------------------------------------------------------------------------------------------
 			protected function first_clickHandler(event:MouseEvent):void
 			{
 				if(indexPage==0){
@@ -77,6 +82,7 @@
 				}
 				
 			}
+			//-------------------------------------------------------------------------------------
 			protected function prev_btn_clickHandler(event:MouseEvent):void
 			{
 				
@@ -102,6 +108,7 @@
 				}
 				
 			}
+			//-------------------------------------------------------------------------------------------
 			protected function next_btn_clickHandler(event:MouseEvent):void
 			{
 				
@@ -125,6 +132,7 @@
 				}
 				
 			}
+			//-------------------------------------------------------------------------------------------------------
 			protected function last_clickHandler(event:MouseEvent):void
 			{
 				if(indexPage==TOTALPAGES){
@@ -144,9 +152,10 @@
 				}
 				
 			}
-			
+			//-------------------------------------------------------------------------------------------------------------
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
+				
 				totalReg = int(event.result.toString());
 				
 				if(totalReg==0)
@@ -169,45 +178,59 @@
 				
 				
 				
+				
 			}
-			
+			//---------------------------------------------------------------------------------------------------------
 			protected function operation1_faultHandler(event:FaultEvent):void
 			{
 				Alert.show("ERROR EN LA CONSULTA!!!");
 				
 			}
-			
+			//--------------------------------------------------------------------------------------------------------
 			protected function operation2_resultHandler(event:ResultEvent):void
 			{
-				//Alert.show(event.result.toString());
+				
 				
 				xmlPresupuesto=new XMLList(event.result);
+			
 				addgrid();
 				
 				
 			}
-			
+			//----------------------------------------------------------------------------------------------
 			private function addgrid():void{
 			
-				//Alert.show(listpresupuestos.toXMLString());	
-				listpresupuestos.refresh();
+			
+				
 				adgPresupuestos.dataProvider=listpresupuestos;
+				if(detallepresupuestos.length>0)
+					detallepresupuestos.removeAll();
+			if(btnExportar.enabled==false)	
+				btnExportar.enabled=true;
+			if(btnImprimir.enabled==false)
+				btnImprimir.enabled=true;
+			if(btnRegargarlistado.enabled==true)
+				btnRegargarlistado.enabled=false;
+			
 				
 			
 			}
-			
+			//----------------------------------------------------------------------------------
 			protected function operation2_faultHandler(event:FaultEvent):void
 			{
 				Alert.show(event.fault.toString());
 				
 			}
 			
+			
+			//--------------------------------------------------------------------------------------------------
 			protected function operation3_resultHandler(event:ResultEvent):void
 			{
-				Alert.show(event.result.toString());
+				xmlPresupuesto=new XMLList(event.result);
+				addgrid();
 				
 			}
-			
+			//---------------------------------------------------------------------------------------------------
 			protected function operation3_faultHandler(event:FaultEvent):void
 			{
 				Alert.show(event.fault.toString());
@@ -216,9 +239,51 @@
 			//----------------------------------------------------------------------------------------------
 			protected function group1_creationCompleteHandler(event:FlexEvent):void
 			{
+				mskidpresupuesto.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				
 				wspresupuestos.getRecordCount();
 				
 				
+			}
+			//------------------------------------------------------------------------------------------------
+			private function transferirFocus(KeyPress:KeyboardEvent):void{
+				
+				if(KeyPress.keyCode==Keyboard.ENTER){
+					if(KeyPress.target.toString().indexOf("mskidpresupuesto")!=-1){
+						
+							//searchIdPresupuesto();
+						indexPage=0;
+						//SIZEPAGE:int=100;
+						totalReg=0;
+						
+						last_btn.enabled=false;
+						next_btn.enabled=false;
+						first_btn.enabled=false;
+						prev_btn.enabled=false;
+						
+						wspresupuestos.searchOneBudget(int(mskidpresupuesto.text));
+						
+					}
+					
+				
+				}
+			
+			
+			}
+			//----------------------------------------------------------------------------------------------
+			private function searchIdPresupuesto():void{
+			 var b:Boolean=false;			
+				for(var i:int=0;i<listpresupuestos.length&&!b;i++){
+					if(listpresupuestos[i].id==int(mskidpresupuesto.text)){
+								adgPresupuestos.selectedIndex=i;
+								b=true;
+					
+					}
+								
+				
+				}
+			
+			
 			}
 			//----------------------------------------------------------------------------------------------
 			
@@ -251,7 +316,7 @@
 				sheet.resize(rowCount+1,adgPresupuestos.columnCount);
 				
 				var columns:Array=adgPresupuestos.columns;
-				Alert.show(" exportando.............."+sheet.rows);
+				
 				var i:int=0;
 				
 				for each (var field:DataGridColumn in columns){  
@@ -331,13 +396,62 @@
 			}
 			//-----------------------------------------------------------	
 			
+			protected function btnImprimir_clickHandler(event:MouseEvent):void
+			{var first:int;
+				var last:int;
+				if(listpresupuestos.length>0){
+					last=listpresupuestos[0].id;
+					first=listpresupuestos[listpresupuestos.length-1].id;
+					
+					var source:String="http://localhost:8080/WebMelani/ShowReportView?first="+first+"&last="+last;
+					var urlReq:URLRequest= new URLRequest(source);
+					navigateToURL(urlReq,"_blank");
+				}
+				
+			}
+			//----------------------------------------------------------------------------
+			
+			
+			
+			protected function operation4_resultHandler(event:ResultEvent):void
+			{
+				if(event.result.toString().indexOf("LA CONSULTA NO ARROJÓ RESULTADOS!!!")!=-1)
+					Alert.show("LA CONSULTA NO ARROJÓ RESULTADOS!!!");
+								
+				else{
+						listpresupuestos.removeAll();
+						xmlPresupuesto=new XMLList(event.result);
+						
+							
+							listpresupuestos.refresh();
+						
+						
+							addgrid();
+						
+							btnRegargarlistado.enabled=true;
+				}
+				
+			}
+			
+			protected function operation4_faultHandler(event:FaultEvent):void
+			{
+				Alert.show(event.fault.toString());
+				
+			}
+			
+			protected function btnRegargarlistado_clickHandler(event:MouseEvent):void
+			{
+				wspresupuestos.getRecordCount();
+				
+			}
+			
 		]]>
 	</fx:Script>
 	<mx:HRule x="28" y="30" width="337" height="0"/>
-	<s:Label x="113" y="12" fontFamily="Verdana" fontWeight="bold" text="VER PRESUPUESTOS MELANI"
+	<s:Label x="151" y="9" fontFamily="Verdana" fontWeight="bold" text="VER PRESUPUESTOS MELANI"
 			 textDecoration="underline"/>
-	<mx:AdvancedDataGrid id="adgPresupuestos" x="10" y="34" width="462" height="160"
-						 designViewDataType="flat" doubleClickEnabled="true"
+	<mx:AdvancedDataGrid id="adgPresupuestos" x="13" y="34" width="462" height="223"
+						 designViewDataType="flat" doubleClickEnabled="true" selectable="true"
 						 itemDoubleClick="adgPresupuestos_itemDoubleClickHandler(event)">
 		<mx:columns>
 			<mx:AdvancedDataGridColumn dataField="id" headerText="N°"/>
@@ -352,22 +466,23 @@
 			<mx:AdvancedDataGridColumn dataField="descuentoresto" visible="false" headerText="Descuento"/>
 			<mx:AdvancedDataGridColumn dataField="porcentajedescuentototal" visible="false" headerText="% Descuento Total"/>
 			<mx:AdvancedDataGridColumn dataField="recargototal" visible="false" headerText="Recargo Total"/>
-			<mx:AdvancedDataGridColumn dataField="porcentajerecargo" visible="false" headerText="% Recargo"/>			
+			<mx:AdvancedDataGridColumn dataField="porcentajerecargo" visible="false" headerText="% Recargo"/>
+			<mx:AdvancedDataGridColumn dataField="observaciones" visible="false" headerText="Observaciones"/>
 		</mx:columns>
 	</mx:AdvancedDataGrid>
-	<s:Button id="first_btn" x="17" y="202" width="50" label="First"
+	<s:Button id="first_btn" x="13" y="265" width="50" label="First"
 			  click="first_clickHandler(event)" enabled="false"/>
-	<s:Button id="prev_btn" x="130" y="202" width="46" label="Prev"
+	<s:Button id="prev_btn" x="126" y="265" width="46" label="Prev"
 			  click="prev_btn_clickHandler(event)" enabled="false"/>
-	<s:Button id="next_btn" x="296" y="202" width="50" label="Next"
+	<s:Button id="next_btn" x="292" y="265" width="50" label="Next"
 			  click="next_btn_clickHandler(event)" enabled="false"/>
-	<s:Button id="last_btn" x="429" y="200" width="47" label="Last" click="last_clickHandler(event)"
+	<s:Button id="last_btn" x="425" y="265" width="47" label="Last" click="last_clickHandler(event)"
 			  enabled="false"/>
-	<s:BorderContainer x="480" y="33" width="88" height="93">
-		<controls:MaskedTextInput id="mskidpresupuesto" x="10" y="24" width="68" toolTip="Ingrese Número de Presupuesto"/>
+	<s:BorderContainer x="523" y="103" width="88" height="93">
+		<controls:MaskedTextInput id="mskidpresupuesto" x="10" y="24" width="68" restrict="0-9" toolTip="Ingrese Número de Presupuesto"/>
 		<s:Label x="10" y="10" text="Buscar"/>
 	</s:BorderContainer>
-	<mx:AdvancedDataGrid id="adgdetallespresupuesto" x="9" y="229" width="463" height="133"
+	<mx:AdvancedDataGrid id="adgdetallespresupuesto" x="12" y="298" width="463" height="133"
 						 designViewDataType="flat">
 		<mx:columns>
 			<mx:AdvancedDataGridColumn dataField="codigo_producto" headerText="Codigo"/>
@@ -375,10 +490,14 @@
 			<mx:AdvancedDataGridColumn dataField="subtotal" headerText="Subtotal"/>
 		</mx:columns>
 	</mx:AdvancedDataGrid>
-	<s:Button id="btnImprimir" x="498" y="249" label="Imprimir"/>
-	<s:Button id="btnExportar" x="498" y="294" label="Copiar Grilla (TAB)" toolTip="Copiar y Pegar listado al portapapeles y visualizar en Excel"
-			  click="DataGridUtil.exportADGToClipboard(adgPresupuestos, false, false)"/>
-	<s:Button id="btnCloseClientComponent" x="559" y="3" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
+	<s:Button id="btnImprimir" x="513" y="343" width="122" label="Ver Presupuestos"
+			  click="btnImprimir_clickHandler(event)" enabled="false"/>
+	<s:Button id="btnExportar" x="513" y="388" label="Copiar Grilla (TAB)"
+			  click="DataGridUtil.exportADGToClipboard(adgPresupuestos, false, false)"
+			  enabled="false" toolTip="Copiar y Pegar listado al portapapeles y visualizar en Excel"/>
+	<s:Button id="btnCloseClientComponent" x="646" y="3" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
+	<s:Button id="btnRegargarlistado" x="513" y="298" width="122" label="Regargar Listado"
+			  click="btnRegargarlistado_clickHandler(event)" enabled="false"/>
 	
 	
 </s:Group>

@@ -224,7 +224,7 @@
 		<mx:FormItem label="Descripcion" labelStyleName="myFormItemLabelStyle">
 			<mx:TextInput id="txtdescripcion" width="214" fontFamily="Verdana" fontSize="18"
 						  fontWeight="bold"
-						  tabIndex="0"
+						  tabIndex="0" restrict="a-z A-Z ñ-Ñ"
 						  toolTip="Ingresar la descripción del producto!!!"
 						   
 						  />			
