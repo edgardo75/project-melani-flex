@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:components="com.hillelcoren.components.*"
+		 width="476" height="300" creationComplete="group1_creationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			[Bindable]
+			private var xmlProvincias:XMLList;
+			[Bindable]
+			private var xmlLocalidades:XMLList;
+			
+			protected function operation1_resultHandler(event:ResultEvent):void
+			{
+				xmlProvincias=new XMLList(event.result);	
+				//Alert.show(String(event.result));
+				cmbprovincias.dataProvider=provinciaslist;
+				cmbprovincias.selectedItemId=18;
+				
+			}
+			
+			protected function operation1_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				Alert.show(event.fault.toString());
+			}
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				serviceProvincias.searchAllProvincias();
+				wslocaliades.searchAllLocalidadesbyidprov(18);
+				
+			}
+			
+			protected function operation2_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				xmlLocalidades=new XMLList(event.result);
+				Alert.show(String(event.result));
+				cmbLocalidades.dataProvider=localidadeslist;
+				cmbLocalidades.selectedItemId=869;
+				
+			}
+			
+			protected function operation2_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<components:AdvancedAutoComplete id="cmbprovincias" x="10" y="21" width="97" allowDuplicates="false"
+									 allowNewValues="false" labelField="descripcion"
+									 matchType="beginning">
+	</components:AdvancedAutoComplete>
+	<s:Label x="10" y="10" text="Provincias"/>
+	<components:AdvancedAutoComplete id="cmbLocalidades" x="124" y="21" labelField="DESCRIPCION" matchType="beginning">
+	</components:AdvancedAutoComplete>
+	<s:Label x="124" y="8" text="Localidades"/>
+	
+	
+	
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<fx:Declarations>
+		<fx:XML xmlns="" id="orientaciones">
+			
+			<Orientaciones>
+				<Orientacion>
+					<ID_ORIENTACION>1</ID_ORIENTACION>
+					<DESCRIPCION>NORTE</DESCRIPCION>							
+				</Orientacion>
+				<Orientacion>
+					<ID_ORIENTACION>2</ID_ORIENTACION>
+					<DESCRIPCION>SUR</DESCRIPCION>
+				</Orientacion>
+				<Orientacion>
+					<ID_ORIENTACION>3</ID_ORIENTACION>
+					<DESCRIPCION>ESTE</DESCRIPCION>
+				</Orientacion>
+				<Orientacion>
+					<ID_ORIENTACION>4</ID_ORIENTACION>
+					<DESCRIPCION>OESTE</DESCRIPCION>
+				</Orientacion>
+			</Orientaciones>
+			
+			
+			
+			
+		</fx:XML>
+		<s:XMLListCollection id="provinciaslist" source="{xmlProvincias.provincia}"/>
+		<s:XMLListCollection id="localidadeslist" source="{xmlLocalidades.Item}"/>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:WebService id="serviceProvincias" wsdl="http://localhost:8080/ServiceProvincias/ProvinciasWs?WSDL" showBusyCursor="true">
+			<s:operation name="searchAllProvincias" result="operation1_resultHandler(event)" fault="operation1_faultHandler(event)">
+				
+			</s:operation>
+		
+		</s:WebService>
+		<s:WebService id="wslocaliades" wsdl="http://localhost:8080/ServicesLocalidades/LocalidadesWs?WSDL" showBusyCursor="true">
+			<s:operation name="searchAllLocalidadesbyidprov" result="operation2_resultHandler(event)" fault="operation2_faultHandler(event)">
+				
+			</s:operation>
+		</s:WebService>
+	</fx:Declarations>
+</s:Group>
