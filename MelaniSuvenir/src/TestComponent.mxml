@@ -4,7 +4,8 @@
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
 			   xmlns:components="components.*"
 			   xmlns:components2="components.GrfxGuru-Adobe-Flex-4.5-Components-86959eb.com.uibuzz.components.*"
-			   minWidth="955" minHeight="600" xmlns:components3="components.com.uibuzz.components.*">
+			   xmlns:components3="components.com.uibuzz.components.*"
+			   height="716" minWidth="955" minHeight="600">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		
@@ -12,6 +13,5 @@
 	</fx:Declarations>
 	<components:getClient x="193" y="36">
 	</components:getClient>
-	<components:GuardarPresupuesto x="89" y="144">
-	</components:GuardarPresupuesto>
+	<components:Domicilios x="73" y="144"/>
 </s:Application>
