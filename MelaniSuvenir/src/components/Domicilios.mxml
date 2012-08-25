@@ -18,7 +18,7 @@
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
 				xmlProvincias=new XMLList(event.result);	
-				//Alert.show(String(event.result));
+				
 				cmbprovincias.dataProvider=provinciaslist;
 				cmbprovincias.selectedItemId=18;
 				
@@ -37,6 +37,8 @@
 				
 				serviceProvincias.searchAllProvincias();
 				wslocaliades.searchAllLocalidadesbyidprov(18);
+				cmborientacion.dataProvider=orientlist;
+				cmborientacion.selectedItemId=1;
 				
 			}
 			
@@ -45,9 +47,9 @@
 				// TODO Auto-generated method stub
 				
 				xmlLocalidades=new XMLList(event.result);
-				Alert.show(String(event.result));
+				
 				cmbLocalidades.dataProvider=localidadeslist;
-				cmbLocalidades.selectedItemId=869;
+				cmbLocalidades.selectedItemId=15758;
 				
 			}
 			
@@ -65,9 +67,12 @@
 									 matchType="beginning">
 	</components:AdvancedAutoComplete>
 	<s:Label x="10" y="10" text="Provincias"/>
-	<components:AdvancedAutoComplete id="cmbLocalidades" x="124" y="21" labelField="DESCRIPCION" matchType="beginning">
+	<components:AdvancedAutoComplete id="cmbLocalidades" x="124" y="21" labelField="descripcion" matchType="beginning">
 	</components:AdvancedAutoComplete>
 	<s:Label x="124" y="8" text="Localidades"/>
+	<components:AdvancedAutoComplete id="cmborientacion" x="292" y="21" width="84" labelField="DESCRIPCION" matchType="word">
+	</components:AdvancedAutoComplete>
+	<s:Label x="292" y="8" text="Orientacion"/>
 	
 	
 	
@@ -79,19 +84,19 @@
 			
 			<Orientaciones>
 				<Orientacion>
-					<ID_ORIENTACION>1</ID_ORIENTACION>
+					<id>1</id>
 					<DESCRIPCION>NORTE</DESCRIPCION>							
 				</Orientacion>
 				<Orientacion>
-					<ID_ORIENTACION>2</ID_ORIENTACION>
+					<id>2</id>
 					<DESCRIPCION>SUR</DESCRIPCION>
 				</Orientacion>
 				<Orientacion>
-					<ID_ORIENTACION>3</ID_ORIENTACION>
+					<id>3</id>
 					<DESCRIPCION>ESTE</DESCRIPCION>
 				</Orientacion>
 				<Orientacion>
-					<ID_ORIENTACION>4</ID_ORIENTACION>
+					<id>4</id>
 					<DESCRIPCION>OESTE</DESCRIPCION>
 				</Orientacion>
 			</Orientaciones>
@@ -100,8 +105,9 @@
 			
 			
 		</fx:XML>
+		<s:XMLListCollection id="orientlist" source="{orientaciones.Orientacion}"/>
 		<s:XMLListCollection id="provinciaslist" source="{xmlProvincias.provincia}"/>
-		<s:XMLListCollection id="localidadeslist" source="{xmlLocalidades.Item}"/>
+		<s:XMLListCollection id="localidadeslist" source="{xmlLocalidades.localidades}"/>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:WebService id="serviceProvincias" wsdl="http://localhost:8080/ServiceProvincias/ProvinciasWs?WSDL" showBusyCursor="true">
 			<s:operation name="searchAllProvincias" result="operation1_resultHandler(event)" fault="operation1_faultHandler(event)">
