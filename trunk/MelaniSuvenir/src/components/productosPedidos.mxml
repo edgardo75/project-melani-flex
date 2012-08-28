@@ -253,7 +253,7 @@
 						}
 						
 						
-						if(col==5 && porc_d==0 && oldValue==0){
+						if(col==5&&oldValue==0){
 							var subtotal:Number=grid.selectedItem.subtotal;
 								
 							
@@ -261,14 +261,16 @@
 							precio=Number(Number(grid.selectedItem.price));
 							porcentajedescuento=newValue;
 							
-							precio_descontado_result_porcentaje=Number(Number(grid.selectedItem.subtotal*(porcentajedescuento/100)));
-													
 							
-							totGralDesc=Number(totGralDesc+Number(precio_descontado_result_porcentaje));
 							
 							grid.selectedItem.prec_descuento=Number(precio-Number(Number(grid.selectedItem.price*(porcentajedescuento/100)))).toFixed(2);
 							
-							grid.selectedItem.subtotal=grid.selectedItem.subtotal-precio_descontado_result_porcentaje;
+							grid.selectedItem.subtotal=grid.selectedItem.prec_descuento*grid.selectedItem.countt;
+							
+							precio_descontado_result_porcentaje=Number(Number(grid.selectedItem.subtotal*(porcentajedescuento/100)));
+							
+							
+							
 							
 						
 								
@@ -276,18 +278,85 @@
 								
 							
 							
+								if(arrayDg.length==1){
+									totGralDesc=Number(grid.selectedItem.prec_descuento);
+									
 								
+								
+								}else{
+									totGralDesc=Number(totGralDesc+Number(grid.selectedItem.prec_descuento));
+									
+									
+								
+								
+								
+								}
 								
 								lbldescuento.text=Number(Number(-totGralDesc)).toFixed(2);
 								lblTotGral.text=String(totGral);
 								
 								lblTotApagar.text=Number(Number(lblTotGral.text)-Number(totGralDesc.toFixed(2))).toFixed(2);
+								
+								
 							
+								//Alert.show("desc subototal "+grid.selectedItem.subtotal+" precio descuento"+grid.selectedItem.prec_descuento);
 								arrayDg.refresh();
 								
 							
 							
 								
+						
+						}else{
+							
+							var tempPrecDesc:Number=0;
+							
+							porcentajedescuento=newValue;
+							
+							tempPrecDesc=grid.selectedItem.prec_descuento;
+							
+							precio=Number(Number(grid.selectedItem.price));
+							
+							grid.selectedItem.prec_descuento=Number(precio-Number(Number(grid.selectedItem.price*(porcentajedescuento/100)))).toFixed(2);
+							
+							
+							grid.selectedItem.subtotal=grid.selectedItem.prec_descuento*grid.selectedItem.countt;
+							
+							precio_descontado_result_porcentaje=Number(Number(grid.selectedItem.subtotal*(porcentajedescuento/100)));
+							
+							arrayDg.refresh();
+							
+							if(arrayDg.length==1){
+								totGralDesc=Number(grid.selectedItem.prec_descuento);
+								
+								
+								
+							}else{
+								var tempTotDesc:Number=0;
+								
+								for(var j:int=0;j<arrayDg.length;j++){
+									//Alert.show(String(arrayDg[j].idproducto));	
+									if(arrayDg[j].idproduct!=grid.selectedItem.idproduct)
+										tempTotDesc=tempTotDesc+Number(arrayDg[j].prec_descuento);
+								
+								}
+								//Alert.show(String(totGralDesc));
+								totGralDesc=0;
+								//Alert.show(String(totGralDesc));
+								totGralDesc=Number(tempTotDesc.toFixed(2))+Number(Number(grid.selectedItem.prec_descuento).toFixed(2));
+								//Alert.show(String(totGralDesc));	
+								
+								
+								
+								
+							}
+							
+							lbldescuento.text=Number(Number(-totGralDesc)).toFixed(2);
+							lblTotGral.text=String(totGral);
+							
+							lblTotApagar.text=Number(Number(lblTotGral.text)-Number(totGralDesc.toFixed(2))).toFixed(2);
+							
+						
+						
 						
 						}
 						
@@ -413,9 +482,9 @@
 					tot_recargo=0;
 					lbltotalconrecargo.text="0.0";
 				}else{
-					    tot_recargo=tot_recargo+Number(mskrecargo.text);
-						recargo=tot_recargo*totGral/100;
-						lbltotalconrecargo.text=Number(totGral+recargo).toFixed(2);
+					    tot_recargo=Number(mskrecargo.text);
+						recargo=tot_recargo*Number(Number(lblTotApagar.text).toFixed(2))/100;
+						lbltotalconrecargo.text=Number(Number(Number(lblTotApagar.text).toFixed(2))+recargo).toFixed(2);
 					
 					
 				
@@ -427,6 +496,7 @@
 			//---------------------------------------------------------------------------------
 			private function calcularDescuentoTotal(evt:CloseEvent):void{
 				var tot_desc:Number;
+				var por_des_tot:Number;
 				var b:Boolean=false;
 				
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
@@ -445,25 +515,25 @@
 				if(b)
 					return;
 				
-				if(porc_d>0)
-					return;
+				//if(porc_d>0)
+					//return;
 				
 				
-				porc_d=Number(Number(txtdescuento.text).toFixed(2));
-				porc_desc_total=Number(Number(porc_desc_total.toFixed(2)) + Number(porc_d.toFixed(2)));
-				
-				
-				
+				por_des_tot=Number(Number(txtdescuento.text).toFixed(2));
+				porc_desc_total=Number(por_des_tot.toFixed(2));
 				
 				
 				
-				if(porc_d==0){
+				
+				
+				
+				/*if(porc_d==0){
 					totGralDesc=0;					
 				}else{			
 			     	totGralDesc=totGralDesc+porc_d;
 					
-				}
-				 tot_desc= Number(Number(lblTotGral.text).toFixed(2))*porc_d/100;
+				}*/
+				 tot_desc= Number(Number(lblTotGral.text).toFixed(2))*por_des_tot/100;
 				 
 				 
 				
