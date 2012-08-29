@@ -28,6 +28,9 @@
 			//--------------------------------------------------------------------------------
 			public function getDatosXML():String{				
 				//--------------------------------------------------------------------------------------
+				var descporcenttot:Number=0;
+				descporcenttot=productordered.porc_desc_total+productordered.temp_tot_porc_desc;
+				
 				
 			 var datosXML:String="<presupuesto>\n"+
 					 "<idpresupuesto>0</idpresupuesto>\n"+
@@ -43,7 +46,7 @@
 					 "<iva>21.00</iva>\n"+
 					 "<totalapagar>"+productordered.lblTotApagar.text+"</totalapagar>\n" +
 					 "<descuentoresto>"+Math.abs(Number(productordered.lbldescuento.text))+"</descuentoresto>\n"+							
-					 "<porc_descuento_total>"+productordered.porc_desc_total+"</porc_descuento_total>\n"+
+					 "<porc_descuento_total>"+descporcenttot.toFixed(2)+"</porc_descuento_total>\n"+
 					 "<detallepresupuesto>\n";
 					 	for(var ii:int=0;ii<productordered.arrayDg.length;ii++){
 							
@@ -85,9 +88,9 @@
 					}
 				
 				}
-				//Alert.show(getDatosXML());
-				btnguardar.enabled=false;
-				servicePresupuesto.addBudgets(getDatosXML());
+				Alert.show(getDatosXML());
+				//btnguardar.enabled=false;
+				//servicePresupuesto.addBudgets(getDatosXML());
 				
 			
 			
@@ -182,8 +185,8 @@
 	<s:BorderContainer x="39" y="33" width="430" height="105">
 		<s:Label x="25" y="32" fontSize="16" text="Nombre:"/>
 		<s:Label x="25" y="69" fontSize="16" text="Apellido:"/>
-		<s:TextInput id="txtnombre" x="87" y="23" width="180" maxChars="40" restrict="a-z A-Z ñ-Ñ"/>
-		<s:TextInput  id="txtapellido" x="88" y="62" width="179" maxChars="20" restrict="a-z A-Z ñ-Ñ "/>
+		<s:TextInput id="txtnombre" tabEnabled="false" x="87" y="23" width="180" maxChars="40" restrict="a-z A-Z ñ-Ñ"/>
+		<s:TextInput  id="txtapellido" tabEnabled="false" x="88" y="62" width="179" maxChars="20" restrict="a-z A-Z ñ-Ñ "/>
 	</s:BorderContainer>
 	<components:productosPedidos id="productordered" x="40" y="138" height="349">
 	</components:productosPedidos>
