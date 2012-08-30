@@ -190,7 +190,7 @@
 							if(col==3){
 								var cannt:Number=(grid.selectedItem.countt);
 								var subtot:Number=(grid.selectedItem.subtotal);
-								
+								Alert.show(String(newValue));
 								
 								
 								if(newValue>0){
@@ -205,7 +205,9 @@
 										
 										
 									}else{
+										
 										grid.selectedItem.subtotal=newValue*grid.selectedItem.price;
+										
 									}
 									
 									
@@ -250,8 +252,19 @@
 									
 									
 									
-									arrayDg.refresh();
+									
+								}else{
+									if(newValue==0){
+										grid.selectedItem.countt="0";
+										grid.selectedItem.subtotal=
+										
+									
+									
+									
+									}		
+								
 								}
+								arrayDg.refresh();
 								
 							}
 							
