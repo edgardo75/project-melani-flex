@@ -181,7 +181,7 @@
 	</fx:Script>
 	
 	<s:Label x="335" y="12" fontFamily="Verdana" fontSize="16" fontWeight="bold"
-			 text="PRESUPUESTO MELANI" textDecoration="underline"/>
+			 text="PRESUPUESTO MELANIE" textDecoration="underline"/>
 	<s:BorderContainer x="39" y="33" width="430" height="105">
 		<s:Label x="25" y="32" fontSize="16" text="Nombre:"/>
 		<s:Label x="25" y="69" fontSize="16" text="Apellido:"/>
