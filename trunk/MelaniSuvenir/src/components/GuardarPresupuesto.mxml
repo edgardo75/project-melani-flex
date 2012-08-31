@@ -205,9 +205,9 @@
 	</s:BorderContainer>
 	<components:productosPedidos id="productordered" x="40" y="138" height="349">
 	</components:productosPedidos>
-	<s:TextArea id="txtobservaciones"  x="559" y="45" width="333" height="93" restrict="A-Z a-z ñ-Ñ" maxChars="5000"/>
+	<s:TextArea id="txtobservaciones"  x="485" y="45" width="402" height="93" restrict="A-Z a-z ñ-Ñ 0-9 % !°¡?¿ ()-;,.[]{}}^`" maxChars="5000"/>
 	<s:Button id="btnguardar" x="417" y="491" width="91" height="33" label="Guardar"
 			  click="btnguardar_clickHandler(event)" enabled="true"/>
-	<s:Label x="560" y="31" fontSize="16" fontWeight="normal" text="Observaciones"/>
+	<s:Label x="487" y="31" fontSize="16" fontWeight="normal" text="Observaciones"/>
 	<s:Button id="btnCloseClientComponent" x="898" y="9" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
 </s:Group>
