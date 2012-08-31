@@ -3,7 +3,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
-		 width="666" height="444" creationComplete="group1_creationCompleteHandler(event)">
+		 width="1130" height="530" creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:WebService id="wspresupuestos" wsdl="http://localhost:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="true" >
@@ -192,7 +192,7 @@
 				
 				
 				xmlPresupuesto=new XMLList(event.result);
-			
+				//Alert.show(xmlPresupuesto.toString());
 				addgrid();
 				
 				
@@ -205,6 +205,7 @@
 				adgPresupuestos.dataProvider=listpresupuestos;
 				if(detallepresupuestos.length>0)
 					detallepresupuestos.removeAll();
+				
 			if(btnExportar.enabled==false)	
 				btnExportar.enabled=true;
 			if(btnImprimir.enabled==false)
@@ -292,6 +293,8 @@
 				detallepresupuestos.source=new XMLList(adgPresupuestos.selectedItem.detallepresupuesto.itemdetallepresupuesto);
 				
 				adgdetallespresupuesto.dataProvider=detallepresupuestos;
+				
+				txtobservaciones.text=adgPresupuestos.selectedItem.observaciones;
 			}
 			
 			//------------------------------------------------------------------------------------------------------------
@@ -448,56 +451,63 @@
 		]]>
 	</fx:Script>
 	<mx:HRule x="28" y="30" width="337" height="0"/>
-	<s:Label x="151" y="9" fontFamily="Verdana" fontWeight="bold" text="VER PRESUPUESTOS MELANI"
+	<s:Label x="450" y="12" fontFamily="Verdana" fontWeight="bold" text="VER PRESUPUESTOS MELANI"
 			 textDecoration="underline"/>
-	<mx:AdvancedDataGrid id="adgPresupuestos" x="13" y="34" width="462" height="223"
+	<mx:AdvancedDataGrid id="adgPresupuestos" x="13" y="34" width="973" height="290"
 						 designViewDataType="flat" doubleClickEnabled="true" selectable="true"
 						 itemDoubleClick="adgPresupuestos_itemDoubleClickHandler(event)">
 		<mx:columns>
-			<mx:AdvancedDataGridColumn dataField="id" headerText="N°"/>
-			<mx:AdvancedDataGridColumn dataField="nombre" headerText="Nombre"/>
-			<mx:AdvancedDataGridColumn dataField="apellido" headerText="Apellido"/>
-			<mx:AdvancedDataGridColumn dataField="totalapagar" headerText="Total a Pagar"/>
-			<mx:AdvancedDataGridColumn dataField="observaciones" visible="false" headerText="Observaciones"/>
+			<mx:AdvancedDataGridColumn dataField="id" headerText="N°" width="50"/>
+			<mx:AdvancedDataGridColumn dataField="nombre" headerText="Nombre" width="150"/>
+			<mx:AdvancedDataGridColumn dataField="apellido" headerText="Apellido" width="150"/>
 			<mx:AdvancedDataGridColumn dataField="usuarioexpidio" visible="false" headerText="Usuario Expidio"/>
 			<mx:AdvancedDataGridColumn dataField="iva" headerText="IVA" visible="false"/>
-			<mx:AdvancedDataGridColumn dataField="fechapresupuesto" visible="false" headerText="Fecha Presupuesto"/>
-			<mx:AdvancedDataGridColumn dataField="fechavalidez" visible="false" headerText="Fecha Validez"/>
-			<mx:AdvancedDataGridColumn dataField="descuentoresto" visible="false" headerText="Descuento"/>
-			<mx:AdvancedDataGridColumn dataField="porcentajedescuentototal" visible="false" headerText="% Descuento Total"/>
-			<mx:AdvancedDataGridColumn dataField="recargototal" visible="false" headerText="Recargo Total"/>
-			<mx:AdvancedDataGridColumn dataField="porcentajerecargo" visible="false" headerText="% Recargo"/>
+			<mx:AdvancedDataGridColumn dataField="fechapresupuesto"  headerText="Fecha Presupuesto"/>
+			<mx:AdvancedDataGridColumn dataField="fechavalidez"  headerText="Fecha Validez"/>
+			<mx:AdvancedDataGridColumn dataField="descuentoresto"  headerText="Descuento"/>
+			<mx:AdvancedDataGridColumn dataField="porcentajedescuentototal"  headerText="% Descuento Total"/>
+			<mx:AdvancedDataGridColumn dataField="recargototal"  headerText="Recargo Total"/>
+			<mx:AdvancedDataGridColumn dataField="porcentajerecargo" headerText="% Recargo"/>
+			<mx:AdvancedDataGridColumn dataField="totalapagar" headerText="Total a Pagar"/>
+			<mx:AdvancedDataGridColumn dataField="total" headerText="Total Gral"/>
 			<mx:AdvancedDataGridColumn dataField="observaciones" visible="false" headerText="Observaciones"/>
 		</mx:columns>
 	</mx:AdvancedDataGrid>
-	<s:Button id="first_btn" x="13" y="265" width="50" label="First"
+	<s:Button id="first_btn" x="13" y="327" width="50" label="First"
 			  click="first_clickHandler(event)" enabled="false"/>
-	<s:Button id="prev_btn" x="126" y="265" width="46" label="Prev"
+	<s:Button id="prev_btn" x="319" y="327" width="46" label="Prev"
 			  click="prev_btn_clickHandler(event)" enabled="false"/>
-	<s:Button id="next_btn" x="292" y="265" width="50" label="Next"
+	<s:Button id="next_btn" x="630" y="326" width="50" label="Next"
 			  click="next_btn_clickHandler(event)" enabled="false"/>
-	<s:Button id="last_btn" x="425" y="265" width="47" label="Last" click="last_clickHandler(event)"
+	<s:Button id="last_btn" x="946" y="326" width="47" label="Last" click="last_clickHandler(event)"
 			  enabled="false"/>
-	<s:BorderContainer x="523" y="103" width="88" height="93">
-		<controls:MaskedTextInput id="mskidpresupuesto" x="10" y="24" width="68" restrict="0-9" toolTip="Ingrese Número de Presupuesto"/>
-		<s:Label x="10" y="10" text="Buscar"/>
+	<s:BorderContainer x="1028" y="51" width="88" height="93">
+		<controls:MaskedTextInput id="mskidpresupuesto" x="10" y="40" width="68" restrict="0-9" toolTip="Ingrese Número de Presupuesto"/>
+		<s:Label x="10" y="26" text="Buscar"/>
 	</s:BorderContainer>
-	<mx:AdvancedDataGrid id="adgdetallespresupuesto" x="12" y="298" width="463" height="133"
+	<mx:AdvancedDataGrid id="adgdetallespresupuesto" x="12" y="356" width="702" height="164"
 						 designViewDataType="flat">
 		<mx:columns>
-			<mx:AdvancedDataGridColumn dataField="codigo_producto" headerText="Codigo"/>
-			<mx:AdvancedDataGridColumn dataField="descripcion_prod" headerText="Descripcion"/>
-			<mx:AdvancedDataGridColumn dataField="subtotal" headerText="Subtotal"/>
+			<mx:AdvancedDataGridColumn dataField="codigo_producto" headerText="Codigo" width="60"/>
+			<mx:AdvancedDataGridColumn dataField="descripcion_prod" headerText="Descripcion" width="70"/>
+			<mx:AdvancedDataGridColumn dataField="cantidad" headerText="Cantidad" width="30"/>
+			<mx:AdvancedDataGridColumn dataField="precio" headerText="Precio" width="30"/>
+			<mx:AdvancedDataGridColumn dataField="descuento" headerText="Descuento" width="30"/>
+			<mx:AdvancedDataGridColumn dataField="precio_desc" headerText="PrecioDesc" width="30"/>						
+			<mx:AdvancedDataGridColumn dataField="subtotal" headerText="Subtotal" width="50"/>
+			
 		</mx:columns>
 	</mx:AdvancedDataGrid>
-	<s:Button id="btnImprimir" x="513" y="343" width="122" label="Ver Presupuestos"
+	<s:Button id="btnImprimir" x="994" y="209" width="122" label="Ver Presupuestos"
 			  click="btnImprimir_clickHandler(event)" enabled="false"/>
-	<s:Button id="btnExportar" x="513" y="388" label="Copiar Grilla (TAB)"
+	<s:Button id="btnExportar" x="994" y="242" label="Copiar Grilla (TAB)"
 			  click="DataGridUtil.exportADGToClipboard(adgPresupuestos, false, false)"
 			  enabled="false" toolTip="Copiar y Pegar listado al portapapeles y visualizar en Excel"/>
-	<s:Button id="btnCloseClientComponent" x="646" y="3" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
-	<s:Button id="btnRegargarlistado" x="513" y="298" width="122" label="Regargar Listado"
+	<s:Button id="btnCloseClientComponent" x="1103" y="10" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
+	<s:Button id="btnRegargarlistado" x="993" y="173" width="122" label="Regargar Listado"
 			  click="btnRegargarlistado_clickHandler(event)" enabled="false"/>
+	<s:TextArea id="txtobservaciones" x="722" y="366" width="402" height="154" maxChars="5000"/>
+	<s:Label x="724" y="353" text="Observaciones"/>
 	
 	
 </s:Group>
