@@ -48,8 +48,11 @@
 					 "<descuentoresto>"+Math.abs(Number(productordered.lbldescuento.text))+"</descuentoresto>\n"+							
 					 "<porc_descuento_total>"+descporcenttot.toFixed(2)+"</porc_descuento_total>\n"+
 					 "<detallepresupuesto>\n";
-					 	for(var ii:int=0;ii<productordered.arrayDg.length;ii++){
+					 	for(var ii:int=0;ii<productordered.arrayDg.length;){
 							
+							if(productordered.arrayDg[ii].price==0||productordered.arrayDg[ii].countt==0||productordered.arrayDg[ii].subtotal==0)
+								ii++;
+							else{
 							datosXML+="<itemdetallespresupuesto>\n"+
 								"<precio>"+productordered.arrayDg[ii].price+"</precio>\n"+
 								"<precio_desc>"+productordered.arrayDg[ii].prec_descuento+"</precio_desc>\n"+
@@ -59,6 +62,8 @@
 								"<fk_id_producto>"+productordered.arrayDg[ii].idproduct+"</fk_id_producto>\n"+
 								"<fk_id_presupuesto>0</fk_id_presupuesto>\n"+	
 								"</itemdetallespresupuesto>\n";
+							ii++
+							}
 						
 						}
 						 						 
@@ -71,9 +76,25 @@
 			protected function btnguardar_clickHandler(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
-				if(productordered.arrayDg.length>0)
+				
+				if(productordered.arrayDg.length>0){
+					var b:Boolean=false;
+					for(var j:int=0;j<productordered.arrayDg.length&&!b;j++){
+						if(productordered.porc_d>0 && productordered.arrayDg[j].porc_desc!=0 && productordered.porc_d!=0){
+							Alert.show("Error al procesar los datos, el descuento es Total o por Productos, corrija!!!");
+							return;
+						}
+						if(String(productordered.arrayDg[j].porc_desc).toString().indexOf(",")!=-1||String(productordered.arrayDg[j].price).toString().indexOf(",")!=-1)
+							b=true;
+					
+					}
+					
+				if(!b)	
 				   Alert.show("Desea Los Datos del Presupuesto?","Confirmar Operación", Alert.YES | Alert.NO, this, guardarpresupuesto, null, Alert.NO);
 				else
+					Alert.show("Corrija la grilla de Productos, el separador decimal es el punto y no la coma!!!");
+				   
+				}else
 					Alert.show("NO HAY PRODUCTOS LISTADOS!!!");
 			}
 			//------------------------------------------------------------------------------------
@@ -81,16 +102,10 @@
 				
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 				
-				for(var i:int=0;i<productordered.arrayDg.length;i++){
-					if(productordered.porc_d>0 && productordered.arrayDg[i].porc_desc!=0 && productordered.porc_d!=0){
-						Alert.show("Error al procesar los datos, descuento total o por productos, corrija!!!");
-						return;
-					}
 				
-				}
-				Alert.show(getDatosXML());
-				//btnguardar.enabled=false;
-				//servicePresupuesto.addBudgets(getDatosXML());
+				//Alert.show(getDatosXML());
+				btnguardar.enabled=false;
+				servicePresupuesto.addBudgets(getDatosXML());
 				
 			
 			
