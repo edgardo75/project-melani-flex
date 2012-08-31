@@ -148,307 +148,373 @@
 						if(col==4){
 							var priceValue:Number=(grid.selectedItem.price);
 							var subtot1:Number=(grid.selectedItem.subtotal);
-							//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-							if(newValue>0){
+							//---------------------------------------------------------------------------------------------------------------------------------------
+							if(col==4&&arrayDg.length==1&&newValue==0){
 								
-								if(grid.selectedItem.prec_descuento>0){
-									var newpricexcountt:Number=grid.selectedItem.countt*Number(Number(newValue).toFixed(2));
-									var descitemporc:Number=Number(Number(grid.selectedItem.porc_desc).toFixed(2))*newValue/100;
-									
-									//Alert.show(newpricexcountt.toFixed(2)+" "+descitemporc.toFixed(2));
-									grid.selectedItem.prec_descuento=Number(Number(newValue-descitemporc).toFixed(2));
-									
-									//grid.selectedItem.subtotal=Number(Number(grid.selectedItem.countt*Number(Number(newValue).toFixed(2))-grid.selectedItem.porc_desc*newValue/100)*grid.selectedItem.countt).toFixed(2);
-									grid.selectedItem.subtotal=Number(Number(newValue-descitemporc)*grid.selectedItem.countt).toFixed(2);
-									
-								}else
-									grid.selectedItem.subtotal=newValue*grid.selectedItem.countt;
+								grid.dataProvider.removeItemAt(grid.selectedIndex);
 								
+								totGral=0;
+								totGralDesc=0;
+								precio_desc=0;
+								txtdescuento.text="0.0";
+								
+								txtpreciop.text="";
+								mskcantidad.text="";					
+								btnremover.enabled=false;
+								lblTotApagar.text="0.0";
+								lblTotGral.text="0.0";
+								porc_d=0;
+								porc_desc_total=0;		
+								lbldescuento.text="0.0";
+								lbltotalconrecargo.text="0.0";
+								desc_resto=0;
+								tot_recargo=0;
+								temp_tot_porc_desc=0;
+								tempPorcDes=0;
+								tempTotDesc=0;
 							
-								
-								if(arrayDg.length==1){
-									totGral=Number(newValue*grid.selectedItem.countt);
-									
-									
-									if(Number(lbldescuento.text)!=0)
-										lblTotApagar.text=Number(totGral-totGralDesc).toFixed(2);
-								}else{
-									temptot=temptot+(newValue*grid.selectedItem.countt);
-									
-									for(var i:int=0;i<arrayDg.length;i++){
-										if(arrayDg[i].idproduct!=grid.selectedItem.idproduct){
-											
-											if(arrayDg[i].porc_desc>0){
-												tempTotDesc=tempTotDesc+Number(Number(arrayDg[i].prec_descuento).toFixed(2));
-												tempPorcDes=tempPorcDes+Number(Number(arrayDg[i].porc_desc).toFixed(2));
-											}
-											if(arrayDg[i].subtotal>0)
-												temptot=temptot+(arrayDg[i].price*arrayDg[i].countt);
-											
-										}
-									
-									}
-									
-									
-									totGral=temptot;
-									
-									totGralDesc=0;
-									
-									totGralDesc=Number(tempTotDesc.toFixed(2))+Number(Number(grid.selectedItem.prec_descuento).toFixed(2));
-									
-									temp_tot_porc_desc=0;
-									
-									temp_tot_porc_desc=Number(tempPorcDes.toFixed(2))+Number(Number(grid.selectedItem.porc_desc).toFixed(2));
-									
-										if(Number(lbldescuento.text)!=0)
-											lblTotApagar.text=Number(totGral+Number(lbldescuento.text)).toFixed(2);
-								}
-								
 							
-							//arrayDg.refresh();
 							}else{
-								if(newValue==0&&grid.selectedIndex>0){
-									var newTotalTemp:Number=0;	
-									for(var l:int=0;l<arrayDg.length;l++){
-										
-										if(arrayDg[l].idproduct!=grid.selectedItem.idproduct){
+								
+											//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+											if(newValue>0){
+												
+												if(grid.selectedItem.prec_descuento>0){
+													var newpricexcountt:Number=grid.selectedItem.countt*Number(Number(newValue).toFixed(2));
+													var descitemporc:Number=Number(Number(grid.selectedItem.porc_desc).toFixed(2))*newValue/100;
+													
+													//Alert.show(newpricexcountt.toFixed(2)+" "+descitemporc.toFixed(2));
+													grid.selectedItem.prec_descuento=Number(Number(newValue-descitemporc).toFixed(2));
+													
+													//grid.selectedItem.subtotal=Number(Number(grid.selectedItem.countt*Number(Number(newValue).toFixed(2))-grid.selectedItem.porc_desc*newValue/100)*grid.selectedItem.countt).toFixed(2);
+													grid.selectedItem.subtotal=Number(Number(newValue-descitemporc)*grid.selectedItem.countt).toFixed(2);
+													
+												}else
+													grid.selectedItem.subtotal=newValue*grid.selectedItem.countt;
+												
 											
-											if(arrayDg[l].porc_desc>0){
-												tempTotDesc=tempTotDesc+Number(arrayDg[l].prec_descuento);
-												tempPorcDes=tempPorcDes+Number(arrayDg[l].porc_desc);
+												
+												if(arrayDg.length==1){
+													totGral=Number(newValue*grid.selectedItem.countt);
+													
+													
+													if(Number(lbldescuento.text)!=0)
+														lblTotApagar.text=Number(totGral-totGralDesc).toFixed(2);
+												}else{
+													temptot=temptot+(newValue*grid.selectedItem.countt);
+													
+													for(var i:int=0;i<arrayDg.length;i++){
+														if(arrayDg[i].idproduct!=grid.selectedItem.idproduct){
+															
+															if(arrayDg[i].porc_desc>0){
+																tempTotDesc=tempTotDesc+Number(Number(arrayDg[i].prec_descuento).toFixed(2));
+																tempPorcDes=tempPorcDes+Number(Number(arrayDg[i].porc_desc).toFixed(2));
+															}
+															if(arrayDg[i].subtotal>0)
+																temptot=temptot+(arrayDg[i].price*arrayDg[i].countt);
+															
+														}
+													
+													}
+													
+													
+													totGral=temptot;
+													
+													totGralDesc=0;
+													
+													totGralDesc=Number(tempTotDesc.toFixed(2))+Number(Number(grid.selectedItem.prec_descuento).toFixed(2));
+													
+													temp_tot_porc_desc=0;
+													
+													temp_tot_porc_desc=Number(tempPorcDes.toFixed(2))+Number(Number(grid.selectedItem.porc_desc).toFixed(2));
+													
+														if(Number(lbldescuento.text)!=0)
+															lblTotApagar.text=Number(totGral+Number(lbldescuento.text)).toFixed(2);
+												}
+												
+											
+											//arrayDg.refresh();
+											}else{
+												if(newValue==0&&grid.selectedIndex>0&&col==4){
+													grid.selectedItem.price="0.0";
+													grid.selectedItem.subtotal="0.0";
+													grid.selectedItem.prec_descuento="0.0";
+													grid.selectedItem.porc_desc="0.0";
+													var newTotalTemp:Number=0;	
+													for(var l:int=0;l<arrayDg.length;l++){
+														
+														if(arrayDg[l].idproduct!=grid.selectedItem.idproduct){
+															
+															if(arrayDg[l].porc_desc>0){
+																tempTotDesc=tempTotDesc+Number(arrayDg[l].prec_descuento);
+																tempPorcDes=tempPorcDes+Number(arrayDg[l].porc_desc);
+															}
+															if(arrayDg[l].subtotal>0)
+																newTotalTemp=newTotalTemp+Number(Number(arrayDg[l].price*arrayDg[l].countt).toFixed(2));
+															
+														}
+													}
+													
+													totGral=newTotalTemp;
+													
+													totGralDesc=0;
+													
+													totGralDesc=Number(tempTotDesc.toFixed(2));//+Number(Number(grid.selectedItem.prec_descuento).toFixed(2));
+													
+													temp_tot_porc_desc=0;
+													
+													temp_tot_porc_desc=Number(tempPorcDes.toFixed(2));//+Number(Number(grid.selectedItem.porc_desc).toFixed(2));
+													
+													
+													//grid.dataProvider.removeItemAt(grid.selectedIndex);
+												
+												
+												}else{
+												
+													var newTotalTemp1:Number=0;	
+													
+													grid.selectedItem.price="0.0";
+													grid.selectedItem.subtotal="0.0";
+													grid.selectedItem.prec_descuento="0.0";
+													grid.selectedItem.porc_desc="0.0";
+													
+													for(var lm:int=0;lm<arrayDg.length;lm++){
+														
+														if(arrayDg[lm].idproduct!=grid.selectedItem.idproduct){
+															
+															if(arrayDg[lm].porc_desc>0){
+																tempTotDesc=tempTotDesc+Number(arrayDg[lm].prec_descuento);
+																tempPorcDes=tempPorcDes+Number(arrayDg[lm].porc_desc);
+															}
+															if(arrayDg[lm].subtotal>0)
+															newTotalTemp1=newTotalTemp1+Number(Number(arrayDg[lm].price*arrayDg[lm].countt).toFixed(2));
+															
+														}
+													}
+													
+													totGral=newTotalTemp1;
+													
+													totGralDesc=0;
+													
+													totGralDesc=Number(tempTotDesc.toFixed(2));//+Number(Number(grid.selectedItem.prec_descuento).toFixed(2));
+													
+													temp_tot_porc_desc=0;
+													
+													temp_tot_porc_desc=Number(tempPorcDes.toFixed(2));//+Number(Number(newValue).toFixed(2));
+												
+												
+												
+												
+												
+												}
+											
+											
 											}
-											if(arrayDg[l].subtotal>0)
-												newTotalTemp=newTotalTemp+Number(Number(arrayDg[l].price*arrayDg[l].countt).toFixed(2));
-											
-										}
-									}
-									
-									totGral=newTotalTemp;
-									
-									totGralDesc=0;
-									
-									totGralDesc=Number(tempTotDesc.toFixed(2));//+Number(Number(grid.selectedItem.prec_descuento).toFixed(2));
-									
-									temp_tot_porc_desc=0;
-									
-									temp_tot_porc_desc=Number(tempPorcDes.toFixed(2));//+Number(Number(grid.selectedItem.porc_desc).toFixed(2));
-									
-									
-									grid.dataProvider.removeItemAt(grid.selectedIndex);
-								
-								
-								}else{
-								
-									var newTotalTemp1:Number=0;	
-									
-									grid.selectedItem.price="0.0";
-									grid.selectedItem.subtotal="0.0";
-									grid.selectedItem.prec_descuento="0.0";
-									grid.selectedItem.porc_desc="0.0";
-									
-									for(var lm:int=0;lm<arrayDg.length;lm++){
-										
-										if(arrayDg[lm].idproduct!=grid.selectedItem.idproduct){
-											
-											if(arrayDg[lm].porc_desc>0){
-												tempTotDesc=tempTotDesc+Number(arrayDg[lm].prec_descuento);
-												tempPorcDes=tempPorcDes+Number(arrayDg[lm].porc_desc);
-											}
-											if(arrayDg[lm].subtotal>0)
-											newTotalTemp1=newTotalTemp1+Number(Number(arrayDg[lm].price*arrayDg[lm].countt).toFixed(2));
-											
-										}
-									}
-									
-									totGral=newTotalTemp1;
-									
-									totGralDesc=0;
-									
-									totGralDesc=Number(tempTotDesc.toFixed(2));//+Number(Number(grid.selectedItem.prec_descuento).toFixed(2));
-									
-									temp_tot_porc_desc=0;
-									
-									temp_tot_porc_desc=Number(tempPorcDes.toFixed(2));//+Number(Number(newValue).toFixed(2));
-								
-								
-								
-								
-								
-								}
-							
-							
+											//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 							}
-							//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-							
+							//---------------------------------------------------------------------------------------------------------------------------------
 						
 						}else{
 							if(col==3){
 								var cannt:Number=(grid.selectedItem.countt);
 								var subtot:Number=(grid.selectedItem.subtotal);
-								
-								
-								
-								if(col==3&&newValue>0){
-									var toti:Number=0;	
-									if(grid.selectedItem.prec_descuento>0){
-										
-										
-										grid.selectedItem.subtotal=newValue*Number(Number(grid.selectedItem.prec_descuento).toFixed(2));
-										
-										
-										
-										
-										
-									}else{
-										
-										grid.selectedItem.subtotal=newValue*grid.selectedItem.price;
-										
-										
-									}
+								//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+								if(col==3&&arrayDg.length==1&&newValue==0){
 									
-									toti=toti+Number(Number(grid.selectedItem.price*newValue).toFixed(2));
+									grid.dataProvider.removeItemAt(grid.selectedIndex);
 									
+									totGral=0;
+									totGralDesc=0;
+									precio_desc=0;
+									txtdescuento.text="0.0";
+									
+									txtpreciop.text="";
+									mskcantidad.text="";					
+									btnremover.enabled=false;
+									lblTotApagar.text="0.0";
+									lblTotGral.text="0.0";
+									porc_d=0;
+									porc_desc_total=0;		
+									lbldescuento.text="0.0";
+									lbltotalconrecargo.text="0.0";
+									desc_resto=0;
+									tot_recargo=0;
+									temp_tot_porc_desc=0;
+									tempPorcDes=0;
+									tempTotDesc=0;
+									
+								//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	
+								}else{
 									
 								
-										if(arrayDg.length==1){
-											totGral=Number(grid.selectedItem.price*newValue);
-											if(Number(lbldescuento.text)!=0){
-										
-												lblTotApagar.text=Number(String(totGral-totGralDesc)).toFixed(2);
-											}
-										}else{
-											
-											
-											
-											
-											
-										
-											
-											for(var n:int=0;n<arrayDg.length;n++){
-												if(arrayDg[n].idproduct!=grid.selectedItem.idproduct){
-													
-													if(arrayDg[n].subtotal>0)
-														toti=toti+Number(Number(arrayDg[n].price*arrayDg[n].countt).toFixed(2));
-													
-													if(arrayDg[n].porc_desc>0&&arrayDg[n].subtotal>0){
-														tempTotDesc=tempTotDesc+Number(arrayDg[n].prec_descuento);
-														tempPorcDes=tempPorcDes+Number(arrayDg[n].porc_desc);
-													
+								
+												if(col==3&&newValue>0){
+													var toti:Number=0;	
+													if(grid.selectedItem.prec_descuento>0){
+														
+														
+														grid.selectedItem.subtotal=newValue*Number(Number(grid.selectedItem.prec_descuento).toFixed(2));
+														
+														
+														
+														
+														
+													}else{
+														
+														grid.selectedItem.subtotal=newValue*grid.selectedItem.price;
+														
+														
 													}
 													
+													toti=toti+Number(Number(grid.selectedItem.price*newValue).toFixed(2));
 													
-												}
-											}
-										
-										
-										totGralDesc=0;
-										temp_tot_porc_desc=0;
-										
-										if(grid.selectedItem.prec_descuento>0){
-											totGralDesc=Number(tempTotDesc.toFixed(2))+Number(Number(grid.selectedItem.prec_descuento).toFixed(2));
-											temp_tot_porc_desc=Number(tempPorcDes.toFixed(2))+Number(Number(grid.selectedItem.porc_desc).toFixed(2));
-										}else{
-											totGralDesc=Number(tempTotDesc.toFixed(2));
-											temp_tot_porc_desc=Number(tempPorcDes.toFixed(2));
-										}
-										
-										
-										
-										
-										
-											
-										
-											totGral=toti;
-											
-										
-											
+													
 												
-										}
-											
-									
-									
-									
-									
-									
-								}else{
-									var tottemp:Number=0;
-									if(col==3&&newValue==0&&grid.selectedIndex>0){
-										
-										
-										
-										
-										for(var m:int=0;m<arrayDg.length;m++){
-											if(arrayDg[m].idproduct!=grid.selectedItem.idproduct){
-												
-												if(arrayDg[m].porc_desc>0){
-													tempTotDesc=tempTotDesc+Number(arrayDg[m].prec_descuento);
-													tempPorcDes=tempPorcDes+Number(arrayDg[m].porc_desc);
-												}
-												if(arrayDg[m].subtotal>0)
-													tottemp=tottemp+Number(Number(arrayDg[m].price*arrayDg[m].countt).toFixed(2));
-											}
-										}
-										
-										totGral=tottemp;
-									
-										totGralDesc=0;
-									
-										totGralDesc=Number(tempTotDesc.toFixed(2));//+Number(Number(grid.selectedItem.prec_descuento).toFixed(2));
-										
-										temp_tot_porc_desc=0;
-									
-										temp_tot_porc_desc=Number(tempPorcDes.toFixed(2));//+Number(Number(porc_desc).toFixed(2));
-										
-										grid.dataProvider.removeItemAt(grid.selectedIndex);
-										
-										
-									}else{
-										if(col==3&&newValue==0&&grid.selectedIndex==0)
-									
-										grid.selectedItem.countt="0";
-										grid.selectedItem.subtotal="0.00";
-										grid.selectedItem.porc_desc="";
-										grid.selectedItem.prec_descuento="0.0";
-										
-										//totGral=totGral-subtot;
-										
-										for(var r:int=0;r<arrayDg.length;r++){
-											if(arrayDg[r].idproduct!=grid.selectedItem.idproduct){
-												
-												if(arrayDg[r].porc_desc>0){
-													tempTotDesc=tempTotDesc+Number(arrayDg[r].prec_descuento);
-													tempPorcDes=tempPorcDes+Number(arrayDg[r].porc_desc);
-												}
-												if(arrayDg[r].subtotal>0)
-													tottemp=tottemp+Number(Number(arrayDg[r].price*arrayDg[r].countt).toFixed(2));
-											}
-										}
-										
-										totGral=tottemp;
-										
-										totGralDesc=0;
-										
-										totGralDesc=Number(tempTotDesc.toFixed(2));//+Number(Number(grid.selectedItem.prec_descuento).toFixed(2));
-										
-										temp_tot_porc_desc=0;
-										
-										temp_tot_porc_desc=Number(tempPorcDes.toFixed(2));//+Number(Number(porc_desc).toFixed(2));
-										
-										grid.dataProvider.removeItemAt(grid.selectedIndex);
-									
-									
-									}
-										
-									
-									
-									
-									}		
+														if(arrayDg.length==1){
+															totGral=Number(grid.selectedItem.price*newValue);
+															if(Number(lbldescuento.text)!=0){
+														
+																lblTotApagar.text=Number(String(totGral-totGralDesc)).toFixed(2);
+															}
+														}else{
+															
+															
+															
+															
+															
+														
+															
+															for(var n:int=0;n<arrayDg.length;n++){
+																if(arrayDg[n].idproduct!=grid.selectedItem.idproduct){
+																	
+																	if(arrayDg[n].subtotal>0)
+																		toti=toti+Number(Number(arrayDg[n].price*arrayDg[n].countt).toFixed(2));
+																	
+																	if(arrayDg[n].porc_desc>0&&arrayDg[n].subtotal>0){
+																		tempTotDesc=tempTotDesc+Number(arrayDg[n].prec_descuento);
+																		tempPorcDes=tempPorcDes+Number(arrayDg[n].porc_desc);
+																	
+																	}
+																	
+																	
+																}
+															}
+														
+														
+														totGralDesc=0;
+														temp_tot_porc_desc=0;
+														
+														if(grid.selectedItem.prec_descuento>0){
+															totGralDesc=Number(tempTotDesc.toFixed(2))+Number(Number(grid.selectedItem.prec_descuento).toFixed(2));
+															temp_tot_porc_desc=Number(tempPorcDes.toFixed(2))+Number(Number(grid.selectedItem.porc_desc).toFixed(2));
+														}else{
+															totGralDesc=Number(tempTotDesc.toFixed(2));
+															temp_tot_porc_desc=Number(tempPorcDes.toFixed(2));
+														}
+														
+														
+														
+														
+														
+															
+														
+															totGral=toti;
+															
+														
+															
+																
+														}
+															
+													
+													
+													
+													
+													
+												}else{
+													var tottemp:Number=0;
+													if(col==3&&newValue==0&&grid.selectedIndex>0){
+														
+														grid.selectedItem.countt="0";
+														grid.selectedItem.subtotal="0.00";
+														grid.selectedItem.porc_desc="0.0";
+														grid.selectedItem.prec_descuento="0.0";
+														
+														
+														for(var m:int=0;m<arrayDg.length;m++){
+															if(arrayDg[m].idproduct!=grid.selectedItem.idproduct){
+																
+																if(arrayDg[m].porc_desc>0){
+																	tempTotDesc=tempTotDesc+Number(arrayDg[m].prec_descuento);
+																	tempPorcDes=tempPorcDes+Number(arrayDg[m].porc_desc);
+																}
+																if(arrayDg[m].subtotal>0)
+																	tottemp=tottemp+Number(Number(arrayDg[m].price*arrayDg[m].countt).toFixed(2));
+															}
+														}
+														
+														totGral=0;
+														
+														totGral=tottemp;
+													
+														totGralDesc=0;
+													
+														totGralDesc=Number(tempTotDesc.toFixed(2));//+Number(Number(grid.selectedItem.prec_descuento).toFixed(2));
+														
+														temp_tot_porc_desc=0;
+													
+														temp_tot_porc_desc=Number(tempPorcDes.toFixed(2));//+Number(Number(porc_desc).toFixed(2));
+														
+														//grid.dataProvider.removeItemAt(grid.selectedIndex);
+														
+														
+													}else{
+														if(col==3&&newValue==0&&grid.selectedIndex==0)
+													
+														grid.selectedItem.countt="0";
+														grid.selectedItem.subtotal="0.00";
+														grid.selectedItem.porc_desc="0.0";
+														grid.selectedItem.prec_descuento="0.0";
+														
+														//totGral=totGral-subtot;
+														
+														for(var r:int=0;r<arrayDg.length;r++){
+															if(arrayDg[r].idproduct!=grid.selectedItem.idproduct){
+																
+																if(arrayDg[r].porc_desc>0){
+																	tempTotDesc=tempTotDesc+Number(arrayDg[r].prec_descuento);
+																	tempPorcDes=tempPorcDes+Number(arrayDg[r].porc_desc);
+																}
+																if(arrayDg[r].subtotal>0)
+																	tottemp=tottemp+Number(Number(arrayDg[r].price*arrayDg[r].countt).toFixed(2));
+															}
+														}
+														
+														totGral=tottemp;
+														
+														totGralDesc=0;
+														
+														totGralDesc=Number(tempTotDesc.toFixed(2));//+Number(Number(grid.selectedItem.prec_descuento).toFixed(2));
+														
+														temp_tot_porc_desc=0;
+														
+														temp_tot_porc_desc=Number(tempPorcDes.toFixed(2));//+Number(Number(porc_desc).toFixed(2));
+														
+														//grid.dataProvider.removeItemAt(grid.selectedIndex);
+													
+													
+													}
+														
+													
+													
+													
+													}
+								  }
 								
 								}else{
 									//-----------------------------------------------------------------------------------------------------------------------------
 									if(col==5&&oldValue==0){
 										//var subtotal:Number=grid.selectedItem.subtotal;
-										var tempsutoti:Number=0;
+										//var tempsutoti:Number=0;
 										
 										
 										
@@ -487,15 +553,15 @@
 														tempTotDesc=tempTotDesc+Number(arrayDg[p].prec_descuento);
 														tempPorcDes=tempPorcDes+Number(arrayDg[p].porc_desc);
 													}
-													if(arrayDg[p].subtotal>0)
-														tempsutoti=tempsutoti+Number(Number(arrayDg[p].price*arrayDg[p].countt).toFixed(2))
+													/*if(arrayDg[p].subtotal>0)
+														tempsutoti=tempsutoti+Number(Number(arrayDg[p].price*arrayDg[p].countt).toFixed(2))*/
 													
 												}
 											}
 											
-											totGral=0;
+											/*totGral=0;
 											
-											totGral=tempsutoti+Number(Number(grid.selectedItem.price*grid.selectedItem.countt).toFixed(2));
+											totGral=tempsutoti+Number(Number(grid.selectedItem.price*grid.selectedItem.countt).toFixed(2));*/
 											
 											totGralDesc=0;
 											
@@ -513,10 +579,10 @@
 											
 										}
 										
-										lbldescuento.text=Number(Number(-totGralDesc)).toFixed(2);
+										/*lbldescuento.text=Number(Number(-totGralDesc)).toFixed(2);
 										lblTotGral.text=String(totGral);
 										
-										lblTotApagar.text=Number(Number(lblTotGral.text)-Number(totGralDesc.toFixed(2))).toFixed(2);
+										lblTotApagar.text=Number(Number(lblTotGral.text)-Number(totGralDesc.toFixed(2))).toFixed(2);*/
 										
 										
 										
@@ -528,7 +594,7 @@
 										
 										
 									}else{
-										var temtot_1:Number=0;
+										//var temtot_1:Number=0;
 										if(col==5&&newValue==0){
 										
 											grid.selectedItem.subtotal=grid.selectedItem.price*grid.selectedItem.countt;
@@ -548,14 +614,14 @@
 														tempTotDesc=tempTotDesc+Number(arrayDg[j].prec_descuento);
 														tempPorcDes=tempPorcDes+Number(arrayDg[j].porc_desc);
 													}
-													if(arrayDg[j].subtotal>0)
-														temtot_1=temtot_1+Number(Number(arrayDg[j].price*arrayDg[j].countt).toFixed(2));
+													/*if(arrayDg[j].subtotal>0)
+														temtot_1=temtot_1+Number(Number(arrayDg[j].price*arrayDg[j].countt).toFixed(2));*/
 														
 												}
 												
-												totGral=0;
+												/*totGral=0;
 												
-												totGral=temtot_1+Number(Number(arrayDg[j].price*arrayDg[j].countt).toFixed(2));
+												totGral=temtot_1+Number(Number(grid.selectedItem.price*grid.selectedItem.countt).toFixed(2));*/
 												
 												totGralDesc=0;
 												
@@ -573,53 +639,56 @@
 											
 										}else{
 											
+											if(col==5&&newValue>0){
 											
-											
-											porcentajedescuento=newValue;
-											
-											tempPrecDesc=grid.selectedItem.prec_descuento;
-											
-											precio=Number(Number(grid.selectedItem.price));
-											
-											grid.selectedItem.prec_descuento=Number(precio-Number(Number(grid.selectedItem.price*(porcentajedescuento/100)))).toFixed(2);
-											
-											
-											grid.selectedItem.subtotal=grid.selectedItem.prec_descuento*grid.selectedItem.countt;
-											
-											precio_descontado_result_porcentaje=Number(Number(grid.selectedItem.subtotal*(porcentajedescuento/100)));
-											
-											arrayDg.refresh();
-											
-											if(arrayDg.length==1){
-												totGralDesc=Number(grid.selectedItem.prec_descuento);
-												
-												
-												
-											}else{
-												
-												
-												for(var k:int=0;k<arrayDg.length;k++){
+													porcentajedescuento=newValue;
+													
+													tempPrecDesc=grid.selectedItem.prec_descuento;
+													
+													precio=Number(Number(grid.selectedItem.price));
+													
+													grid.selectedItem.prec_descuento=Number(precio-Number(Number(grid.selectedItem.price*(porcentajedescuento/100)))).toFixed(2);
+													
+													
+													grid.selectedItem.subtotal=grid.selectedItem.prec_descuento*grid.selectedItem.countt;
+													
+													precio_descontado_result_porcentaje=Number(Number(grid.selectedItem.subtotal*(porcentajedescuento/100)));
+													
+													//arrayDg.refresh();
+													
+													if(arrayDg.length==1){
+														totGralDesc=Number(grid.selectedItem.prec_descuento);
 														
-													if(arrayDg[k].idproduct!=grid.selectedItem.idproduct){
-														tempTotDesc=tempTotDesc+Number(arrayDg[k].prec_descuento);
-														tempPorcDes=tempPorcDes+Number(arrayDg[k].porc_desc);
+														
+														
+													}else{
+														
+														
+														for(var k:int=0;k<arrayDg.length;k++){
+																
+															if(arrayDg[k].idproduct!=grid.selectedItem.idproduct){
+																tempTotDesc=tempTotDesc+Number(arrayDg[k].prec_descuento);
+																tempPorcDes=tempPorcDes+Number(arrayDg[k].porc_desc);
+															}
+															/*if(arrayDg[k].subtotal>0)
+																temtot_1=temtot_1+Number(Number(arrayDg[j].price*arrayDg[j].countt).toFixed(2));*/
+														}
+														
+														totGralDesc=0;
+														
+														totGralDesc=Number(tempTotDesc.toFixed(2))+Number(Number(grid.selectedItem.prec_descuento).toFixed(2));
+														
+														temp_tot_porc_desc=0;
+														
+														temp_tot_porc_desc=Number(tempPorcDes.toFixed(2))+Number(Number(newValue).toFixed(2));
+														
+														/*totGral=0;
+														
+														totGral=temtot_1+Number(Number(grid.selectedItem.price*grid.selectedItem.countt).toFixed(2));*/
+														
+														
+														
 													}
-													if(arrayDg[k].subtotal>0)
-														temtot_1=temtot_1+Number(Number(arrayDg[j].price*arrayDg[j].countt).toFixed(2));
-												}
-												
-												totGralDesc=0;
-												
-												totGralDesc=Number(tempTotDesc.toFixed(2))+Number(Number(grid.selectedItem.prec_descuento).toFixed(2));
-												
-												temp_tot_porc_desc=0;
-												
-												temp_tot_porc_desc=Number(tempPorcDes.toFixed(2))+Number(Number(newValue).toFixed(2));
-												
-												totGral=temtot_1+Number(Number(arrayDg[j].price*arrayDg[j].countt).toFixed(2));
-												
-												
-												
 											}
 										}
 										
@@ -955,7 +1024,7 @@
 						totGralDesc=0;
 						precio_desc=0;
 						txtdescuento.text="0.0";
-						mskcantidad.setFocus();
+						
 						txtpreciop.text="";
 						mskcantidad.text="";					
 						btnremover.enabled=false;
@@ -967,6 +1036,9 @@
 						lbltotalconrecargo.text="0.0";
 						desc_resto=0;
 						tot_recargo=0;
+						temp_tot_porc_desc=0;
+						tempPorcDes=0;
+						tempTotDesc=0;
 				
 				}else{
 					lblTotApagar.text=totGralDesc.toFixed(2);
