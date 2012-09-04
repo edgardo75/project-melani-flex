@@ -5,7 +5,7 @@
 			   xmlns:components="components.*"
 			   xmlns:components2="components.GrfxGuru-Adobe-Flex-4.5-Components-86959eb.com.uibuzz.components.*"
 			   xmlns:components3="components.com.uibuzz.components.*"
-			   height="716" minWidth="955" minHeight="600">
+			   height="830" minWidth="955" minHeight="600">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		
@@ -14,4 +14,5 @@
 	<components:getClient x="193" y="36">
 	</components:getClient>
 	<components:Domicilios x="73" y="144"/>
+	<components:Telefonos x="102" y="437"/>
 </s:Application>
