@@ -10,7 +10,7 @@
 		 width="484" height="344" creationComplete="init(event)">
 	
 	<fx:Declarations>
-		
+		<s:XMLListCollection id="infoclient" source="{xmlInfoClient.item}"/>
 			<s:WebService id="serviceCLI" 
 						  wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL" 
 						  useProxy="false"
@@ -129,7 +129,6 @@
 									 toolTip="Seleccione el Genero del Cliente M o F!!!"
 									 verticalScrollPolicy="on">
 	</components:AdvancedAutoComplete>
-	<s:Button id="btnClose" x="458" y="10" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
 	<mx:HRule x="19" y="165" width="441" height="2"/>
 	
 	<fx:Script>
@@ -140,6 +139,9 @@
 			import mx.rpc.events.ResultEvent;
 			[Bindable]
 				private var respuesta:String;
+			[Bindable]
+			private var xmlInfoClient:XMLList;
+			
 			private function tranferirFocus(keyPress:KeyboardEvent):void{
 				
 				if(keyPress.keyCode==Keyboard.ENTER&&respuesta.indexOf("El Cliente ya se encuentra Registrado!!!")!=-1)
@@ -165,7 +167,7 @@
 											focusManager.setFocus(txtapellido);
 									
 									
-									if(keyPress.currentTarget.toString().indexOf("txtdocumento")!=-1)
+									if(keyPress.currentTarget.toString().indexOf("txtdocumento")!=-1&&infoclient.length>0)
 											focusManager.setFocus(txtnombre);
 									
 									if(keyPress.currentTarget.toString().indexOf("txtemail")!=-1&&respuesta.indexOf("<cliente>NO ENCONTRADO</cliente>")!=-1)
@@ -193,10 +195,7 @@
 				//----------------------------------------
 			}
 			
-			protected function btnClose_clickHandler(event:MouseEvent):void
-			{
-				this.removeAllElements();
-			}
+			
 			public function clearComponenteCliente():void{
 					
 				txtapellido.text="";
@@ -214,16 +213,40 @@
 			{
 				respuesta ="";
 				respuesta = event.result.toString();
-				//Alert.show(respuesta.indexOf("<observaciones>").toString().toString());
-				//if(respuesta.indexOf("<cliente>NO ENCONTRADO</cliente>")!=-1)
-					//focusManager.setFocus(txtnombre);
+				//Alert.show(event.result.toString());
+				xmlInfoClient=new XMLList(event.result);
+				
+				if(respuesta.indexOf("<cliente>NO ENCONTRADO</cliente>")!=-1){
+					infoclient.removeAll();
+					infoclient.refresh();
+					clearComponenteCliente();
+				}
 					
 				//}else{
 				if(respuesta.indexOf("<observaciones>")!=-1){					
-					Alert.show("El Cliente ya se encuentra Registrado!!!");
+					//Alert.show("El Cliente ya se encuentra Registrado!!!");
 					//focusManager.setFocus(txtdocumento);
+					addCliente();
 				}
 				
+			}
+			private function addCliente():void{
+				
+				if(infoclient.length>0){
+						txtapellido.text=infoclient[0].apellido;
+						txtdocumento.text=infoclient[0].nrodocu;
+						txtemail.text=infoclient[0].email;
+						txtnombre.text=infoclient[0].nombre;
+						txtobservaciones.text=infoclient[0].observaciones;
+						cmbGeneros.selectedItemId=infoclient[0].Genero.generoId;
+						cmbTiposdocu.selectedItemId=infoclient[0].idtipodocu;
+				}else{
+					clearComponenteCliente();
+				
+				
+				}
+			
+			
 			}
 			
 			protected function operation1_faultHandler(event:FaultEvent):void

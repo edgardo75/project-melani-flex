@@ -3,7 +3,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:components="components.*"
-		 width="924" height="534" creationComplete="group1_creationCompleteHandler(event)">
+		 width="924" height="534" creationComplete="group1_creationCompleteHandler(event)" xmlns:products="components.products.*">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:WebService id="servicePresupuesto" wsdl="http://localhost:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="true">
@@ -140,14 +140,22 @@
 			//--------------------------------------------------------------------------------------
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
-				var result:uint=uint(event.result.toString());	
+				var result:Number=Number(event.result.toString());	
 				
 				
-				switch(result>0){
-					case 0:Alert.show("HUBO UN ERROR EN EL SERVIDOR VERIFIQUE!!!");
-						break;
-					case -2:Alert.show("SE PRODUJO UN ERROR AL PROCESAR LOS DATOS, VERIFIQUE!!!");
-						break;
+				
+				switch(result){
+					case -1:{
+						Alert.show("ERROR EN EL SERVIDOR, VERIFIQUE!!!");
+						break};
+					case 0:{Alert.show("NO PASÓ NADA!!!");
+						break};
+					case -2:{Alert.show("SE PRODUJO UN ERROR AL PROCESAR LOS DATOS, VERIFIQUE!!!");
+						break};
+					case -3:{Alert.show("ERROR EN EL SERVIDOR CON LOS DATOS VERIFIQUE!!!");
+						break};
+					case -4:{Alert.show("SE ENCONTRARON CARACTERES NO VÁLIDOS, NO SE PUDO GUARDAR EL PRESUPUESTO!!!");
+						break};
 					default:{
 						Alert.show("Presupuesto N° "+result+" Generado correctamente!!!");
 						var source:String="http://localhost:8080/WebMelani/ShowReportPresupuesto?presnro="+result;
@@ -155,6 +163,7 @@
 						navigateToURL(urlReq,"_blank");
 						
 						blanquearTodosLosControles();
+						break;
 					
 					}
 					
@@ -203,9 +212,9 @@
 		<s:TextInput id="txtnombre" tabEnabled="false" x="87" y="23" width="180" maxChars="40" restrict="a-z A-Z ñ-Ñ"/>
 		<s:TextInput  id="txtapellido" tabEnabled="false" x="88" y="62" width="179" maxChars="20" restrict="a-z A-Z ñ-Ñ "/>
 	</s:BorderContainer>
-	<components:productosPedidos id="productordered" x="40" y="138" height="349">
-	</components:productosPedidos>
-	<s:TextArea id="txtobservaciones"  x="485" y="45" width="402" height="93" restrict="A-Z a-z ñ-Ñ 0-9 % !°¡?¿ ()-;,.[]{}}^`" maxChars="5000"/>
+	<products:productosPedidos id="productordered" x="40" y="138" height="349">
+	</products:productosPedidos>
+	<s:TextArea id="txtobservaciones"  x="485" y="45" width="400" height="159"  maxChars="5000"/>
 	<s:Button id="btnguardar" x="417" y="491" width="91" height="33" label="Guardar"
 			  click="btnguardar_clickHandler(event)" enabled="true"/>
 	<s:Label x="487" y="31" fontSize="16" fontWeight="normal" text="Observaciones"/>
