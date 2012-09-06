@@ -140,7 +140,7 @@
 			[Bindable]
 				private var respuesta:String;
 			[Bindable]
-			private var xmlInfoClient:XMLList;
+			public var xmlInfoClient:XMLList;
 			
 			private function tranferirFocus(keyPress:KeyboardEvent):void{
 				
@@ -270,6 +270,29 @@
 				}
 				
 			}
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			public function getDatosPersonalesXML():String{
+				var xmlDatosPersonales:String="<item>\n"+
+								"<apellido>"+txtapellido.text+"</apellido>\n"+
+								"<nombre>"+txtnombre.text+"</nombre>\n"+
+								"<email>"+txtemail.text+"</email>\n"+
+								"<observaciones>"+txtobservaciones.text+"</observaciones>\n"+
+								"<nrodocu>"+txtdocumento.text+"</nrodocu>\n"+
+								"<idtipodocu>"+cmbTiposdocu.selectedItemId+"</idtipodocu>\n"+
+								"<totalcompras>0</totalcompras>\n"+
+								"<totalpuntos>0</totalpuntos>\n"+
+								"<idcliente>0</idcliente>\n"+
+								"<genero>\n"+
+									"<idgenero>"+cmbGeneros.selectedItemId+"</idgenero>\n"+
+								"</genero>\n"+
+						"</item>\n";	
+						
+						return xmlDatosPersonales;
+			
+			}
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			
+			
 			
 		]]>
 	</fx:Script>
