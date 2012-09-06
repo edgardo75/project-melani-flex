@@ -118,6 +118,29 @@
 			
 			
 			}
+			//--------------------------------------------------------------------------------------------------------------
+			public function getDatosTelefonos():String{
+				var xmlTelefonos:String="<listaTelefonos>\n";
+						for(var ii:int=0;ii<listtel.length;ii++){
+							xmlTelefonos+="<telefono>\n"+
+							
+								"<numero>"+txtnumerotel.text+"</numero>\n"+
+								"<prefijo>"+txtprefijo.text+"</prefijo>\n"+
+								"<idEmpresaTelefonia>\n"+
+									"<idempresatelefonia>"+cmbEmpresatelefonia.selectedItemId+"</idempresatelefonia>\n"+
+								"</idEmpresaTelefonia>\n"+
+								"<idcliente>0</idcliente>\n"+
+								"<tipoTelefono>\n"+
+								"<idtipotel>"+cmbtipotel.selectedItemId+"</idtipotel>\n"+
+								"</tipoTelefono>\n"+
+							"</telefono>\n";
+						}	
+							
+							xmlTelefonos+="</listaTelefonos>\n";
+				return xmlTelefonos;
+			
+			}
+			//--------------------------------------------------------------------------------------------------------------
 		]]>
 	</fx:Script>
 	<fx:Declarations>

@@ -75,12 +75,17 @@
 				txtpiso.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txtsector.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txttorre.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				txtarea.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				btnAddLocalidades.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				btnaddbarrios.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				btnaddcalles.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				
 			
 				
 				
 				txtcodpostal.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				
+			
 				
 				
 			}
@@ -137,7 +142,7 @@
 								txtsector.setFocus();
 							}
 							if(txtmonoblock.text.length>0&&KeyPress.currentTarget.toString().indexOf("txtmonoblock")!=-1){
-								txtentrecalle.setFocus();	
+								txtarea.setFocus();	
 							}
 							if(txtnumdepto.text.length>0&&KeyPress.currentTarget.toString().indexOf("txtnumdepto")!=-1){
 								txtpiso.setFocus();
@@ -157,16 +162,20 @@
 							if(txttorre.text.length>0&&KeyPress.currentTarget.toString().indexOf("txttorre")!=-1){
 								txtmonoblock.setFocus();
 							}
+							if(txttorre.text.length>0&&KeyPress.currentTarget.toString().indexOf("txtarea")!=-1){
+								txtentrecalle.setFocus();
+							}
 							if (KeyPress.currentTarget.toString().indexOf("btnAddLocalidades")!=-1){
 								cmborientacion.setFocus();
-								if(btnAddLocalidades.enabled=true)
+								if(btnAddLocalidades.enabled==true)
 									btnAddLocalidades.enabled=false;
 							
 							}
 							
 							if (KeyPress.currentTarget.toString().indexOf("btnaddcalles")!=-1){
+							
 								cmbbarrios.setFocus();
-								if(btnaddcalles.enabled=true)
+								if(btnaddcalles.enabled==true)
 									btnaddcalles.enabled=false;
 								
 							}
@@ -382,7 +391,7 @@
 			
 			protected function btnaddcalles_clickHandler(event:MouseEvent):void
 			{
-				if(cmbcalles.text.length>0){
+				if(cmbcalles.text!=""&&cmbcalles.text.length>0){
 					Alert.show("Desea la agregar la Calle "+cmbcalles.text.toUpperCase()+" ?","Confirmar Operación", Alert.YES | Alert.NO, this, agregarCalle, null, Alert.YES);
 					
 					
@@ -494,6 +503,42 @@
 				
 			}
 			
+			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			public function getDatosDomiciliosXML():String{
+				var xmlDomiclio:String=
+					"<Domicilio>\n"+
+					   "<domicilioId>0</domicilioId>\n"+
+						"<piso>"+txtpiso.text+"</piso>\n"+
+						"<manzana>"+txtmanzana.text+"</manzana>\n"+
+						"<entrecalleycalle>"+txtentrecalle.text+"</entrecalleycalle>\n"+
+						"<sector>"+txtsector.text+"</sector>\n"+
+						"<torre>"+txttorre.text+"</torre>\n"+
+						"<monoblock>"+txtmonoblock.text+"</monoblock>\n"+
+						"<barrios>\n"+
+							"<barrioId>"+cmbbarrios.selectedItemId+"</barrioId>\n"+
+						"</barrios>\n"+
+						"<calles>\n"+
+							"<calleId>"+cmbcalles.selectedItemId+"</calleId>\n"+
+						"</calles>\n"+
+						"<area>"+txtarea.text+"</area>\n"+
+						"<orientacion>\n"+
+							"<idOrientacion>"+cmborientacion.selectedItemId+"</idOrientacion>\n"+
+						"</orientacion>\n"+
+						"<numero>"+txtnumero.text+"</numero>\n"+
+						"<numdepto>"+txtnumdepto.text+"</numdepto>\n"+
+						"<localidad>\n"+
+							"<idlocalidad>"+cmbLocalidades.selectedItemId+"</idlocalidad>\n"+
+							"<idProvincia>"+cmbprovincias.selectedItemId+"</idProvincia>\n"+
+							"<codigoPostal>"+txtcodpostal.text+"</codigoPostal>\n"+
+						"</localidad>\n"+
+						"<homeDetelles>"+txtobservaciones.text+"</homeDetelles>\n"+
+					"</Domicilio>\n";		
+			
+			return xmlDomiclio;
+			
+			}
+			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			
 		]]>
 	</fx:Script>
 	
@@ -514,23 +559,23 @@
 	<s:Button id="btnAddLocalidades" x="545" y="24" width="36" label="A"
 			  click="btnAddLocalidades_clickHandler(event)" enabled="false" icon="assets/add.jpg"
 			  toolTip="Agregar Una Localidad"/>
-	<controls:MaskedTextInput id="txtpiso" maxChars="10" restrict="0-9 a-z A-Z -_" x="219" y="111" width="65"/>
-	<s:Label x="217" y="101" text="Piso"/>
+	<controls:MaskedTextInput id="txtpiso" maxChars="10" restrict="0-9 a-z A-Z -_" x="186" y="106" width="65"/>
+	<s:Label x="185" y="96" text="Piso"/>
 	<s:Label x="173" y="56" text="Calles"/>
-	<controls:MaskedTextInput restrict="0-9 a-z A-Z -_" id="txtmanzana" maxChars="10" x="295" y="111" width="60"/>
-	<controls:MaskedTextInput id="txtsector" restrict="0-9 a-z A-Z -_" maxChars="10" x="360" y="110" width="64"/>
-	<controls:MaskedTextInput id="txttorre" maxChars="10" x="433" y="110" width="63" restrict="0-9 a-z A-Z -_"/>
-	<controls:MaskedTextInput restrict="0-9 a-z A-Z -_" id="txtmonoblock" maxChars="10" x="504" y="111" width="59"/>
-	<s:Label x="294" y="101" text="Manzana"/>
-	<s:Label x="359" y="101" text="Sector"/>
-	<s:Label x="432" y="100" text="Torre"/>
-	<s:Label x="503" y="101" text="Monoblock"/>
+	<controls:MaskedTextInput restrict="0-9 a-z A-Z -_" id="txtmanzana" maxChars="10" x="254" y="107" width="60"/>
+	<controls:MaskedTextInput id="txtsector" restrict="0-9 a-z A-Z -_" maxChars="10" x="317" y="107" width="64"/>
+	<controls:MaskedTextInput id="txttorre" maxChars="10" x="384" y="107" width="63" restrict="0-9 a-z A-Z -_"/>
+	<controls:MaskedTextInput restrict="0-9 a-z A-Z -_" id="txtmonoblock" maxChars="10" x="449" y="108" width="59"/>
+	<s:Label x="253" y="96" text="Manzana"/>
+	<s:Label x="316" y="96" text="Sector"/>
+	<s:Label x="383" y="96" text="Torre"/>
+	<s:Label x="448" y="97" text="Monoblock"/>
 	<components:AdvancedAutoComplete id="cmbcalles" x="174" y="68" width="181" labelField="nombre" matchType="beginning" allowNewValues="true">
 	</components:AdvancedAutoComplete>
 	<components:AdvancedAutoComplete id="cmbbarrios" x="390" y="69" width="189" labelField="nombre" allowNewValues="true" matchType="beginning">
 	</components:AdvancedAutoComplete>
 	<s:Label x="391" y="57" text="Barrios"/>
-	<s:Button id="btnaddcalles" x="358" y="70" width="30" label="+"
+	<s:Button id="btnaddcalles" x="358" y="69" width="30" label="+"
 			  click="btnaddcalles_clickHandler(event)" enabled="false" icon="assets/add.jpg"/>
 	<s:Button id="btnaddbarrios" x="582" y="70" width="29" label="+"
 			  click="btnaddbarrios_clickHandler(event)" enabled="false" icon="assets/add.jpg"/>
@@ -538,10 +583,12 @@
 	<s:Label x="13" y="136" text="Entre Calle y Calle"/>
 	<controls:MaskedTextInput restrict="0-9" required="true" maxChars="10" id="txtnumero" x="12" y="107" width="98"/>
 	<s:Label x="13" y="96" text="Numero"/>
-	<controls:MaskedTextInput restrict="0-9 a-z A-Z -_" maxChars="10" id="txtnumdepto" x="140" y="111" width="68"/>
-	<s:Label x="139" y="101" text="Num Depto"/>
+	<controls:MaskedTextInput restrict="0-9 a-z A-Z -_" maxChars="10" id="txtnumdepto" x="114" y="107" width="68"/>
+	<s:Label x="113" y="97" text="Num Depto"/>
 	<s:TextArea id="txtobservaciones" x="236" y="149" width="322" height="104" maxChars="255"/>
 	<s:Label x="236" y="138" text="Observaciones"/>
+	<controls:MaskedTextInput id="txtarea" maxChars="10" x="512" y="108" width="67"/>
+	<s:Label x="513" y="97" text="Area"/>
 	
 	
 	

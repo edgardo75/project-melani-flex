@@ -2,7 +2,7 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
-		 xmlns:components="components.*"
+		 xmlns:components="components.*" creationComplete="group1_creationCompleteHandler(event)"
 		 width="798" height="490" xmlns:clients="components.clients.*" xmlns:homes="components.homes.*" xmlns:phones="components.phones.*">
 	<s:layout>
 		<s:BasicLayout/>
@@ -14,12 +14,41 @@
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
 			//-----------------------------------------------------------
 			protected function btnClose_clickHandler(event:MouseEvent):void
 			{
 				this.removeAllElements();
 			}
 			//-----------------------------------------------------------	
+			
+			protected function btnGuardar_clickHandler(event:MouseEvent):void
+			{
+				Alert.show(getDatosCliente());
+				
+			}
+			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			protected function getDatosCliente():String{
+				
+				var datosCliente:String=
+					"<ClienteDomicilioTelefono>\n" +
+					"<idusuario>0</idusuario>\n"+
+						tabDatosPersonales.getDatosPersonalesXML()+"" +
+						tabDomicilios.getDatosDomiciliosXML()+"" +
+						tabTelefonos.getDatosTelefonos()+"" +											
+					"</ClienteDomicilioTelefono>\n";
+				return datosCliente;
+			}
+			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				tabDatosPersonales.txtdocumento.setFocus();
+			}
+			
 		]]>
 	</fx:Script>
 	<s:Button id="btnCloseClientComponent" x="778" y="4" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
@@ -28,16 +57,16 @@
 	
 	<s:TabBar direction="ltr" id="tabBar" x="57" y="53" width="629" dataProvider="{ViewStack}"/>
 	<mx:ViewStack id="ViewStack" x="278" y="23" width="749" height="395">
-		<s:NavigatorContent id="Child1" width="100%" height="100%" label="Cliente">
-			<clients:datosCliente x="104" y="32" width="513" height="369"/>
+		<s:NavigatorContent id="cliente" width="100%" height="100%" label="Cliente">
+			<clients:datosCliente id="tabDatosPersonales" x="104" y="32" width="513" height="369"/>
 		</s:NavigatorContent>
-		<s:NavigatorContent id="Child2" width="100%" height="100%" label="Domicilio">
-			<homes:Domicilios x="47" y="22" height="341"/>
+		<s:NavigatorContent id="domicilio" width="100%" height="100%" label="Domicilio">
+			<homes:Domicilios id="tabDomicilios" x="47" y="22" height="341"/>
 		</s:NavigatorContent>
-		<s:NavigatorContent id="Child3" width="100%" height="100%" label="Telefono">
-			<phones:Telefonos x="126" y="20" width="525" height="350"/>
+		<s:NavigatorContent id="telefono" width="100%" height="100%" label="Telefono">
+			<phones:Telefonos id="tabTelefonos" x="126" y="20" width="525" height="350"/>
 		</s:NavigatorContent>
 	</mx:ViewStack>
-		<s:Button id="btnGuardar" label="Guardar"/>
+		<s:Button id="btnGuardar" label="Guardar" click="btnGuardar_clickHandler(event)"/>
 	</mx:VBox>
 </s:Group>
