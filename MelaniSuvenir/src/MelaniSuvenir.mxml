@@ -65,9 +65,10 @@
 	
 	<fx:Script>
 		<![CDATA[			
-			import components.GuardarPresupuesto;
-			import components.Verpresupuestos;
-			import components.datosProducto;
+			import components.ClienteDomicilioTelefono;
+			import components.budgets.GuardarPresupuesto;
+			import components.budgets.Verpresupuestos;
+			import components.products.datosProducto;
 			import components.guardarDatosPersonalCliente;
 			
 			import flash.net.navigateToURL;
@@ -82,6 +83,10 @@
 				if(event.item.@label =="Cargar Datos Personales"){
 					panelCentral.removeAllChildren();
 					panelCentral.addChild(new guardarDatosPersonalCliente());						
+				}
+				if(event.item.@label =="Cargar Datos Completo"){
+					panelCentral.removeAllChildren();
+					panelCentral.addChild(new ClienteDomicilioTelefono());						
 				}
 				if(event.item.@label=="Cargar Productos"){
 					panelCentral.removeAllChildren();

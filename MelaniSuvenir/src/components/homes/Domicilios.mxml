@@ -109,7 +109,7 @@
 										
 								
 							}else{
-									if(cmbLocalidades.text!=""&&KeyPress.currentTarget.toString().indexOf("cmbLocalidades")!=-1&&txtcodpostal.text.length==0){
+									if(cmbLocalidades.text!=""&&KeyPress.currentTarget.toString().indexOf("cmbLocalidades")!=-1){
 											txtcodpostal.setFocus();
 											
 											txtcodpostal.text=String(cmbLocalidades.selectedItem.codigopostal);

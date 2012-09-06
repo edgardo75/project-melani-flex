@@ -3,7 +3,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:components="components.*" toolTip="Formulario de carga para Datos Personales Básicos de un Cliente!!!"
-		 width="532" height="380" creationComplete="group1_creationCompleteHandler(event)">
+		 width="532" height="380" creationComplete="group1_creationCompleteHandler(event)" xmlns:clients="components.clients.*">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<mx:WebService id="servicesCliente" wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"
@@ -57,7 +57,7 @@
 				}
 			protected function group1_creationCompleteHandler(event:FlexEvent):void
 			{
-				clienteComp.btnClose.visible = false;
+			
 				focusManager.setFocus(clienteComp.txtdocumento);
 				
 			}
@@ -168,8 +168,8 @@
 	
 	
 	
-	<components:datosCliente id="clienteComp" x="14" y="10">
-	</components:datosCliente>
+	<clients:datosCliente id="clienteComp" x="14" y="10">
+	</clients:datosCliente>
 	<s:Button id="btnGuardarCli" x="233" y="353" label="Guardar"
 			  click="validateAndSubmit(event)"/>
 	<s:Button id="btnCloseClientComponent" x="510" y="5" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>

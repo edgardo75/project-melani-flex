@@ -192,7 +192,7 @@
 				
 				
 				xmlPresupuesto=new XMLList(event.result);
-				//Alert.show(xmlPresupuesto.toString());
+				
 				addgrid();
 				
 				
@@ -469,8 +469,7 @@
 			<mx:AdvancedDataGridColumn dataField="recargototal"  headerText="Recargo Total"/>
 			<mx:AdvancedDataGridColumn dataField="porcentajerecargo" headerText="% Recargo"/>
 			<mx:AdvancedDataGridColumn dataField="totalapagar" headerText="Total a Pagar"/>
-			<mx:AdvancedDataGridColumn dataField="total" headerText="Total Gral"/>
-			<mx:AdvancedDataGridColumn dataField="observaciones" visible="false" headerText="Observaciones"/>
+			<mx:AdvancedDataGridColumn dataField="total" headerText="Total Gral"/>			
 		</mx:columns>
 	</mx:AdvancedDataGrid>
 	<s:Button id="first_btn" x="13" y="327" width="50" label="First"
@@ -479,7 +478,7 @@
 			  click="prev_btn_clickHandler(event)" enabled="false"/>
 	<s:Button id="next_btn" x="630" y="326" width="50" label="Next"
 			  click="next_btn_clickHandler(event)" enabled="false"/>
-	<s:Button id="last_btn" x="946" y="326" width="47" label="Last" click="last_clickHandler(event)"
+	<s:Button id="last_btn" x="939" y="326" width="47" label="Last" click="last_clickHandler(event)"
 			  enabled="false"/>
 	<s:BorderContainer x="1028" y="51" width="88" height="93">
 		<controls:MaskedTextInput id="mskidpresupuesto" x="10" y="40" width="68" restrict="0-9" toolTip="Ingrese Número de Presupuesto"/>
