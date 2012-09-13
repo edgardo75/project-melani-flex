@@ -11,6 +11,7 @@
 	
 	<fx:Declarations>
 		<s:XMLListCollection id="infoclient" source="{xmlInfoClient.item}"/>
+		
 			<s:WebService id="serviceCLI" 
 						  wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL" 
 						  useProxy="false"
@@ -137,10 +138,16 @@
 			import mx.events.FlexEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			
+			import org.flexunit.internals.namespaces.classInternal;
 			[Bindable]
 				private var respuesta:String;
 			[Bindable]
-			public var xmlInfoClient:XMLList;
+			private var xmlInfoClient:XMLList;
+			[Bindable]
+			public var xmlinfoclidomi:XMLList;
+			[Bindable]
+			public var xmlinfotelcli:XMLList;
 			
 			private function tranferirFocus(keyPress:KeyboardEvent):void{
 				
@@ -215,6 +222,8 @@
 				respuesta = event.result.toString();
 				//Alert.show(event.result.toString());
 				xmlInfoClient=new XMLList(event.result);
+				xmlinfoclidomi=new XMLList(xmlInfoClient.item.personadomicilio.domicilio);
+				xmlinfotelcli=new XMLList(xmlInfoClient.item.personatelefono.telefono);
 				
 				if(respuesta.indexOf("<cliente>NO ENCONTRADO</cliente>")!=-1){
 					infoclient.removeAll();

@@ -80,7 +80,7 @@
 				btnaddbarrios.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				btnaddcalles.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				
-			
+				cmbLocalidades.setFocus();
 				
 				
 				txtcodpostal.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);

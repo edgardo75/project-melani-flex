@@ -4,7 +4,7 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:components="com.hillelcoren.components.*"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
-		 width="490" height="300" creationComplete="group1_creationCompleteHandler(event)">
+		 width="490" height="336" creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Script>
 		<![CDATA[
 			import mx.controls.Alert;
@@ -213,7 +213,7 @@
 	<controls:MaskedTextInput id="txtnumerotel" x="279" y="139" restrict="0-9" maxChars="20" inputMask="##########"/>
 	<s:Button id="btnAgregarTel" x="388" y="137" label="Agregar"
 			  click="btnAgregarTel_clickHandler(event)" icon="assets/add.jpg"/>
-	<s:DataGrid id="adgTel" x="48" y="182" width="416" height="87" requestedRowCount="4">
+	<s:DataGrid id="adgTel" x="10" y="182" width="464" height="128" requestedRowCount="4">
 		<s:columns>
 			<s:ArrayList>
 				<s:GridColumn dataField="prefijo" headerText="Prefijo"></s:GridColumn>
