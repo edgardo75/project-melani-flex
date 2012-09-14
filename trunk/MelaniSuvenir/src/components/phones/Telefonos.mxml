@@ -7,6 +7,8 @@
 		 width="490" height="336" creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Script>
 		<![CDATA[
+			import com.hillelcoren.components.autoComplete.classes.SelectedItem;
+			
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			[Bindable]
@@ -52,7 +54,7 @@
 											
 											if(txtnumerotel.text.length>0&&KeyPress.currentTarget.toString().indexOf("txtnumerotel")!=-1&&(txtnumerotel.text.substring(0,1).indexOf("4")!=-1||txtnumerotel.text.substring(0,2).indexOf("15")!=-1)){
 												btnAgregarTel.setFocus();
-												Alert.show(txtnumerotel.text.substring(0,1).toString()+" "+txtnumerotel.text.substring(0,2).toString());
+												//Alert.show(txtnumerotel.text.substring(0,1).toString()+" "+txtnumerotel.text.substring(0,2).toString());
 											}
 										}
 								
@@ -82,7 +84,7 @@
 			var b:Boolean=false;
 		
 				if(arrayTel.length==0){
-					arrayTel=[{prefijo:txtprefijo.text,numero:txtnumerotel.text,descripcion:cmbEmpresatelefonia.text,tipotelefono:cmbtipotel.text}];
+					arrayTel=[{prefijo:txtprefijo.text,nrotelefono:txtnumerotel.text,descripcion:cmbEmpresatelefonia.text,tipotelefono:cmbtipotel.text,idempresatel:cmbEmpresatelefonia.selectedItemId,idtipotel:cmbtipotel.selectedItemId}];
 					blanqueartodo();
 				}else{
 				
@@ -98,7 +100,7 @@
 					
 					
 					if(!b){
-						arrayTel.push({prefijo:txtprefijo.text,numero:txtnumerotel.text,descripcion:cmbEmpresatelefonia.text,tipotelefono:cmbtipotel.text});
+						arrayTel.push({prefijo:txtprefijo.text,nrotelefono:txtnumerotel.text,descripcion:cmbEmpresatelefonia.text,tipotelefono:cmbtipotel.text,idempresatel:cmbEmpresatelefonia.selectedItemId,idtipotel:cmbtipotel.selectedItemId});
 						blanqueartodo();
 					}else
 						Alert.show("YA EXISTE EL NUMERO EN LA LISTA");
@@ -108,7 +110,7 @@
 				listtel.refresh();
 			
 			}
-			private function blanqueartodo():void{
+			public function blanqueartodo():void{
 				cmbEmpresatelefonia.selectedItemId=0;
 				cmbtipotel.selectedItemId=0;
 				txtnumerotel.text="";
@@ -124,14 +126,14 @@
 						for(var ii:int=0;ii<listtel.length;ii++){
 							xmlTelefonos+="<telefono>\n"+
 							
-								"<numero>"+txtnumerotel.text+"</numero>\n"+
-								"<prefijo>"+txtprefijo.text+"</prefijo>\n"+
+								"<numero>"+listtel[ii].nrotelefono+"</numero>\n"+
+								"<prefijo>"+listtel[ii].prefijo+"</prefijo>\n"+
 								"<idEmpresaTelefonia>\n"+
-									"<idempresatelefonia>"+cmbEmpresatelefonia.selectedItemId+"</idempresatelefonia>\n"+
+									"<idempresatelefonia>"+listtel[ii].idempresatel+"</idempresatelefonia>\n"+
 								"</idEmpresaTelefonia>\n"+
 								"<idcliente>0</idcliente>\n"+
 								"<tipoTelefono>\n"+
-								"<idtipotel>"+cmbtipotel.selectedItemId+"</idtipotel>\n"+
+								"<idtipotel>"+listtel[ii].idtipotel+"</idtipotel>\n"+
 								"</tipoTelefono>\n"+
 							"</telefono>\n";
 						}	
@@ -141,6 +143,8 @@
 			
 			}
 			//--------------------------------------------------------------------------------------------------------------
+		
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -213,13 +217,15 @@
 	<controls:MaskedTextInput id="txtnumerotel" x="279" y="139" restrict="0-9" maxChars="20" inputMask="##########"/>
 	<s:Button id="btnAgregarTel" x="388" y="137" label="Agregar"
 			  click="btnAgregarTel_clickHandler(event)" icon="assets/add.jpg"/>
-	<s:DataGrid id="adgTel" x="10" y="182" width="464" height="128" requestedRowCount="4">
+	<s:DataGrid id="adgTel" x="14" y="189" width="464" height="128" requestedRowCount="4">
 		<s:columns>
 			<s:ArrayList>
 				<s:GridColumn dataField="prefijo" headerText="Prefijo"></s:GridColumn>
-				<s:GridColumn dataField="numero" headerText="Numero"></s:GridColumn>
+				<s:GridColumn dataField="nrotelefono" headerText="Numero"></s:GridColumn>
 				<s:GridColumn dataField="descripcion" headerText="Empresa"></s:GridColumn>
 				<s:GridColumn dataField="tipotelefono" headerText="TipoTelefono"></s:GridColumn>
+				<s:GridColumn dataField="idempresatel" headerText="EmpresaTelefonia" visible="false"></s:GridColumn>
+				<s:GridColumn dataField="idtipotel" headerText="TipoTelefono" visible="false"></s:GridColumn>
 			</s:ArrayList>
 		</s:columns>
 	</s:DataGrid>

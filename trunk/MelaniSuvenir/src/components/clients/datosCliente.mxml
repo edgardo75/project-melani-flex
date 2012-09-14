@@ -100,7 +100,7 @@
 							  enter="txtdocumento_enterHandler(event)" fontFamily="Verdana"
 							  fontSize="20" fontWeight="bold" inputMask="########" maxChars="8"
 							  restrict="0-9" tabIndex="1"
-							  toolTip="Ingrese el Número de Documento!!!"/>
+							  toolTip="Ingrese el Número de Documento!!!" required="true"/>
 	
 	<s:Label x="130" y="142" color="#033339" fontSize="20" text="Genero:"/>
 	<s:Label x="128" y="178" width="60" color="#033339" fontSize="20" text="Email:"/>
@@ -138,6 +138,7 @@
 			import mx.events.FlexEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			import mx.validators.Validator;
 			
 			import org.flexunit.internals.namespaces.classInternal;
 			[Bindable]
@@ -148,6 +149,21 @@
 			public var xmlinfoclidomi:XMLList;
 			[Bindable]
 			public var xmlinfotelcli:XMLList;
+			
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			public function validateForm():Boolean{
+			var validatorArray:Array=new Array();
+			validatorArray.push(emV);
+			validatorArray.push(apeV);
+			validatorArray.push(nomV);
+			validatorArray.push(txtdocumento);
+			var validatorErrorArray:Array = Validator.validateAll(validatorArray);
+			var isValidForm:Boolean = validatorErrorArray.length == 0;                
+			return isValidForm
+			
+			
+			}
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			
 			private function tranferirFocus(keyPress:KeyboardEvent):void{
 				
@@ -280,12 +296,14 @@
 				
 			}
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		
 			public function getDatosPersonalesXML():String{
+				
 				var xmlDatosPersonales:String="<item>\n"+
 								"<apellido>"+txtapellido.text+"</apellido>\n"+
 								"<nombre>"+txtnombre.text+"</nombre>\n"+
 								"<email>"+txtemail.text+"</email>\n"+
-								"<observaciones>"+txtobservaciones.text+"</observaciones>\n"+
+								"<det2allescli>"+txtobservaciones.text+"</det2allescli>\n"+
 								"<nrodocu>"+txtdocumento.text+"</nrodocu>\n"+
 								"<idtipodocu>"+cmbTiposdocu.selectedItemId+"</idtipodocu>\n"+
 								"<totalcompras>0</totalcompras>\n"+
