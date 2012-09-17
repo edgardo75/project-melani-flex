@@ -322,7 +322,7 @@
 						break;
 					}
 					default:{
-						//Alert.show("Localidad Agregada");
+						
 						idlocalidad=retorno;
 						wslocaliades.searchAllLocalidadesbyidprov(int(cmbprovincias.selectedItem.id));
 						if(btnAddLocalidades.enabled==true)
@@ -414,7 +414,7 @@
 			protected function btnaddcalles_clickHandler(event:MouseEvent):void
 			{
 				if(cmbcalles.text!=""&&cmbcalles.text.length>0){
-					Alert.show("Desea la agregar la Calle "+cmbcalles.text.toUpperCase()+" ?","Confirmar Operación", Alert.YES | Alert.NO, this, agregarCalle, null, Alert.YES);
+					Alert.show("Desea agregar la Calle "+cmbcalles.text.toUpperCase()+" ?","Confirmar Operación", Alert.YES | Alert.NO, this, agregarCalle, null, Alert.YES);
 					
 					
 					

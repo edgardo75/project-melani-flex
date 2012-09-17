@@ -7,7 +7,7 @@
 		 xmlns:viewer="com.jaspersoft.reports.viewer.*"
 		 xmlns:components="com.hillelcoren.components.*"
 		 xmlns:classes="com.hillelcoren.components.autoComplete.classes.*"
-		 width="484" height="344" creationComplete="init(event)">
+		 width="548" height="344" creationComplete="init(event)">
 	
 	<fx:Declarations>
 		<s:XMLListCollection id="infoclient" source="{xmlInfoClient.item}"/>
@@ -64,7 +64,8 @@
 	<mx:EmailValidator id="emV" source="{txtemail}" property="text"					   
 					    required="false" invalidCharError="La dirección de email contiene caracteres inválidos!!!"
 					   tooManyAtSignsError="La dirección de email contiene muchos caracteres!!!"
-					   invalidDomainError="Dominio de la dirección de email incorrecto"/>
+					   invalidDomainError="Dominio de la dirección de email incorrecto" invalidIPDomainError="Mensaje de error cuando el dominio de IP no es válido. El dominio IP debe estar encerrado entre corchetes." 
+					   />
 		
 		
 	<mx:StringValidator id="apeV" source="{txtapellido}"
@@ -84,12 +85,12 @@
 	<mx:HRule x="10" y="29" width="380" height="1"/>
 	<s:Label x="9" y="9" backgroundAlpha="0.6" color="#FD0303" fontSize="20" fontWeight="bold"
 			 text="DATOS PERSONALES DE CLIENTE"/>
-	<s:TextInput id="txtnombre" x="206" y="69" width="220" fontFamily="Verdana" fontSize="18"
-				 fontWeight="bold" maxChars="30" restrict="A-ÑZa-ñz " tabIndex="2"
+	<s:TextInput id="txtnombre" x="206" y="69" width="317" fontFamily="Verdana" fontSize="18"
+				 fontWeight="bold" maxChars="30" restrict="A-ÑZa-ñz " 
 				 toolTip="Ingrese el Nombre Completo del Cliente!!!"/>
 	<s:Label x="128" y="74" color="#033339" fontSize="20" text="Nombre:"/>
-	<s:TextInput id="txtapellido" x="207" y="101" width="219" fontFamily="Verdana" fontSize="18"
-				 fontWeight="bold" maxChars="30" restrict="A-ÑZa-ñz " tabIndex="3"
+	<s:TextInput id="txtapellido" x="207" y="101" width="315" fontFamily="Verdana" fontSize="18"
+				 fontWeight="bold" maxChars="30" restrict="A-ÑZa-ñz " 
 				 toolTip="Ingrese el Apellido Completo del Cliente!!!"/>
 	<s:Label x="128" y="108" color="#033339" fontSize="20" text="Apellido:"/>
 	<s:Label x="51" y="44" color="#033339" fontSize="20" text="Tipo:"/>
@@ -99,16 +100,16 @@
 	<controls:MaskedTextInput id="txtdocumento" x="315" y="36" width="70"
 							  enter="txtdocumento_enterHandler(event)" fontFamily="Verdana"
 							  fontSize="20" fontWeight="bold" inputMask="########" maxChars="8"
-							  restrict="0-9" tabIndex="1"
+							  restrict="0-9" 
 							  toolTip="Ingrese el Número de Documento!!!" required="true"/>
 	
 	<s:Label x="130" y="142" color="#033339" fontSize="20" text="Genero:"/>
 	<s:Label x="128" y="178" width="60" color="#033339" fontSize="20" text="Email:"/>
-	<s:TextInput id="txtemail" x="184" y="172" width="242" fontFamily="Verdana" fontSize="18"
+	<s:TextInput id="txtemail" x="184" y="172" width="338" fontFamily="Verdana" fontSize="18"
 				 fontWeight="bold" maxChars="50" tabIndex="5"
 				 toolTip="Ingrese un Correo Electrónico!!!"/>
 	<s:Label x="19" y="206" color="#033339" fontSize="20" text="Observaciones:"/>
-	<s:TextArea id="txtobservaciones" x="18" y="230" width="442" height="96" fontFamily="Verdana"
+	<s:TextArea id="txtobservaciones" x="18" y="230" width="504" height="96" fontFamily="Verdana"
 				fontWeight="bold" maxChars="255" tabIndex="6"/>
 	<components:AdvancedAutoComplete id="cmbTiposdocu" x="97" y="36" width="99"
 									 allowDuplicates="false" allowEditingNewValues="false"
@@ -130,7 +131,7 @@
 									 toolTip="Seleccione el Genero del Cliente M o F!!!"
 									 verticalScrollPolicy="on">
 	</components:AdvancedAutoComplete>
-	<mx:HRule x="19" y="165" width="441" height="2"/>
+	<mx:HRule x="19" y="164" width="503" height="1"/>
 	
 	<fx:Script>
 		<![CDATA[
@@ -167,37 +168,34 @@
 			
 			private function tranferirFocus(keyPress:KeyboardEvent):void{
 				
-				if(keyPress.keyCode==Keyboard.ENTER&&respuesta.indexOf("El Cliente ya se encuentra Registrado!!!")!=-1)
-					focusManager.setFocus(txtdocumento);
-					
-					else{
+				
 			
 								if (keyPress.keyCode==Keyboard.ENTER){
 									
 									if (keyPress.currentTarget.toString().indexOf("cmbTiposdocu")!=-1)
-											focusManager.setFocus(txtdocumento);	
+											txtdocumento.setFocus();	
 									
 									
-									if (keyPress.currentTarget.toString().indexOf("cmbGeneros")!=-1&&respuesta.indexOf("<cliente>NO ENCONTRADO</cliente>")!=-1)
-										focusManager.setFocus(txtemail);	
+									if (keyPress.currentTarget.toString().indexOf("cmbGeneros")!=-1)
+										txtemail.setFocus();	
 									
 									
-									if(keyPress.currentTarget.toString().indexOf("txtapellido")!=-1&&respuesta.indexOf("<cliente>NO ENCONTRADO</cliente>")!=-1)
-										focusManager.setFocus(cmbGeneros);
+									if(keyPress.currentTarget.toString().indexOf("txtapellido")!=-1&&txtapellido.text.length>2)
+										cmbGeneros.setFocus();
 									
 									
-									if(keyPress.currentTarget.toString().indexOf("txtnombre")!=-1&&respuesta.indexOf("<cliente>NO ENCONTRADO</cliente>")!=-1)
-											focusManager.setFocus(txtapellido);
+									if(keyPress.currentTarget.toString().indexOf("txtnombre")!=-1&&txtnombre.text.length>2)
+											txtapellido.setFocus();
 									
 									
-									if(keyPress.currentTarget.toString().indexOf("txtdocumento")!=-1&&infoclient.length>0)
-											focusManager.setFocus(txtnombre);
+									if(keyPress.currentTarget.toString().indexOf("txtdocumento")!=-1)
+											txtnombre.setFocus();
 									
-									if(keyPress.currentTarget.toString().indexOf("txtemail")!=-1&&respuesta.indexOf("<cliente>NO ENCONTRADO</cliente>")!=-1)
-											focusManager.setFocus(txtobservaciones);
+									if(keyPress.currentTarget.toString().indexOf("txtemail")!=-1)
+											txtobservaciones.setFocus();
 									
 								}
-					}
+					
 			
 			}
 			
@@ -241,16 +239,18 @@
 				xmlinfoclidomi=new XMLList(xmlInfoClient.item.personadomicilio.domicilio);
 				xmlinfotelcli=new XMLList(xmlInfoClient.item.personatelefono.telefono);
 				
-				if(respuesta.indexOf("<cliente>NO ENCONTRADO</cliente>")!=-1){
-					infoclient.removeAll();
-					infoclient.refresh();
+				
+				if(respuesta.indexOf("NO ENCONTRADO")!=-1){
 					clearComponenteCliente();
+					txtnombre.setFocus();
+					
+				
+			
 				}
 					
-				//}else{
+				
 				if(respuesta.indexOf("<observaciones>")!=-1){					
-					//Alert.show("El Cliente ya se encuentra Registrado!!!");
-					//focusManager.setFocus(txtdocumento);
+					
 					addCliente();
 				}
 				

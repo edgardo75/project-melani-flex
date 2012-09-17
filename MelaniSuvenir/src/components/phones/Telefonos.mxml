@@ -12,7 +12,7 @@
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			[Bindable]
-			private var arrayTel:Array=[];
+			public var arrayTel:Array=[];
 			
 			protected function group1_creationCompleteHandler(event:FlexEvent):void
 			{
@@ -30,6 +30,19 @@
 				adgTel.dataProvider=listtel;
 				cmbEmpresatelefonia.setFocus();
 				
+			}
+			public function clearTodo():void{
+				var longarray:int=arrayTel.length;
+				cmbEmpresatelefonia.selectedItemId=0;
+				cmbtipotel.dataProvider=tipotellist;
+				cmbtipotel.selectedItemId=0;
+				txtprefijo.text="0264";
+				for(var j:int=0;j<longarray;j++)
+					arrayTel.pop();
+				listtel.removeAll();
+				listtel.refresh();
+			
+			
 			}
 			//----------------------------------------------------------------------------------
 			private function transferirFocus(KeyPress:KeyboardEvent):void{
@@ -214,7 +227,7 @@
 	<controls:MaskedTextInput id="txtprefijo" x="58" y="139" width="104" maxChars="10" restrict="0-9" inputMask="(#########)"/>
 	<s:Label x="58" y="127" text="Prefijo"/>
 	<s:Label x="279" y="128" text="Número"/>
-	<controls:MaskedTextInput id="txtnumerotel" x="279" y="139" restrict="0-9" maxChars="20" inputMask="##########"/>
+	<controls:MaskedTextInput id="txtnumerotel" x="279" y="139" restrict="0-9" maxChars="20" inputMask="#########"/>
 	<s:Button id="btnAgregarTel" x="388" y="137" label="Agregar"
 			  click="btnAgregarTel_clickHandler(event)" icon="assets/add.jpg"/>
 	<s:DataGrid id="adgTel" x="14" y="189" width="464" height="128" requestedRowCount="4">
