@@ -13,6 +13,7 @@
 			import mx.events.FlexEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			import mx.validators.Validator;
 			
 			import spark.components.TextInput;
 
@@ -56,8 +57,9 @@
 				cmbLocalidades.selectedItemId=0;
 				cmborientacion.selectedItemId=1;
 				cmbprovincias.selectedItemId=18;
+				txtcodpostal.text="5400";
 				txtarea.text="";
-				txtcodpostal.text="";
+				
 				txtentrecalle.text="";
 				txtmanzana.text="";
 				txtmonoblock.text="";
@@ -82,6 +84,9 @@
 				wscalles.searchAllCalles();
 				cmborientacion.dataProvider=orientlist;
 				cmborientacion.selectedItemId=5;
+				cmbbarrios.selectedItemId=0;
+				cmbcalles.selectedItemId=0;
+				
 				cmbLocalidades.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				cmborientacion.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				cmbprovincias.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
@@ -103,7 +108,7 @@
 				btnaddcalles.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				
 				cmbLocalidades.setFocus();
-				
+			
 				
 				txtcodpostal.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				
@@ -258,11 +263,14 @@
 				
 				cmbLocalidades.dataProvider=localidadeslist;
 				
+				//Alert.show(String(event.result.toString()));
+				
 				if(idlocalidad==0){
 					cmbLocalidades.selectedItemId=localidadeslist[localidadeslist.length-1].id;
-					
+					txtcodpostal.text=localidadeslist[localidadeslist.length-1].codigopostal;
 				}else{
 					cmbLocalidades.selectedItemId=idlocalidad;
+					txtcodpostal.text=cmbLocalidades.selectedItem.codigopostal;
 					
 				}
 				
@@ -278,7 +286,7 @@
 			
 			protected function operation2_faultHandler(event:FaultEvent):void
 			{
-				// TODO Auto-generated method stub
+				Alert.show(event.fault.toString());
 				
 			}
 			
@@ -337,7 +345,7 @@
 			
 			protected function operationResultFaultAddLocalidad(event:FaultEvent):void
 			{
-				// TODO Auto-generated method stub
+				Alert.show(event.fault.toString());
 				
 			}
 			
@@ -543,6 +551,8 @@
 					txttorre.text="NO INGRESADO";
 				if(txtnumdepto.text.length==0)
 					txtnumdepto.text="0";
+				if(txtnumero.length==0)
+					txtnumero.text="0";
 				
 				var xmlDomiclio:String=
 					"<Domicilio>\n"+
@@ -577,6 +587,17 @@
 			
 			}
 			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			public function validateForm():Boolean{
+				var validatorArray:Array=new Array();
+				validatorArray.push(numeroValid);
+				validatorArray.push(codpostalvalid);			
+				var validatorErrorArray:Array = Validator.validateAll(validatorArray);
+				var isValidForm:Boolean = validatorErrorArray.length == 0;                
+				return isValidForm
+				
+				
+			}
+			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			
 		]]>
 	</fx:Script>
@@ -594,7 +615,7 @@
 	</components:AdvancedAutoComplete>
 	<s:Label x="10" y="54" text="Orientacion"/>
 	<s:Label x="467" y="9" text="Cod.Postal"/>
-	<controls:MaskedTextInput id="txtcodpostal" required="true" x="466" restrict="0-9 a-z A-Z -_" maxChars="10" y="20" width="75" height="25"/>
+	<controls:MaskedTextInput id="txtcodpostal" x="466" restrict="0-9 a-z A-Z -_" maxChars="10" y="20" width="75" height="25" required="true"/>
 	<s:Button id="btnAddLocalidades" x="545" y="24" width="36" label="A"
 			  click="btnAddLocalidades_clickHandler(event)" enabled="false" icon="assets/add.jpg"
 			  toolTip="Agregar Una Localidad"/>
@@ -620,11 +641,11 @@
 			  click="btnaddbarrios_clickHandler(event)" enabled="false" icon="assets/add.jpg"/>
 	<s:TextInput id="txtentrecalle" x="12" y="149" width="214" maxChars="100"/>
 	<s:Label x="13" y="138" text="Entre Calle y Calle"/>
-	<controls:MaskedTextInput restrict="0-9" required="true" maxChars="10" id="txtnumero" x="12" y="107" width="98"/>
+	<controls:MaskedTextInput restrict="0-9" maxChars="10" id="txtnumero" x="12" y="107" width="98" required="true"/>
 	<s:Label x="13" y="96" text="Numero"/>
 	<controls:MaskedTextInput restrict="0-9 a-z A-Z -_" maxChars="10" id="txtnumdepto" x="116" y="107" width="68"/>
 	<s:Label x="115" y="97" text="Num Depto"/>
-	<s:TextArea id="txtobservaciones" x="236" y="149" width="322" height="104" maxChars="255"/>
+	<s:TextArea id="txtobservaciones" x="236" y="149" width="361" height="128" maxChars="5000"/>
 	<s:Label x="236" y="138" text="Observaciones"/>
 	<controls:MaskedTextInput id="txtarea" maxChars="10" x="530" y="108" width="67"/>
 	<s:Label x="531" y="97" text="Area"/>
@@ -702,5 +723,11 @@
 				
 			</s:operation>
 		</s:WebService>
+		<mx:NumberValidator id="numeroValid" source="{txtnumero}" minValue="0" maxValue="999999" required="true">
+			
+		</mx:NumberValidator>
+		<mx:NumberValidator id="codpostalvalid" source="{txtcodpostal}" required="true">
+			
+		</mx:NumberValidator>
 	</fx:Declarations>
 </s:Group>

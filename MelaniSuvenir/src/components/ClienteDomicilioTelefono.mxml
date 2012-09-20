@@ -56,7 +56,7 @@
 			protected function btnGuardar_clickHandler(event:MouseEvent):void
 			{
 			
-				var isValidForm:Boolean=tabDatosPersonales.validateForm();
+				var isValidForm:Boolean= tabDatosPersonales.validateForm() && tabDomicilios.txtcodpostal.text.length>0 && tabDomicilios.txtnumero.length>0;
 				if(isValidForm)
 					Alert.show("Está Seguro de Guardar?","Confirmar Operación", Alert.YES | Alert.NO, this, getDatosCliente, null, Alert.YES);
 				else
@@ -68,7 +68,7 @@
 				
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 				serviceCli.addCliente(sendInformation());
-				//Alert.show("HOLA A TODOS "+sendInformation());
+				Alert.show("HOLA A TODOS "+sendInformation());
 				
 			}
 			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -94,6 +94,7 @@
 			
 			protected function tabBar_changeHandler(event:IndexChangeEvent):void
 			{
+				var longarray:int;
 				if(btnGuardar.enabled==false)
 					btnGuardar.enabled=true;
 				
@@ -128,8 +129,7 @@
 					}else{
 						if(infodomicli.length==0)
 							tabDomicilios.clearFormDomicilios();
-						if(btnGuardar.enabled==true)
-							btnGuardar.enabled=false;
+						
 					}
 				
 				}
@@ -137,7 +137,7 @@
 				
 							if(infotelcli.length>0){
 									
-										var longarray:int=tabTelefonos.arrayTel.length;
+										longarray=tabTelefonos.arrayTel.length;
 										for(var j:int=0;j<longarray;j++)
 													tabTelefonos.arrayTel.pop();
 										
@@ -153,8 +153,7 @@
 							}else{
 								if(infotelcli.length==0)
 									tabTelefonos.clearTodo();
-								if(btnGuardar.enabled==true)
-									btnGuardar.enabled=false;
+								
 							}
 							
 						
@@ -190,6 +189,12 @@
 					case -1:{Alert.show("Error en el Server, verifique!!!");
 						break;
 					}
+					case -2:{Alert.show("Error en el Server, verifique!!!");
+						break;
+					}	
+					case -3:{Alert.show("Error en el Server, verifique!!!");
+						break;
+					}	
 					case -5:{Alert.show("Email encontrado ya registrado en la base de datos");
 						break;
 					}					
@@ -209,7 +214,7 @@
 			
 			protected function operation1_faultHandler(event:FaultEvent):void
 			{
-				Alert.show(event.fault.toString());
+				Alert.show("FALLÓ EL SERVICIO, VERIFIQUE!!!"+event.fault.toString());
 			}
 			
 		]]>
