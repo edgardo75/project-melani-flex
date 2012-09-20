@@ -276,7 +276,7 @@
 			
 			protected function operation1_faultHandler(event:FaultEvent):void
 			{
-				Alert.show(event.fault.toString());
+				Alert.show("FALLÓ EL SERVICIO, VERIFIQUE!!!"+event.fault.toString());
 				
 			}
 			
