@@ -220,9 +220,9 @@
 			public function clearComponenteCliente():void{
 					
 				txtapellido.text="";
-				txtdocumento.text="";
+				//txtdocumento.text="";
 				txtemail.text="";
-				txtnombre.text=" ";
+				txtnombre.text="";
 				txtobservaciones.text="";
 				cmbGeneros.selectedItemId=2;
 				cmbTiposdocu.selectedItemId=3;
@@ -234,7 +234,7 @@
 			{
 				respuesta ="";
 				respuesta = event.result.toString();
-				//Alert.show(event.result.toString());
+				
 				xmlInfoClient=new XMLList(event.result);
 				xmlinfoclidomi=new XMLList(xmlInfoClient.item.personadomicilio.domicilio);
 				xmlinfotelcli=new XMLList(xmlInfoClient.item.personatelefono.telefono);
