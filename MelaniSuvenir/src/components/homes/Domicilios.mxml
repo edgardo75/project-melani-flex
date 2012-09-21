@@ -536,19 +536,19 @@
 			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			public function getDatosDomiciliosXML():String{
 				if(txtarea.length==0)
-					txtarea.text="NO INGRESADO";
+					txtarea.text="NO INGRES";
 				if(txtentrecalle.text.length==0)
 					txtentrecalle.text="NO INGRESADO";
 				if(txtmanzana.text.length==0)
-					txtmanzana.text="NO INGRESADO";
+					txtmanzana.text="NO INGRES";
 				if(txtmonoblock.text.length==0)
-					txtmonoblock.text="NO INGRESADO";
+					txtmonoblock.text="NO INGRES";
 				if(txtpiso.text.length==0)
-					txtpiso.text="NO INGRESADO";
+					txtpiso.text="NO INGRES";
 				if(txtsector.text.length==0)
-					txtsector.text="NO INGRESADO";
+					txtsector.text="NO INGRES";
 				if(txttorre.text.length==0)
-					txttorre.text="NO INGRESADO";
+					txttorre.text="NO INGRES";
 				if(txtnumdepto.text.length==0)
 					txtnumdepto.text="0";
 				if(txtnumero.length==0)
@@ -639,7 +639,7 @@
 			  click="btnaddcalles_clickHandler(event)" enabled="false" icon="assets/add.jpg"/>
 	<s:Button id="btnaddbarrios" x="582" y="70" width="29" label="+"
 			  click="btnaddbarrios_clickHandler(event)" enabled="false" icon="assets/add.jpg"/>
-	<s:TextInput id="txtentrecalle" x="12" y="149" width="214" maxChars="100"/>
+	<s:TextInput id="txtentrecalle" x="12" y="149" width="214" maxChars="255"/>
 	<s:Label x="13" y="138" text="Entre Calle y Calle"/>
 	<controls:MaskedTextInput restrict="0-9" maxChars="10" id="txtnumero" x="12" y="107" width="98" required="true"/>
 	<s:Label x="13" y="96" text="Numero"/>
