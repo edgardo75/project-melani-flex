@@ -5,14 +5,14 @@
 			   xmlns:components="components.*"
 			   xmlns:components2="components.GrfxGuru-Adobe-Flex-4.5-Components-86959eb.com.uibuzz.components.*"
 			   xmlns:components3="components.com.uibuzz.components.*"
-			   height="830" minWidth="955" minHeight="600" xmlns:clients="components.clients.*" xmlns:homes="components.homes.*" xmlns:phones="components.phones.*">
+			   height="896" minWidth="955" minHeight="600" xmlns:clients="components.clients.*" xmlns:homes="components.homes.*" xmlns:phones="components.phones.*">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		
 		
 	</fx:Declarations>
-	<clients:getClient x="193" y="36">
+	<clients:getClient x="304" y="7">
 	</clients:getClient>
-	<homes:Domicilios x="73" y="144"/>
+	<homes:Domicilios x="251" y="277"/>
 	<phones:Telefonos x="102" y="437"/>
 </s:Application>

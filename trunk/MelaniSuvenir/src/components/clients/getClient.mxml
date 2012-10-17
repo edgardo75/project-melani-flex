@@ -3,13 +3,27 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
-		 width="356" height="100" creationComplete="group1_creationCompleteHandler(event)">
+		 width="472" height="256" creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Script>
 		<![CDATA[
+			import components.clients.grillaClientes;
+			import components.clients.popupClienteNameSecondName;
+			
 			import mx.controls.Alert;
+			import mx.core.IFlexDisplayObject;
+			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			
+			import spark.components.TitleWindow;
+			[Bindable]
+			public var xmlcliente:XMLList;
+			
+			//private var grillaclientes:grillaClientes;
+			
+			public var secondName:popupClienteNameSecondName;
 			
 			protected function mskdocu_enterHandler(event:FlexEvent):void
 			{
@@ -32,7 +46,9 @@
 				if(event.result.toString().indexOf("Cliente no encontrado")!=-1)
 					Alert.show("CLIENTE NO ENCOTRADO");
 				
-				lblapellidoynombre.text=String(cliente.nombre+" "+cliente.apellido).toUpperCase();
+				//lblapellidoynombre.text=String(cliente.nombre+" "+cliente.apellido).toUpperCase();
+				txtnombre.text=String(cliente.nombre);
+				txtapellido.text=String(cliente.apellido);
 				lblnocli.text=cliente.id;
 				
 				
@@ -43,6 +59,74 @@
 			protected function group1_creationCompleteHandler(event:FlexEvent):void
 			{
 				mskdocu.setFocus();
+				txtapellido.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				txtnombre.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+			}
+			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			private function transferirFocus(keypress:KeyboardEvent):void{
+				if(keypress.keyCode==Keyboard.ENTER){
+				
+					if(keypress.currentTarget.toString().indexOf("txtapellido")!=-1 && txtapellido.text.length >= 4 && txtnombre.text.length >=4)
+								cli.searchClientForNameAndLastName(txtnombre.text.toString(),txtapellido.text.toString());
+								
+					else{
+							if(keypress.currentTarget.toString().indexOf("txtnombre")!=-1&&txtnombre.text.length>=4){
+									txtapellido.setFocus();
+							
+							}	
+					}
+				
+				}
+			
+			
+			}
+			
+			protected function operation2_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("Error en el Servidor, verifique!!!");	
+				
+			}
+			
+			protected function operation2_resultHandler(event:ResultEvent):void
+			{
+				
+				
+				
+				xmlcliente =new XMLList(event.result);
+				
+				//**************************************************popupWindows++++++++++++++++++++++++++++++++++
+					
+					displayPopup();		
+						
+					
+				//***********************************************************************************************
+				
+				
+			}
+			//***********************************************************************
+			public function displayPopup():void{
+				var pop1:popupClienteNameSecondName=popupClienteNameSecondName(PopUpManager.createPopUp(this,popupClienteNameSecondName,true));
+				
+				/*+Set TitleWindows properties+*/
+				pop1.title="Seleccione un Registro";
+				pop1.showCloseButton=true;
+				
+				/*Set properties to custom component popup*/
+				pop1.targetCodeCustomer=lblnocli;
+				pop1.targetName=txtnombre;
+				pop1.targetNumCustomer=mskdocu;
+				pop1.targetSecondName=txtapellido;
+				pop1.clidata=xmlcli;
+				PopUpManager.centerPopUp(pop1);
+				
+				
+			
+			
+			}
+			//***********************************************************************
+			public function windows_Popup_close(evt:CloseEvent):void{
+				PopUpManager.removePopUp(evt.currentTarget as IFlexDisplayObject);
+			
 			}
 			
 		]]>
@@ -55,19 +139,24 @@
 						 name="getCustomerDocNumber">
 				
 			</s:operation>
+			<s:operation fault="operation2_faultHandler(event)" result="operation2_resultHandler(event)"
+						 name="searchClientForNameAndLastName">
+				
+			</s:operation>
 			
 		</s:WebService>
-		<s:XMLListCollection id="xmlcli"/>
+		<s:XMLListCollection id="xmlcli" source="{xmlcliente.item}"/>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<s:Label x="20" y="21" height="15" fontSize="14" fontWeight="bold" text="Documento:"/>
-	<controls:MaskedTextInput id="mskdocu" x="110" y="14" enter="mskdocu_enterHandler(event)"
+	<s:Label x="122" y="75" height="15" fontSize="14" fontWeight="bold" text="Documento:"/>
+	<controls:MaskedTextInput id="mskdocu" x="207" y="68" enter="mskdocu_enterHandler(event)"
 							  fontSize="18" inputMask="##########" maxChars="10" restrict="0-9"
 							  toolTip="Ingrese Número de Documento!!!"/>
-	<s:Label x="21" y="49" fontSize="14" fontWeight="bold" text="Nombre:"/>
-	<s:Label id="lblapellidoynombre" x="82" y="47" width="266" fontFamily="Verdana" fontSize="15"
+	<s:Label x="146" y="124" fontSize="14" fontWeight="bold" text="Nombre:"/>
+	<s:Label x="134" y="96" fontSize="14" fontWeight="bold" text="Cliente N°:"/>
+	<s:Label id="lblnocli" x="206" y="93" width="124" fontFamily="Verdana" fontSize="15"
 			 fontWeight="bold" verticalAlign="middle"/>
-	<s:Label x="20" y="75" fontSize="14" fontWeight="bold" text="Cliente N°:"/>
-	<s:Label id="lblnocli" x="96" y="73" width="124" fontFamily="Verdana" fontSize="15"
-			 fontWeight="bold" verticalAlign="middle"/>
+	<s:TextInput id="txtnombre" x="205" y="116" maxChars="40" prompt="Ingrese Nombre" restrict="a-z A-Z ñ-Ñ"/>
+	<s:Label id="lblapellido" x="140" y="149" fontSize="14" fontWeight="bold" text="Apellido:"/>
+	<s:TextInput id="txtapellido" x="204" y="142" prompt="Ingrese Apellido" maxChars="40" restrict="a-z A-Z ñ-Ñ"/>
 </s:Group>
