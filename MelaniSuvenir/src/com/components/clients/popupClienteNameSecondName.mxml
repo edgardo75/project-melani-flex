@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+				xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="422" height="344" close="titlewindow1_closeHandler()" >
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.flex.extras.controls.MaskedTextInput;
+			
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.managers.PopUpManager;
+			
+			import spark.components.Label;
+			import spark.components.TextInput;
+			
+			[Bindable]
+			public var targetName:TextInput;
+			[Bindable]
+			public var targetSecondName:TextInput;
+			[Bindable]
+			public var targetCodeCustomer:Label;
+			[Bindable]
+			public var targetNumCustomer:MaskedTextInput;
+			
+			
+			
+			protected function handleCloseEvent(event:CloseEvent):void
+			{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+				
+			}
+			
+			protected function adgclientes_itemDoubleClickHandler(event:ListEvent):void
+			{
+				
+				
+			
+				
+				targetName.text=String(adgclientes.selectedItem.nombre);
+				targetSecondName.text=String(adgclientes.selectedItem.apellido);
+				targetCodeCustomer.text=String(adgclientes.selectedItem.id);
+				targetNumCustomer.text=String(adgclientes.selectedItem.nrodocu);
+				
+			
+				
+				
+				titlewindow1_closeHandler();
+	
+				
+			}	
+			
+			protected function titlewindow1_closeHandler():void
+			{
+				// TODO Auto-generated method stub
+				
+				PopUpManager.removePopUp(this);
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:XMLListCollection id="clidata"/>
+	</fx:Declarations>
+	
+	
+		<mx:AdvancedDataGrid id="adgclientes" x="13" y="10" width="377" height="238" dataProvider="{clidata}" 
+							 designViewDataType="flat" doubleClickEnabled="true"
+							 itemDoubleClick="adgclientes_itemDoubleClickHandler(event)" resizableColumns="false">
+			<mx:columns>
+				<mx:AdvancedDataGridColumn dataField="nombre" headerText="Nombre"/>
+				<mx:AdvancedDataGridColumn dataField="apellido" headerText="Apellido"/>
+				<mx:AdvancedDataGridColumn dataField="nrodocu" headerText="Documento"/>
+				<mx:AdvancedDataGridColumn dataField="id" headerText="Id" visible="false"/>
+			</mx:columns>
+		</mx:AdvancedDataGrid>
+	
+</mx:TitleWindow>

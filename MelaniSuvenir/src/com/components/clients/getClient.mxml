@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:controls="com.adobe.flex.extras.controls.*"
+		 width="438" height="256" creationComplete="group1_creationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import com.components.clients.grillaClientes;
+			import com.components.clients.popupClienteNameSecondName;
+			
+			import mx.controls.Alert;
+			import mx.core.IFlexDisplayObject;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import spark.components.TitleWindow;
+			[Bindable]
+			public var xmlcliente:XMLList;
+			
+			//private var grillaclientes:grillaClientes;
+			
+			public var secondName:popupClienteNameSecondName;
+			
+			protected function mskdocu_enterHandler(event:FlexEvent):void
+			{
+				cli.getCustomerDocNumber(int(mskdocu.text));
+				
+			}
+			
+			protected function operation1_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("Error "+event.fault.toString());
+				
+			}
+			
+			protected function operation1_resultHandler(event:ResultEvent):void
+			{
+				var cliente:XMLList;
+				cliente = new XMLList(event.result);
+				
+				//xmlcli.source=new XMLListCollection(cliente).child("item");
+				if(event.result.toString().indexOf("Cliente no encontrado")!=-1)
+					Alert.show("CLIENTE NO ENCOTRADO");
+				
+				//lblapellidoynombre.text=String(cliente.nombre+" "+cliente.apellido).toUpperCase();
+				txtnombre.text=String(cliente.nombre);
+				txtapellido.text=String(cliente.apellido);
+				lblnocli.text=cliente.id;
+				
+				
+				
+				
+			}
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				mskdocu.setFocus();
+				txtapellido.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				txtnombre.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+			}
+			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			private function transferirFocus(keypress:KeyboardEvent):void{
+				if(keypress.keyCode==Keyboard.ENTER){
+				
+					if(keypress.currentTarget.toString().indexOf("txtapellido")!=-1 && txtapellido.text.length >= 4 && txtnombre.text.length >=4)
+								cli.searchClientForNameAndLastName(txtnombre.text.toString(),txtapellido.text.toString());
+								
+					else{
+							if(keypress.currentTarget.toString().indexOf("txtnombre")!=-1&&txtnombre.text.length>=4){
+									txtapellido.setFocus();
+							
+							}	
+					}
+				
+				}
+			
+			
+			}
+			
+			protected function operation2_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("Error en el Servidor, verifique!!!");	
+				
+			}
+			
+			protected function operation2_resultHandler(event:ResultEvent):void
+			{
+				
+				
+				
+				xmlcliente =new XMLList(event.result);
+				
+				//**************************************************popupWindows++++++++++++++++++++++++++++++++++
+					
+					displayPopup();		
+						
+					
+				//***********************************************************************************************
+				
+				
+			}
+			//***********************************************************************
+			public function displayPopup():void{
+				var pop1:popupClienteNameSecondName=popupClienteNameSecondName(PopUpManager.createPopUp(this,popupClienteNameSecondName,true));
+				
+				/*+Set TitleWindows properties+*/
+				pop1.title="Seleccione un Registro";
+				pop1.showCloseButton=true;
+				
+				/*Set properties to custom component popup*/
+				pop1.targetCodeCustomer=lblnocli;
+				pop1.targetName=txtnombre;
+				pop1.targetNumCustomer=mskdocu;
+				pop1.targetSecondName=txtapellido;
+				pop1.clidata=xmlcli;
+				PopUpManager.centerPopUp(pop1);
+				
+				
+			
+			
+			}
+			//***********************************************************************
+			public function windows_Popup_close(evt:CloseEvent):void{
+				PopUpManager.removePopUp(evt.currentTarget as IFlexDisplayObject);
+			
+			}
+			
+			protected function btninserclient_clickHandler(event:MouseEvent):void
+			{
+				displayPopupCustomerPersonalData();
+			}
+			public function displayPopupCustomerPersonalData():void{
+				var popup2:guardarDatosPersonalClientePopup=guardarDatosPersonalClientePopup(PopUpManager.createPopUp(this,guardarDatosPersonalClientePopup,true));
+				
+				popup2.title="Ingrese Datos Personales de Cliente";
+				
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:WebService wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"
+					  id="cli" showBusyCursor="true">
+			<s:operation fault="operation1_faultHandler(event)"
+						 result="operation1_resultHandler(event)" 
+						 name="getCustomerDocNumber">
+				
+			</s:operation>
+			<s:operation fault="operation2_faultHandler(event)" result="operation2_resultHandler(event)"
+						 name="searchClientForNameAndLastName">
+				
+			</s:operation>
+			
+		</s:WebService>
+		<s:XMLListCollection id="xmlcli" source="{xmlcliente.item}"/>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Label x="19" y="39" height="15" fontSize="14" fontWeight="bold" text="Documento:"/>
+	<controls:MaskedTextInput id="mskdocu" x="104" y="32" enter="mskdocu_enterHandler(event)"
+							  fontSize="18" inputMask="########" maxChars="8" restrict="0-9"
+							  toolTip="Ingrese Número de Documento!!!"/>
+	<s:Label x="43" y="96" fontSize="14" fontWeight="bold" text="Nombre:"/>
+	<s:Label x="31" y="63" fontSize="14" fontWeight="bold" text="Cliente N°:"/>
+	<s:Label id="lblnocli" x="103" y="60" width="124" fontFamily="Verdana" fontSize="18"
+			 fontWeight="bold" verticalAlign="middle"/>
+	<s:TextInput id="txtnombre" x="102" y="85" width="188" fontSize="18" maxChars="40"
+				 prompt="Ingrese Nombre" restrict="a-z A-Z ñ-Ñ"/>
+	<s:Label id="lblapellido" x="37" y="125" fontSize="14" fontWeight="bold" text="Apellido:"/>
+	<s:TextInput id="txtapellido" x="101" y="118" width="189" fontSize="18" maxChars="40"
+				 prompt="Ingrese Apellido" restrict="a-z A-Z ñ-Ñ"/>
+	<s:Button id="btninserclient" x="326" y="21" label="DatosCliente" toolTip="Ingresa Datos Personales de un Cliente" click="btninserclient_clickHandler(event)"/>
+</s:Group>

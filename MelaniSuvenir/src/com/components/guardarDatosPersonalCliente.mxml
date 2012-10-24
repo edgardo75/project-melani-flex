@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:components="com.components.*" toolTip="Formulario de carga para Datos Personales Básicos de un Cliente!!!"
+		 width="560" height="380" creationComplete="group1_creationCompleteHandler(event)" xmlns:clients="com.components.clients.*">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<mx:WebService id="servicesCliente" wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"
+					  
+					  showBusyCursor="true"
+					  useProxy="false">
+			<mx:operation name="addCliente"
+						 resultFormat="object"
+						 result="operation1_resultHandler(event)"
+						 fault="operation1_faultHandler(event)">				
+			</mx:operation>			
+		</mx:WebService>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import com.components.utils.BarraProgreso;
+			
+			import mx.controls.Alert;
+			import mx.controls.ProgressBar;
+			import mx.events.FlexEvent;
+			import mx.events.ValidationResultEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			private var popupWait:BarraProgreso;
+			private var vResult:ValidationResultEvent;
+			
+			
+				protected function getDatosCliente():String{
+					if(clienteComp.txtemail.text==null)
+						clienteComp.txtemail.text="EMAIL NO INGRESADO";
+					var datosCliente:String=
+						"<ClienteDomicilioTelefono>\n"+
+							"<item>\n"+
+								"<apellido>"+clienteComp.txtapellido.text.toUpperCase()+"</apellido>\n"+
+								"<nombre>"+clienteComp.txtnombre.text.toUpperCase()+"</nombre>\n"+
+								"<email>"+clienteComp.txtemail.text.toLowerCase()+"</email>\n"+
+								"<observaciones>"+clienteComp.txtobservaciones.text+"</observaciones>\n"+
+								"<nrodocu>"+clienteComp.txtdocumento.text+"</nrodocu>\n"+
+								"<idtipodocu>"+clienteComp.cmbTiposdocu.selectedItemId+"</idtipodocu>\n"+
+								"<totalcompras>0</totalcompras>\n"+
+								"<totalpuntos>0</totalpuntos>\n"+
+								"<idcliente>0</idcliente>\n"+
+								"<genero>\n"+
+									"<idgenero>"+clienteComp.cmbGeneros.selectedItemId+"</idgenero>\n"+
+								"</genero>\n"+
+							"</item>\n"+							
+						"</ClienteDomicilioTelefono>\n";
+					return datosCliente;
+				}
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+			
+				focusManager.setFocus(clienteComp.txtdocumento);
+				
+			}
+			
+			protected function operation1_resultHandler(event:ResultEvent):void
+			{
+				PopUpManager.removePopUp(popupWait);
+				
+				var indice:Number;
+				indice=new Number(event.result.toString());
+				
+				switch(indice)
+				{
+					case 0:
+					{
+						Alert.show("NO PASÓ NADA!!!"+indice);	
+						break;
+					}
+					case -1:{
+						Alert.show("ERROR EN EL SERVIDOR!!!"+indice);	
+						break;
+					}	
+					case -2:{
+						Alert.show("ERROR CLIENTE NO ENCOTRADO!!!"+indice);	
+						break;
+					}	
+					case -3:{
+						Alert.show("NO SE PUDO AGREGAR DOMICILIO!!!");
+						break;
+					}	
+					default:
+					{
+						Alert.show("Cliente Almacenado Nº "+indice);
+						clienteComp.clearComponenteCliente();
+						
+						break;
+					}
+				}
+				
+				
+			}
+			//-----------------------------------------------------------
+			protected function operation1_faultHandler(event:FaultEvent):void
+			{
+				Alert.show(event.fault.toString());
+				
+			}
+			//-----------------------------------------------------------
+			protected function btnClose_clickHandler(event:MouseEvent):void
+			{
+				this.removeAllElements();
+			}
+			//-----------------------------------------------------------			
+			protected function validateAndSubmit(event:MouseEvent):void
+			{
+				// Validate the required fields. 
+				//Alert.show(getDatosCliente());
+				vResult = clienteComp.nomV.validate();
+				//-----------------------------------------------------------
+				if(vResult.type==ValidationResultEvent.INVALID)
+					return;
+				else{
+					
+					vResult=clienteComp.apeV.validate();
+					if(vResult.type==ValidationResultEvent.INVALID)
+						return;
+					
+					
+				}
+				//-----------------------------------------------------------
+				if(clienteComp.cmbTiposdocu.selectedItem==null){
+					Alert.show("Seleccione un Tipo de Documento DNI, LE, LC, PASAPORTE");
+					return;
+				}
+				//-----------------------------------------------------------
+				if(clienteComp.txtdocumento.text.length==0){
+					Alert.show("Ingrese un número de Documento!!!");
+					return;
+				}else{
+					if(clienteComp.txtdocumento.text.length<7){
+						Alert.show("Ingrese un número de Documento de manera correcta");
+						return;
+						
+					}
+				}
+				//------------------------------------------------------------
+				if(clienteComp.cmbGeneros.selectedItem==null){
+					Alert.show("Debe Seleccionar el Genero F o M");
+					return;
+				}
+				//-------------------------------------------------------------					
+				
+				
+				
+				///SendData to Server
+				//popupWait = BarraProgreso(PopUpManager.createPopUp(this, BarraProgreso, true));				
+				//PopUpManager.centerPopUp(popupWait);
+				//-------------------------------------------------------------
+				
+				//-------------------------------------------------------------
+				servicesCliente.addCliente(getDatosCliente());
+				
+				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	
+	
+	<clients:datosCliente id="clienteComp" x="14" y="10">
+	</clients:datosCliente>
+	<s:Button id="btnGuardarCli" x="233" y="353" label="Guardar"
+			  click="validateAndSubmit(event)"/>
+	<s:Button id="btnCloseClientComponent" x="510" y="5" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
+</s:Group>
