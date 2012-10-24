@@ -3,19 +3,27 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:components="com.components.*" toolTip="Formulario de carga para Datos Personales Básicos de un Cliente!!!"
-		 width="570" height="438" creationComplete="group1_creationCompleteHandler(event)" xmlns:clients="com.components.clients.*">
+		 width="570" height="438" creationComplete="group1_creationCompleteHandler(event)" xmlns:clients="com.components.clients.*" close="titlewindow1_closeHandler()">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<mx:WebService id="servicesCliente" wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"
-					  
+		<s:WebService id="servicesCliente" wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"					  
 					  showBusyCursor="true"
 					  useProxy="false">
-			<mx:operation name="addCliente"
+			
+			<s:operation name="addCliente"
 						 resultFormat="object"
 						 result="operation1_resultHandler(event)"
 						 fault="operation1_faultHandler(event)">				
-			</mx:operation>			
-		</mx:WebService>
+			</s:operation>		
+			
+			<s:operation name="addClienteDatosPersonales"
+						  resultFormat="object"
+						  result="operationDatosPersonalesREstHandler(event)"
+						  fault="operationDatosPersonalesFaultHandelr(event)">				
+			</s:operation>		
+			
+			
+		</s:WebService>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
@@ -23,16 +31,57 @@
 			
 			import mx.controls.Alert;
 			import mx.controls.ProgressBar;
+			import mx.controls.TextInput;
+			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.events.ValidationResultEvent;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
+			import spark.components.Label;
+			import spark.components.TextInput;
+			
 			private var popupWait:BarraProgreso;
 			private var vResult:ValidationResultEvent;
 			
+			[Bindable]
+			private var xmlClienteDatosPersonales:XMLList;
 			
+			[Bindable]
+			public var idcliente:spark.components.Label;
+			[Bindable]
+			public var nrodocu:mx.controls.TextInput;
+			[Bindable]
+			public var nombre:spark.components.TextInput;
+			[Bindable]
+			public var apellido:spark.components.TextInput;
+			
+			
+			
+			//*******************************************************************************************
+			protected function operationDatosPersonalesREstHandler(event:ResultEvent):void{
+				
+				xmlClienteDatosPersonales=new XMLList(event.result);
+				
+				if(xmlClienteDatosPersonales.toString().indexOf("<id>")!=-1){
+						idcliente.text=String(datoscliente[0].id);
+						nrodocu.text=String(datoscliente[0].nrodocu);
+						nombre.text=String(datoscliente[0].nombre);
+						apellido.text=String(datoscliente[0].apellido);
+						
+						titlewindow1_closeHandler();
+				
+				}else
+					Alert.show("Mensaje "+xmlClienteDatosPersonales.toString());	
+				
+				
+			}
+			//*********************************************************************************************
+			protected function operationDatosPersonalesFaultHandelr(event:FaultEvent):void{
+				Alert.show("Se produjo un error al almacenar datos personales de clientes!!!");
+			}
+			//************************************************************************************************
 				protected function getDatosCliente():String{
 					if(clienteComp.txtemail.text==null)
 						clienteComp.txtemail.text="EMAIL NO INGRESADO";
@@ -42,7 +91,7 @@
 								"<apellido>"+clienteComp.txtapellido.text.toUpperCase()+"</apellido>\n"+
 								"<nombre>"+clienteComp.txtnombre.text.toUpperCase()+"</nombre>\n"+
 								"<email>"+clienteComp.txtemail.text.toLowerCase()+"</email>\n"+
-								"<observaciones>"+clienteComp.txtobservaciones.text+"</observaciones>\n"+
+								"<det2allescli>"+clienteComp.txtobservaciones.text+"</det2allescli>\n"+
 								"<nrodocu>"+clienteComp.txtdocumento.text+"</nrodocu>\n"+
 								"<idtipodocu>"+clienteComp.cmbTiposdocu.selectedItemId+"</idtipodocu>\n"+
 								"<totalcompras>0</totalcompras>\n"+
@@ -54,7 +103,7 @@
 							"</item>\n"+							
 						"</ClienteDomicilioTelefono>\n";
 					return datosCliente;
-				}
+		 }
 			protected function group1_creationCompleteHandler(event:FlexEvent):void
 			{
 			
@@ -155,8 +204,16 @@
 				//-------------------------------------------------------------
 				
 				//-------------------------------------------------------------
-				servicesCliente.addCliente(getDatosCliente());
+				servicesCliente.addClienteDatosPersonales(getDatosCliente());
 				
+				
+			}
+			
+			protected function titlewindow1_closeHandler():void
+			{
+				// TODO Auto-generated method stub
+				
+				PopUpManager.removePopUp(this);
 				
 			}
 			
@@ -164,9 +221,11 @@
 	</fx:Script>
 	
 	
-	
+	<fx:Declarations>
+		<s:XMLListCollection id="datoscliente" source="{xmlClienteDatosPersonales.item}"/>
+	</fx:Declarations>
 	<clients:datosCliente id="clienteComp" x="14" y="10">
 	</clients:datosCliente>
-	<s:Button id="btnGuardarCli" x="233" y="353" label="Guardar"
+	<s:Button id="btnGuardarCli" x="233" y="359" label="Guardar"
 			  click="validateAndSubmit(event)"/>
 </s:TitleWindow>

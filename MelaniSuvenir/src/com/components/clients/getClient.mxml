@@ -138,6 +138,11 @@
 				
 				popup2.title="Ingrese Datos Personales de Cliente";
 				
+				popup2.idcliente=lblnocli;
+				popup2.nombre=txtnombre;
+				popup2.apellido=txtapellido;
+				popup2.nrodocu=mskdocu;
+				PopUpManager.centerPopUp(popup2);
 			}
 			
 		]]>
@@ -172,5 +177,5 @@
 	<s:Label id="lblapellido" x="37" y="125" fontSize="14" fontWeight="bold" text="Apellido:"/>
 	<s:TextInput id="txtapellido" x="101" y="118" width="189" fontSize="18" maxChars="40"
 				 prompt="Ingrese Apellido" restrict="a-z A-Z ñ-Ñ"/>
-	<s:Button id="btninserclient" x="326" y="21" label="DatosCliente" toolTip="Ingresa Datos Personales de un Cliente" click="btninserclient_clickHandler(event)"/>
+	<s:Button id="btninserclient" x="308" y="21" label="DatosCliente" toolTip="Ingresa Datos Personales de un Cliente" click="btninserclient_clickHandler(event)"/>
 </s:Group>
