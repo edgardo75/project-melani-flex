@@ -2,8 +2,8 @@
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
-			   xmlns:components="components.*"
-			   width="1263" height="666" minWidth="955" minHeight="600"
+			   xmlns:components="com.components.*"
+			   width="1263" height="688" minWidth="955" minHeight="600"
 			   creationComplete="application1_creationCompleteHandler(event)">
 	
 	<fx:Declarations>
@@ -35,9 +35,9 @@
 				<menuitem label="Ver Presupuestos"/>
 				<menuitem type="separator"/>
 			</menuitem>
-			<menuitem label="Ordenes de Compra">
+			<menuitem label="Notas">
 				<menuitem type="separator"/>
-				<menuitem label="Ordenes"/>
+				<menuitem label="Nota de Pedido"/>
 				<menuitem type="separator"/>
 				<menuitem label="Ver Ordenes"/>
 				<menuitem type="separator"/>
@@ -60,16 +60,17 @@
 			</menuitem>
 		</fx:XMLList>
 	</mx:MenuBar>
-	<mx:Panel id="panelCentral" x="10" y="25" width="1243" height="631">
+	<mx:Panel id="panelCentral" x="10" y="25" width="1243" height="660">
 	</mx:Panel>
 	
 	<fx:Script>
 		<![CDATA[			
-			import components.ClienteDomicilioTelefono;
-			import components.budgets.GuardarPresupuesto;
-			import components.budgets.Verpresupuestos;
-			import components.products.datosProducto;
-			import components.guardarDatosPersonalCliente;
+			import com.components.ClienteDomicilioTelefono;
+			import com.components.budgets.GuardarPresupuesto;
+			import com.components.budgets.Verpresupuestos;
+			import com.components.guardarDatosPersonalCliente;
+			import com.components.orderform.noteTheOrder;
+			import com.components.products.datosProducto;
 			
 			import flash.net.navigateToURL;
 			
@@ -100,12 +101,17 @@
 					panelCentral.removeAllChildren();
 					panelCentral.addChild(new Verpresupuestos());
 				}
-				if(event.item.@label=="Clientes"){
-					verInformeCliente();
+				if(event.item.@label=="Clientes")
+					 verInformeCliente()
+				
+				if(event.item.@label=="Nota de Pedido"){
+					panelCentral.removeAllChildren();
+					panelCentral.addChild(new noteTheOrder());
+							
 				}
-				if(event.item.@label=="Productos"){
-					verInformeProductos();				
-				}
+				if(event.item.@label=="Productos")
+				    	verInformeProductos();				
+				
 				if(event.item.@label=="Barrios"){
 					verInformeBarrios();
 				}
