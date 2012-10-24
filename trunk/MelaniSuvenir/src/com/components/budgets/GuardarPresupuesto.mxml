@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:components="com.components.*"
+		 width="924" height="534" creationComplete="group1_creationCompleteHandler(event)" xmlns:products="com.components.products.*">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:WebService id="servicePresupuesto" wsdl="http://localhost:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="true">
+			<s:operation name="addBudgets" result="operation1_resultHandler(event)"
+						 fault="operation1_faultHandler(event)">
+				
+			</s:operation>
+		</s:WebService>
+		<mx:StringValidator required="true" source="{txtnombre}" property="text" minLength="2" maxLength="40"/>
+		<mx:StringValidator required="true" source="{txtapellido}" property="text" minLength="2" maxLength="20"  />
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import flash.net.navigateToURL;
+			
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			//--------------------------------------------------------------------------------
+			public function getDatosXML():String{				
+				//--------------------------------------------------------------------------------------
+				var descporcenttot:Number=0;
+				descporcenttot=productordered.porc_desc_total+productordered.temp_tot_porc_desc;
+				
+				
+			 var datosXML:String="<presupuesto>\n"+
+					 "<idpresupuesto>0</idpresupuesto>\n"+
+					 "<observaciones>"+txtobservaciones.text+"</observaciones>\n"+
+					 "<id_usuario_expidio>0</id_usuario_expidio>\n"+
+					 "<fvalidez>10/10/2012</fvalidez>\n"+
+					 "<fpresupuesto>10/10/2012</fpresupuesto>\n"+
+					 "<total>"+productordered.lblTotGral.text+"</total>\n"+
+					 "<nombre>"+txtnombre.text.toUpperCase()+"</nombre>\n"+
+					 "<apellido>"+txtapellido.text.toUpperCase()+"</apellido>\n" +
+					 "<recargototal>"+productordered.lbltotalconrecargo.text+"</recargototal>\n" +
+					 "<porcentajerecargo>"+productordered.tot_recargo+"</porcentajerecargo>\n"+
+					 "<iva>21.00</iva>\n"+
+					 "<totalapagar>"+productordered.lblTotApagar.text+"</totalapagar>\n" +
+					 "<descuentoresto>"+Math.abs(Number(productordered.lbldescuento.text))+"</descuentoresto>\n"+							
+					 "<porc_descuento_total>"+descporcenttot.toFixed(2)+"</porc_descuento_total>\n"+
+					 "<detallepresupuesto>\n";
+					 	for(var ii:int=0;ii<productordered.arrayDg.length;){
+							
+							if(productordered.arrayDg[ii].price==0||productordered.arrayDg[ii].countt==0||productordered.arrayDg[ii].subtotal==0)
+								ii++;
+							else{
+							datosXML+="<itemdetallespresupuesto>\n"+
+								"<precio>"+productordered.arrayDg[ii].price+"</precio>\n"+
+								"<precio_desc>"+productordered.arrayDg[ii].prec_descuento+"</precio_desc>\n"+
+								"<subtotal>"+Number(productordered.arrayDg[ii].subtotal).toFixed(2)+"</subtotal>\n"+
+								"<descuento>"+productordered.arrayDg[ii].porc_desc+"</descuento>\n"+
+								"<cantidad>"+productordered.arrayDg[ii].countt+"</cantidad>\n"+
+								"<fk_id_producto>"+productordered.arrayDg[ii].idproduct+"</fk_id_producto>\n"+
+								"<fk_id_presupuesto>0</fk_id_presupuesto>\n"+	
+								"</itemdetallespresupuesto>\n";
+							ii++
+							}
+						
+						}
+						 						 
+			datosXML+=		 "</detallepresupuesto>\n"+	
+				 "</presupuesto>\n";
+			
+				return datosXML;
+			}
+			//------------------------------------------------------------------------------------
+			protected function btnguardar_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				if(productordered.arrayDg.length>0){
+					var b:Boolean=false;
+					for(var j:int=0;j<productordered.arrayDg.length&&!b;j++){
+						if(productordered.porc_d>0 && productordered.arrayDg[j].porc_desc!=0 && productordered.porc_d!=0){
+							Alert.show("Error al procesar los datos, el descuento es Total o por Productos, corrija!!!");
+							return;
+						}
+						if(String(productordered.arrayDg[j].porc_desc).toString().indexOf(",")!=-1||String(productordered.arrayDg[j].price).toString().indexOf(",")!=-1)
+							b=true;
+					
+					}
+					
+				if(!b)	
+				   Alert.show("Desea Los Datos del Presupuesto?","Confirmar Operación", Alert.YES | Alert.NO, this, guardarpresupuesto, null, Alert.NO);
+				else
+					Alert.show("Corrija la grilla de Productos, el separador decimal es el punto y no la coma!!!");
+				   
+				}else
+					Alert.show("NO HAY PRODUCTOS LISTADOS!!!");
+			}
+			//------------------------------------------------------------------------------------
+			private function guardarpresupuesto(evt:CloseEvent):void{
+				
+				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
+				
+				
+				//Alert.show(getDatosXML());
+				btnguardar.enabled=false;
+				servicePresupuesto.addBudgets(getDatosXML());
+				
+			
+			
+			
+			}
+			//------------------------------------------------------------------------------------
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				
+				txtnombre.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				txtapellido.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				txtobservaciones.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				txtnombre.setFocus();
+			}
+			//------------------------------------------------------------------------------------
+			private function transferirFocus(KeyPress:KeyboardEvent):void{
+				if(KeyPress.keyCode==Keyboard.ENTER){
+					if(KeyPress.target.toString().indexOf("txtnombre")!=-1){
+						txtapellido.setFocus();
+						txtnombre.text.toUpperCase();
+					}
+					if(KeyPress.target.toString().indexOf("txtapellido")!=-1){
+						    
+							productordered.cmbproduct.setFocus();
+							txtapellido.text.toUpperCase();
+					}
+				
+				}
+			
+			
+			}
+			//--------------------------------------------------------------------------------------
+			protected function operation1_resultHandler(event:ResultEvent):void
+			{
+				var result:Number=Number(event.result.toString());	
+				
+				
+				
+				switch(result){
+					case -1:{
+						Alert.show("ERROR EN EL SERVIDOR, VERIFIQUE!!!");
+						break};
+					case 0:{Alert.show("NO PASÓ NADA!!!");
+						break};
+					case -2:{Alert.show("SE PRODUJO UN ERROR AL PROCESAR LOS DATOS, VERIFIQUE!!!");
+						break};
+					case -3:{Alert.show("ERROR EN EL SERVIDOR CON LOS DATOS VERIFIQUE!!!");
+						break};
+					case -4:{Alert.show("SE ENCONTRARON CARACTERES NO VÁLIDOS, NO SE PUDO GUARDAR EL PRESUPUESTO!!!");
+						break};
+					default:{
+						Alert.show("Presupuesto N° "+result+" Generado correctamente!!!");
+						var source:String="http://localhost:8080/WebMelani/ShowReportPresupuesto?presnro="+result;
+						var urlReq:URLRequest= new URLRequest(source);
+						navigateToURL(urlReq,"_blank");
+						
+						blanquearTodosLosControles();
+						break;
+					
+					}
+					
+				}
+					
+				
+			}
+			//--------------------------------------------------------------------------------------
+			private function blanquearTodosLosControles():void{
+				var cls:CloseEvent;		
+						txtapellido.text="";
+						txtnombre.text="";
+						txtobservaciones.text="";
+						txtnombre.setFocus();
+						productordered.removerListadoPedidos(cls);
+						
+						if(btnguardar.enabled==false)
+							 btnguardar.enabled=true;
+						if(productordered.btnremover.enabled==false)
+							productordered.btnremover.enabled=true;
+			
+			}
+			//--------------------------------------------------------------------------------------
+			protected function operation1_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("ERROR!!! "+event.fault.toString());
+				
+			}
+			//-------------------------------------------------------------------------------------
+			
+			//-----------------------------------------------------------
+			protected function btnClose_clickHandler(event:MouseEvent):void
+			{
+				this.removeAllElements();
+			}
+			//-----------------------------------------------------------	
+			
+		]]>
+	</fx:Script>
+	
+	<s:Label x="335" y="12" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+			 text="PRESUPUESTO MELANIE" textDecoration="underline"/>
+	<s:BorderContainer x="39" y="33" width="430" height="105">
+		<s:Label x="25" y="32" fontSize="16" text="Nombre:"/>
+		<s:Label x="25" y="69" fontSize="16" text="Apellido:"/>
+		<s:TextInput id="txtnombre" tabEnabled="false" x="87" y="23" width="180" maxChars="40" restrict="a-z A-Z ñ-Ñ"/>
+		<s:TextInput  id="txtapellido" tabEnabled="false" x="88" y="62" width="179" maxChars="20" restrict="a-z A-Z ñ-Ñ "/>
+	</s:BorderContainer>
+	<products:productosPedidos id="productordered" x="40" y="138" height="349">
+	</products:productosPedidos>
+	<s:TextArea id="txtobservaciones"  x="485" y="45" width="400" height="159"  maxChars="5000"/>
+	<s:Button id="btnguardar" x="417" y="491" width="91" height="33" label="Guardar"
+			  click="btnguardar_clickHandler(event)" enabled="true"/>
+	<s:Label x="487" y="31" fontSize="16" fontWeight="normal" text="Observaciones"/>
+	<s:Button id="btnCloseClientComponent" x="898" y="9" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
+</s:Group>

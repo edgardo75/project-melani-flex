@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:components="com.hillelcoren.components.*"
+		 width="352" height="44" creationComplete="group1_creationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import flexunit.utils.ArrayList;
+			
+			import mx.collections.ListCollectionView;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import org.hamcrest.mxml.collection.Array;
+			[Bindable]
+				private var xmlListStreet:XML;
+			[Bindable]
+				private var xmlcalles:XMLListCollection;
+			[Bindable]
+				private var idStreetTemp:int;
+			
+			
+			protected function operation1_resultHandler(event:ResultEvent):void
+			{	
+				
+				xmlListStreet=XML(event.result.toString());
+				
+				collectionStreet.refresh();
+				cmbStreet.dataProvider=collectionStreet;
+				
+				
+				btnAddStreet.enabled=false;
+				focusManager.setFocus(cmbStreet);
+				
+			}
+			
+			protected function operation1_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("LA CONSULTA NO ARROJÓ RESULTADOS!!!");
+				
+			}
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				wsStreet.searchAllCalles();
+				cmbStreet.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				
+			}
+			private function transferirFocus(keyPress:KeyboardEvent):void{
+				if(keyPress.keyCode==Keyboard.ENTER){
+					
+					btnAddStreet.enabled=true;
+					focusManager.setFocus(btnAddStreet);
+					
+					
+				}
+			
+			}
+			
+			protected function btnAddStreet_clickHandler(event:MouseEvent):void
+			{
+				
+				if(cmbStreet.text.length>2 && cmbStreet.text.length<100)
+					wsStreet.addCalles(cmbStreet.text.toUpperCase(),0);
+					//Alert.show(String(cmbStreet.text));
+				else{
+					if(cmbStreet.text.length>100)
+						Alert.show("Imposible Almacenar, Nombre de calle demasiado largo!!!");
+					else
+						Alert.show("Debe Ingresar un Nombre de Calle");
+				
+				}
+				
+			}
+			
+			protected function operation2_resultHandler(event:ResultEvent):void
+			{
+				
+				wsStreet.searchAllCalles();
+				
+				cmbStreet.text="";
+				if(int(event.result.toString())>0){
+					//Alert.show("Descripción Almacenada!!!");
+					idStreetTemp=int(event.result.toString());
+					cmbStreet.selectedItem.ID_CALLE=idStreetTemp;
+					
+					
+				}
+				
+			}
+			
+			protected function operation2_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("LA CONSULTA NO ARROJÓ RESULTADOS!!!");
+				
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:WebService id="wsStreet" wsdl="http://localhost:8080/ServicesCalles/CallesWs?WSDL" showBusyCursor="true"
+					  
+					  >
+			<s:operation result="operation1_resultHandler(event)"
+						 fault="operation1_faultHandler(event)"
+						 name="searchAllCalles"
+						>
+				
+			</s:operation>
+			<s:operation result="operation2_resultHandler(event)"
+						 fault="operation2_faultHandler(event)"
+						 name="addCalles">
+				
+			</s:operation>
+		</s:WebService>
+		<s:XMLListCollection id="collectionStreet" source="{xmlListStreet.Item}" />
+	</fx:Declarations>
+	<s:Label x="11" y="19" fontSize="19" text="Calles:"/>
+	<components:AutoComplete	
+		id="cmbStreet" x="74" y="10" width="227" 
+		labelField="DESCRIPCION"
+		tabEnabled="true"		
+		autoSelectEnabled="true"
+		dropDownRowCount="10"
+		matchType="beginning"
+		allowMultipleSelection="false"
+		allowDuplicates="false"
+		allowEditingNewValues="false" 
+		allowNewValues="true"
+		backspaceAction="remove" 
+		selectedItemStyleName="facebook"
+		
+		
+		
+		>
+	</components:AutoComplete>
+	<s:Button id="btnAddStreet" x="309" y="12" width="33" label="+" tabEnabled="true"
+			  click="btnAddStreet_clickHandler(event)" enabled="false" fontWeight="bold"/>
+</s:Group>

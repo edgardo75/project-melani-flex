@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:ui="com.jaspersoft.ui.*"
+		 xmlns:controls="com.adobe.flex.extras.controls.*"
+		 xmlns:viewer="com.jaspersoft.reports.viewer.*"
+		 xmlns:components="com.hillelcoren.components.*"
+		 xmlns:classes="com.hillelcoren.components.autoComplete.classes.*"
+		 width="548" height="344" creationComplete="init(event)">
+	
+	<fx:Declarations>
+		<s:XMLListCollection id="infoclient" source="{xmlInfoClient.item}"/>
+		
+			<s:WebService id="serviceCLI" 
+						  wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL" 
+						  useProxy="false"
+						  showBusyCursor="true" 
+						  >
+				<s:operation name="obtenerClienteXTipoAndNumeroDocu"
+							 resultFormat="object"
+							 result="operation1_resultHandler(event)"
+							 fault="operation1_faultHandler(event)">
+					
+				</s:operation>
+			</s:WebService>
+			
+		
+		<!-- Place non-visual elements (e.g., services, value objects) here -->		
+		<fx:XML format="e4x" id="xmlTiposdocu">
+			<TiposDocumentos>
+				<Tipo>
+					<descripcion>DNI</descripcion>
+					<id>3</id>
+				</Tipo>
+				<Tipo>
+					<descripcion>LC</descripcion>
+					<id>2</id>
+				</Tipo>
+				<Tipo>
+					<descripcion>LE</descripcion>
+					<id>1</id>
+				</Tipo>   
+				<Tipo>
+					<descripcion>PASAPORTE</descripcion>
+					<id>4</id>
+				</Tipo>			 
+			</TiposDocumentos>	
+		</fx:XML>
+		<fx:XML format="e4x" id="xmlGeneros">
+			<Generos>
+				<Genero>
+					<id>1</id>
+					<descripcion>M</descripcion>
+				</Genero>
+				<Genero>
+					<id>2</id>
+					<descripcion>F</descripcion>
+				</Genero>
+			</Generos>			
+		</fx:XML>	
+		<!-- Defino los validadores. -->	
+		
+	<mx:EmailValidator id="emV" source="{txtemail}" property="text"					   
+					    required="false" invalidCharError="La dirección de email contiene caracteres inválidos!!!"
+					   tooManyAtSignsError="La dirección de email contiene muchos caracteres!!!"
+					   invalidDomainError="Dominio de la dirección de email incorrecto" invalidIPDomainError="Mensaje de error cuando el dominio de IP no es válido. El dominio IP debe estar encerrado entre corchetes." 
+					   />
+		
+		
+	<mx:StringValidator id="apeV" source="{txtapellido}"
+						property="text" minLength="2" maxLength="30"
+						required="true" requiredFieldError="Debe Ingresar el Apellido"/>	
+		
+		<mx:StringValidator id="nomV" source="{txtnombre}" 
+							property="text" minLength="2" maxLength="30"
+							required="true" requiredFieldError="Debe Ingresar el Nombre"/>
+		
+		<mx:XMLListCollection id="xmlListTiposDocu" source="{xmlTiposdocu.Tipo}"/>
+		<mx:XMLListCollection id="xmlListGeneros" source="{xmlGeneros.Genero}"/>
+		
+	</fx:Declarations>
+	
+
+	<mx:HRule x="10" y="29" width="380" height="1"/>
+	<s:Label x="9" y="9" backgroundAlpha="0.6" color="#FD0303" fontSize="20" fontWeight="bold"
+			 text="DATOS PERSONALES DE CLIENTE"/>
+	<s:TextInput id="txtnombre" x="206" y="69" width="317" fontFamily="Verdana" fontSize="18"
+				 fontWeight="bold" maxChars="30" restrict="A-ÑZa-ñz " 
+				 toolTip="Ingrese el Nombre Completo del Cliente!!!"/>
+	<s:Label x="128" y="74" color="#033339" fontSize="20" text="Nombre:"/>
+	<s:TextInput id="txtapellido" x="207" y="101" width="315" fontFamily="Verdana" fontSize="18"
+				 fontWeight="bold" maxChars="30" restrict="A-ÑZa-ñz " 
+				 toolTip="Ingrese el Apellido Completo del Cliente!!!"/>
+	<s:Label x="128" y="108" color="#033339" fontSize="20" text="Apellido:"/>
+	<s:Label x="51" y="44" color="#033339" fontSize="20" text="Tipo:"/>
+	
+	<s:Label x="205" y="45" width="112" height="22" color="#033339" fontSize="20" text="Documento:"/>
+	
+	<controls:MaskedTextInput id="txtdocumento" x="315" y="36" width="70"
+							  enter="txtdocumento_enterHandler(event)" fontFamily="Verdana"
+							  fontSize="20" fontWeight="bold" inputMask="########" maxChars="8"
+							  restrict="0-9" 
+							  toolTip="Ingrese el Número de Documento!!!" required="true"/>
+	
+	<s:Label x="130" y="142" color="#033339" fontSize="20" text="Genero:"/>
+	<s:Label x="128" y="178" width="60" color="#033339" fontSize="20" text="Email:"/>
+	<s:TextInput id="txtemail" x="184" y="172" width="338" fontFamily="Verdana" fontSize="18"
+				 fontWeight="bold" maxChars="50" tabIndex="5"
+				 toolTip="Ingrese un Correo Electrónico!!!"/>
+	<s:Label x="19" y="206" color="#033339" fontSize="20" text="Observaciones:"/>
+	<s:TextArea id="txtobservaciones" x="18" y="230" width="504" height="96" fontFamily="Verdana"
+				fontWeight="bold" maxChars="255" tabIndex="6"/>
+	<components:AdvancedAutoComplete id="cmbTiposdocu" x="97" y="36" width="99"
+									 allowDuplicates="false" allowEditingNewValues="false"
+									 allowEditingSelectedValues="false"
+									 allowMultipleSelection="false" allowNewValues="false"
+									 backspaceAction="remove" dataProvider="{xmlListTiposDocu}"
+									 fontFamily="Verdana" fontWeight="bold" labelField="descripcion"
+									 matchType="beginning" tabIndex="0"
+									 toolTip="Seleccione el Tipo de Documento!!!"
+									 verticalScrollPolicy="on">
+	</components:AdvancedAutoComplete>
+	<components:AdvancedAutoComplete id="cmbGeneros" x="205" y="134" width="53"
+									 allowDuplicates="false" allowEditingNewValues="false"
+									 allowEditingSelectedValues="false"
+									 allowMultipleSelection="false" allowNewValues="false"
+									 backspaceAction="remove" dataProvider="{xmlListGeneros}"
+									 fontFamily="Verdana" fontWeight="bold" labelField="descripcion"
+									 matchType="beginning" tabIndex="4"
+									 toolTip="Seleccione el Genero del Cliente M o F!!!"
+									 verticalScrollPolicy="on">
+	</components:AdvancedAutoComplete>
+	<mx:HRule x="19" y="164" width="503" height="1"/>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.validators.Validator;
+			
+			import org.flexunit.internals.namespaces.classInternal;
+			[Bindable]
+				private var respuesta:String;
+			[Bindable]
+			private var xmlInfoClient:XMLList;
+			[Bindable]
+			public var xmlinfoclidomi:XMLList;
+			[Bindable]
+			public var xmlinfotelcli:XMLList;
+			
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			public function validateForm():Boolean{
+			var validatorArray:Array=new Array();
+			validatorArray.push(emV);
+			validatorArray.push(apeV);
+			validatorArray.push(nomV);
+			validatorArray.push(txtdocumento);
+			var validatorErrorArray:Array = Validator.validateAll(validatorArray);
+			var isValidForm:Boolean = validatorErrorArray.length == 0;                
+			return isValidForm
+			
+			
+			}
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			
+			private function tranferirFocus(keyPress:KeyboardEvent):void{
+				
+				
+			
+								if (keyPress.keyCode==Keyboard.ENTER){
+									
+									if (keyPress.currentTarget.toString().indexOf("cmbTiposdocu")!=-1)
+											txtdocumento.setFocus();	
+									
+									
+									if (keyPress.currentTarget.toString().indexOf("cmbGeneros")!=-1)
+										txtemail.setFocus();	
+									
+									
+									if(keyPress.currentTarget.toString().indexOf("txtapellido")!=-1&&txtapellido.text.length>2)
+										cmbGeneros.setFocus();
+									
+									
+									if(keyPress.currentTarget.toString().indexOf("txtnombre")!=-1&&txtnombre.text.length>2)
+											txtapellido.setFocus();
+									
+									
+									if(keyPress.currentTarget.toString().indexOf("txtdocumento")!=-1)
+											txtnombre.setFocus();
+									
+									if(keyPress.currentTarget.toString().indexOf("txtemail")!=-1)
+											txtobservaciones.setFocus();
+									
+								}
+					
+			
+			}
+			
+			protected function init(event:FlexEvent):void
+			{
+				//----------------------------------------
+				cmbGeneros.selectedItemId=2;
+				cmbTiposdocu.selectedItemId=3;
+				//----------------------------------------
+				txtapellido.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtdocumento.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtemail.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtnombre.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtobservaciones.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				//----------------------------------------
+				cmbGeneros.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);				
+				cmbTiposdocu.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				//----------------------------------------
+			}
+			
+			
+			public function clearComponenteCliente():void{
+					
+				txtapellido.text="";
+				//txtdocumento.text="";
+				txtemail.text="";
+				txtnombre.text="";
+				txtobservaciones.text="";
+				cmbGeneros.selectedItemId=2;
+				cmbTiposdocu.selectedItemId=3;
+			
+			
+			}
+			
+			protected function operation1_resultHandler(event:ResultEvent):void
+			{
+				respuesta ="";
+				respuesta = event.result.toString();
+				
+				xmlInfoClient=new XMLList(event.result);
+				xmlinfoclidomi=new XMLList(xmlInfoClient.item.personadomicilio.domicilio);
+				xmlinfotelcli=new XMLList(xmlInfoClient.item.personatelefono.telefono);
+				
+				
+				if(respuesta.indexOf("NO ENCONTRADO")!=-1){
+					clearComponenteCliente();
+					txtnombre.setFocus();
+					
+				
+			
+				}
+					
+				
+				if(respuesta.indexOf("<observaciones>")!=-1){					
+					
+					addCliente();
+				}
+				
+			}
+			private function addCliente():void{
+				
+				if(infoclient.length>0){
+						txtapellido.text=infoclient[0].apellido;
+						txtdocumento.text=infoclient[0].nrodocu;
+						txtemail.text=infoclient[0].email;
+						txtnombre.text=infoclient[0].nombre;
+						txtobservaciones.text=infoclient[0].observaciones;
+						cmbGeneros.selectedItemId=infoclient[0].Genero.generoId;
+						cmbTiposdocu.selectedItemId=infoclient[0].idtipodocu;
+				}else{
+					clearComponenteCliente();
+				
+				
+				}
+			
+			
+			}
+			
+			protected function operation1_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("FALLÓ EL SERVICIO, VERIFIQUE!!!"+event.fault.toString());
+				
+			}
+			
+			protected function txtdocumento_enterHandler(event:FlexEvent):void
+			{
+				if(txtdocumento.text.length==0)
+					Alert.show("Debe Ingresar Un número de Documento");
+				else{
+					if(txtdocumento.text.length<7){
+						Alert.show("Ingrese un número de Documento de manera correcta");
+					
+					}else{
+						serviceCLI.obtenerClienteXTipoAndNumeroDocu(cmbTiposdocu.selectedItemId,int(txtdocumento.text));
+					
+					}
+				}
+				
+			}
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		
+			public function getDatosPersonalesXML():String{
+				
+				var xmlDatosPersonales:String="<item>\n"+
+								"<apellido>"+txtapellido.text+"</apellido>\n"+
+								"<nombre>"+txtnombre.text+"</nombre>\n"+
+								"<email>"+txtemail.text+"</email>\n"+
+								"<det2allescli>"+txtobservaciones.text+"</det2allescli>\n"+
+								"<nrodocu>"+txtdocumento.text+"</nrodocu>\n"+
+								"<idtipodocu>"+cmbTiposdocu.selectedItemId+"</idtipodocu>\n"+
+								"<totalcompras>0</totalcompras>\n"+
+								"<totalpuntos>0</totalpuntos>\n"+
+								"<idcliente>0</idcliente>\n"+
+								"<genero>\n"+
+									"<idgenero>"+cmbGeneros.selectedItemId+"</idgenero>\n"+
+								"</genero>\n"+
+						"</item>\n";	
+						
+						return xmlDatosPersonales;
+			
+			}
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			
+			
+			
+		]]>
+	</fx:Script>
+</s:Group>

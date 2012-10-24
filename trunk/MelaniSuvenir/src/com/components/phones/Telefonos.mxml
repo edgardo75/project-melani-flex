@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:components="com.hillelcoren.components.*"
+		 xmlns:controls="com.adobe.flex.extras.controls.*"
+		 width="490" height="336" creationComplete="group1_creationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import com.hillelcoren.components.autoComplete.classes.SelectedItem;
+			
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			[Bindable]
+			public var arrayTel:Array=[];
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				cmbEmpresatelefonia.dataProvider=empteleflist;
+				cmbEmpresatelefonia.selectedItemId=0;
+				cmbtipotel.dataProvider=tipotellist;
+				cmbtipotel.selectedItemId=0;
+				txtprefijo.text="0264";
+				cmbEmpresatelefonia.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				cmbtipotel.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				txtnumerotel.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				txtprefijo.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				btnAgregarTel.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				adgTel.dataProvider=listtel;
+				cmbEmpresatelefonia.setFocus();
+				
+			}
+			public function clearTodo():void{
+				var longarray:int=arrayTel.length;
+				cmbEmpresatelefonia.selectedItemId=0;
+				cmbtipotel.dataProvider=tipotellist;
+				cmbtipotel.selectedItemId=0;
+				txtprefijo.text="0264";
+				for(var j:int=0;j<longarray;j++)
+					arrayTel.pop();
+				listtel.removeAll();
+				listtel.refresh();
+			
+			
+			}
+			//----------------------------------------------------------------------------------
+			private function transferirFocus(KeyPress:KeyboardEvent):void{
+			
+				if(KeyPress.keyCode==Keyboard.ENTER){
+						if(cmbEmpresatelefonia.text!=""&&KeyPress.currentTarget.toString().indexOf("cmbEmpresatelefonia")!=-1){
+							cmbtipotel.setFocus();
+						
+						
+						}else{
+							if(cmbtipotel.text!=""&&KeyPress.currentTarget.toString().indexOf("cmbtipotel")!=-1){
+								txtprefijo.setFocus();
+							
+							}else{
+								if(txtprefijo.text.length>0&&KeyPress.currentTarget.toString().indexOf("txtprefijo")!=-1)
+									txtnumerotel.setFocus();
+								else{
+									
+										if(KeyPress.currentTarget.toString().indexOf("btnAgregarTel")!=-1&&txtnumerotel.text.length>0&&txtprefijo.text.length>0&&cmbEmpresatelefonia.text.length>0&&cmbtipotel.text.length>0)
+											addGrid();
+										else{
+											
+											if(txtnumerotel.text.length>0&&KeyPress.currentTarget.toString().indexOf("txtnumerotel")!=-1&&(txtnumerotel.text.substring(0,1).indexOf("4")!=-1||txtnumerotel.text.substring(0,2).indexOf("15")!=-1)){
+												btnAgregarTel.setFocus();
+												//Alert.show(txtnumerotel.text.substring(0,1).toString()+" "+txtnumerotel.text.substring(0,2).toString());
+											}
+										}
+								
+								}
+							
+							}
+								
+						
+						}
+				
+				}
+			
+				
+			
+			}
+			//----------------------------------------------------------------------------------
+			
+			
+			protected function btnAgregarTel_clickHandler(event:MouseEvent):void
+			{
+				if(txtnumerotel.text.substring(0,1).indexOf("4")!=-1||txtnumerotel.text.substring(0,2).indexOf("15")!=-1)
+						addGrid();
+				else
+					Alert.show("El Número debe empezar con 4 o 15!!!");
+			}
+			private function addGrid():void{
+			var b:Boolean=false;
+		
+				if(arrayTel.length==0){
+					arrayTel=[{prefijo:txtprefijo.text,nrotelefono:txtnumerotel.text,descripcion:cmbEmpresatelefonia.text,tipotelefono:cmbtipotel.text,idempresatel:cmbEmpresatelefonia.selectedItemId,idtipotel:cmbtipotel.selectedItemId}];
+					blanqueartodo();
+				}else{
+				
+					for(var i:int=0;i<arrayTel.length&&!b;i++){
+						
+								if(int(arrayTel[i].numero)==int(txtnumerotel.text))		
+									b=true;
+						
+						
+						
+						
+					}
+					
+					
+					if(!b){
+						arrayTel.push({prefijo:txtprefijo.text,nrotelefono:txtnumerotel.text,descripcion:cmbEmpresatelefonia.text,tipotelefono:cmbtipotel.text,idempresatel:cmbEmpresatelefonia.selectedItemId,idtipotel:cmbtipotel.selectedItemId});
+						blanqueartodo();
+					}else
+						Alert.show("YA EXISTE EL NUMERO EN LA LISTA");
+				
+				}
+				listtel.source=arrayTel;
+				listtel.refresh();
+			
+			}
+			public function blanqueartodo():void{
+				cmbEmpresatelefonia.selectedItemId=0;
+				cmbtipotel.selectedItemId=0;
+				txtnumerotel.text="";
+				txtprefijo.text="0264";
+				cmbEmpresatelefonia.setFocus();
+			
+			
+			
+			}
+			//--------------------------------------------------------------------------------------------------------------
+			public function getDatosTelefonos():String{
+				var xmlTelefonos:String="<listaTelefonos>\n";
+						for(var ii:int=0;ii<listtel.length;ii++){
+							xmlTelefonos+="<telefono>\n"+
+							
+								"<numero>"+listtel[ii].nrotelefono+"</numero>\n"+
+								"<prefijo>"+listtel[ii].prefijo+"</prefijo>\n"+
+								"<idEmpresaTelefonia>\n"+
+									"<idempresatelefonia>"+listtel[ii].idempresatel+"</idempresatelefonia>\n"+
+								"</idEmpresaTelefonia>\n"+
+								"<idcliente>0</idcliente>\n"+
+								"<tipoTelefono>\n"+
+								"<idtipotel>"+listtel[ii].idtipotel+"</idtipotel>\n"+
+								"</tipoTelefono>\n"+
+							"</telefono>\n";
+						}	
+							
+							xmlTelefonos+="</listaTelefonos>\n";
+				return xmlTelefonos;
+			
+			}
+			//--------------------------------------------------------------------------------------------------------------
+		
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:XMLListCollection id="empteleflist" source="{empresasTelefonia.Empresa}"/>
+		<s:XMLListCollection id="tipotellist" source="{tipostelefonos.Tipo}"/>
+		<s:ArrayCollection id="listtel"/>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<fx:XML xmlns="" id="empresasTelefonia">
+			<Lista>
+				<Empresa>
+					<id>1</id>
+					<descripcion>MOVISTAR</descripcion>
+				</Empresa>
+				<Empresa>
+					<id>2</id>
+					<descripcion>CLARO</descripcion>
+				</Empresa>
+				<Empresa>
+					<id>3</id>
+					<descripcion>PERSONAL</descripcion>
+				</Empresa>
+				<Empresa>
+					<id>4</id>
+					<descripcion>TELEFONICA</descripcion>
+				</Empresa>
+				<Empresa>
+					<id>5</id>
+					<descripcion>TELECOM</descripcion>
+				</Empresa>
+				<Empresa>
+					<id>6</id>
+					<descripcion>NEXTEL</descripcion>
+				</Empresa>
+				<Empresa>
+					<id>0</id>
+					<descripcion>NO SELECCIONADO</descripcion>
+				</Empresa>
+			</Lista>
+			
+		</fx:XML>
+		<fx:XML xmlns="" id="tipostelefonos">
+			<Lista>
+				<Tipo>
+					<id>1</id>
+					<descripcion>CELULAR</descripcion>
+				</Tipo>
+				<Tipo>
+					<id>2</id>
+					<descripcion>PARTICULAR</descripcion>
+				</Tipo>
+				<Tipo>
+					<id>0</id>
+					<descripcion>NO SELECCIONADO</descripcion>
+				</Tipo>
+			</Lista>
+			
+		</fx:XML>
+	</fx:Declarations>
+	<components:AdvancedAutoComplete id="cmbEmpresatelefonia" x="58" y="96" width="205" labelField="descripcion" matchType="beginning">
+	</components:AdvancedAutoComplete>
+	<s:Label x="58" y="84" text="Empresa Telefónia"/>
+	<s:Label x="278" y="84" text="Tipo Teléfono"/>
+	<components:AdvancedAutoComplete x="279" y="95" id="cmbtipotel" labelField="descripcion" matchType="beginning">
+	</components:AdvancedAutoComplete>
+	<mx:HRule x="10" y="70" width="428" height="1"/>
+	<s:Label x="12" y="58" text="Teléfonos"/>
+	<controls:MaskedTextInput id="txtprefijo" x="58" y="139" width="104" maxChars="10" restrict="0-9" inputMask="(#########)"/>
+	<s:Label x="58" y="127" text="Prefijo"/>
+	<s:Label x="279" y="128" text="Número"/>
+	<controls:MaskedTextInput id="txtnumerotel" x="279" y="139" restrict="0-9" maxChars="20" inputMask="#########"/>
+	<s:Button id="btnAgregarTel" x="388" y="137" label="Agregar"
+			  click="btnAgregarTel_clickHandler(event)" icon="assets/add.jpg"/>
+	<s:DataGrid id="adgTel" x="14" y="189" width="464" height="128" requestedRowCount="4">
+		<s:columns>
+			<s:ArrayList>
+				<s:GridColumn dataField="prefijo" headerText="Prefijo"></s:GridColumn>
+				<s:GridColumn dataField="nrotelefono" headerText="Numero"></s:GridColumn>
+				<s:GridColumn dataField="descripcion" headerText="Empresa"></s:GridColumn>
+				<s:GridColumn dataField="tipotelefono" headerText="TipoTelefono"></s:GridColumn>
+				<s:GridColumn dataField="idempresatel" headerText="EmpresaTelefonia" visible="false"></s:GridColumn>
+				<s:GridColumn dataField="idtipotel" headerText="TipoTelefono" visible="false"></s:GridColumn>
+			</s:ArrayList>
+		</s:columns>
+	</s:DataGrid>
+</s:Group>
