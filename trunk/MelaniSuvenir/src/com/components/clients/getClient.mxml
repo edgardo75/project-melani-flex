@@ -6,14 +6,15 @@
 		 width="438" height="256" creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Script>
 		<![CDATA[
-			import com.aaronhardy.ProgressBar;
 			import com.components.clients.grillaClientes;
 			import com.components.clients.popupClienteNameSecondName;
+			import com.components.products.productosPedidos;
 			
 			import mx.controls.Alert;
 			import mx.core.IFlexDisplayObject;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
+			import mx.managers.IFocusManager;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
@@ -24,7 +25,9 @@
 			[Bindable]
 			public var xmlcliente:XMLList;
 			
-			private var progress:Progress=new Progress();
+			private var popup:Progress;
+			private var componentProductos:productosPedidos;
+			
 			
 			//private var grillaclientes:grillaClientes;
 			
@@ -33,6 +36,8 @@
 			protected function mskdocu_enterHandler(event:FlexEvent):void
 			{
 				
+			    popup=Progress(PopUpManager.createPopUp(this,Progress,true));
+				PopUpManager.centerPopUp(popup);
 				
 				cli.getCustomerDocNumber(int(mskdocu.text));
 				
@@ -40,26 +45,31 @@
 			
 			protected function operation1_faultHandler(event:FaultEvent):void
 			{
-				
+				PopUpManager.removePopUp(popup);
 				Alert.show("Error "+event.fault.toString());
 				
 			}
 			
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
-				
+			
+				PopUpManager.removePopUp(popup);
 				var cliente:XMLList;
 				cliente = new XMLList(event.result);
 					
 				
-				//xmlcli.source=new XMLListCollection(cliente).child("item");
+				
 				if(event.result.toString().indexOf("Cliente no encontrado")!=-1)
 					Alert.show("CLIENTE NO ENCOTRADO");
+									
 				
-				//lblapellidoynombre.text=String(cliente.nombre+" "+cliente.apellido).toUpperCase();
+				
+				
 				txtnombre.text=String(cliente.nombre);
 				txtapellido.text=String(cliente.apellido);
 				lblnocli.text=cliente.id;
+				
+				
 				
 				
 				
@@ -78,8 +88,8 @@
 				
 					if(keypress.currentTarget.toString().indexOf("txtapellido")!=-1 && txtapellido.text.length >= 4 && txtnombre.text.length >=4){
 						
-						PopUpManager.addPopUp(progress, this, true);
-						PopUpManager.centerPopUp(progress);
+						popup=Progress(PopUpManager.createPopUp(this,Progress,true));
+						PopUpManager.centerPopUp(popup);
 						cli.searchClientForNameAndLastName(txtnombre.text.toString(),txtapellido.text.toString());
 								
 					}else{
@@ -96,13 +106,14 @@
 			
 			protected function operation2_faultHandler(event:FaultEvent):void
 			{
+				PopUpManager.removePopUp(popup);
 				Alert.show("Error en el Servidor, verifique!!!");	
 				
 			}
 			
 			protected function operation2_resultHandler(event:ResultEvent):void
 			{
-				
+				PopUpManager.removePopUp(popup);
 				
 				
 				xmlcliente =new XMLList(event.result);
@@ -191,5 +202,5 @@
 	<s:Label id="lblapellido" x="37" y="125" fontSize="14" fontWeight="bold" text="Apellido:"/>
 	<s:TextInput id="txtapellido" x="101" y="118" width="189" fontSize="18" maxChars="40"
 				 prompt="Ingrese Apellido" restrict="a-z A-Z ñ-Ñ"/>
-	<s:Button id="btninserclient" x="308" y="21" label="DatosCliente" toolTip="Ingresa Datos Personales de un Cliente" click="btninserclient_clickHandler(event)"/>
+	<s:Button id="btninserclient" x="289" y="21" label="DatosCliente" toolTip="Ingresa Datos Personales de un Cliente" click="btninserclient_clickHandler(event)"/>
 </s:Group>

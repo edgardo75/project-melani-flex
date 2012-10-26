@@ -6,14 +6,59 @@
 		 xmlns:products="com.components.products.*"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
 		 xmlns:components="com.hillelcoren.components.*"
-		 width="1016" height="570">
+		 width="1016" height="570" initialize="group1_initializeHandler(event)" creationComplete="group1_creationCompleteHandler(event)">
 	
 	<fx:Script>
 		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			[Bindable]
+			private var xmltarjetas:XMLList;
 			protected function btnCloseClientComponent_clickHandler(event:MouseEvent):void
 			{
 				this.removeAllElements();	
 			}
+			//*************************************************************************************++
+			private function transferirFocus(keypress:KeyboardEvent):void{
+					if(keypress.keyCode==Keyboard.ENTER){
+						if(cmbTarjetasCreditoDebito.text.length>0){
+								txtnumerocuponpago.setFocus();
+						}
+					
+					}
+			
+			}
+			//***************************************************************************************
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				cmbTarjetasCreditoDebito.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				txtnumerocuponpago.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				cmbTarjetasCreditoDebito.selectedItemId=0;
+			}
+			
+			protected function operation1_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				xmltarjetas=new XMLList(event.result);
+				cmbTarjetasCreditoDebito.dataProvider=tarjetas;
+				
+			}
+			
+			protected function operation1_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("Se produjo un error al querer obtener el listado de tarjetas de crédito y débito!!!");
+				
+			}
+			
+			protected function group1_initializeHandler(event:FlexEvent):void
+			{
+				wstarjetascreditodebito.searchAllTarjetasCreditoDebito();
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -22,16 +67,26 @@
 		<s:RadioButtonGroup id="stockFuturo"/>
 		<s:RadioButtonGroup id="notaCancelada"/>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:WebService id="wstarjetascreditodebito" wsdl="http://localhost:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
+					  >
+			<s:operation name="searchAllTarjetasCreditoDebito" result="operation1_resultHandler(event)" fault="operation1_faultHandler(event)">
+				
+			</s:operation>
+		</s:WebService>
+		<s:XMLListCollection id="tarjetas" source="{xmltarjetas.item}"/>
 	</fx:Declarations>
+	
 	<clients:getClient x="2" y="0"/>
 	<products:productosPedidos x="0" y="160" height="363"/>
 	<s:TextArea id="txtObservacionesNota" x="593" y="124" width="402" height="115" maxChars="32000"/>
 	<s:Label x="480" y="124" fontSize="14" fontWeight="bold" text="Observaciones:"/>
-	<controls:MaskedTextInput id="txtnumerocuponpago" x="608" y="32" fontSize="14"
+	<controls:MaskedTextInput id="txtnumerocuponpago" x="665" y="32" fontSize="14"
 							  inputMask="####-####-####-####" maxChars="19" toolTip="Ingrese en Número de Tarjeta de Crédito o Débito del Plástico"/>
-	<s:Label x="608" y="16" fontSize="14" fontWeight="bold"
+	<s:Label x="663" y="16" fontSize="14" fontWeight="bold"
 			 text="Número de cupón tarjeta de credito/debito:"/>
-	<components:AdvancedAutoComplete id="cmbTarjetasCreditoDebito" x="412" y="31" fontSize="14" toolTip="Seleccione una Tarjeta de Crédito o Débito si el cliente utiliza esta forma de pago!!!">
+	<components:AdvancedAutoComplete id="cmbTarjetasCreditoDebito" x="412" y="31" width="221"
+									 fontSize="14" labelField="descripcion"
+									 toolTip="Seleccione una Tarjeta de Crédito o Débito si el cliente utiliza esta forma de pago!!!">
 	</components:AdvancedAutoComplete>
 	<s:Label x="412" y="16" fontSize="14" fontWeight="bold" text="Tarjetas de Crédito / Débito" toolTip="Seleccione si o no para registrar que la nota de pedido fue entregada al Clliente"/>
 	<s:VGroup   x="413" y="74" horizontalAlign="justify" verticalAlign="middle">
