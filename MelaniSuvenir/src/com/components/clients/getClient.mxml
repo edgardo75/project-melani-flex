@@ -6,6 +6,7 @@
 		 width="438" height="256" creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Script>
 		<![CDATA[
+			import com.aaronhardy.ProgressBar;
 			import com.components.clients.grillaClientes;
 			import com.components.clients.popupClienteNameSecondName;
 			
@@ -17,9 +18,13 @@
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
+			import popus.Progress;
+			
 			import spark.components.TitleWindow;
 			[Bindable]
 			public var xmlcliente:XMLList;
+			
+			private var progress:Progress=new Progress();
 			
 			//private var grillaclientes:grillaClientes;
 			
@@ -27,20 +32,25 @@
 			
 			protected function mskdocu_enterHandler(event:FlexEvent):void
 			{
+				
+				
 				cli.getCustomerDocNumber(int(mskdocu.text));
 				
 			}
 			
 			protected function operation1_faultHandler(event:FaultEvent):void
 			{
+				
 				Alert.show("Error "+event.fault.toString());
 				
 			}
 			
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
+				
 				var cliente:XMLList;
 				cliente = new XMLList(event.result);
+					
 				
 				//xmlcli.source=new XMLListCollection(cliente).child("item");
 				if(event.result.toString().indexOf("Cliente no encontrado")!=-1)
@@ -66,10 +76,13 @@
 			private function transferirFocus(keypress:KeyboardEvent):void{
 				if(keypress.keyCode==Keyboard.ENTER){
 				
-					if(keypress.currentTarget.toString().indexOf("txtapellido")!=-1 && txtapellido.text.length >= 4 && txtnombre.text.length >=4)
-								cli.searchClientForNameAndLastName(txtnombre.text.toString(),txtapellido.text.toString());
+					if(keypress.currentTarget.toString().indexOf("txtapellido")!=-1 && txtapellido.text.length >= 4 && txtnombre.text.length >=4){
+						
+						PopUpManager.addPopUp(progress, this, true);
+						PopUpManager.centerPopUp(progress);
+						cli.searchClientForNameAndLastName(txtnombre.text.toString(),txtapellido.text.toString());
 								
-					else{
+					}else{
 							if(keypress.currentTarget.toString().indexOf("txtnombre")!=-1&&txtnombre.text.length>=4){
 									txtapellido.setFocus();
 							
@@ -155,7 +168,8 @@
 						 name="getCustomerDocNumber">
 				
 			</s:operation>
-			<s:operation fault="operation2_faultHandler(event)" result="operation2_resultHandler(event)"
+			<s:operation fault="operation2_faultHandler(event)" 
+						 result="operation2_resultHandler(event)"
 						 name="searchClientForNameAndLastName">
 				
 			</s:operation>
