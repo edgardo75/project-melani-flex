@@ -10,30 +10,181 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import com.components.clients.grillaClientes;
+			import com.components.clients.guardarDatosPersonalClientePopup;
+			import com.components.clients.popupClienteNameSecondName;
+			
 			import mx.controls.Alert;
+			import mx.core.IFlexDisplayObject;
+			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
+			import mx.managers.IFocusManager;
+			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			[Bindable]
 			private var xmltarjetas:XMLList;
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			import popus.Progress;
+			
+			import spark.components.TitleWindow;
+			[Bindable]
+			public var xmlcliente:XMLList;
+			
+			private var popup:Progress;
+			private var componentProductos:productosPedidos;
+			
+			
+			//private var grillaclientes:grillaClientes;
+			
+			public var secondName:popupClienteNameSecondName;
+			
+			protected function mskdocu_enterHandler(event:FlexEvent):void
+			{
+				
+				popup=Progress(PopUpManager.createPopUp(this,Progress,true));
+				PopUpManager.centerPopUp(popup);
+				
+				cli.getCustomerDocNumber(int(mskdocu.text));
+				
+			}
+			
+			protected function operationFaultGetClient(event:FaultEvent):void
+			{
+				PopUpManager.removePopUp(popup);
+				Alert.show("Error "+event.fault.toString());
+				
+			}
+			
+			protected function operationResultGetClient(event:ResultEvent):void
+			{
+				
+				PopUpManager.removePopUp(popup);
+				var cliente:XMLList;
+				cliente = new XMLList(event.result);
+				
+				
+				
+				if(event.result.toString().indexOf("Cliente no encontrado")!=-1)
+					Alert.show("CLIENTE NO ENCOTRADO");
+				
+				
+				
+				
+				txtnombrecliente.text=String(cliente.nombre);
+				txtapellidocliente.text=String(cliente.apellido);
+				lblnocli.text=cliente.id;
+				
+				focusManager.setFocus(productscomp.cmbproduct);
+				
+				
+				
+				
+			}
+			
+			
+			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			private function transferirFocus(keypress:KeyboardEvent):void{
+				if(keypress.keyCode==Keyboard.ENTER){
+					
+					if(keypress.currentTarget.toString().indexOf("txtapellidocliente")!=-1 && txtapellidocliente.text.length >= 4 && txtnombrecliente.text.length >=4){
+						
+						popup=Progress(PopUpManager.createPopUp(this,Progress,true));
+						PopUpManager.centerPopUp(popup);
+						cli.searchClientForNameAndLastName(txtnombrecliente.text.toString(),txtapellidocliente.text.toString());
+						
+					}else{
+						if(keypress.currentTarget.toString().indexOf("txtnombrecliente")!=-1&&txtnombrecliente.text.length>=4){
+							txtapellidocliente.setFocus();
+							
+						}	
+					}
+					if(cmbTarjetasCreditoDebito.text.length>0){
+						txtnumerocuponpago.setFocus();
+					}
+					
+				}
+				
+				
+			}
+			
+			protected function operationFaultSearchClient(event:FaultEvent):void
+			{
+				PopUpManager.removePopUp(popup);
+				Alert.show("Error en el Servidor, verifique!!!");	
+				
+			}
+			
+			protected function operationResultSearchClient(event:ResultEvent):void
+			{
+				PopUpManager.removePopUp(popup);
+				
+				
+				xmlcliente =new XMLList(event.result);
+				
+				//**************************************************popupWindows++++++++++++++++++++++++++++++++++
+				
+				displayPopup();		
+				
+				
+				//***********************************************************************************************
+				
+				
+			}
+			//***********************************************************************
+			public function displayPopup():void{
+				var pop1:popupClienteNameSecondName=popupClienteNameSecondName(PopUpManager.createPopUp(this,popupClienteNameSecondName,true));
+				
+				/*+Set TitleWindows properties+*/
+				pop1.title="Seleccione un Registro";
+				pop1.showCloseButton=true;
+				
+				/*Set properties to custom component popup*/
+				pop1.targetCodeCustomer=lblnocli;
+				pop1.targetName=txtnombrecliente;
+				pop1.targetNumCustomer=mskdocu;
+				pop1.targetSecondName=txtapellidocliente;
+				pop1.clidata=xmlcli;
+				PopUpManager.centerPopUp(pop1);
+				
+				
+				
+				
+			}
+			//***********************************************************************
+			public function windows_Popup_close(evt:CloseEvent):void{
+				PopUpManager.removePopUp(evt.currentTarget as IFlexDisplayObject);
+				
+			}
+			
+			protected function btninserclient_clickHandler(event:MouseEvent):void
+			{
+				displayPopupCustomerPersonalData();
+			}
+			public function displayPopupCustomerPersonalData():void{
+				var popup2:guardarDatosPersonalClientePopup=guardarDatosPersonalClientePopup(PopUpManager.createPopUp(this,guardarDatosPersonalClientePopup,true));
+				
+				popup2.title="Ingrese Datos Personales de Cliente";
+				
+				popup2.idcliente=lblnocli;
+				popup2.nombre=txtnombrecliente;
+				popup2.apellido=txtapellidocliente;
+				popup2.nrodocu=mskdocu;
+				PopUpManager.centerPopUp(popup2);
+			}
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			protected function btnCloseClientComponent_clickHandler(event:MouseEvent):void
 			{
 				this.removeAllElements();	
 			}
 			//*************************************************************************************++
-			private function transferirFocus(keypress:KeyboardEvent):void{
-					if(keypress.keyCode==Keyboard.ENTER){
-						if(cmbTarjetasCreditoDebito.text.length>0){
-								txtnumerocuponpago.setFocus();
-						}
-					
-					}
 			
-			}
-			//***************************************************************************************
 			
 			protected function group1_creationCompleteHandler(event:FlexEvent):void
 			{
+				mskdocu.setFocus();
+				txtapellidocliente.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				txtnombrecliente.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				cmbTarjetasCreditoDebito.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txtnumerocuponpago.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				cmbTarjetasCreditoDebito.selectedItemId=0;
@@ -73,11 +224,27 @@
 				
 			</s:operation>
 		</s:WebService>
+		<s:WebService wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"
+					  id="cli" showBusyCursor="true">
+			<s:operation fault="operationFaultGetClient(event)"
+						 result="operationResultGetClient(event)" 
+						 name="getCustomerDocNumber">
+				
+			</s:operation>
+			<s:operation fault="operationFaultSearchClient(event)" 
+						 result="operationResultSearchClient(event)"
+						 name="searchClientForNameAndLastName">
+				
+			</s:operation>
+			
+		</s:WebService>
+		<s:XMLListCollection id="xmlcli" source="{xmlcliente.item}"/>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:XMLListCollection id="tarjetas" source="{xmltarjetas.item}"/>
 	</fx:Declarations>
 	
-	<clients:getClient x="2" y="0"/>
-	<products:productosPedidos x="0" y="160" height="363"/>
+	
+	<products:productosPedidos x="0" y="160" height="363" id="productscomp"/>
 	<s:TextArea id="txtObservacionesNota" x="593" y="124" width="402" height="115" maxChars="32000"/>
 	<s:Label x="480" y="124" fontSize="14" fontWeight="bold" text="Observaciones:"/>
 	<controls:MaskedTextInput id="txtnumerocuponpago" x="665" y="32" fontSize="14"
@@ -105,4 +272,18 @@
 		<s:RadioButton id="rdbcanceladanotano" label="No" selected="true" groupName="notaCancelada"/>
 	</s:VGroup>
 	<s:Button id="btnCloseClientComponent" x="994" y="10" width="16" height="19" icon="assets/icon_close.png" click="btnCloseClientComponent_clickHandler(event)"/>
+	<s:Label x="19" y="39" height="15" fontSize="14" fontWeight="bold" text="Documento:"/>
+	<controls:MaskedTextInput id="mskdocu" x="104" y="32" enter="mskdocu_enterHandler(event)"
+							  fontSize="18" inputMask="########" maxChars="8" restrict="0-9"
+							  toolTip="Ingrese Número de Documento!!!"/>
+	<s:Label x="43" y="96" fontSize="14" fontWeight="bold" text="Nombre:"/>
+	<s:Label x="31" y="63" fontSize="14" fontWeight="bold" text="Cliente N°:"/>
+	<s:Label id="lblnocli" x="103" y="60" width="124" fontFamily="Verdana" fontSize="18"
+			 fontWeight="bold" verticalAlign="middle"/>
+	<s:TextInput id="txtnombrecliente" x="102" y="85" width="188" fontSize="18" maxChars="40"
+				 prompt="Ingrese Nombre" restrict="a-z A-Z ñ-Ñ" />
+	<s:Label id="lblapellido" x="37" y="125" fontSize="14" fontWeight="bold" text="Apellido:"/>
+	<s:TextInput id="txtapellidocliente" x="101" y="118" width="189" fontSize="18" maxChars="40"
+				 prompt="Ingrese Apellido" restrict="a-z A-Z ñ-Ñ"/>
+	<s:Button id="btninserclient" x="289" y="21" label="DatosCliente" toolTip="Ingresa Datos Personales de un Cliente" click="btninserclient_clickHandler(event)"/>
 </s:Group>
