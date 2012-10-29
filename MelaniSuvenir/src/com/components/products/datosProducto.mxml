@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
-		 width="612" height="364" toolTip="FORMULARIO PARA AGREGAR" creationComplete="group1_creationCompleteHandler(event)" xmlns:components="com.hillelcoren.components.*">
+		 width="612" height="364" toolTip="FORMULARIO PARA AGREGAR" creationComplete="group1_creationCompleteHandler(event)" xmlns:components="com.hillelcoren.components.*"
+		 title="Agregar un Producto a la Base de Datos" close="titlewindow_closeHandler()">
 	<fx:Style>
 		@namespace s "library://ns.adobe.com/flex/spark";		
 		@namespace controls "com.adobe.flex.extras.controls.*";
@@ -42,7 +43,9 @@
 			
 			import mx.collections.XMLListCollection;
 			import mx.controls.Alert;
+			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			[Bindable]
@@ -51,7 +54,8 @@
 				private var cantDisp:int;
 			[Bindable]
 				private var codProducto:String;
-			
+			[Bindable]
+				private var xmllistproducto:XMLList;
 			
 			
 			//---------------------------------------------------------------------
@@ -82,10 +86,7 @@
 				}	
 			
 			}
-			protected function btnClose_clickHandler(event:MouseEvent):void
-			{
-				this.removeAllElements();				
-			}
+			
 			
 			protected function btnGuardarProducto_clickHandler(event:MouseEvent):void
 			{
@@ -134,7 +135,9 @@
 			}
 			protected function producto_resultHandler(event:ResultEvent):void{
 				var indice:Number;
-				indice = new Number(event.result.toString());
+				
+				xmllistproducto=new XMLList(event.result);
+				indice = new Number(product[0].id);
 				switch(indice)
 				{
 					case 0:
@@ -167,9 +170,10 @@
 						
 					default:
 					{
-						Alert.show("OPERACIÓN EXITOSA PRODUCTO Nº "+indice);						
+						Alert.show("OPERACIÓN EXITOSA PRODUCTO Nº "+indice);
+						
 						limpiarFormulario();
-						//servicesProducto.searchAllProductos();
+						
 						break;
 					}
 				}
@@ -209,10 +213,19 @@
 			
 			
 			
+			protected function titlewindow_closeHandler():void
+			{
+				PopUpManager.removePopUp(this);
+				
+			}
+		
+			
 		]]>
 	</fx:Script>
 	
-	
+	<fx:Declarations>
+		<s:XMLListCollection id="product" source="{xmllistproducto.producto}"/>
+	</fx:Declarations>
 	
 		
 	
@@ -246,8 +259,6 @@
 									  inputMask="#####" fontWeight="bold" restrict="0-9" />
 		</mx:FormItem>
 	</mx:Form>
-	<s:Button tabIndex="5" toolTip="Enviar los datos al Servidor!!!" id="btnClose" x="564" y="14" width="23" height="23"
-			  click="btnClose_clickHandler(event)" icon="assets/icon_close(1).png"/>
 	<s:Button id="btnGuardarProducto" x="271" y="333" label="Guardar"
 			  click="btnGuardarProducto_clickHandler(event)"/>
-</s:Group>
+</s:TitleWindow>
