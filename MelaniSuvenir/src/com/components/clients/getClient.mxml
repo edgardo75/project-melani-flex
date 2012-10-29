@@ -26,7 +26,7 @@
 			public var xmlcliente:XMLList;
 			
 			private var popup:Progress;
-			private var componentProductos:productosPedidos;
+			
 			
 			
 			//private var grillaclientes:grillaClientes;
@@ -43,14 +43,14 @@
 				
 			}
 			
-			protected function operation1_faultHandler(event:FaultEvent):void
+			protected function operationFaultGetClient(event:FaultEvent):void
 			{
 				PopUpManager.removePopUp(popup);
 				Alert.show("Error "+event.fault.toString());
 				
 			}
 			
-			protected function operation1_resultHandler(event:ResultEvent):void
+			protected function operationResultGetClient(event:ResultEvent):void
 			{
 			
 				PopUpManager.removePopUp(popup);
@@ -65,8 +65,8 @@
 				
 				
 				
-				txtnombre.text=String(cliente.nombre);
-				txtapellido.text=String(cliente.apellido);
+				txtnombrecliente.text=String(cliente.nombre);
+				txtapellidocliente.text=String(cliente.apellido);
 				lblnocli.text=cliente.id;
 				
 				
@@ -79,22 +79,22 @@
 			protected function group1_creationCompleteHandler(event:FlexEvent):void
 			{
 				mskdocu.setFocus();
-				txtapellido.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
-				txtnombre.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				txtapellidocliente.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				txtnombrecliente.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 			}
 			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			private function transferirFocus(keypress:KeyboardEvent):void{
 				if(keypress.keyCode==Keyboard.ENTER){
 				
-					if(keypress.currentTarget.toString().indexOf("txtapellido")!=-1 && txtapellido.text.length >= 4 && txtnombre.text.length >=4){
+					if(keypress.currentTarget.toString().indexOf("txtapellidocliente")!=-1 && txtapellidocliente.text.length >= 4 && txtnombrecliente.text.length >=4){
 						
 						popup=Progress(PopUpManager.createPopUp(this,Progress,true));
 						PopUpManager.centerPopUp(popup);
-						cli.searchClientForNameAndLastName(txtnombre.text.toString(),txtapellido.text.toString());
+						cli.searchClientForNameAndLastName(txtnombrecliente.text.toString(),txtapellidocliente.text.toString());
 								
 					}else{
-							if(keypress.currentTarget.toString().indexOf("txtnombre")!=-1&&txtnombre.text.length>=4){
-									txtapellido.setFocus();
+							if(keypress.currentTarget.toString().indexOf("txtnombrecliente")!=-1&&txtnombrecliente.text.length>=4){
+									txtapellidocliente.setFocus();
 							
 							}	
 					}
@@ -104,14 +104,14 @@
 			
 			}
 			
-			protected function operation2_faultHandler(event:FaultEvent):void
+			protected function operationFaultSearchClient(event:FaultEvent):void
 			{
 				PopUpManager.removePopUp(popup);
 				Alert.show("Error en el Servidor, verifique!!!");	
 				
 			}
 			
-			protected function operation2_resultHandler(event:ResultEvent):void
+			protected function operationResultSearchClient(event:ResultEvent):void
 			{
 				PopUpManager.removePopUp(popup);
 				
@@ -137,9 +137,9 @@
 				
 				/*Set properties to custom component popup*/
 				pop1.targetCodeCustomer=lblnocli;
-				pop1.targetName=txtnombre;
+				pop1.targetName=txtnombrecliente;
 				pop1.targetNumCustomer=mskdocu;
-				pop1.targetSecondName=txtapellido;
+				pop1.targetSecondName=txtapellidocliente;
 				pop1.clidata=xmlcli;
 				PopUpManager.centerPopUp(pop1);
 				
@@ -163,8 +163,8 @@
 				popup2.title="Ingrese Datos Personales de Cliente";
 				
 				popup2.idcliente=lblnocli;
-				popup2.nombre=txtnombre;
-				popup2.apellido=txtapellido;
+				popup2.nombre=txtnombrecliente;
+				popup2.apellido=txtapellidocliente;
 				popup2.nrodocu=mskdocu;
 				PopUpManager.centerPopUp(popup2);
 			}
@@ -174,13 +174,13 @@
 	<fx:Declarations>
 		<s:WebService wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"
 					  id="cli" showBusyCursor="true">
-			<s:operation fault="operation1_faultHandler(event)"
-						 result="operation1_resultHandler(event)" 
+			<s:operation fault="operationFaultGetClient(event)"
+						 result="operationResultGetClient(event)" 
 						 name="getCustomerDocNumber">
 				
 			</s:operation>
-			<s:operation fault="operation2_faultHandler(event)" 
-						 result="operation2_resultHandler(event)"
+			<s:operation fault="operationFaultSearchClient(event)" 
+						 result="operationResultSearchClient(event)"
 						 name="searchClientForNameAndLastName">
 				
 			</s:operation>
@@ -197,10 +197,10 @@
 	<s:Label x="31" y="63" fontSize="14" fontWeight="bold" text="Cliente N°:"/>
 	<s:Label id="lblnocli" x="103" y="60" width="124" fontFamily="Verdana" fontSize="18"
 			 fontWeight="bold" verticalAlign="middle"/>
-	<s:TextInput id="txtnombre" x="102" y="85" width="188" fontSize="18" maxChars="40"
-				 prompt="Ingrese Nombre" restrict="a-z A-Z ñ-Ñ"/>
+	<s:TextInput id="txtnombrecliente" x="102" y="85" width="188" fontSize="18" maxChars="40"
+				 prompt="Ingrese Nombre" restrict="a-z A-Z ñ-Ñ" />
 	<s:Label id="lblapellido" x="37" y="125" fontSize="14" fontWeight="bold" text="Apellido:"/>
-	<s:TextInput id="txtapellido" x="101" y="118" width="189" fontSize="18" maxChars="40"
+	<s:TextInput id="txtapellidocliente" x="101" y="118" width="189" fontSize="18" maxChars="40"
 				 prompt="Ingrese Apellido" restrict="a-z A-Z ñ-Ñ"/>
 	<s:Button id="btninserclient" x="289" y="21" label="DatosCliente" toolTip="Ingresa Datos Personales de un Cliente" click="btninserclient_clickHandler(event)"/>
 </s:Group>
