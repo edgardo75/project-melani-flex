@@ -1198,6 +1198,6 @@
 			 textAlign="right"/>
 	<controls:MaskedTextInput id="mskrecargo" x="645" y="323" width="49" fontFamily="Verdana"
 							  fontSize="16" restrict="0-9."/>
-	<s:Button id="brncargarunproducto" x="381" y="9" label="Cargar Producto"
+	<s:Button id="brncargarunproducto" x="381" toolTip="Muestra una Ventana para cargar un Producto" y="9" label="Cargar Producto"
 			  click="brncargarunproducto_clickHandler(event)"/>
 </s:Group>

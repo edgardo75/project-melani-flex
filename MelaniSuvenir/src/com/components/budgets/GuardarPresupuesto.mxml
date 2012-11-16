@@ -75,22 +75,24 @@
 			//------------------------------------------------------------------------------------
 			protected function btnguardar_clickHandler(event:MouseEvent):void
 			{
-				// TODO Auto-generated method stub
+				
 				
 				if(productordered.arrayDg.length>0){
 					var b:Boolean=false;
 					for(var j:int=0;j<productordered.arrayDg.length&&!b;j++){
+						//controlamos que no haya descuento por producto y total a la vez
 						if(productordered.porc_d>0 && productordered.arrayDg[j].porc_desc!=0 && productordered.porc_d!=0){
 							Alert.show("Error al procesar los datos, el descuento es Total o por Productos, corrija!!!");
 							return;
 						}
+						//controlamos que los separadores decimales no sean comas
 						if(String(productordered.arrayDg[j].porc_desc).toString().indexOf(",")!=-1||String(productordered.arrayDg[j].price).toString().indexOf(",")!=-1)
 							b=true;
 					
 					}
 					
 				if(!b)	
-				   Alert.show("Desea Los Datos del Presupuesto?","Confirmar Operación", Alert.YES | Alert.NO, this, guardarpresupuesto, null, Alert.NO);
+				   Alert.show("Desea Guardar el Presupuesto Actual?","Confirmar Operación", Alert.YES | Alert.NO, this, guardarpresupuesto, null, Alert.NO);
 				else
 					Alert.show("Corrija la grilla de Productos, el separador decimal es el punto y no la coma!!!");
 				   

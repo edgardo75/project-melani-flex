@@ -210,6 +210,99 @@
 				wstarjetascreditodebito.searchAllTarjetasCreditoDebito();
 			}
 			
+			protected function verificarProductosCargados():void{
+				
+				if(productscomp.arrayDg.length>0){
+					//*******************************************************************
+					var b:Boolean=false;
+					for(var j:int=0;j<productscomp.arrayDg.length&&!b;j++){
+						//controlamos que no haya descuento por producto y total a la vez
+						if(productscomp.porc_d>0 && productscomp.arrayDg[j].porc_desc!=0 && productscomp.porc_d!=0){
+							Alert.show("Error al procesar los datos, el descuento es Total o por Productos, corrija!!!");
+							return;
+						}
+						//controlamos que los separadores decimales no sean comas
+						if(String(productscomp.arrayDg[j].porc_desc).toString().indexOf(",")!=-1||String(productscomp.arrayDg[j].price).toString().indexOf(",")!=-1)
+							b=true;
+						
+					}
+					//*******************************************************************
+					if(!b)	
+						Alert.show("Desea Guardar Nota De Pedido Actual?","Confirmar Operación", Alert.YES | Alert.NO, this, guardarNotaPedido, null, Alert.NO);
+					else
+						Alert.show("Corrija la grilla de Productos, el separador decimal es el punto y no la coma!!!");
+					
+				}else
+					Alert.show("NO HAY PRODUCTOS LISTADOS!!!");		
+				
+			}
+			//***************************************************************************************************
+			protected function chequearNumeroCupon():Boolean{
+					if(cmbTarjetasCreditoDebito.selectedItem.id!=0&&txtnumerocuponpago.length==0)
+						return true;
+					else
+						return false;
+			
+			}
+			//***************************************************************************************************
+			protected function btnGuardarNota_clickHandler(event:MouseEvent):void
+			{
+				//*************************Chequeamos que haya un cliente ya seleccionado********************++
+					if(xmlcli.length>0&&txtnombrecliente.text.length>0&&txtapellidocliente.text.length>0){
+							if(chequearNumeroCupon())
+								Alert.show("Falta Ingresar un Número de Cupón");
+							else
+								verificarProductosCargados();
+							
+					}else
+						Alert.show("Corregir Datos de Cliente!!!");
+				//********************************************************************************************
+				
+				
+				
+			}
+		protected function guardarNotaPedido(evt:CloseEvent):void{
+			if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
+				
+		
+		}	
+		//****************************************************************************************************
+		protected function getDatosXML():void{
+			var xml:String="<notapedido>\n" +
+				"<idnota>0</idnota>\n" +
+				"<personas>\n" +
+				"<id>"+this.lblnocli.text+"</id>\n" +
+				"<numerodocu>"++"</numerodocu>\n" +				
+				"</personas>\n" +
+				"<tarjetacredito>\n" +
+				"<id_tarjeta>0</id_tarjeta>\n" +
+				"</tarjetacredito>\n" +
+				"<porcentajes>\n" +
+				"<id_porcentaje>1</id_porcentaje>\n" +
+				"</porcentajes>\n" +
+				"<montototal>1233.56</montototal>\n" +
+				"<anticipo>100.50</anticipo>\n" +
+				"<saldo>1133.06</saldo>\n" +
+				"<entregado>0</entregado>\n" +
+				"<usuario_expidio_nota>0</usuario_expidio_nota>\n" +
+				"<stockfuturo>0</stockfuturo>\n" +
+				"<usuario_entregado>0</usuario_entregado>\n" +
+				"<anulado>0</anulado>\n" +
+				"<usuario_cancelo_nota>0</usuario_cancelo_nota>\n" +
+				"<cancelado>0</cancelado>\n" +
+				"<descuentonota>0.00</descuentonota>\n" +
+				"<observacionesDomicilio>" ++"</observacionesDomicilio>\n" +
+				"<pendiente>1</pendiente>\n" +
+				"<montoiva>0</montoiva>\n" +
+				"<recargo>0</recargo>\n" +
+				"<id_usuario_anulado>0</id_usuario_anulado><numerodecupon>0</numerodecupon><enefectivo>1</enefectivo><detallesnotapedido><itemdetallesnota><cantidad>10</cantidad><preciocondescuento>0.00</preciocondescuento><precio>10</precio><subtotal>10</subtotal><entregado>10</entregado><cancelado>0</cancelado><anulado>0</anulado><pendiente>1</pendiente><descuento>10</descuento><iva>0</iva><id_nota>0</id_nota><id_producto>4</id_producto></itemdetallesnota><itemdetallesnota><cantidad>2</cantidad><preciocondescuento>0.00</preciocondescuento><precio>10</precio><subtotal>10</subtotal><entregado>0</entregado><cancelado>0</cancelado><pendiente>1</pendiente><anulado>0</anulado><descuento>0</descuento><iva>0</iva><id_nota>0</id_nota><id_producto>5</id_producto></itemdetallesnota><itemdetallesnota><cantidad>10</cantidad><preciocondescuento>0.00</preciocondescuento><precio>10</precio><subtotal>10</subtotal><entregado>0</entregado><cancelado>0</cancelado><anulado>0</anulado><pendiente>1</pendiente><descuento>0</descuento><iva>0</iva><id_nota>0</id_nota><id_producto>6</id_producto></itemdetallesnota></detallesnotapedido></notapedido>"
+				
+				"</tarjetacredito>\n"+
+				"</notapedido>\n";
+		
+		
+		}	
+		//****************************************************************************************************	
 		]]>
 	</fx:Script>
 	
@@ -285,5 +378,7 @@
 	<s:Label id="lblapellido" x="37" y="125" fontSize="14" fontWeight="bold" text="Apellido:"/>
 	<s:TextInput id="txtapellidocliente" x="101" y="118" width="189" fontSize="18" maxChars="40"
 				 prompt="Ingrese Apellido" restrict="a-z A-Z ñ-Ñ"/>
-	<s:Button id="btninserclient" x="289" y="21" label="DatosCliente" toolTip="Ingresa Datos Personales de un Cliente" click="btninserclient_clickHandler(event)"/>
+	<s:Button id="btninserclient" x="289" y="21" label="DatosCliente" toolTip="Muestra una Ventana para Ingresar Datos Personales de un Cliente" click="btninserclient_clickHandler(event)"/>
+	<s:Button id="btnGuardarNota" x="893" y="308" label="Guardar Nota"
+			  click="btnGuardarNota_clickHandler(event)" enabled="false"/>
 </s:Group>
