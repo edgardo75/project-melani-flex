@@ -84,6 +84,7 @@
 				txtdescuento.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				mskcantidad.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				mskrecargo.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				mskanticipo.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				adglistpedprod.addEventListener(AdvancedDataGridEvent.ITEM_EDIT_END,itemEditEndHandler);
 				
 
@@ -157,7 +158,7 @@
 								totGral=0;
 								totGralDesc=0;
 								precio_desc=0;
-								txtdescuento.text="0.000";
+								txtdescuento.text="0.0";
 								
 								txtpreciop.text="";
 								mskcantidad.text="";					
@@ -167,6 +168,7 @@
 								porc_d=0;
 								porc_desc_total=0;		
 								lbldescuento.text="0.000";
+								lblsaldo.text="0.000";
 								lbltotalconrecargo.text="0.000";
 								desc_resto=0;
 								tot_recargo=0;
@@ -327,7 +329,7 @@
 									totGral=0;
 									totGralDesc=0;
 									precio_desc=0;
-									txtdescuento.text="0.000";
+									txtdescuento.text="0.0";
 									
 									txtpreciop.text="";
 									mskcantidad.text="";					
@@ -337,6 +339,7 @@
 									porc_d=0;
 									porc_desc_total=0;		
 									lbldescuento.text="0.000";
+									lblsaldo.text="0.000";
 									lbltotalconrecargo.text="0.000";
 									desc_resto=0;
 									tot_recargo=0;
@@ -817,9 +820,21 @@
 					}
 					if(KeyPress.currentTarget.toString().indexOf("mskrecargo")!=-1)
 						Alert.show("Desea Agregar el Recargo al Listado?","Confirmar Operación", Alert.YES | Alert.NO, this, calcularRecargo, null, Alert.YES);
+					
+					if(KeyPress.currentTarget.toString().indexOf("mskanticipo")!=-1)
+						calcularAnticipo();
 							
 				
 				}
+			
+			
+			}
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			protected function calcularAnticipo():void{
+				if(int(mskanticipo.text)==0)
+					lblsaldo.text="0.000";
+				else 
+					lblsaldo.text=Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskanticipo.text)).toFixed(3);
 			
 			
 			}
@@ -869,8 +884,8 @@
 				
 				
 				
-				por_des_tot=Number(Number(txtdescuento.text).toFixed(3));
-				porc_desc_total=Number(por_des_tot.toFixed(3));
+				por_des_tot=Number(Number(txtdescuento.text).toFixed(2));
+				porc_desc_total=Number(por_des_tot.toFixed(2));
 				
 				
 				
@@ -980,7 +995,7 @@
 						totGral=0;
 						totGralDesc=0;
 						precio_desc=0;
-						txtdescuento.text="0.000";
+						txtdescuento.text="0.0";
 						
 						txtpreciop.text="";
 						mskcantidad.text="";					
@@ -990,6 +1005,7 @@
 						porc_d=0;
 						porc_desc_total=0;		
 						lbldescuento.text="0.000";
+						lblsaldo.text="0.000";
 						lbltotalconrecargo.text="0.000";
 						desc_resto=0;
 						tot_recargo=0;
@@ -1029,7 +1045,7 @@
 				totGral=0;
 				totGralDesc=0;
 				precio_desc=0;
-				txtdescuento.text="0.000";
+				txtdescuento.text="0.0";
 				cmbproduct.text="";
 				cmbproduct.setFocus();
 				txtpreciop.text="";
@@ -1148,12 +1164,19 @@
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
 	<s:Label x="425" y="301" width="223" color="#04667F" fontFamily="Verdana" fontSize="16"
 			 fontWeight="bold" text="TOTAL CON RECARGO $:" textAlign="right"/>
+	<s:Label x="425" y="319" width="223" color="#7F1E04" fontFamily="Verdana" fontSize="16"
+			 fontWeight="bold" text="SALDO $:" textAlign="right"/>
 	<s:Label id="lbltotalconrecargo" x="645" y="299" width="124" color="#04667F" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label x="436" y="330" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="TOTAL CON RECARGO %:"
+	<s:Label id="lblsaldo" x="645" y="318" width="124" color="#7F2704" fontFamily="Verdana"
+			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
+	<s:Label x="436" y="356" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="TOTAL CON RECARGO %:"
 			 textAlign="right"/>
-	<controls:MaskedTextInput id="mskrecargo" x="645" y="323" width="49" fontFamily="Verdana"
+	<controls:MaskedTextInput id="mskrecargo" x="645" y="349" width="49" fontFamily="Verdana"
 							  fontSize="16" restrict="0-9." toolTip="Ingresa un Porcentaje de recargo total para los productos cargados"/>
 	<s:Button id="brncargarunproducto" x="339" toolTip="Muestra una Ventana para cargar un Producto" y="8" label="Cargar Producto"
 			  click="brncargarunproducto_clickHandler(event)"/>
+	<s:Label x="541" y="386" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="ANTICIPO $:"
+			 textAlign="right"/>
+	<controls:MaskedTextInput restrict="0-9." id="mskanticipo" x="645" y="381" width="103"/>
 </s:Group>
