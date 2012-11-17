@@ -56,10 +56,10 @@
 							datosXML+="<itemdetallespresupuesto>\n"+
 								"<precio>"+productordered.arrayDg[ii].price+"</precio>\n"+
 								"<precio_desc>"+productordered.arrayDg[ii].prec_descuento+"</precio_desc>\n"+
-								"<subtotal>"+Number(productordered.arrayDg[ii].subtotal).toFixed(2)+"</subtotal>\n"+
-								"<descuento>"+productordered.arrayDg[ii].porc_desc+"</descuento>\n"+
+								"<subtotal>"+Number(productordered.arrayDg[ii].subtotal).toFixed(3)+"</subtotal>\n"+
+								"<descuento>"+Number(productordered.arrayDg[ii].porc_desc).toFixed(2)+"</descuento>\n"+
 								"<cantidad>"+productordered.arrayDg[ii].countt+"</cantidad>\n"+
-								"<fk_id_producto>"+productordered.arrayDg[ii].idproduct+"</fk_id_producto>\n"+
+								"<fk_id_producto>"+productordered.arrayDg[ii].id+"</fk_id_producto>\n"+
 								"<fk_id_presupuesto>0</fk_id_presupuesto>\n"+	
 								"</itemdetallespresupuesto>\n";
 							ii++
@@ -216,9 +216,9 @@
 	</s:BorderContainer>
 	<products:productosPedidos id="productordered" x="40" y="138" height="349">
 	</products:productosPedidos>
-	<s:TextArea id="txtobservaciones"  x="485" y="45" width="400" height="159"  maxChars="5000"/>
+	<s:TextArea id="txtobservaciones"  x="504" y="45" width="400" height="159"  maxChars="5000"/>
 	<s:Button id="btnguardar" x="417" y="491" width="91" height="33" label="Guardar"
 			  click="btnguardar_clickHandler(event)" enabled="true"/>
-	<s:Label x="487" y="31" fontSize="16" fontWeight="normal" text="Observaciones"/>
+	<s:Label x="506" y="31" fontSize="16" fontWeight="normal" text="Observaciones"/>
 	<s:Button id="btnCloseClientComponent" x="898" y="9" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
 </s:Group>

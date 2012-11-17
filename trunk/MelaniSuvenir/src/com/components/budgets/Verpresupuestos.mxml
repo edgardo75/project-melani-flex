@@ -451,7 +451,7 @@
 		]]>
 	</fx:Script>
 	<mx:HRule x="28" y="30" width="337" height="0"/>
-	<s:Label x="450" y="12" fontFamily="Verdana" fontWeight="bold" text="VER PRESUPUESTOS MELANI"
+	<s:Label x="450" y="12" fontFamily="Verdana" fontWeight="bold" text="VER PRESUPUESTOS MELANIE"
 			 textDecoration="underline"/>
 	<mx:AdvancedDataGrid id="adgPresupuestos" x="13" y="34" width="973" height="290"
 						 designViewDataType="flat" doubleClickEnabled="true" selectable="true"
