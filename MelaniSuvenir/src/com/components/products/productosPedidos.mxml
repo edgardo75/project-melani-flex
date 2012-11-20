@@ -810,7 +810,7 @@
 						focusManager.setFocus(mskcantidad);
 					
 					if(KeyPress.currentTarget.toString().indexOf("txtdescuento")!=-1 && Number(Number(txtdescuento.text).toFixed(3))>0){
-					//	addadglistpedprod(cmbproduct.selectedItem.id,txtpreciop.text,mskcantidad.text,cmbproduct.selectedItem.descripcion,txtdescuento);
+					
 						Alert.show("Desea Agregar el Descuento al Listado?","Confirmar Operación", Alert.YES | Alert.NO, this, calcularDescuentoTotal, null, Alert.YES);
 						
 					
@@ -830,15 +830,24 @@
 				var recargo:Number=0;
 			
 				if(Number(mskrecargo.text)==0){
+					var totgral:Number=Number(Number(lblTotGral.text).toFixed(3));
+					var descTotal:Number=Math.abs(Number(lbldescuento.text));
 					tot_recargo=0;
 					lbltotalconrecargo.text="0.000";
+					lblTotApagar.text=Number(totgral-descTotal).toFixed(3);
 				}else{
-					    tot_recargo=Number(mskrecargo.text);
-						recargo=tot_recargo*Number(Number(lblTotApagar.text).toFixed(3))/100;
-						lbltotalconrecargo.text=Number(Number(Number(lblTotApagar.text).toFixed(3))+recargo).toFixed(3);
+					
+					tot_recargo+=Number(mskrecargo.text);
+					
+					recargo=tot_recargo*Number(Number(lblTotApagar.text).toFixed(3))/100;
+					lbltotalconrecargo.text=Number(Number(Number(lblTotApagar.text).toFixed(3))+recargo).toFixed(3);
+					var lbltotrecargo:Number=Number(Number(lbltotalconrecargo.text).toFixed(3));
+					
+					var lbltotdesc:Number=Math.abs(Number(lbldescuento.text));
+					
+					lblTotApagar.text=Number(lbltotrecargo).toFixed(3);
 					
 					
-				
 				}
 				
 			
