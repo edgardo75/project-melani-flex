@@ -783,6 +783,7 @@
 			}
 			//--------------------------------------------------------------------------------------
 			private function transferirFocus(KeyPress:KeyboardEvent):void{
+				
 				var b:Boolean=false;
 				if(KeyPress.keyCode==Keyboard.ENTER){
 					
@@ -845,13 +846,22 @@
 				var recargo:Number=0;
 			
 				if(Number(mskrecargo.text)==0){
+					var totgral:Number=Number(Number(lblTotGral.text).toFixed(3));
+					var descTotal:Number=Math.abs(Number(lbldescuento.text));
 					tot_recargo=0;
 					lbltotalconrecargo.text="0.000";
+					lblTotApagar.text=Number(totgral-descTotal).toFixed(3);
 				}else{
-					    tot_recargo=Number(mskrecargo.text);
+						
+					    tot_recargo+=Number(mskrecargo.text);
+					
 						recargo=tot_recargo*Number(Number(lblTotApagar.text).toFixed(3))/100;
 						lbltotalconrecargo.text=Number(Number(Number(lblTotApagar.text).toFixed(3))+recargo).toFixed(3);
+						var lbltotrecargo:Number=Number(Number(lbltotalconrecargo.text).toFixed(3));
 					
+						var lbltotdesc:Number=Math.abs(Number(lbldescuento.text));
+					
+						lblTotApagar.text=Number(lbltotrecargo).toFixed(3);
 					
 				
 				}
@@ -1178,5 +1188,6 @@
 			  click="brncargarunproducto_clickHandler(event)"/>
 	<s:Label x="541" y="386" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="ANTICIPO $:"
 			 textAlign="right"/>
-	<controls:MaskedTextInput restrict="0-9." id="mskanticipo" x="645" y="381" width="103"/>
+	<controls:MaskedTextInput id="mskanticipo" x="645" y="381" width="103" fontFamily="Verdana"
+							  fontSize="16" restrict="0-9."/>
 </s:Group>

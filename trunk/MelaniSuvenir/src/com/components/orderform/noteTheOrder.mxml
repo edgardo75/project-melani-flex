@@ -268,6 +268,29 @@
 		}	
 		//****************************************************************************************************
 		protected function getDatosXML():void{
+			
+			if(rdbentregadosi.selected)
+				var entregado:int=1;
+			else
+				var entregado:int=0;
+			if(rdbcanceladanotasi.selected)
+				 var canceladanota:int=1;
+			else
+				var canceladanota:int=0;
+			if(rdbstockfuturosi.selected)
+				var stockfuturo:int=1;
+			else
+				var stockfuturo:int=0;
+			
+			if(rdanuladasi.selected)
+				var anulada:int=1;
+			else
+				var anulada:int=0;
+			if(rdenfectivosi.selected)
+				var enfectivo:int=1;
+			else
+				var enfectivo:int=0;
+			
 			var xmlnota:String="<notapedido>\n" +
 				"<idnota>0</idnota>\n" +
 				"<personas>\n" +
@@ -283,24 +306,24 @@
 				"<montototal>"+productscomp.lblTotGral+"</montototal>\n" +
 				"<anticipo>"+productscomp.mskanticipo.text+"</anticipo>\n" +
 				"<saldo>"+productscomp.lblsaldo.text+"</saldo>\n" +
-				"<entregado>0</entregado>\n" +
+				"<entregado>"+entregado+"</entregado>\n" +
 				"<usuario_expidio_nota>0</usuario_expidio_nota>\n" +
-				"<stockfuturo>0</stockfuturo>\n" +
+				"<stockfuturo>"+stockfuturo+"</stockfuturo>\n" +
 				"<usuario_entregado>0</usuario_entregado>\n" +
-				"<anulado>0</anulado>\n" +
+				"<anulado>"+anulada+"</anulado>\n" +
 				"<usuario_cancelo_nota>0</usuario_cancelo_nota>\n" +
-				"<cancelado>0</cancelado>\n" +
-				"<descuentonota>0.000</descuentonota>\n" +
-				"<porc_descuento_total>0.000</porc_descuento_total>\n" +
-				"<porcentajerecargo>0.000</porcentajerecargo>\n" +
-				"<montototalapagar>2000.000</montototalapagar>"+
+				"<cancelado>"+canceladanota+"</cancelado>\n" +
+				"<descuentonota>"+productscomp.lbldescuento+"</descuentonota>\n" +
+				"<porc_descuento_total>"+productscomp.porc_desc_total+"</porc_descuento_total>\n" +
+				"<porcentajerecargo>"+productscomp.mskrecargo.text+"</porcentajerecargo>\n" +
+				"<montototalapagar>"+productscomp.lblTotApagar.text+"</montototalapagar>"+
 				"<observaciones>" +this.txtObservacionesNota+"</observaciones>\n" +
-				"<pendiente>1</pendiente>\n"
+				"<pendiente>"+entregado+"</pendiente>\n"
 				"<montoiva>0</montoiva>\n"
-				"<recargo>0.000</recargo>\n" +
+				"<recargo>"+productscomp.lbltotalconrecargo.text+"</recargo>\n" +
 				"<id_usuario_anulado>0</id_usuario_anulado>\n" +
-				"<numerodecupon>0</numerodecupon>\n" +
-				"<enefectivo>1</enefectivo>"+
+				"<numerodecupon>"+txtnumerocuponpago.text+"</numerodecupon>\n" +
+				"<enefectivo>"+enfectivo+"</enefectivo>"+
 				"<detallesnotapedido>\n" ;
 			
 							for(var ii:int=0;ii<productscomp.arrayDg.length;){
@@ -309,18 +332,18 @@
 									ii++;
 								else{
 									xmlnota+="<itemdetallesnota>\n" +
-												"<cantidad>10</cantidad>\n" +
-												"<preciocondescuento>0.00</preciocondescuento>\n" +
-												"<precio>10</precio>\n" +
-												"<subtotal>10</subtotal>\n" +
-												"<entregado>10</entregado>\n" +
-												"<cancelado>0</cancelado>\n" +
-												"<anulado>0</anulado>\n" +
-												"<pendiente>1</pendiente>\n" +
-												"<descuento>10</descuento>\n" +
+												"<cantidad>"+productscomp.arrayDg[ii].countt+"</cantidad>\n" +
+												"<preciocondescuento>"+productscomp.arrayDg[ii].prec_descuento+"</preciocondescuento>\n" +
+												"<precio>"+productscomp.arrayDg[ii].price+"</precio>\n" +
+												"<subtotal>"+Number(productscomp.arrayDg[ii].subtotal).toFixed(3)+"</subtotal>\n" +
+												"<entregado>"+entregado+"</entregado>\n" +
+												"<cancelado>"+canceladanota+"</cancelado>\n" +
+												"<anulado>"+anulada+"</anulado>\n" +
+												"<pendiente>"+entregado+"</pendiente>\n" +
+												"<descuento>"+Number(productscomp.arrayDg[ii].porc_desc).toFixed(2)+"</descuento>\n" +
 												"<iva>0</iva>\n" +
 												"<id_nota>0</id_nota>\n" +
-												"<id_producto>4</id_producto>\n" +
+												"<id_producto>"+productscomp.arrayDg[ii].id+"</id_producto>\n" +
 												"</itemdetallesnota>" ;
 									ii++
 								}
@@ -369,8 +392,8 @@
 	</fx:Declarations>
 	
 	
-	<s:TextArea id="txtObservacionesNota" x="593" y="124" width="402" height="115" maxChars="32000"/>
-	<s:Label x="480" y="124" fontSize="14" fontWeight="bold" text="Observaciones:"/>
+	<s:TextArea id="txtObservacionesNota" x="460" y="137" width="402" height="97" maxChars="32000"/>
+	<s:Label x="457" y="124" fontSize="14" fontWeight="bold" text="Observaciones:"/>
 	<controls:MaskedTextInput id="txtnumerocuponpago" x="665" y="32" fontSize="14"
 							  inputMask="####-####-####-####" maxChars="19" toolTip="Ingrese en Número de Tarjeta de Crédito o Débito del Plástico"/>
 	<s:Label x="663" y="16" fontSize="14" fontWeight="bold"
@@ -380,18 +403,14 @@
 									 toolTip="Seleccione una Tarjeta de Crédito o Débito si el cliente utiliza esta forma de pago!!!">
 	</components:AdvancedAutoComplete>
 	<s:Label x="412" y="16" fontSize="14" fontWeight="bold" text="Tarjetas de Crédito / Débito" toolTip="Seleccione si o no para registrar que la nota de pedido fue entregada al Clliente"/>
-	<s:VGroup   x="413" y="74" horizontalAlign="justify" verticalAlign="middle">
-		<s:RadioButton id="rdbentregadosi" label="Si" groupName="GrupoEntregado" />
-		<s:RadioButton id="rdbentregadorno" label="No" groupName="GrupoEntregado" selected="true"/>
-	</s:VGroup>
-	<s:Label x="414" y="60" fontSize="14" fontWeight="bold" text="Nota de Pedido Entregada"/>
-	<s:Label x="608" y="59" fontSize="14" fontWeight="bold" text="Nota de Pedido Stock Futuro"/>
-	<s:VGroup x="608" y="72">
+	<s:Label x="332" y="60" fontSize="14" fontWeight="bold" text="Nota de Pedido Entregada"/>
+	<s:Label x="520" y="60" fontSize="14" fontWeight="bold" text="Nota de Pedido Stock Futuro"/>
+	<s:VGroup x="522" y="72">
 		<s:RadioButton id="rdbstockfuturosi" label="Si" groupName="stockFuturo"/>
 		<s:RadioButton id="rdbstockfuturono" label="No" groupName="stockFuturo" selected="true"/>
 	</s:VGroup>
-	<s:Label x="815" y="59" fontSize="14" fontWeight="bold" text="Nota de Pedido Cancelada"/>
-	<s:VGroup x="815" y="72">
+	<s:Label x="724" y="58" fontSize="14" fontWeight="bold" text="Nota de Pedido Cancelada"/>
+	<s:VGroup x="727" y="71">
 		<s:RadioButton id="rdbcanceladanotasi" label="Si" groupName="notaCancelada"/>
 		<s:RadioButton id="rdbcanceladanotano" label="No" selected="true" groupName="notaCancelada"/>
 	</s:VGroup>
@@ -413,4 +432,13 @@
 	<s:Button id="btnGuardarNota" x="893" y="308" label="Guardar Nota"
 			  click="btnGuardarNota_clickHandler(event)" enabled="false"/>
 	<products:productosPedidosNota id="productscomp" x="4" y="166"/>
+	<s:RadioButton id="rdbentregadosi" x="331" y="74" label="Si" groupName="GrupoEntregado"/>
+	<s:RadioButton id="rdbentregadorno" x="331" y="92" label="No" groupName="GrupoEntregado"
+				   selected="true"/>
+	<s:Label x="912" y="59" fontSize="14" fontWeight="bold" text="Nota Anulada"/>
+	<s:RadioButton x="916" y="72" label="Si" id="rdanuladasi"/>
+	<s:RadioButton x="916" y="90" label="No" id="rdanuladano" selected="true"/>
+	<s:Label x="885" y="123" fontSize="14" fontWeight="bold" text="Pago Contado"/>
+	<s:RadioButton x="906" y="145" label="Si" id="rdenfectivosi" selected="true"/>
+	<s:RadioButton x="906" y="163" label="No" id="rdenfectivono"/>
 </s:Group>
