@@ -149,6 +149,9 @@
 						if(col==4){
 							var priceValue:Number=(grid.selectedItem.price);
 							var subtot1:Number=(grid.selectedItem.subtotal);
+							//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+							if(int(txtdescuento.text.length>0))
+								txtdescuento.text="0.000";
 							//---------------------------------------------------------------------------------------------------------------------------------------
 							if(col==4&&arrayDg.length==1&&newValue==0){
 								
@@ -1099,7 +1102,7 @@
 	<s:Label x="23" y="67" fontFamily="Verdana" fontSize="16" text="Cantidad:"/>
 	<controls:MaskedTextInput id="mskcantidad" x="108" y="58" width="55" fontFamily="Verdana"
 							  tabEnabled="false" fontSize="16" fontWeight="bold" maxChars="3" restrict="0-9"/>
-	<mx:AdvancedDataGrid id="adglistpedprod" x="25" y="86" width="747" height="149"
+	<mx:AdvancedDataGrid id="adglistpedprod" x="25" y="86" width="796" height="149"
 						 alternatingItemColors="[#adf1f5, white]"
 						 dataChange="adglistpedprod_dataChangeHandler(event)"
 						 designViewDataType="flat" doubleClickEnabled="true"
@@ -1163,6 +1166,6 @@
 			 textAlign="right"/>
 	<controls:MaskedTextInput id="mskrecargo" x="645" y="323" width="49" fontFamily="Verdana"
 							  fontSize="16" restrict="0-9." toolTip="Ingresa un Porcentaje de recargo total para los productos cargados"/>
-	<s:Button id="brncargarunproducto" x="339" toolTip="Muestra una Ventana para cargar un Producto" y="8" label="Cargar Producto"
+	<s:Button id="brncargarunproducto" x="25" toolTip="Muestra una Ventana para cargar un Producto" y="272" label="Cargar Producto"
 			  click="brncargarunproducto_clickHandler(event)"/>
 </s:Group>
