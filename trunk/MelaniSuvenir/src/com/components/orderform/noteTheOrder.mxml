@@ -6,7 +6,7 @@
 		 xmlns:products="com.components.products.*"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
 		 xmlns:components="com.hillelcoren.components.*"
-		 width="1016" height="640" initialize="group1_initializeHandler(event)" creationComplete="group1_creationCompleteHandler(event)">
+		 width="1016" height="608" initialize="group1_initializeHandler(event)" creationComplete="group1_creationCompleteHandler(event)">
 	
 	<fx:Script>
 		<![CDATA[
@@ -263,33 +263,38 @@
 			}
 		protected function guardarNotaPedido(evt:CloseEvent):void{
 			if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
-				
+			Alert.show(getDatosXML());	
 		
 		}	
 		//****************************************************************************************************
-		protected function getDatosXML():void{
+		protected function getDatosXML():String{
+			var entregado:int=0;
+			var canceladanota:int=0;
+			var stockfuturo:int=0;
+			var anulada:int=0;
+			var enfectivo:int=0;
 			
 			if(rdbentregadosi.selected)
-				var entregado:int=1;
-			else
-				var entregado:int=0;
+				entregado=1;
+			
+			
 			if(rdbcanceladanotasi.selected)
-				 var canceladanota:int=1;
-			else
-				var canceladanota:int=0;
+				 canceladanota=1;
+			
+			
 			if(rdbstockfuturosi.selected)
-				var stockfuturo:int=1;
-			else
-				var stockfuturo:int=0;
+				stockfuturo=1;
+			
+				
 			
 			if(rdanuladasi.selected)
-				var anulada:int=1;
-			else
-				var anulada:int=0;
-			if(rdenfectivosi.selected)
-				var enfectivo:int=1;
-			else
-				var enfectivo:int=0;
+				anulada=1;
+						
+			
+			if(rdbenefectivosi.selected)
+				enfectivo=1;
+			
+			
 			
 			var xmlnota:String="<notapedido>\n" +
 				"<idnota>0</idnota>\n" +
@@ -354,6 +359,8 @@
 			
 				 xmlnota+= "</detallesnotapedido>" +
 				  "</notapedido>";
+				 
+				 return xmlnota;
 		
 		
 		}	
@@ -403,14 +410,14 @@
 									 toolTip="Seleccione una Tarjeta de Crédito o Débito si el cliente utiliza esta forma de pago!!!">
 	</components:AdvancedAutoComplete>
 	<s:Label x="412" y="16" fontSize="14" fontWeight="bold" text="Tarjetas de Crédito / Débito" toolTip="Seleccione si o no para registrar que la nota de pedido fue entregada al Clliente"/>
-	<s:Label x="332" y="60" fontSize="14" fontWeight="bold" text="Nota de Pedido Entregada"/>
-	<s:Label x="520" y="60" fontSize="14" fontWeight="bold" text="Nota de Pedido Stock Futuro"/>
+	<s:Label x="332" y="60" fontSize="14" fontWeight="bold" text="Nota de pedido entregada"/>
+	<s:Label x="520" y="60" fontSize="14" fontWeight="bold" text="Nota de pedido stock futuro"/>
 	<s:VGroup x="522" y="72">
 		<s:RadioButton id="rdbstockfuturosi" label="Si" groupName="stockFuturo"/>
 		<s:RadioButton id="rdbstockfuturono" label="No" groupName="stockFuturo" selected="true"/>
 	</s:VGroup>
-	<s:Label x="724" y="58" fontSize="14" fontWeight="bold" text="Nota de Pedido Cancelada"/>
-	<s:VGroup x="727" y="71">
+	<s:Label x="724" y="59" fontSize="14" fontWeight="bold" text="Nota de pedido cancelada"/>
+	<s:VGroup x="727" y="72">
 		<s:RadioButton id="rdbcanceladanotasi" label="Si" groupName="notaCancelada"/>
 		<s:RadioButton id="rdbcanceladanotano" label="No" selected="true" groupName="notaCancelada"/>
 	</s:VGroup>
@@ -428,17 +435,25 @@
 	<s:Label id="lblapellido" x="46" y="128" fontSize="14" fontWeight="bold" text="Apellido:"/>
 	<s:TextInput id="txtapellidocliente" x="113" y="118" width="189" fontSize="18" maxChars="40"
 				 prompt="Ingrese Apellido" restrict="a-z A-Z ñ-Ñ"/>
-	<s:Button id="btninserclient" x="289" y="21" label="DatosCliente" toolTip="Muestra una Ventana para Ingresar Datos Personales de un Cliente" click="btninserclient_clickHandler(event)"/>
-	<s:Button id="btnGuardarNota" x="893" y="308" label="Guardar Nota"
-			  click="btnGuardarNota_clickHandler(event)" enabled="false"/>
-	<products:productosPedidosNota id="productscomp" x="4" y="166"/>
+	<s:Button id="btninserclient" x="30" y="461" label="DatosCliente" toolTip="Muestra una Ventana para Ingresar Datos Personales de un Cliente" click="btninserclient_clickHandler(event)"/>
+	<s:Button id="btnGuardarNota" x="31" y="485" label="Guardar Nota"
+			  click="btnGuardarNota_clickHandler(event)" enabled="true"/>
+	<products:productosPedidosNota id="productscomp" x="4" y="166" height="434"/>
 	<s:RadioButton id="rdbentregadosi" x="331" y="74" label="Si" groupName="GrupoEntregado"/>
 	<s:RadioButton id="rdbentregadorno" x="331" y="92" label="No" groupName="GrupoEntregado"
 				   selected="true"/>
-	<s:Label x="912" y="59" fontSize="14" fontWeight="bold" text="Nota Anulada"/>
-	<s:RadioButton x="916" y="72" label="Si" id="rdanuladasi"/>
-	<s:RadioButton x="916" y="90" label="No" id="rdanuladano" selected="true"/>
-	<s:Label x="885" y="123" fontSize="14" fontWeight="bold" text="Pago Contado"/>
-	<s:RadioButton x="906" y="145" label="Si" id="rdenfectivosi" selected="true"/>
-	<s:RadioButton x="906" y="163" label="No" id="rdenfectivono"/>
+	<s:Label x="912" y="59" fontSize="14" fontWeight="bold" text="Nota anulada"/>
+		
+	<s:Label x="913" y="123" fontSize="14" fontWeight="bold" text="Pago contado"/>
+	
+	<s:VGroup x="913" y="140" width="43" height="55">
+		<s:RadioButton id="rdbenefectivosi" label="Si" selected="true" groupName="enfectivo"/>
+		<s:RadioButton id="rdbenefectivono" label="No" groupName="enefectivo"/>
+	</s:VGroup>
+	
+	<s:VGroup x="913" y="75" width="45" height="57">
+		<s:RadioButton id="rdanuladasi" label="Si" groupName="anulada"/>
+		<s:RadioButton id="rdanuladano" label="No" selected="true" groupName="anulada"/>
+	</s:VGroup>
+	
 </s:Group>

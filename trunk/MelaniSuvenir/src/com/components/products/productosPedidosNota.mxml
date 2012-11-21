@@ -27,6 +27,8 @@
 			import spark.events.ListEvent;
 			[Bindable]
 				private var xmlproduct:XMLList;
+			[Bindable]
+				private var anticipo:Number=0;
 			
 			[Bindable]
 				public var dp:Array=[];
@@ -136,6 +138,8 @@
 					// get the value (post-edit) from the item editor
 					var newValue:Number = Number(grid.itemEditorInstance[grid.columns[col].editorDataField]);
 					
+					
+					
 					// check if the value has changed
 					if (newValue != oldValue)
 					{
@@ -150,6 +154,8 @@
 						if(col==4){
 							var priceValue:Number=(grid.selectedItem.price);
 							var subtot1:Number=(grid.selectedItem.subtotal);
+							
+							
 							//---------------------------------------------------------------------------------------------------------------------------------------
 							if(col==4&&arrayDg.length==1&&newValue==0){
 								
@@ -166,6 +172,7 @@
 								lblTotApagar.text="0.000";
 								lblTotGral.text="0.000";
 								porc_d=0;
+								anticipo=0;
 								porc_desc_total=0;		
 								lbldescuento.text="0.000";
 								lblsaldo.text="0.000";
@@ -515,7 +522,10 @@
 								}else{
 									//-----------------------------------------------------------------------------------------------------------------------------
 									if(col==5&&oldValue==0){
-																
+										//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+										if(txtdescuento.text.length>0)
+											txtdescuento.text="0.0";
+										//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 										
 										
 										precio=Number(Number(grid.selectedItem.price));
@@ -726,6 +736,7 @@
 
 			//------------------------------------------------------------------------------------------------
 			private function addadglistpedprod(idprod:String,codigoId:String,txtprecio:String,cantidad:String,descripcion:String,desc_porc:String):void{
+				
 				var subtot:Number;
 				var b:Boolean=false;
 				var p_desc:Number=0;
@@ -733,6 +744,7 @@
 				
 				subtot=Number(Number(Number(Number(txtprecio).toFixed(3))*Number(cantidad)).toFixed(3));
 				totGral=Number(Number(totGral.toFixed(3))+Number(subtot.toFixed(3)));
+				//totGralDesc=Number(Number(lbldescuento.text).toFixed(3));
 				
 				
 				
@@ -770,7 +782,12 @@
 				lblTotGral.text=String(totGral.toFixed(3));
 				
 				
-				lblTotApagar.text=Number(Number(lblTotGral.text)-totGralDesc).toFixed(3);
+				//lblTotApagar.text=Number(Number(lblTotGral.text)-totGralDesc).toFixed(3);
+				
+					calcularDescuentoVariant();
+					calcularAnticipo();
+				
+				calcularRecargoVariant();
 				
 				
 				
@@ -814,7 +831,7 @@
 						focusManager.setFocus(mskcantidad);
 					
 					if(KeyPress.currentTarget.toString().indexOf("txtdescuento")!=-1 && Number(Number(txtdescuento.text).toFixed(3))>0){
-					//	addadglistpedprod(cmbproduct.selectedItem.id,txtpreciop.text,mskcantidad.text,cmbproduct.selectedItem.descripcion,txtdescuento);
+					
 						Alert.show("Desea Agregar el Descuento al Listado?","Confirmar Operación", Alert.YES | Alert.NO, this, calcularDescuentoTotal, null, Alert.YES);
 						
 					
@@ -832,19 +849,23 @@
 			}
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			protected function calcularAnticipo():void{
-				if(int(mskanticipo.text)==0)
+				if(int(mskanticipo.text)==0){
 					lblsaldo.text="0.000";
-				else 
-					lblsaldo.text=Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskanticipo.text)).toFixed(3);
+					anticipo=0;
+				}else anticipocalculoreuso();
 			
 			
 			}
-			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-			private function calcularRecargo(evt:CloseEvent):void{
-				
-				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			protected function anticipocalculoreuso():void{
+				Alert.show(lblTotApagar.text+" "+mskanticipo.text);
+				anticipo=Number(Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskanticipo.text)).toFixed(3));
+				lblsaldo.text=anticipo.toFixed(3);
+			}
+			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			protected function calcularRecargoVariant():void{
 				var recargo:Number=0;
-			
+				
 				if(Number(mskrecargo.text)==0){
 					var totgral:Number=Number(Number(lblTotGral.text).toFixed(3));
 					var descTotal:Number=Math.abs(Number(lbldescuento.text));
@@ -852,27 +873,34 @@
 					lbltotalconrecargo.text="0.000";
 					lblTotApagar.text=Number(totgral-descTotal).toFixed(3);
 				}else{
-						
-					    tot_recargo+=Number(mskrecargo.text);
 					
-						recargo=tot_recargo*Number(Number(lblTotApagar.text).toFixed(3))/100;
-						lbltotalconrecargo.text=Number(Number(Number(lblTotApagar.text).toFixed(3))+recargo).toFixed(3);
-						var lbltotrecargo:Number=Number(Number(lbltotalconrecargo.text).toFixed(3));
+					tot_recargo+=Number(mskrecargo.text);
 					
-						var lbltotdesc:Number=Math.abs(Number(lbldescuento.text));
+					recargo=tot_recargo*Number(Number(lblTotApagar.text).toFixed(3))/100;
+					lbltotalconrecargo.text=Number(Number(Number(lblTotApagar.text).toFixed(3))+recargo).toFixed(3);
+					var lbltotrecargo:Number=Number(Number(lbltotalconrecargo.text).toFixed(3));
 					
-						lblTotApagar.text=Number(lbltotrecargo).toFixed(3);
+					var lbltotdesc:Number=Math.abs(Number(lbldescuento.text));
 					
-				
+					lblTotApagar.text=Number(lbltotrecargo).toFixed(3);
+					
+					
 				}
+			
+			
+			}
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			private function calcularRecargo(evt:CloseEvent):void{
 				
+				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
+				
+				calcularRecargoVariant();
 			
 			
 			}
 			//---------------------------------------------------------------------------------
 			private function calcularDescuentoTotal(evt:CloseEvent):void{
-				var tot_desc:Number;
-				var por_des_tot:Number;
+				
 				var b:Boolean=false;
 				
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
@@ -881,6 +909,8 @@
 				for(var i:int=0;i<arrayDg.length && !b;i++){
 					if(arrayDg[i].porc_desc != 0){
 						b=true;
+						
+						Alert.show("No se puede calcular el descuento por que hay productos con descuentos en el listado!!!");
 						
 						
 					}
@@ -892,29 +922,37 @@
 					return;
 				
 				
+				calcularDescuentoVariant();
 				
 				
-				por_des_tot=Number(Number(txtdescuento.text).toFixed(2));
-				porc_desc_total=Number(por_des_tot.toFixed(2));
-				
-				
-				
-				
-				
-				
-				
-				 tot_desc= Number(Number(lblTotGral.text).toFixed(3))*por_des_tot/100;
-				 
-				 
-				
-				 
-						lbldescuento.text=Number(Number(-tot_desc)).toFixed(3);
-						lblTotApagar.text=String(Number(Number(lblTotGral.text)-tot_desc).toFixed(3));
+						
+						if(anticipo>0)
+							anticipocalculoreuso();	
+						
 				
 			
 			}
+			
 			//---------------------------------------------------------------------------------
-		
+			protected function calcularDescuentoVariant():void{
+				var tot_desc:Number=0;
+				var por_des_tot:Number=0;
+				
+					if(int(txtdescuento.text)>0){
+							por_des_tot=Number(Number(txtdescuento.text).toFixed(2));
+							porc_desc_total=Number(por_des_tot.toFixed(2));				
+							
+							
+							tot_desc= Number(Number(lblTotGral.text).toFixed(3))*por_des_tot/100;					
+							
+							lbldescuento.text=Number(Number(-tot_desc)).toFixed(3);
+							
+					}else
+						lbldescuento.text="0.000";
+					
+					lblTotApagar.text=String(Number(Number(lblTotGral.text)-tot_desc).toFixed(3));
+			
+			}
 			
 			
 			//-------------------------------------------------------------------------------------
@@ -1013,6 +1051,7 @@
 						lblTotApagar.text="0.000";
 						lblTotGral.text="0.000";
 						porc_d=0;
+						anticipo=0;
 						porc_desc_total=0;		
 						lbldescuento.text="0.000";
 						lblsaldo.text="0.000";
@@ -1069,6 +1108,7 @@
 				lbltotalconrecargo.text="0.000";
 				desc_resto=0;
 				tot_recargo=0;
+				anticipo=0;
 				
 				
 				
@@ -1116,7 +1156,7 @@
 	<s:Label x="23" y="67" fontFamily="Verdana" fontSize="16" text="Cantidad:"/>
 	<controls:MaskedTextInput id="mskcantidad" x="108" y="58" width="55" fontFamily="Verdana"
 							  tabEnabled="false" fontSize="16" fontWeight="bold" maxChars="3" restrict="0-9"/>
-	<mx:AdvancedDataGrid id="adglistpedprod" x="25" y="86" width="747" height="149"
+	<mx:AdvancedDataGrid id="adglistpedprod" x="8" y="86" width="826" height="149"
 						 alternatingItemColors="[#adf1f5, white]"
 						 dataChange="adglistpedprod_dataChangeHandler(event)"
 						 designViewDataType="flat" doubleClickEnabled="true"
@@ -1138,7 +1178,7 @@
 									   resizable="false" sortable="false" textAlign="center"/>
 			<mx:AdvancedDataGridColumn width="45" dataField="price" draggable="false" editable="true"
 									   fontFamily="Verdana" fontSize="10" formatter="{cf}"
-									   headerText="PrecioU" resizable="false" sortable="false"
+									   headerText="PrecioU" resizable="true" sortable="false"
 									   textAlign="center"/>
 			<mx:AdvancedDataGridColumn editable="true" dataField="porc_desc" fontFamily="Verdana" fontSize="10"
 									   headerText="% Descuento" resizable="false" sortable="false"
@@ -1161,7 +1201,7 @@
 	<s:Label id="lblTotGral" x="645" y="243" width="124" color="#127B1A" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
 	<s:Label x="264" y="69" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
-	<controls:MaskedTextInput text="0.0" maxChars="3" x="381" y="58" width="43" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingrese un porcentaje de descuento"/>
+	<controls:MaskedTextInput text="0.0" maxChars="3" x="381" y="58" width="43" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingresa un porcentaje de descuento, aplicable a todos los productos de la planilla"/>
 	<s:Label x="481" y="279" color="#E2AA14" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL A PAGAR $:"/>
 	<s:Label id="lblTotApagar" x="641" y="279" width="127" color="#F9BD05" fontFamily="Verdana"
@@ -1184,7 +1224,7 @@
 			 textAlign="right"/>
 	<controls:MaskedTextInput id="mskrecargo" x="645" y="349" width="49" fontFamily="Verdana"
 							  fontSize="16" restrict="0-9." toolTip="Ingresa un Porcentaje de recargo total para los productos cargados"/>
-	<s:Button id="brncargarunproducto" x="339" toolTip="Muestra una Ventana para cargar un Producto" y="8" label="Cargar Producto"
+	<s:Button id="brncargarunproducto" x="25" toolTip="Muestra una Ventana para cargar un Producto" y="271" label="Cargar Producto"
 			  click="brncargarunproducto_clickHandler(event)"/>
 	<s:Label x="541" y="386" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="ANTICIPO $:"
 			 textAlign="right"/>
