@@ -29,13 +29,16 @@
 			
 			import spark.components.TitleWindow;
 			[Bindable]
-			public var xmlcliente:XMLList;
+				public var xmlcliente:XMLList;
+			[Bindable]
+				private var cliente:XMLList;
+			
 			
 			private var popup:Progress;
 			
 			
 			
-			//private var grillaclientes:grillaClientes;
+			
 			
 			public var secondName:popupClienteNameSecondName;
 			
@@ -60,7 +63,7 @@
 			{
 				
 				PopUpManager.removePopUp(popup);
-				var cliente:XMLList;
+				
 				cliente = new XMLList(event.result);
 				
 				
@@ -192,7 +195,7 @@
 			
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
-				// TODO Auto-generated method stub
+				
 				
 				xmltarjetas=new XMLList(event.result);
 				cmbTarjetasCreditoDebito.dataProvider=tarjetas;
@@ -216,7 +219,7 @@
 					//*******************************************************************
 					var b:Boolean=false;
 					for(var j:int=0;j<productscomp.arrayDg.length&&!b;j++){
-						//controlamos que no haya descuento por producto y total a la vez
+						//controlamos que no haya descuento por producto y total a la vez en la nota de pedido
 						if(productscomp.porc_d>0 && productscomp.arrayDg[j].porc_desc!=0 && productscomp.porc_d!=0){
 							Alert.show("Error al procesar los datos, el descuento es Total o por Productos, corrija!!!");
 							return;
@@ -248,7 +251,8 @@
 			protected function btnGuardarNota_clickHandler(event:MouseEvent):void
 			{
 				//*************************Chequeamos que haya un cliente ya seleccionado********************++
-					if(xmlcli.length>0&&txtnombrecliente.text.length>0&&txtapellidocliente.text.length>0){
+				
+					if(txtnombrecliente.text.length>0&&txtapellidocliente.text.length>0){
 							if(chequearNumeroCupon())
 								Alert.show("Falta Ingresar un Número de Cupón");
 							else
@@ -263,7 +267,14 @@
 			}
 		protected function guardarNotaPedido(evt:CloseEvent):void{
 			if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
-			Alert.show(getDatosXML());	
+			
+			//mostramos al cliente un popup de espera
+				popup=Progress(PopUpManager.createPopUp(this,Progress,true));
+				PopUpManager.centerPopUp(popup);
+			//llamamos al metodo del webservice para almacenar la nota de pedido en el servidor
+				wsnotapedido.agregarNotaPedido(getDatosXML());
+             			
+						
 		
 		}	
 		//****************************************************************************************************
@@ -296,6 +307,7 @@
 			
 			
 			
+			
 			var xmlnota:String="<notapedido>\n" +
 				"<idnota>0</idnota>\n" +
 				"<personas>\n" +
@@ -308,7 +320,7 @@
 				"<porcentaje>\n" +
 					"<id_porcentaje>1</id_porcentaje>\n" +
 				"</porcentaje>\n" +
-				"<montototal>"+productscomp.lblTotGral+"</montototal>\n" +
+				"<montototal>"+productscomp.lblTotGral.text+"</montototal>\n" +
 				"<anticipo>"+productscomp.mskanticipo.text+"</anticipo>\n" +
 				"<saldo>"+productscomp.lblsaldo.text+"</saldo>\n" +
 				"<entregado>"+entregado+"</entregado>\n" +
@@ -318,17 +330,17 @@
 				"<anulado>"+anulada+"</anulado>\n" +
 				"<usuario_cancelo_nota>0</usuario_cancelo_nota>\n" +
 				"<cancelado>"+canceladanota+"</cancelado>\n" +
-				"<descuentonota>"+productscomp.lbldescuento+"</descuentonota>\n" +
+				"<descuentonota>"+productscomp.lbldescuento.text+"</descuentonota>\n" +
 				"<porc_descuento_total>"+productscomp.porc_desc_total+"</porc_descuento_total>\n" +
 				"<porcentajerecargo>"+productscomp.mskrecargo.text+"</porcentajerecargo>\n" +
-				"<montototalapagar>"+productscomp.lblTotApagar.text+"</montototalapagar>"+
-				"<observaciones>" +this.txtObservacionesNota+"</observaciones>\n" +
-				"<pendiente>"+entregado+"</pendiente>\n"
-				"<montoiva>0</montoiva>\n"
+				"<montototalapagar>"+productscomp.lblTotApagar.text+"</montototalapagar>\n"+
+				"<observaciones>" +this.txtObservacionesNota.text+"</observaciones>\n" +
+				"<pendiente>"+entregado+"</pendiente>\n"+
+				"<montoiva>0</montoiva>\n"+
 				"<recargo>"+productscomp.lbltotalconrecargo.text+"</recargo>\n" +
 				"<id_usuario_anulado>0</id_usuario_anulado>\n" +
 				"<numerodecupon>"+txtnumerocuponpago.text+"</numerodecupon>\n" +
-				"<enefectivo>"+enfectivo+"</enefectivo>"+
+				"<enefectivo>"+enfectivo+"</enefectivo>\n"+
 				"<detallesnotapedido>\n" ;
 			
 							for(var ii:int=0;ii<productscomp.arrayDg.length;){
@@ -349,7 +361,7 @@
 												"<iva>0</iva>\n" +
 												"<id_nota>0</id_nota>\n" +
 												"<id_producto>"+productscomp.arrayDg[ii].id+"</id_producto>\n" +
-												"</itemdetallesnota>" ;
+											"</itemdetallesnota>\n" ;
 									ii++
 								}
 								
@@ -357,14 +369,29 @@
 			
 			
 			
-				 xmlnota+= "</detallesnotapedido>" +
-				  "</notapedido>";
+				 xmlnota+= "</detallesnotapedido>\n" +
+				  "</notapedido>\n";
 				 
 				 return xmlnota;
 		
 		
 		}	
 		//****************************************************************************************************	
+			
+			protected function operationNota_faultHandler(event:FaultEvent):void
+			{
+				PopUpManager.removePopUp(popup);
+				Alert.show(event.fault.toString());
+				
+			}
+			
+			protected function operationNota_resultHandler(event:ResultEvent):void
+			{
+				PopUpManager.removePopUp(popup);
+				Alert.show("Nota de pedido almacenada "+int(event.result.toString()));
+				
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -373,7 +400,14 @@
 		<s:RadioButtonGroup id="stockFuturo"/>
 		<s:RadioButtonGroup id="notaCancelada"/>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wstarjetascreditodebito" wsdl="http://localhost:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
+		<s:WebService id="wsnotapedido" wsdl="http://localhost:8080/ServiceNotaPedido/NotaPedidoWs?WSDL">
+			<s:operation name="agregarNotaPedido" fault="operationNota_faultHandler(event)"
+						 result="operationNota_resultHandler(event)">
+				
+			</s:operation>
+		</s:WebService>
+		<s:WebService id="wstarjetascreditodebito" 
+					  wsdl="http://localhost:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
 					  >
 			<s:operation name="searchAllTarjetasCreditoDebito" result="operation1_resultHandler(event)" fault="operation1_faultHandler(event)">
 				
@@ -401,8 +435,9 @@
 	
 	<s:TextArea id="txtObservacionesNota" x="460" y="137" width="402" height="97" maxChars="32000"/>
 	<s:Label x="457" y="124" fontSize="14" fontWeight="bold" text="Observaciones:"/>
-	<controls:MaskedTextInput id="txtnumerocuponpago" x="665" y="32" fontSize="14"
-							  inputMask="####-####-####-####" maxChars="19" toolTip="Ingrese en Número de Tarjeta de Crédito o Débito del Plástico"/>
+	<controls:MaskedTextInput id="txtnumerocuponpago" x="665" y="32" fontFamily="Verdana"
+							  fontSize="14" inputMask="####-####-####-####" maxChars="19"
+							  toolTip="Ingrese en Número de Tarjeta de Crédito o Débito del Plástico"/>
 	<s:Label x="663" y="16" fontSize="14" fontWeight="bold"
 			 text="Número de cupón tarjeta de credito/debito:"/>
 	<components:AdvancedAutoComplete id="cmbTarjetasCreditoDebito" x="412" y="31" width="221"
@@ -413,8 +448,8 @@
 	<s:Label x="332" y="60" fontSize="14" fontWeight="bold" text="Nota de pedido entregada"/>
 	<s:Label x="520" y="60" fontSize="14" fontWeight="bold" text="Nota de pedido stock futuro"/>
 	<s:VGroup x="522" y="72">
-		<s:RadioButton id="rdbstockfuturosi" label="Si" groupName="stockFuturo"/>
-		<s:RadioButton id="rdbstockfuturono" label="No" groupName="stockFuturo" selected="true"/>
+		<s:RadioButton id="rdbstockfuturosi" label="Si" groupName="stockFuturo" selected="true"/>
+		<s:RadioButton id="rdbstockfuturono" label="No" groupName="stockFuturo"/>
 	</s:VGroup>
 	<s:Label x="724" y="59" fontSize="14" fontWeight="bold" text="Nota de pedido cancelada"/>
 	<s:VGroup x="727" y="72">
@@ -436,7 +471,7 @@
 	<s:TextInput id="txtapellidocliente" x="113" y="118" width="189" fontSize="18" maxChars="40"
 				 prompt="Ingrese Apellido" restrict="a-z A-Z ñ-Ñ"/>
 	<s:Button id="btninserclient" x="30" y="461" label="DatosCliente" toolTip="Muestra una Ventana para Ingresar Datos Personales de un Cliente" click="btninserclient_clickHandler(event)"/>
-	<s:Button id="btnGuardarNota" x="31" y="485" label="Guardar Nota"
+	<s:Button id="btnGuardarNota" x="31" y="485" label="Guardar Nota" toolTip="Guarda la Nota de Pedido con todos Sus Datos"
 			  click="btnGuardarNota_clickHandler(event)" enabled="true"/>
 	<products:productosPedidosNota id="productscomp" x="4" y="166" height="434"/>
 	<s:RadioButton id="rdbentregadosi" x="331" y="74" label="Si" groupName="GrupoEntregado"/>
@@ -448,7 +483,7 @@
 	
 	<s:VGroup x="913" y="140" width="43" height="55">
 		<s:RadioButton id="rdbenefectivosi" label="Si" selected="true" groupName="enfectivo"/>
-		<s:RadioButton id="rdbenefectivono" label="No" groupName="enefectivo"/>
+		<s:RadioButton id="rdbenefectivono" label="No" groupName="enfectivo"/>
 	</s:VGroup>
 	
 	<s:VGroup x="913" y="75" width="45" height="57">
