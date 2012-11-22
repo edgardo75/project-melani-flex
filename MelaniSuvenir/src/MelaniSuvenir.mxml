@@ -35,7 +35,7 @@
 				<menuitem label="Ver Presupuestos"/>
 				<menuitem type="separator"/>
 			</menuitem>
-			<menuitem label="Notas">
+			<menuitem label="Notas de Pedido">
 				<menuitem type="separator"/>
 				<menuitem label="Nota de Pedido"/>
 				<menuitem type="separator"/>
