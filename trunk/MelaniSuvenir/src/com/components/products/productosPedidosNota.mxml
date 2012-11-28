@@ -756,7 +756,7 @@
 				
 				subtot=Number(Number(Number(Number(txtprecio).toFixed(3))*Number(cantidad)).toFixed(3));
 				totGral=Number(Number(totGral.toFixed(3))+Number(subtot.toFixed(3)));
-				//totGralDesc=Number(Number(lbldescuento.text).toFixed(3));
+				
 				
 				
 				

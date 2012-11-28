@@ -215,28 +215,33 @@
 			
 			protected function verificarProductosCargados():void{
 				
-				if(productscomp.arrayDg.length>0){
-					//*******************************************************************
-					var b:Boolean=false;
-					for(var j:int=0;j<productscomp.arrayDg.length&&!b;j++){
-						//controlamos que no haya descuento por producto y total a la vez en la nota de pedido
-						if(productscomp.porc_d>0 && productscomp.arrayDg[j].porc_desc!=0 && productscomp.porc_d!=0){
-							Alert.show("Error al procesar los datos, el descuento es Total o por Productos, corrija!!!");
-							return;
-						}
-						//controlamos que los separadores decimales no sean comas
-						if(String(productscomp.arrayDg[j].porc_desc).toString().indexOf(",")!=-1||String(productscomp.arrayDg[j].price).toString().indexOf(",")!=-1)
-							b=true;
-						
-					}
-					//*******************************************************************
-					if(!b)	
-						Alert.show("Desea Guardar Nota De Pedido Actual?","Confirmar Operación", Alert.YES | Alert.NO, this, guardarNotaPedido, null, Alert.NO);
-					else
-						Alert.show("Corrija la grilla de Productos, el separador decimal es el punto y no la coma!!!");
-					
+				if(dtfentrega.text.length>0){
+								
+								if(productscomp.arrayDg.length>0){
+									//*******************************************************************
+									var b:Boolean=false;
+									for(var j:int=0;j<productscomp.arrayDg.length&&!b;j++){
+										//controlamos que no haya descuento por producto y total a la vez en la nota de pedido
+										if(productscomp.porc_d>0 && productscomp.arrayDg[j].porc_desc!=0 && productscomp.porc_d!=0){
+											Alert.show("Error al procesar los datos, el descuento es Total o por Productos, corrija!!!");
+											return;
+										}
+										//controlamos que los separadores decimales no sean comas
+										if(String(productscomp.arrayDg[j].porc_desc).toString().indexOf(",")!=-1||String(productscomp.arrayDg[j].price).toString().indexOf(",")!=-1)
+											b=true;
+										
+									}
+									//*******************************************************************
+									if(!b)	
+										Alert.show("Desea Guardar Nota De Pedido Actual?","Confirmar Operación", Alert.YES | Alert.NO, this, guardarNotaPedido, null, Alert.NO);
+									else
+										Alert.show("Corrija la grilla de Productos, el separador decimal es el punto y no la coma!!!");
+									
+								}else
+									Alert.show("NO HAY PRODUCTOS LISTADOS!!!");		
 				}else
-					Alert.show("NO HAY PRODUCTOS LISTADOS!!!");		
+					Alert.show("Debe Seleccionar la fecha de Entrega");
+								
 				
 			}
 			//***************************************************************************************************
@@ -272,6 +277,7 @@
 				popup=Progress(PopUpManager.createPopUp(this,Progress,true));
 				PopUpManager.centerPopUp(popup);
 			//llamamos al metodo del webservice para almacenar la nota de pedido en el servidor
+			//Alert.show(getDatosXML());
 				wsnotapedido.agregarNotaPedido(getDatosXML());
              			
 						
@@ -284,6 +290,7 @@
 			var stockfuturo:int=0;
 			var anulada:int=0;
 			var enfectivo:int=0;
+			var porcdescAcum:Number=0;
 			
 			if(rdbentregadosi.selected)
 				entregado=1;
@@ -330,8 +337,7 @@
 				"<anulado>"+anulada+"</anulado>\n" +
 				"<usuario_cancelo_nota>0</usuario_cancelo_nota>\n" +
 				"<cancelado>"+canceladanota+"</cancelado>\n" +
-				"<descuentonota>"+productscomp.lbldescuento.text+"</descuentonota>\n" +
-				"<porc_descuento_total>"+productscomp.porc_desc_total+"</porc_descuento_total>\n" +
+				"<descuentonota>"+productscomp.lbldescuento.text+"</descuentonota>\n" +				
 				"<porcentajerecargo>"+productscomp.mskrecargo.text+"</porcentajerecargo>\n" +
 				"<montototalapagar>"+productscomp.lblTotApagar.text+"</montototalapagar>\n"+
 				"<observaciones>" +this.txtObservacionesNota.text+"</observaciones>\n" +
@@ -339,15 +345,17 @@
 				"<montoiva>0</montoiva>\n"+
 				"<recargo>"+productscomp.lbltotalconrecargo.text+"</recargo>\n" +
 				"<id_usuario_anulado>0</id_usuario_anulado>\n" +
+				"<fechaentrega>"+dtfentrega.text+"</fechaentrega>\n"+
 				"<numerodecupon>"+txtnumerocuponpago.text+"</numerodecupon>\n" +
 				"<enefectivo>"+enfectivo+"</enefectivo>\n"+
 				"<detallesnotapedido>\n" ;
-			
+									
 							for(var ii:int=0;ii<productscomp.arrayDg.length;){
 								
 								if(productscomp.arrayDg[ii].price==0||productscomp.arrayDg[ii].countt==0||productscomp.arrayDg[ii].subtotal==0)
 									ii++;
 								else{
+									porcdescAcum+=Number(Number(productscomp.arrayDg[ii].porc_desc).toFixed(2));
 									xmlnota+="<itemdetallesnota>\n" +
 												"<cantidad>"+productscomp.arrayDg[ii].countt+"</cantidad>\n" +
 												"<preciocondescuento>"+productscomp.arrayDg[ii].prec_descuento+"</preciocondescuento>\n" +
@@ -370,6 +378,7 @@
 			
 			
 				 xmlnota+= "</detallesnotapedido>\n" +
+					 "<porc_descuento_total>"+productscomp.porc_desc_total+porcdescAcum+"</porc_descuento_total>\n" +
 				  "</notapedido>\n";
 				 
 				 return xmlnota;
@@ -388,9 +397,53 @@
 			protected function operationNota_resultHandler(event:ResultEvent):void
 			{
 				PopUpManager.removePopUp(popup);
-				Alert.show("Nota de pedido almacenada "+int(event.result.toString()));
+				var nro:Number=int(event.result.toString());
+				
+				
+				switch(nro)
+				{
+					case -1:
+					{
+						Alert.show("Error en metodo agregarNotaPedido, verifique");	
+						break;
+					}
+					case -2:
+					{
+						Alert.show("Error en metodo almacenarnota, EJBNotaPedido");	
+						break;
+					}	
+					case -3:
+					{
+						Alert.show("Error en metdodo almacenardetallenota");	
+						break;
+					}
+					case -4:
+					{
+						Alert.show("Error en metodo almacenarhistorico");	
+						break;
+					}
+					case 0:
+					{
+						Alert.show("No pasó nada, verifique!!!");	
+						break;
+					}	
+					
+					default:
+					{
+						Alert.show("Nota de pedido almacenada "+int(event.result.toString()));
+						var source:String="http://localhost:8080/WebMelanie/ShowReportNotaPedido?nronota="+nro;
+						var urlReq:URLRequest= new URLRequest(source);
+						navigateToURL(urlReq,"_blank");
+						break;
+					}
+				}
 				
 			}
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			private function formatDateTime(date:Date):String {
+				return dtf.format(date);
+			} 
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			
 		]]>
 	</fx:Script>
@@ -427,6 +480,7 @@
 			</s:operation>
 			
 		</s:WebService>
+		<s:DateTimeFormatter id="dtf" dateTimePattern="dd/MM/yyyy"/>
 		<s:XMLListCollection id="xmlcli" source="{xmlcliente.item}"/>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:XMLListCollection id="tarjetas" source="{xmltarjetas.item}"/>
@@ -475,7 +529,7 @@
 			  click="btnGuardarNota_clickHandler(event)" enabled="true"/>
 	<products:productosPedidosNota id="productscomp" x="4" y="166" height="434"/>
 	<s:RadioButton id="rdbentregadosi" x="331" y="74" label="Si" groupName="GrupoEntregado"/>
-	<s:RadioButton id="rdbentregadorno" x="331" y="92" label="No" groupName="GrupoEntregado"
+	<s:RadioButton id="rdbentregadono" x="331" y="92" label="No" groupName="GrupoEntregado"
 				   selected="true"/>
 	<s:Label x="912" y="59" fontSize="14" fontWeight="bold" text="Nota anulada"/>
 		
@@ -490,5 +544,8 @@
 		<s:RadioButton id="rdanuladasi" label="Si" groupName="anulada"/>
 		<s:RadioButton id="rdanuladano" label="No" selected="true" groupName="anulada"/>
 	</s:VGroup>
+	<mx:DateField disabledRanges="{[{rangeEnd: new Date((new Date()).getTime() - (1000*60*60*24))}]}"
+				  selectableRange="{{rangeStart : new Date()}}" x="865" y="258"  width="117" id="dtfentrega" disabledDays="[0]" labelFunction="formatDateTime" parseFunction="{null}"/>
+	<s:Label x="863" y="243" fontSize="14" fontWeight="bold" text="Fecha de entrega"/>
 	
 </s:Group>

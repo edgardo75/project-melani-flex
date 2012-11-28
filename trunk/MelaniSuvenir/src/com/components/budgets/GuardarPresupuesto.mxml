@@ -105,7 +105,7 @@
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 				
 				
-				//Alert.show(getDatosXML());
+				
 				btnguardar.enabled=false;
 				servicePresupuesto.addBudgets(getDatosXML());
 				
@@ -160,7 +160,7 @@
 						break};
 					default:{
 						Alert.show("Presupuesto N° "+result+" Generado correctamente!!!");
-						var source:String="http://localhost:8080/WebMelani/ShowReportPresupuesto?presnro="+result;
+						var source:String="http://localhost:8080/WebMelanie/ShowReportPresupuesto?presnro="+result;
 						var urlReq:URLRequest= new URLRequest(source);
 						navigateToURL(urlReq,"_blank");
 						
