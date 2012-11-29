@@ -1152,8 +1152,9 @@
 			 text="TOTAL A PAGAR $:"/>
 	<s:Label id="lblTotApagar" x="641" y="279" width="127" color="#F9BD05" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
-	<s:Button id="btnremover" x="25" y="248" label="Remover Todo" click="btnremover_clickHandler(event)"
-			  enabled="false" toolTip="Elimina todos Los productos del Listado!!!"/>
+	<s:Button id="btnremover" x="25" y="248" label="Remover Todo"
+			  click="btnremover_clickHandler(event)" enabled="false" fontSize="16"
+			  toolTip="Elimina todos Los productos del Listado!!!"/>
 	<s:Label x="514" y="262" width="135" height="14" color="#F84B07" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="DESCUENTO $:"/>
 	<s:Label id="lbldescuento" x="644" y="262" width="125" color="#F84B07" fontFamily="Verdana"
@@ -1166,6 +1167,7 @@
 			 textAlign="right"/>
 	<controls:MaskedTextInput id="mskrecargo" x="645" y="323" width="49" fontFamily="Verdana"
 							  fontSize="16" restrict="0-9." toolTip="Ingresa un Porcentaje de recargo total para los productos cargados"/>
-	<s:Button id="brncargarunproducto" x="25" toolTip="Muestra una Ventana para cargar un Producto" y="272" label="Cargar Producto"
-			  click="brncargarunproducto_clickHandler(event)"/>
+	<s:Button id="brncargarunproducto" x="25" y="272" label="Cargar Producto"
+			  click="brncargarunproducto_clickHandler(event)" fontSize="16"
+			  toolTip="Muestra una Ventana para cargar un Producto"/>
 </s:Group>

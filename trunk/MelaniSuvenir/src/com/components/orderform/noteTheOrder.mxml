@@ -487,18 +487,19 @@
 	</fx:Declarations>
 	
 	
-	<s:TextArea id="txtObservacionesNota" x="460" y="137" width="402" height="97" maxChars="32000"/>
+	<s:TextArea id="txtObservacionesNota" x="460" y="137" width="402" height="97" fontSize="16"
+				maxChars="32000"/>
 	<s:Label x="457" y="124" fontSize="14" fontWeight="bold" text="Observaciones:"/>
 	<controls:MaskedTextInput id="txtnumerocuponpago" x="665" y="32" fontFamily="Verdana"
-							  fontSize="14" inputMask="####-####-####-####" maxChars="19"
+							  fontSize="16" inputMask="####-####-####-####" maxChars="19"
 							  toolTip="Ingrese en Número de Tarjeta de Crédito o Débito del Plástico"/>
 	<s:Label x="663" y="16" fontSize="14" fontWeight="bold"
 			 text="Número de cupón tarjeta de credito/debito:"/>
-	<components:AdvancedAutoComplete id="cmbTarjetasCreditoDebito" x="412" y="31" width="221"
-									 fontSize="14" labelField="descripcion"
+	<components:AdvancedAutoComplete id="cmbTarjetasCreditoDebito" x="393" y="28" width="221"
+									 fontSize="16" labelField="descripcion"
 									 toolTip="Seleccione una Tarjeta de Crédito o Débito si el cliente utiliza esta forma de pago!!!">
 	</components:AdvancedAutoComplete>
-	<s:Label x="412" y="16" fontSize="14" fontWeight="bold" text="Tarjetas de Crédito / Débito" toolTip="Seleccione si o no para registrar que la nota de pedido fue entregada al Clliente"/>
+	<s:Label x="393" y="16" fontSize="14" fontWeight="bold" text="Tarjetas de Crédito / Débito" toolTip="Seleccione si o no para registrar que la nota de pedido fue entregada al Clliente"/>
 	<s:Label x="332" y="60" fontSize="14" fontWeight="bold" text="Nota de pedido entregada"/>
 	<s:Label x="520" y="60" fontSize="14" fontWeight="bold" text="Nota de pedido stock futuro"/>
 	<s:VGroup x="522" y="72">
@@ -511,21 +512,21 @@
 		<s:RadioButton id="rdbcanceladanotano" label="No" selected="true" groupName="notaCancelada"/>
 	</s:VGroup>
 	<s:Button id="btnCloseClientComponent" x="994" y="10" width="16" height="19" icon="assets/icon_close.png" click="btnCloseClientComponent_clickHandler(event)"/>
-	<s:Label x="28" y="39" height="15" fontSize="14" fontWeight="bold" text="Documento:"/>
-	<controls:MaskedTextInput id="mskdocu" x="116" y="32" enter="mskdocu_enterHandler(event)"
+	<s:Label x="20" y="39" height="15" fontSize="16" fontWeight="bold" text="Documento:"/>
+	<controls:MaskedTextInput id="mskdocu" x="116" y="34" enter="mskdocu_enterHandler(event)"
 							  fontSize="18" inputMask="########" maxChars="8" restrict="0-9"
 							  toolTip="Ingrese Número de Documento!!!"/>
-	<s:Label x="52" y="97" fontSize="14" fontWeight="bold" text="Nombre:"/>
-	<s:Label x="39" y="66" fontSize="14" fontWeight="bold" text="Cliente N°:"/>
+	<s:Label x="46" y="97" fontSize="16" fontWeight="bold" text="Nombre:"/>
+	<s:Label x="33" y="66" fontSize="16" fontWeight="bold" text="Cliente N°:"/>
 	<s:Label id="lblnocli" x="115" y="60" width="124" fontFamily="Verdana" fontSize="18"
 			 fontWeight="bold" verticalAlign="middle"/>
 	<s:TextInput id="txtnombrecliente" x="114" y="85" width="188" fontSize="18" maxChars="40"
 				 prompt="Ingrese Nombre" restrict="a-z A-Z ñ-Ñ" />
-	<s:Label id="lblapellido" x="46" y="128" fontSize="14" fontWeight="bold" text="Apellido:"/>
+	<s:Label id="lblapellido" x="43" y="128" fontSize="16" fontWeight="bold" text="Apellido:"/>
 	<s:TextInput id="txtapellidocliente" x="113" y="118" width="189" fontSize="18" maxChars="40"
 				 prompt="Ingrese Apellido" restrict="a-z A-Z ñ-Ñ"/>
-	<s:Button id="btninserclient" x="30" y="461" label="DatosCliente" toolTip="Muestra una Ventana para Ingresar Datos Personales de un Cliente" click="btninserclient_clickHandler(event)"/>
-	<s:Button id="btnGuardarNota" x="31" y="485" label="Guardar Nota" toolTip="Guarda la Nota de Pedido con todos Sus Datos"
+	<s:Button id="btninserclient" x="30" y="461" label="DatosCliente" fontSize="16"  toolTip="Muestra una Ventana para Ingresar Datos Personales de un Cliente" click="btninserclient_clickHandler(event)"/>
+	<s:Button id="btnGuardarNota" x="31" y="485" label="Guardar Nota" fontSize="16" toolTip="Guarda la Nota de Pedido con todos Sus Datos"
 			  click="btnGuardarNota_clickHandler(event)" enabled="true"/>
 	<products:productosPedidosNota id="productscomp" x="4" y="166" height="434"/>
 	<s:RadioButton id="rdbentregadosi" x="331" y="74" label="Si" groupName="GrupoEntregado"/>
@@ -544,8 +545,10 @@
 		<s:RadioButton id="rdanuladasi" label="Si" groupName="anulada"/>
 		<s:RadioButton id="rdanuladano" label="No" selected="true" groupName="anulada"/>
 	</s:VGroup>
-	<mx:DateField disabledRanges="{[{rangeEnd: new Date((new Date()).getTime() - (1000*60*60*24))}]}"
-				  selectableRange="{{rangeStart : new Date()}}" x="865" y="258"  width="117" id="dtfentrega" disabledDays="[0]" labelFunction="formatDateTime" parseFunction="{null}"/>
+	<mx:DateField id="dtfentrega" x="865" y="258" width="141" disabledDays="[0]"
+				  disabledRanges="{[{rangeEnd: new Date((new Date()).getTime() - (1000*60*60*24))}]}"
+				  fontSize="16" labelFunction="formatDateTime" parseFunction="{null}"
+				  selectableRange="{{rangeStart : new Date()}}"/>
 	<s:Label x="863" y="243" fontSize="14" fontWeight="bold" text="Fecha de entrega"/>
 	
 </s:Group>
