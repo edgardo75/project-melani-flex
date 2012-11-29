@@ -216,21 +216,26 @@
 			
 		</fx:XML>
 	</fx:Declarations>
-	<components:AdvancedAutoComplete id="cmbEmpresatelefonia" x="58" y="96" width="205" labelField="descripcion" matchType="beginning">
+	<components:AdvancedAutoComplete id="cmbEmpresatelefonia" x="58" y="100" width="205" fontSize="16"
+									 labelField="descripcion" matchType="beginning">
 	</components:AdvancedAutoComplete>
-	<s:Label x="58" y="84" text="Empresa Telefónia"/>
-	<s:Label x="278" y="84" text="Tipo Teléfono"/>
-	<components:AdvancedAutoComplete x="279" y="95" id="cmbtipotel" labelField="descripcion" matchType="beginning">
+	<s:Label x="58" y="84" fontSize="16" text="Empresa Telefónia"/>
+	<s:Label x="278" y="84" fontSize="16" text="Tipo Teléfono"/>
+	<components:AdvancedAutoComplete id="cmbtipotel" x="279" y="100" fontSize="16"
+									 labelField="descripcion" matchType="beginning">
 	</components:AdvancedAutoComplete>
 	<mx:HRule x="10" y="70" width="428" height="1"/>
-	<s:Label x="12" y="58" text="Teléfonos"/>
-	<controls:MaskedTextInput id="txtprefijo" x="58" y="139" width="104" maxChars="10" restrict="0-9" inputMask="(#########)"/>
-	<s:Label x="58" y="127" text="Prefijo"/>
-	<s:Label x="279" y="128" text="Número"/>
-	<controls:MaskedTextInput id="txtnumerotel" x="279" y="139" restrict="0-9" maxChars="20" inputMask="#########"/>
-	<s:Button id="btnAgregarTel" x="388" y="137" label="Agregar"
-			  click="btnAgregarTel_clickHandler(event)" icon="assets/add.jpg"/>
-	<s:DataGrid id="adgTel" x="14" y="189" width="464" height="128" requestedRowCount="4">
+	<s:Label x="12" y="58" fontSize="16" text="Teléfonos"/>
+	<controls:MaskedTextInput id="txtprefijo" x="58" y="142" width="104" fontSize="16"
+							  inputMask="(#########)" maxChars="10" restrict="0-9"/>
+	<s:Label x="58" y="127" fontSize="16" text="Prefijo"/>
+	<s:Label x="279" y="128" fontSize="16" text="Número"/>
+	<controls:MaskedTextInput id="txtnumerotel" x="279" y="142" fontSize="16" inputMask="#########"
+							  maxChars="20" restrict="0-9"/>
+	<s:Button id="btnAgregarTel" x="379" y="142" label="Agregar"
+			  click="btnAgregarTel_clickHandler(event)" fontSize="16" icon="assets/add.jpg"/>
+	<s:DataGrid id="adgTel" x="14" y="189" width="464" height="128" fontSize="16"
+				requestedRowCount="4">
 		<s:columns>
 			<s:ArrayList>
 				<s:GridColumn dataField="prefijo" headerText="Prefijo"></s:GridColumn>

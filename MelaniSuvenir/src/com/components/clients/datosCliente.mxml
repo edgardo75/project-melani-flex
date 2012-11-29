@@ -83,13 +83,13 @@
 	
 
 	<mx:HRule x="10" y="29" width="380" height="1"/>
-	<s:Label x="9" y="9" backgroundAlpha="0.6" color="#FD0303" fontSize="20" fontWeight="bold"
+	<s:Label x="9" y="9" backgroundAlpha="0.6" color="#FD0303" fontSize="16" fontWeight="bold"
 			 text="DATOS PERSONALES DE CLIENTE"/>
-	<s:TextInput id="txtnombre" x="206" y="69" width="317" fontFamily="Verdana" fontSize="18"
+	<s:TextInput id="txtnombre" x="206" y="69" width="317" fontFamily="Verdana" fontSize="16"
 				 fontWeight="bold" maxChars="30" restrict="A-ÑZa-ñz " 
 				 toolTip="Ingrese el Nombre Completo del Cliente!!!"/>
 	<s:Label x="128" y="74" color="#033339" fontSize="20" text="Nombre:"/>
-	<s:TextInput id="txtapellido" x="207" y="101" width="315" fontFamily="Verdana" fontSize="18"
+	<s:TextInput id="txtapellido" x="207" y="101" width="315" fontFamily="Verdana" fontSize="16"
 				 fontWeight="bold" maxChars="30" restrict="A-ÑZa-ñz " 
 				 toolTip="Ingrese el Apellido Completo del Cliente!!!"/>
 	<s:Label x="128" y="108" color="#033339" fontSize="20" text="Apellido:"/>
@@ -97,27 +97,27 @@
 	
 	<s:Label x="205" y="45" width="112" height="22" color="#033339" fontSize="20" text="Documento:"/>
 	
-	<controls:MaskedTextInput id="txtdocumento" x="315" y="36" width="70"
+	<controls:MaskedTextInput id="txtdocumento" x="315" y="40" width="70"
 							  enter="txtdocumento_enterHandler(event)" fontFamily="Verdana"
-							  fontSize="20" fontWeight="bold" inputMask="########" maxChars="8"
+							  fontSize="16" fontWeight="bold" inputMask="########" maxChars="8"
 							  restrict="0-9" 
 							  toolTip="Ingrese el Número de Documento!!!" required="true"/>
 	
 	<s:Label x="130" y="142" color="#033339" fontSize="20" text="Genero:"/>
 	<s:Label x="128" y="178" width="60" color="#033339" fontSize="20" text="Email:"/>
-	<s:TextInput id="txtemail" x="184" y="172" width="338" fontFamily="Verdana" fontSize="18"
+	<s:TextInput id="txtemail" x="184" y="172" width="338" fontFamily="Verdana" fontSize="16"
 				 fontWeight="bold" maxChars="50" tabIndex="5"
 				 toolTip="Ingrese un Correo Electrónico!!!"/>
 	<s:Label x="19" y="206" color="#033339" fontSize="20" text="Observaciones:"/>
 	<s:TextArea id="txtobservaciones" x="18" y="230" width="504" height="96" fontFamily="Verdana"
-				fontWeight="bold" maxChars="255" tabIndex="6"/>
+				fontSize="16" fontWeight="bold" maxChars="255" tabIndex="6"/>
 	<components:AdvancedAutoComplete id="cmbTiposdocu" x="97" y="36" width="99"
 									 allowDuplicates="false" allowEditingNewValues="false"
 									 allowEditingSelectedValues="false"
 									 allowMultipleSelection="false" allowNewValues="false"
 									 backspaceAction="remove" dataProvider="{xmlListTiposDocu}"
-									 fontFamily="Verdana" fontWeight="bold" labelField="descripcion"
-									 matchType="beginning" tabIndex="0"
+									 fontFamily="Verdana" fontSize="16" fontWeight="bold"
+									 labelField="descripcion" matchType="beginning" tabIndex="0"
 									 toolTip="Seleccione el Tipo de Documento!!!"
 									 verticalScrollPolicy="on">
 	</components:AdvancedAutoComplete>
@@ -126,8 +126,8 @@
 									 allowEditingSelectedValues="false"
 									 allowMultipleSelection="false" allowNewValues="false"
 									 backspaceAction="remove" dataProvider="{xmlListGeneros}"
-									 fontFamily="Verdana" fontWeight="bold" labelField="descripcion"
-									 matchType="beginning" tabIndex="4"
+									 fontFamily="Verdana" fontSize="16" fontWeight="bold"
+									 labelField="descripcion" matchType="beginning" tabIndex="4"
 									 toolTip="Seleccione el Genero del Cliente M o F!!!"
 									 verticalScrollPolicy="on">
 	</components:AdvancedAutoComplete>

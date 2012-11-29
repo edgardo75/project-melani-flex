@@ -43,8 +43,9 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<mx:AdvancedDataGrid id="adgclientes" x="26" y="19" width="409" height="275"
-						 designViewDataType="flat" doubleClickEnabled="true"
-						 itemDoubleClick="adgclientes_itemDoubleClickHandler(event)" resizableColumns="false">
+						 designViewDataType="flat" doubleClickEnabled="true" fontSize="16"
+						 itemDoubleClick="adgclientes_itemDoubleClickHandler(event)"
+						 resizableColumns="false">
 		<mx:columns>
 			<mx:AdvancedDataGridColumn dataField="nombre" headerText="Nombre"/>
 			<mx:AdvancedDataGridColumn dataField="apellido" headerText="Apellido"/>

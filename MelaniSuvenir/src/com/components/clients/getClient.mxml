@@ -189,18 +189,20 @@
 		<s:XMLListCollection id="xmlcli" source="{xmlcliente.item}"/>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<s:Label x="19" y="39" height="15" fontSize="14" fontWeight="bold" text="Documento:"/>
-	<controls:MaskedTextInput id="mskdocu" x="104" y="32" enter="mskdocu_enterHandler(event)"
+	<s:Label x="14" y="39" height="15" fontSize="16" fontWeight="bold" text="Documento:"/>
+	<controls:MaskedTextInput id="mskdocu" x="115" y="32" enter="mskdocu_enterHandler(event)"
 							  fontSize="18" inputMask="########" maxChars="8" restrict="0-9"
 							  toolTip="Ingrese Número de Documento!!!"/>
-	<s:Label x="43" y="96" fontSize="14" fontWeight="bold" text="Nombre:"/>
-	<s:Label x="31" y="63" fontSize="14" fontWeight="bold" text="Cliente N°:"/>
-	<s:Label id="lblnocli" x="103" y="60" width="124" fontFamily="Verdana" fontSize="18"
+	<s:Label x="43" y="96" fontSize="16" fontWeight="bold" text="Nombre:"/>
+	<s:Label x="28" y="63" fontSize="16" fontWeight="bold" text="Cliente N°:"/>
+	<s:Label id="lblnocli" x="115" y="58" width="124" fontFamily="Verdana" fontSize="18"
 			 fontWeight="bold" verticalAlign="middle"/>
-	<s:TextInput id="txtnombrecliente" x="102" y="85" width="188" fontSize="18" maxChars="40"
+	<s:TextInput id="txtnombrecliente" x="114" y="85" width="188" fontSize="18" maxChars="40"
 				 prompt="Ingrese Nombre" restrict="a-z A-Z ñ-Ñ" />
-	<s:Label id="lblapellido" x="37" y="125" fontSize="14" fontWeight="bold" text="Apellido:"/>
-	<s:TextInput id="txtapellidocliente" x="101" y="118" width="189" fontSize="18" maxChars="40"
+	<s:Label id="lblapellido" x="40" y="125" fontSize="16" fontWeight="bold" text="Apellido:"/>
+	<s:TextInput id="txtapellidocliente" x="114" y="118" width="189" fontSize="18" maxChars="40"
 				 prompt="Ingrese Apellido" restrict="a-z A-Z ñ-Ñ"/>
-	<s:Button id="btninserclient" x="289" y="21" label="DatosCliente" toolTip="Ingresa Datos Personales de un Cliente" click="btninserclient_clickHandler(event)"/>
+	<s:Button id="btninserclient" x="289" y="21" label="DatosCliente"
+			  click="btninserclient_clickHandler(event)" fontSize="16"
+			  toolTip="Ingresa Datos Personales de un Cliente"/>
 </s:Group>

@@ -3,7 +3,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
-		 width="1130" height="530" creationComplete="group1_creationCompleteHandler(event)">
+		 width="1168" height="530" creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:WebService id="wspresupuestos" wsdl="http://localhost:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="true" >
@@ -451,11 +451,12 @@
 		]]>
 	</fx:Script>
 	<mx:HRule x="28" y="30" width="337" height="0"/>
-	<s:Label x="450" y="12" fontFamily="Verdana" fontWeight="bold" text="VER PRESUPUESTOS MELANIE"
-			 textDecoration="underline"/>
+	<s:Label x="450" y="12" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+			 text="VER PRESUPUESTOS MELANIE" textDecoration="underline"/>
 	<mx:AdvancedDataGrid id="adgPresupuestos" x="13" y="34" width="973" height="290"
-						 designViewDataType="flat" doubleClickEnabled="true" selectable="true"
-						 itemDoubleClick="adgPresupuestos_itemDoubleClickHandler(event)">
+						 designViewDataType="flat" doubleClickEnabled="true" fontSize="16"
+						 itemDoubleClick="adgPresupuestos_itemDoubleClickHandler(event)"
+						 selectable="true">
 		<mx:columns>
 			<mx:AdvancedDataGridColumn dataField="id" headerText="N°" width="50"/>
 			<mx:AdvancedDataGridColumn dataField="nombre" headerText="Nombre" width="150"/>
@@ -472,20 +473,20 @@
 			<mx:AdvancedDataGridColumn dataField="total" headerText="Total Gral"/>			
 		</mx:columns>
 	</mx:AdvancedDataGrid>
-	<s:Button id="first_btn" x="13" y="327" width="50" label="First"
-			  click="first_clickHandler(event)" enabled="false"/>
-	<s:Button id="prev_btn" x="319" y="327" width="46" label="Prev"
-			  click="prev_btn_clickHandler(event)" enabled="false"/>
-	<s:Button id="next_btn" x="630" y="326" width="50" label="Next"
-			  click="next_btn_clickHandler(event)" enabled="false"/>
-	<s:Button id="last_btn" x="939" y="326" width="47" label="Last" click="last_clickHandler(event)"
-			  enabled="false"/>
-	<s:BorderContainer x="1028" y="51" width="88" height="93">
+	<s:Button id="first_btn" x="13" y="327" width="85" label="First"
+			  click="first_clickHandler(event)" enabled="false" fontSize="16"/>
+	<s:Button id="prev_btn" x="319" y="327" width="88" label="Prev"
+			  click="prev_btn_clickHandler(event)" enabled="false" fontSize="16"/>
+	<s:Button id="next_btn" x="630" y="328" width="84" label="Next"
+			  click="next_btn_clickHandler(event)" enabled="false" fontSize="16"/>
+	<s:Button id="last_btn" x="897" y="326" width="89" label="Last" click="last_clickHandler(event)"
+			  enabled="false" fontSize="16"/>
+	<s:BorderContainer x="1016" y="51" width="88" height="93" fontSize="16">
 		<controls:MaskedTextInput id="mskidpresupuesto" x="10" y="40" width="68" restrict="0-9" toolTip="Ingrese Número de Presupuesto"/>
 		<s:Label x="10" y="26" text="Buscar"/>
 	</s:BorderContainer>
 	<mx:AdvancedDataGrid id="adgdetallespresupuesto" x="12" y="356" width="702" height="164"
-						 designViewDataType="flat">
+						 designViewDataType="flat" fontSize="16">
 		<mx:columns>
 			<mx:AdvancedDataGridColumn dataField="codigo_producto" headerText="Codigo" width="60"/>
 			<mx:AdvancedDataGridColumn dataField="descripcion_prod" headerText="Descripcion" width="70"/>
@@ -497,16 +498,17 @@
 			
 		</mx:columns>
 	</mx:AdvancedDataGrid>
-	<s:Button id="btnImprimir" x="994" y="209" width="122" label="Ver Presupuestos"
-			  click="btnImprimir_clickHandler(event)" enabled="false"/>
+	<s:Button id="btnImprimir" x="994" y="209" width="152" label="Ver Presupuestos"
+			  click="btnImprimir_clickHandler(event)" enabled="false" fontSize="16"/>
 	<s:Button id="btnExportar" x="994" y="242" label="Copiar Grilla (TAB)"
 			  click="DataGridUtil.exportADGToClipboard(adgPresupuestos, false, false)"
-			  enabled="false" toolTip="Copiar y Pegar listado al portapapeles y visualizar en Excel"/>
+			  enabled="false" fontSize="16"
+			  toolTip="Copiar y Pegar listado al portapapeles y visualizar en Excel"/>
 	<s:Button id="btnCloseClientComponent" x="1103" y="10" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
-	<s:Button id="btnRegargarlistado" x="993" y="173" width="122" label="Regargar Listado"
-			  click="btnRegargarlistado_clickHandler(event)" enabled="false"/>
+	<s:Button id="btnRegargarlistado" x="993" y="173" width="153" label="Regargar Listado"
+			  click="btnRegargarlistado_clickHandler(event)" enabled="false" fontSize="16"/>
 	<s:TextArea id="txtobservaciones" x="722" y="366" width="402" height="154" maxChars="5000"/>
-	<s:Label x="724" y="353" text="Observaciones"/>
+	<s:Label x="724" y="349" fontSize="16" text="Observaciones"/>
 	
 	
 </s:Group>
