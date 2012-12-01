@@ -14,7 +14,7 @@
 		<s:XMLListCollection id="infodomicli" source="{tabDatosPersonales.xmlinfoclidomi}"/>
 		<s:XMLListCollection id="infotelcli" source="{tabDatosPersonales.xmlinfotelcli}"/>
 		
-		<s:WebService id="serviceCli" wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL" showBusyCursor="true">
+		<s:WebService id="serviceCli" wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL" showBusyCursor="true">
 			<s:operation name="addCliente" result="operation1_resultHandler(event)" fault="operation1_faultHandler(event)">
 				
 			</s:operation>
