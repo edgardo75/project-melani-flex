@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:controls="com.adobe.flex.extras.controls.*"
+		 width="612" height="364" toolTip="FORMULARIO PARA AGREGAR" creationComplete="group1_creationCompleteHandler(event)" xmlns:components="com.hillelcoren.components.*"
+		>
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";		
+		@namespace controls "com.adobe.flex.extras.controls.*";
+		
+		.myFormItemLabelStyle {
+			color: #333399;
+			fontSize: 20;
+		}
+		
+		
+	</fx:Style>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+		<mx:StringValidator id="descV" source="{cmbproduct}"
+							property="text" minLength="2" maxLength="80"
+							required="true" requiredFieldError="Debe Ingresar la descripción y/o nombre del producto"/>
+		<mx:WebService id="servicesProducto" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?WSDL"
+					   
+					   showBusyCursor="true"
+					   useProxy="false">
+			<mx:operation name="actualizarProducto"
+						  resultFormat="object"
+						  result="producto_resultHandler(event)"
+						  fault="producto_faultHandler(event)">				
+			</mx:operation>
+			<mx:operation name="searchAllProductos"
+						 fault="operation1_faultHandler(event)"
+						 result="operation1_resultHandler(event)">
+			</mx:operation>
+		</mx:WebService>	             
+		
+		
+	</fx:Declarations>
+	
+	
+	<fx:Script>
+		<![CDATA[
+			import flashx.textLayout.formats.Float;
+			
+			import mx.collections.XMLListCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import popus.Progress;
+			
+			[Bindable]
+				private var cantIni:int;
+			[Bindable]
+				private var cantDisp:int;
+			[Bindable]
+				private var codProducto:String;
+			[Bindable]
+				private var xmllistproducto:XMLList;
+			private var idproducto:int=0;
+			
+			private var popup:Progress;
+			
+			
+			//---------------------------------------------------------------------
+			//---------------------------------------------------------------------------
+			protected function operation1_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("ERROR "+event.fault.toString());
+				
+			}
+			//---------------------------------------------------------------------------
+			protected function operation1_resultHandler(event:ResultEvent):void
+			{
+				
+				if(String(event.result.toString())=="LA CONSULTA NO ARROJÓ RESULTADOS")
+					Alert.show("LA CONSULTA NO ARROJÓ RESULTADOS");
+				else{
+					if(String(event.result.toString())=="NADA"){
+						Alert.show("FALLÓ LA CONEXION CON LA BASE DE DATOS, REVISE LOS SERVICIOS SI SE HAN INICIADO CORRECTAMENTE.");
+					}else{
+						xmllistproducto=new XMLList(event.result);							
+						cmbproduct.dataProvider=product;						
+					}
+				}
+				
+				
+				
+				
+			}
+			//--------------------------------------------------------------------------
+			protected function asignarValoresYPasaraNoEditable():void{
+			
+				txtcodigoproducto.text=cmbproduct.selectedItem.idproduct;
+				txtcantidadinicial.text=cmbproduct.selectedItem.cantidadInicial;
+				txtcantidadisponible.text=cmbproduct.selectedItem.cantidadDisponible;
+				txtpreciounitario.text = cmbproduct.selectedItem.precio;
+				txtcodigoproducto.editable=false;			
+				idproducto=cmbproduct.selectedItem.id;
+								
+				
+			
+			}
+			//----------------------------------------------------------------------
+			
+			//------------------------------------------------------------------------
+			
+			
+			private function tranferirFocus(keyPress:KeyboardEvent):void{
+				
+				if(keyPress.keyCode==Keyboard.ENTER){
+					//------------------------------------------------------
+					if(cmbproduct.text!=""&&keyPress.currentTarget.toString().indexOf("cmbproduct")!=-1){
+						focusManager.setFocus(txtcodigoproducto);
+						if(int(cmbproduct.selectedItem.id>0)){
+								asignarValoresYPasaraNoEditable();
+									
+								
+						}else{
+							limpiarFormulario();
+							
+						}
+					}
+					//------------------------------------------------------
+					if(keyPress.currentTarget.toString().indexOf("txtcodigoproducto")!=-1)
+						focusManager.setFocus(txtpreciounitario);
+					//------------------------------------------------------
+					if(keyPress.currentTarget.toString().indexOf("txtcantidadinicial")!=-1)
+						focusManager.setFocus(txtcantidadisponible);
+					//------------------------------------------------------				
+					if(keyPress.currentTarget.toString().indexOf("txtpreciounitario")!=-1)
+						focusManager.setFocus(txtcantidadinicial);
+					//------------------------------------------------------
+					if(keyPress.currentTarget.toString().indexOf("txtcantidadisponible")!=-1)
+						focusManager.setFocus(btnGuardarProducto);
+				
+				}	
+			
+			}
+			
+			
+			protected function btnGuardarProducto_clickHandler(event:MouseEvent):void
+			{
+				//------------------------------------------------------------------
+				
+				codProducto=txtcodigoproducto.text;
+				//------------------------------------------------------------------
+				
+				if(txtpreciounitario.text.length==0){
+					Alert.show("DEBE INGRESAR EL PRECIO DEL PRODUCTO");
+					
+					return;
+				}
+					
+				
+				if(txtcantidadinicial.text.length==0)
+					cantIni=0;
+				else
+					cantIni=int(txtcantidadinicial.text.toString());
+				//------------------------------------------------------------------
+				if(txtcantidadisponible.text.length==0)
+					cantDisp=0;
+					else
+					cantDisp=int(txtcantidadisponible.text.toString());
+				//------------------------------------------------------------------
+		
+				//mostramos al cliente un popup de espera
+				//popup=Progress(PopUpManager.createPopUp(this,Progress,true));
+				//PopUpManager.centerPopUp(popup);
+				Alert.show(getDatos());
+				
+				servicesProducto.actualizarProducto(getDatos());
+				
+			}
+			protected function getDatos():String{
+				
+				
+				
+				var producto:String="<producto>\n"+
+				
+				
+					"<idproducto>"+idproducto+"</idproducto>\n" +
+						
+									
+				"<descripcion>"+cmbproduct.text.toUpperCase()+"</descripcion>\n" +					
+				"<preciounitario>"+txtpreciounitario.text+"</preciounitario>\n"+
+				"<codproducto>"+codProducto.toUpperCase()+"</codproducto>\n"+
+				"<cantidadinicial>"+cantIni+"</cantidadinicial>\n"+
+				"<cantidaddisponible>"+cantDisp+"</cantidaddisponible>\n"+
+				"<fechaCarga></fechaCarga>\n"+
+				"<img>0</img>\n" +
+				"</producto>\n";
+					
+				return producto;	
+				
+			}
+			protected function producto_resultHandler(event:ResultEvent):void{
+				var indice:Number;
+				PopUpManager.removePopUp(popup);
+				xmllistproducto=new XMLList(event.result);
+				indice = new Number(product[0].id);
+				switch(indice)
+				{
+					case 0:
+					{
+						Alert.show("NO PASÓ NADA");
+						
+						break;
+					}
+					case -1:
+					{
+						Alert.show("ERROR EN EL SERVIDOR!!!");
+						break;
+					}
+					case -2:
+					{
+						Alert.show("ERROR EN EL SERVIDOR!!!");
+						break;
+					}
+					case -5:
+					{
+						Alert.show("YA HAY UN PRODUCTO CON LA MISMA DESCRIPCIÓN, IMPOSIBLE ALMACENAR");
+						break;
+					}	
+												
+						
+						
+					default:
+					{
+						Alert.show("OPERACIÓN EXITOSA PRODUCTO Nº "+indice);
+						servicesProducto.searchAllProductos();
+						limpiarFormulario();
+						
+						
+						
+						break;
+					}
+				}
+			
+			}
+			protected function limpiarFormulario():void{
+				
+				
+				txtcantidadinicial.text="";
+				txtcantidadisponible.text="";
+				txtpreciounitario.text="";
+				cantDisp=0;
+				cantIni=0;
+				txtcodigoproducto.text="";
+				txtcodigoproducto.editable=true;
+				txtcantidadinicial.editable=true;
+				txtcantidadisponible.editable=true;
+				txtpreciounitario.editable=true;
+				if(txtcodigoproducto.editable==false)
+					txtcodigoproducto.editable=true;
+				idproducto=0;
+				cmbproduct.text="";
+				cmbproduct.setFocus();
+					
+			
+			
+			}
+			protected function producto_faultHandler(event:FaultEvent):void{
+				PopUpManager.removePopUp(popup);
+				Alert.show("SE PRODUJO UN ERROR CON EL PRODUCTO, REVISE");			
+			}
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				servicesProducto.searchAllProductos();
+				
+				focusManager.setFocus(cmbproduct);
+				txtcantidadinicial.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtcantidadisponible.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtcodigoproducto.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				cmbproduct.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtpreciounitario.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				btnGuardarProducto.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				
+			}
+			
+			//-----------------------------------------------------------
+			protected function btnClose_clickHandler(event:MouseEvent):void
+			{
+				this.removeAllElements();
+			}
+			//-----------------------------------------------------------	
+			
+			
+			
+			
+		
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<s:XMLListCollection id="product" source="{xmllistproducto.producto}"/>
+	</fx:Declarations>
+	
+		
+	
+	<mx:Form id="frmProductos" width="561" height="285" fontFamily="Verdana" fontWeight="bold"
+			 horizontalCenter="0" textAlign="left" verticalCenter="7">
+		<mx:FormItem backgroundAlpha="0.85" textAlign="left">
+			<s:FormHeading label="Productos" color="#FD0505" fontSize="21"/>
+		</mx:FormItem>
+		<mx:FormItem width="509" height="30" label="Descripción"
+					 labelStyleName="myFormItemLabelStyle">
+			<components:AutoComplete id="cmbproduct" width="211" height="29"
+											 allowNewValues="true" fontSize="18" allowDuplicates="false"
+											 matchType="beginning" labelField="descripcion">
+			</components:AutoComplete>
+			
+			
+		</mx:FormItem>
+		<mx:FormItem label="Codigo Producto Interno" labelStyleName="myFormItemLabelStyle">
+			<mx:TextInput tabIndex="1" toolTip="Optativo ingreso codigo producto interno!!!" id="txtcodigoproducto" width="213" fontFamily="Verdana" fontSize="18"
+						  fontWeight="bold" maxChars="100"/>			
+		</mx:FormItem>
+		<mx:FormItem label="Precio Unitario" labelStyleName="myFormItemLabelStyle">
+			<mx:TextInput tabIndex="2" maxChars="5" toolTip="Ingrese precion unitario!!!" id="txtpreciounitario" fontFamily="Verdana" fontSize="20"
+									  fontWeight="bold" restrict="0-9." />
+		</mx:FormItem>
+		<mx:FormItem label="Cantidad Inicial" labelStyleName="myFormItemLabelStyle">
+			<controls:MaskedTextInput tabIndex="3" toolTip="Ingrese cantidad inicial!!!" id="txtcantidadinicial" fontFamily="Verdana" fontSize="20"
+									  inputMask="#####" fontWeight="bold" restrict="0-9" />
+		</mx:FormItem>
+		<mx:FormItem label="Cantidad Disponible" labelStyleName="myFormItemLabelStyle">
+			<controls:MaskedTextInput tabIndex="4" toolTip="Ingrese cantidad disponible" id="txtcantidadisponible" fontFamily="Verdana" fontSize="20"
+									  inputMask="#####" fontWeight="bold" restrict="0-9" />
+		</mx:FormItem>
+	</mx:Form>
+	<s:Button id="btnGuardarProducto" x="271" y="333" label="Guardar"
+			  click="btnGuardarProducto_clickHandler(event)"/>
+	<s:Button id="btnCloseClientComponent" x="586" y="10" width="16" height="19"
+			  click="btnClose_clickHandler(event)" icon="assets/icon_close.png"/>
+</s:Group>
