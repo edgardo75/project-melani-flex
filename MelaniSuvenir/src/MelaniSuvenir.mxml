@@ -25,7 +25,7 @@
 			</menuitem>
 			<menuitem label="Productos">
 				<menuitem type="separator"/>
-				<menuitem label="Cargar Productos"/>
+				<menuitem label="Cargar Productos y Editar"/>
 				<menuitem type="separator"/>			
 			</menuitem>
 			<menuitem label="Presupuestos">
@@ -69,7 +69,8 @@
 			import com.components.budgets.GuardarPresupuesto;
 			import com.components.budgets.Verpresupuestos;
 			import com.components.guardarDatosPersonalCliente;
-			import com.components.orderform.noteTheOrder;			
+			import com.components.orderform.noteTheOrder;
+			import com.components.products.cargaryeditarProducto;
 			import com.components.products.datosProducto1;
 			
 			import flash.net.navigateToURL;
@@ -90,9 +91,9 @@
 					panelCentral.removeAllChildren();
 					panelCentral.addChild(new ClienteDomicilioTelefono());						
 				}
-				if(event.item.@label=="Cargar Productos"){
+				if(event.item.@label=="Cargar Productos y Editar"){
 					panelCentral.removeAllChildren();
-					panelCentral.addChild(new datosProducto1());
+					panelCentral.addChild(new cargaryeditarProducto());
 				}
 				if(event.item.@label=="Cargar Presupuesto"){
 					panelCentral.removeAllChildren();
