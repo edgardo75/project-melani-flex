@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:controls="com.adobe.flex.extras.controls.*"
+		 width="644" height="418" creationComplete="group1_creationCompleteHandler(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import popus.Progress;
+			[Bindable]
+			private var xmllistproducto:XMLList;
+			[Bindable]
+			private var idproducto:int=0;
+			private var popup:Progress;
+			protected function btnnuevo_clickHandler(event:MouseEvent):void
+			{
+				if(txtcodigoproducto.editable==false)
+					txtcodigoproducto.editable=true;
+				
+				txtdescripcion.setFocus();
+				txtcantidaddisponible.text="";
+				txtcantidadinicial.text="";
+				txtcodigoproducto.text="";
+				txtdescripcion.text="";
+				txtprecio.text="";
+				idproducto=0;
+				
+				
+			}
+			protected function getDatos():String{
+				
+				
+				
+				var producto:String="<producto>\n"+
+					
+					
+					"<idproducto>"+idproducto+"</idproducto>\n" +
+					
+					
+					"<descripcion>"+txtdescripcion.text.toUpperCase()+"</descripcion>\n" +					
+					"<preciounitario>"+txtprecio.text+"</preciounitario>\n"+
+					"<codproducto>"+txtcodigoproducto.text.toUpperCase()+"</codproducto>\n"+
+					"<cantidadinicial>"+txtcantidadinicial.text+"</cantidadinicial>\n"+
+					"<cantidaddisponible>"+txtcantidaddisponible.text+"</cantidaddisponible>\n"+
+					"<fechaCarga></fechaCarga>\n"+
+					"<img>0</img>\n" +
+					"</producto>\n";
+				
+				return producto;	
+				
+			}
+			protected function btnguardar_clickHandler(event:MouseEvent):void
+			{
+				
+				if(txtprecio.text.length==0){
+						Alert.show("falta el precio");
+						return;
+				}
+				if(txtcantidaddisponible.text.length==0){
+					Alert.show("falta la cantidad disponible");
+					return;
+				}
+				if(txtcantidadinicial.text.length==0){
+					Alert.show("falta la cantidad inicial");
+					return;
+				}
+				if(txtcodigoproducto.text.length==0){
+					Alert.show("falta el codigio de producto");
+					return;
+				}
+				if(txtdescripcion.text.length==0){
+					Alert.show("falta la descripcion");
+					return;
+				}
+				
+				//mostramos al cliente un popup de espera
+				popup=Progress(PopUpManager.createPopUp(this,Progress,true));
+				PopUpManager.centerPopUp(popup);
+				
+				servicesProducto.actualizarProducto(getDatos());
+					
+				
+				
+			}
+			private function tranferirFocus(keyPress:KeyboardEvent):void{
+				
+				if(keyPress.keyCode==Keyboard.ENTER){
+				
+					
+					if(keyPress.currentTarget.toString().indexOf("txtdescripcion")!=-1){
+						if(txtcodigoproducto.editable==false)
+							txtcodigoproducto.editable=true;
+						txtcodigoproducto.setFocus();
+						return;
+					
+					}
+					if(keyPress.currentTarget.toString().indexOf("txtcodigoproducto")!=-1){
+						txtprecio.setFocus();
+						return;
+						
+					}
+					if(keyPress.currentTarget.toString().indexOf("txtprecio")!=-1){
+						txtcantidadinicial.setFocus();
+						return;
+						
+					}
+					if(keyPress.currentTarget.toString().indexOf("txtcantidadinicial")!=-1){
+						txtcantidaddisponible.setFocus();
+						return;
+						
+					}
+				
+					if(keyPress.currentTarget.toString().indexOf("txtcantidaddisponible")!=-1){
+						btnguardar.setFocus();
+						return;
+						
+					}
+				
+				}
+			
+			
+			}
+			protected function operation1_resultHandler(event:ResultEvent):void
+			{
+				
+				if(String(event.result.toString())=="LA CONSULTA NO ARROJÓ RESULTADOS")
+					Alert.show("LA CONSULTA NO ARROJÓ RESULTADOS");
+				else{
+					if(String(event.result.toString())=="NADA"){
+						Alert.show("FALLÓ LA CONEXION CON LA BASE DE DATOS, REVISE LOS SERVICIOS SI SE HAN INICIADO CORRECTAMENTE.");
+					}else{
+						xmllistproducto=new XMLList(event.result);							
+						adgproductos.dataProvider=product;						
+					}
+				}
+				
+				
+				
+				
+			}
+			protected function producto_resultHandler(event:ResultEvent):void{
+				var indice:Number;
+				PopUpManager.removePopUp(popup);
+				xmllistproducto=new XMLList(event.result);
+				indice = new Number(product[0].id);
+				switch(indice)
+				{
+					case 0:
+					{
+						Alert.show("NO PASÓ NADA");
+						
+						break;
+					}
+					case -1:
+					{
+						Alert.show("ERROR EN EL SERVIDOR!!!");
+						break;
+					}
+					case -2:
+					{
+						Alert.show("ERROR EN EL SERVIDOR!!!");
+						break;
+					}
+					case -5:
+					{
+						Alert.show("YA HAY UN PRODUCTO CON LA MISMA DESCRIPCIÓN, IMPOSIBLE ALMACENAR");
+						break;
+					}	
+						
+						
+						
+					default:
+					{
+						Alert.show("OPERACIÓN EXITOSA PRODUCTO Nº "+indice);
+						servicesProducto.searchAllProductos();
+						limpiarFormulario();
+						
+						
+						
+						break;
+					}
+				}
+			
+			
+			
+			}
+			protected function limpiarFormulario():void{
+			
+				if(txtcodigoproducto.editable==true)
+					txtcodigoproducto.editable=false;
+				
+				txtdescripcion.setFocus();
+				txtcantidaddisponible.text="";
+				txtcantidadinicial.text="";
+				txtcodigoproducto.text="";
+				txtdescripcion.text="";
+				txtprecio.text="";
+				idproducto=0;
+			
+			}
+			protected function producto_faultHandler(event:FaultEvent):void{
+				PopUpManager.removePopUp(popup);
+				Alert.show("SE PRODUJO UN ERROR CON EL PRODUCTO, REVISE");		
+			
+			
+			}
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				servicesProducto.searchAllProductos();
+				txtcantidadinicial.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtcantidaddisponible.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtcodigoproducto.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtdescripcion.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtprecio.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				
+			}
+			//---------------------------------------------------------------------------
+			protected function operation1_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("ERROR "+event.fault.toString());
+				
+			}
+			//---------------------------------------------------------------------------
+			//-----------------------------------------------------------
+			protected function btnClose_clickHandler(event:MouseEvent):void
+			{
+				this.removeAllElements();
+			}
+			//-----------------------------------------------------------	
+			
+			protected function adgproductos_doubleClickHandler(event:MouseEvent):void
+			{
+				
+				idproducto=adgproductos.selectedItem.id;
+				txtprecio.text=adgproductos.selectedItem.precio;
+				txtcantidaddisponible.text=adgproductos.selectedItem.cantidadDisponible;
+				txtcantidadinicial.text=adgproductos.selectedItem.cantidadInicial;
+				txtcodigoproducto.text=adgproductos.selectedItem.idproduct;
+				txtdescripcion.text=adgproductos.selectedItem.descripcion;
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:XMLListCollection id="product" source="{xmllistproducto.producto}"/>
+		<mx:WebService id="servicesProducto" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?WSDL"
+					   
+					   showBusyCursor="true"
+					   useProxy="false">
+			<mx:operation name="actualizarProducto"
+						  resultFormat="object"
+						  result="producto_resultHandler(event)"
+						  fault="producto_faultHandler(event)">				
+			</mx:operation>
+			<mx:operation name="searchAllProductos"
+						  fault="operation1_faultHandler(event)"
+						  result="operation1_resultHandler(event)">
+			</mx:operation>
+		</mx:WebService>
+	</fx:Declarations>
+	
+	<s:DataGrid id="adgproductos" x="44" y="67" width="553" height="174"
+				doubleClick="adgproductos_doubleClickHandler(event)" doubleClickEnabled="true"
+				requestedRowCount="4">
+		<s:columns>
+			<s:ArrayList>
+				<s:GridColumn dataField="id" headerText="id" visible="false"></s:GridColumn>
+				<s:GridColumn dataField="idproduct" headerText="idproduct" visible="false"></s:GridColumn>
+				<s:GridColumn dataField="descripcion" headerText="Descripcion"></s:GridColumn>
+				<s:GridColumn dataField="precio" headerText="Precio"></s:GridColumn>
+				<s:GridColumn dataField="cantidadInicial" headerText="CantInicial"></s:GridColumn>
+				<s:GridColumn dataField="cantidadDisponible" headerText="CantDisponible"></s:GridColumn>
+			</s:ArrayList>
+		</s:columns>
+		<s:typicalItem>
+			<fx:Object dataField1="Sample Data" dataField2="Sample Data" dataField3="Sample Data"></fx:Object>
+		</s:typicalItem>
+		<s:ArrayList>
+			<fx:Object dataField1="data1" dataField2="data1" dataField3="data1"></fx:Object>
+			<fx:Object dataField1="data2" dataField2="data2" dataField3="data2"></fx:Object>
+			<fx:Object dataField1="data3" dataField2="data3" dataField3="data3"></fx:Object>
+			<fx:Object dataField1="data4" dataField2="data4" dataField3="data4"></fx:Object>
+		</s:ArrayList>
+	</s:DataGrid>
+	<s:Label x="44" y="277" text="Descripcion:"/>
+	<s:TextInput id="txtdescripcion" x="164" y="267" width="160"/>
+	<s:Label x="337" y="273" text="CodigoProducto:"/>
+	<s:Label x="44" y="313" text="Precio:"/>
+	<s:Label x="337" y="304" text="Cantidad Inicial:"/>
+	<s:Label x="44" y="335" text="Cantidad Disponible:"/>
+	<s:TextInput id="txtcodigoproducto" x="437" y="267" width="160" editable="false"/>
+	<controls:MaskedTextInput id="txtprecio" x="164" y="298" restrict="0-9."/>
+	<controls:MaskedTextInput id="txtcantidadinicial" x="437" y="300" restrict="0-9."/>
+	<controls:MaskedTextInput id="txtcantidaddisponible" x="164" y="326" restrict="0-9."/>
+	<s:Button id="btnnuevo" x="248" y="371" label="Nuevo" click="btnnuevo_clickHandler(event)"/>
+	<s:Button id="btnguardar" x="326" y="371" label="Guardar" click="btnguardar_clickHandler(event)"/>
+	<s:Button id="btnCloseClientComponent" x="617" y="10" width="16" height="19"
+			  click="btnClose_clickHandler(event)" icon="assets/icon_close.png"/>
+	<s:Label x="152" y="41" color="#ADF2C7" fontFamily="Verdana" fontSize="19" fontWeight="bold"
+			 text="CARGAR Y EDITAR PRODUCTOS"/>
+</s:Group>
