@@ -1,11 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="300">
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:controls="com.adobe.flex.extras.controls.*"
+		 xmlns:components="com.hillelcoren.components.*"
+		 width="722" height="450">
+	<fx:Script>
+		<![CDATA[
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			protected function operationAddEmpleadosFulltime1_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function operation1AddEmpladosFullTime_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function operationAddEmpleadosPartime1_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function operationAddEmpleadosPartime1_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function operationSelectAllEmpleados_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function operationselectAllEmpleados_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function operationdesabilitarEmpleado_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function operationDesabilitarEmpleado1_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+		]]>
+	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:WebService wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
+			<s:operation name="addEmpleadoFullTime"
+						 result="operationAddEmpleadosFulltime1_resultHandler(event)"
+						 fault="operation1AddEmpladosFullTime_faultHandler(event)"
+						 >
+				
+			</s:operation>
+			<s:operation name="addEmpleadoParttime"
+						 result="operationAddEmpleadosPartime1_resultHandler(event)"
+						 fault="operationAddEmpleadosPartime1_faultHandler(event)">
+				
+			</s:operation>
+			<s:operation name="selectAllEmpleados"
+						 result="operationSelectAllEmpleados_resultHandler(event)"
+						 fault="operationselectAllEmpleados_faultHandler(event)">
+				
+			</s:operation>
+			<s:operation name="deshabilitarEmpleado"
+						 result="operationdesabilitarEmpleado_resultHandler(event)"
+						 fault="operationDesabilitarEmpleado1_faultHandler(event)">
+				
+			</s:operation>
+		</s:WebService>
+		<mx:XMLListCollection id="xmlListTiposDocu" source="{xmlTiposdocu.Tipo}"/>
+		<mx:EmailValidator id="emV" source="{txtemail}" property="text"					   
+						   required="false" invalidCharError="La dirección de email contiene caracteres inválidos!!!"
+						   tooManyAtSignsError="La dirección de email contiene muchos caracteres!!!"
+						   invalidDomainError="Dominio de la dirección de email incorrecto" invalidIPDomainError="Mensaje de error cuando el dominio de IP no es válido. El dominio IP debe estar encerrado entre corchetes." 
+						   />
+		
+		
+		<mx:StringValidator id="apeV" source="{txtapellido}"
+							property="text" minLength="2" maxLength="30"
+							required="true" requiredFieldError="Debe Ingresar el Apellido"/>	
+		
+		<mx:StringValidator id="nomV" source="{txtnombre}" 
+							property="text" minLength="2" maxLength="30"
+							required="true" requiredFieldError="Debe Ingresar el Nombre"/>
+		
+		<mx:XMLListCollection id="xmlListTiposDocu" source="{xmlTiposdocu.Tipo}"/>
+		<fx:XML format="e4x" id="xmlTiposdocu">
+			<TiposDocumentos>
+				<Tipo>
+					<descripcion>DNI</descripcion>
+					<id>3</id>
+				</Tipo>
+				<Tipo>
+					<descripcion>LC</descripcion>
+					<id>2</id>
+				</Tipo>
+				<Tipo>
+					<descripcion>LE</descripcion>
+					<id>1</id>
+				</Tipo>   
+				<Tipo>
+					<descripcion>PASAPORTE</descripcion>
+					<id>4</id>
+				</Tipo>			 
+			</TiposDocumentos>	
+		</fx:XML>
+		<fx:XML format="e4x" id="xmlGeneros">
+			<Generos>
+				<Genero>
+					<id>1</id>
+					<descripcion>M</descripcion>
+				</Genero>
+				<Genero>
+					<id>2</id>
+					<descripcion>F</descripcion>
+				</Genero>
+			</Generos>			
+		</fx:XML>	
+		<s:RadioButtonGroup id="rdgroupEmpleados"/>
 	</fx:Declarations>
-	<s:DataGrid x="31" y="34" width="335" requestedRowCount="4">
+	<s:DataGrid x="50" y="32" width="459" height="148" requestedRowCount="4">
 		<s:columns>
 			<s:ArrayList>
 				<s:GridColumn dataField="dataField1" headerText="Column 1"></s:GridColumn>
@@ -23,5 +154,52 @@
 			<fx:Object dataField1="data4" dataField2="data4" dataField3="data4"></fx:Object>
 		</s:ArrayList>
 	</s:DataGrid>
-	<s:Label x="48" y="14" text="CARGA DE EMPLEADOS PARA OPERAR EL SISTEMA"/>
+	<s:Label x="48" y="14" fontFamily="Verdana" fontSize="14"
+			 text="CARGA DE EMPLEADOS PARA OPERAR EL SISTEMA" textAlign="center"/>
+	<s:Label x="23" y="192" fontSize="20" fontWeight="bold" text="Nombre:"/>
+	<s:TextInput id="txtnombre" x="105" y="188"/>
+	<s:Label x="250" y="193" fontSize="20" fontWeight="bold" text="Apellido:"/>
+	<s:TextInput id="txtapellido" x="338" y="185"/>
+	<s:Label x="24" y="218" fontSize="20" fontWeight="bold" text="Email:"/>
+	<s:TextInput id="txtemail" x="104" y="214" width="141"/>
+	<s:Label x="249" y="214" color="#033339" fontSize="20" text="Tipo:"/>
+	<s:Label x="24" y="240" width="112" height="22" color="#033339" fontSize="20" text="Documento:"/>
+	<controls:MaskedTextInput id="txtdocumento" x="133" y="238" width="70"
+							  enter="txtdocumento_enterHandler(event)" fontFamily="Verdana"
+							  fontSize="16" fontWeight="bold" inputMask="########" maxChars="8"
+							  restrict="0-9" 
+							  toolTip="Ingrese el Número de Documento!!!" required="true"/>
+	<components:AdvancedAutoComplete id="cmbTiposdocu" x="339" y="208" width="99"
+									 allowDuplicates="false" allowEditingNewValues="false"
+									 allowEditingSelectedValues="false"
+									 allowMultipleSelection="false" allowNewValues="false"
+									 backspaceAction="remove" dataProvider="{xmlListTiposDocu}"
+									 fontFamily="Verdana" fontSize="16" fontWeight="bold"
+									 labelField="descripcion" matchType="beginning" tabIndex="0"
+									 toolTip="Seleccione el Tipo de Documento!!!"
+									 verticalScrollPolicy="on">
+	</components:AdvancedAutoComplete>
+	<s:Label x="251" y="241" color="#033339" fontSize="20" text="Genero:"/>
+	<components:AdvancedAutoComplete id="cmbGeneros" x="340" y="237" width="53"
+									 allowDuplicates="false" allowEditingNewValues="false"
+									 allowEditingSelectedValues="false"
+									 allowMultipleSelection="false" allowNewValues="false"
+									 backspaceAction="remove" dataProvider="{xmlListGeneros}"
+									 fontFamily="Verdana" fontSize="16" fontWeight="bold"
+									 labelField="descripcion" matchType="beginning" tabIndex="4"
+									 toolTip="Seleccione el Genero del Cliente M o F!!!"
+									 verticalScrollPolicy="on">
+	</components:AdvancedAutoComplete>
+	<s:Label x="24" y="290" color="#033339" fontSize="20" text="Observaciones:"/>
+	<s:TextArea id="txtobservaciones" x="23" y="314" width="504" height="96" fontFamily="Verdana"
+				fontSize="16" fontWeight="bold" maxChars="255" tabIndex="6"/>
+	<s:Button id="btnnuevo" x="23" y="418" label="Nuevo"/>
+	<s:Button id="btnguardar" x="101" y="418" label="Guardar"/>
+	<s:VGroup x="260" y="268">
+		<s:RadioButton label="Empleado FullTime" groupName="rdgroupEmpleados" selected="true"/>
+		<s:RadioButton label="Empleado PartTime" groupName="rdgroupEmpleados"/>
+	</s:VGroup>
+	<s:Label x="406" y="277" fontSize="20" text="Salario Mensual:"/>
+	<s:Label x="406" y="277" fontSize="20" text="Salario por Hora:"/>
+	<controls:MaskedTextInput id="txtsalario" x="552" y="274" fontSize="20" restrict="0-9."/>
 </s:Group>
