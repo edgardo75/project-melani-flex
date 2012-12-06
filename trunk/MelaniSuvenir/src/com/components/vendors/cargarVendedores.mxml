@@ -4,9 +4,11 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
 		 xmlns:components="com.hillelcoren.components.*"
-		 width="722" height="450">
+		 width="722" height="514" creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Script>
 		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
@@ -36,8 +38,7 @@
 			
 			protected function operationSelectAllEmpleados_resultHandler(event:ResultEvent):void
 			{
-				// TODO Auto-generated method stub
-				
+				Alert.show(event.result.toString());
 			}
 			
 			protected function operationselectAllEmpleados_faultHandler(event:FaultEvent):void
@@ -58,11 +59,97 @@
 				
 			}
 			
+			protected function btnnuevo_clickHandler(event:MouseEvent):void
+			{
+				txtnombre.setFocus();
+				
+			}
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				wsempleado.selectAllEmpleados();
+				txtapellido.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+			}
+			private function tranferirFocus(keyPress:KeyboardEvent):void{
+				if (keyPress.keyCode==Keyboard.ENTER){
+						if(keyPress.currentTarget.toString().indexOf("txtnombre")!=-1){
+							txtapellido.setFocus();
+							return;
+						}
+						if(keyPress.currentTarget.toString().indexOf("txtapellido")!=-1){
+							txtemail.setFocus();
+							return;
+						}
+						if(keyPress.currentTarget.toString().indexOf("txtemail")!=-1){
+							cmbTiposdocu.setFocus();
+							return;
+						}
+						if(keyPress.currentTarget.toString().indexOf("cmbTiposdocu")!=-1){
+							txtdocumento.setFocus();
+							return;
+						}
+						if(keyPress.currentTarget.toString().indexOf("txtdocumento")!=-1){
+							cmbGeneros.setFocus();
+							return;
+						}
+						if(keyPress.currentTarget.toString().indexOf("cmbGeneros")!=-1){
+							txtnameuser.setFocus();
+							return;
+						}
+						if(keyPress.currentTarget.toString().indexOf("txtnameuser")!=-1){
+							txtpassword.setFocus();
+							return;
+						}
+						if(keyPress.currentTarget.toString().indexOf("txtpassword")!=-1){
+							if(msksalario.visible==true)
+								msksalario.setFocus();
+							else{
+								if(msksalarioxhora.visible==true)
+									msksalarioxhora.setFocus();
+							}	
+							return;
+						}
+						
+				
+				}
+			
+			}
+			
+			protected function vgroup1_clickHandler(event:MouseEvent):void
+			{
+				if(rbempleadofull.enabled==true){
+						labelsalariofull.visible=true;
+						msksalario.visible=true;
+						labelsalariopart.visible=false;
+						msksalarioxhora.visible=false;
+						
+				}else{
+					if(rbempleadopart.enabled==true){
+						labelsalariofull.visible=false;
+						msksalario.visible=false;
+						labelsalariopart.visible=true;
+						msksalarioxhora.visible=true;
+					
+					}
+				
+				}
+			}
+			
+			protected function btnguardar_clickHandler(event:MouseEvent):void
+			{
+				if(rbempleadofull.enabled==true)
+					wsempleado.addEmpleadoFullTime(txtapellido,txtnameuser,txtpassword,"",txtemail,cmbTiposdocu.selectedItem.id,int(txtdocumento.text),Number(msksalario),cmbGeneros.selectedItem.id,txtobservaciones);
+				else{
+					if(rbempleadopart.enabled==true)
+						wsempleado.addEmpleadoParttime();
+				}
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wsempleado" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
 			<s:operation name="addEmpleadoFullTime"
 						 result="operationAddEmpleadosFulltime1_resultHandler(event)"
 						 fault="operation1AddEmpladosFullTime_faultHandler(event)"
@@ -157,19 +244,20 @@
 	<s:Label x="48" y="14" fontFamily="Verdana" fontSize="14"
 			 text="CARGA DE EMPLEADOS PARA OPERAR EL SISTEMA" textAlign="center"/>
 	<s:Label x="23" y="192" fontSize="20" fontWeight="bold" text="Nombre:"/>
-	<s:TextInput id="txtnombre" x="105" y="188"/>
-	<s:Label x="250" y="193" fontSize="20" fontWeight="bold" text="Apellido:"/>
-	<s:TextInput id="txtapellido" x="338" y="185"/>
+	<s:TextInput id="txtnombre" x="105" y="188" width="178" prompt="ingrese su nombre propio...."/>
+	<s:Label x="291" y="193" fontSize="20" fontWeight="bold" text="Apellido:"/>
+	<s:TextInput id="txtapellido" x="379" y="185" width="164" prompt="ingrese su apellido"/>
 	<s:Label x="24" y="218" fontSize="20" fontWeight="bold" text="Email:"/>
-	<s:TextInput id="txtemail" x="104" y="214" width="141"/>
-	<s:Label x="249" y="214" color="#033339" fontSize="20" text="Tipo:"/>
+	<s:TextInput id="txtemail" x="104" y="214" width="141"
+				 prompt="ingrese direccion de email que mas use..."/>
+	<s:Label x="290" y="214" color="#033339" fontSize="20" text="Tipo:"/>
 	<s:Label x="24" y="240" width="112" height="22" color="#033339" fontSize="20" text="Documento:"/>
 	<controls:MaskedTextInput id="txtdocumento" x="133" y="238" width="70"
 							  enter="txtdocumento_enterHandler(event)" fontFamily="Verdana"
 							  fontSize="16" fontWeight="bold" inputMask="########" maxChars="8"
 							  restrict="0-9" 
 							  toolTip="Ingrese el Número de Documento!!!" required="true"/>
-	<components:AdvancedAutoComplete id="cmbTiposdocu" x="339" y="208" width="99"
+	<components:AdvancedAutoComplete id="cmbTiposdocu" x="380" y="208" width="99"
 									 allowDuplicates="false" allowEditingNewValues="false"
 									 allowEditingSelectedValues="false"
 									 allowMultipleSelection="false" allowNewValues="false"
@@ -179,8 +267,8 @@
 									 toolTip="Seleccione el Tipo de Documento!!!"
 									 verticalScrollPolicy="on">
 	</components:AdvancedAutoComplete>
-	<s:Label x="251" y="241" color="#033339" fontSize="20" text="Genero:"/>
-	<components:AdvancedAutoComplete id="cmbGeneros" x="340" y="237" width="53"
+	<s:Label x="293" y="241" color="#033339" fontSize="20" text="Genero:"/>
+	<components:AdvancedAutoComplete id="cmbGeneros" x="380" y="237" width="53"
 									 allowDuplicates="false" allowEditingNewValues="false"
 									 allowEditingSelectedValues="false"
 									 allowMultipleSelection="false" allowNewValues="false"
@@ -190,16 +278,25 @@
 									 toolTip="Seleccione el Genero del Cliente M o F!!!"
 									 verticalScrollPolicy="on">
 	</components:AdvancedAutoComplete>
-	<s:Label x="24" y="290" color="#033339" fontSize="20" text="Observaciones:"/>
-	<s:TextArea id="txtobservaciones" x="23" y="314" width="504" height="96" fontFamily="Verdana"
+	<s:Label x="25" y="355" color="#033339" fontSize="20" text="Observaciones:"/>
+	<s:TextArea id="txtobservaciones" x="24" y="379" width="504" height="96" fontFamily="Verdana"
 				fontSize="16" fontWeight="bold" maxChars="255" tabIndex="6"/>
-	<s:Button id="btnnuevo" x="23" y="418" label="Nuevo"/>
-	<s:Button id="btnguardar" x="101" y="418" label="Guardar"/>
-	<s:VGroup x="260" y="268">
-		<s:RadioButton label="Empleado FullTime" groupName="rdgroupEmpleados" selected="true"/>
-		<s:RadioButton label="Empleado PartTime" groupName="rdgroupEmpleados"/>
+	<s:Button id="btnnuevo" x="24" y="483" label="Nuevo" click="btnnuevo_clickHandler(event)"/>
+	<s:Button id="btnguardar" x="102" y="483" label="Guardar" click="btnguardar_clickHandler(event)"/>
+	<s:VGroup x="260" y="268" click="vgroup1_clickHandler(event)">
 	</s:VGroup>
-	<s:Label x="406" y="277" fontSize="20" text="Salario Mensual:"/>
-	<s:Label x="406" y="277" fontSize="20" text="Salario por Hora:"/>
-	<controls:MaskedTextInput id="txtsalario" x="552" y="274" fontSize="20" restrict="0-9."/>
+	<s:Label id="labelsalariofull" x="407" y="342" fontSize="20" text="Salario Mensual:"/>
+	<s:Label id="labelsalariopart" x="407" y="342" fontSize="20" text="Salario por Hora:" visible="false"/>
+	<controls:MaskedTextInput id="msksalario" x="553" y="339" fontSize="20" restrict="0-9."/>
+	<controls:MaskedTextInput id="msksalarioxhora" x="553" y="340" height="26" fontSize="20" restrict="0-9." visible="false"/>
+	<s:RadioButton id="rbempleadofull" x="261" y="333" label="Empleado FullTime"
+				   groupName="rdgroupEmpleados" selected="true"/>
+	<s:RadioButton id="rbempleadopart" x="261" y="357" label="Empleado PartTime"
+				   groupName="rdgroupEmpleados"/>
+	<s:Label x="24" y="287" fontSize="20" fontWeight="bold" text="Nombre Usuario:"/>
+	<s:TextInput id="txtnameuser" x="189" y="284" prompt="ingrese un nombre de usuario"/>
+	<s:Label x="325" y="287" fontSize="20" fontWeight="bold" text="Password:"/>
+	<s:Label x="325" y="306" fontSize="20" fontWeight="bold" text="Repassword:"/>
+	<s:TextInput id="txtpassword" x="453" y="284" prompt="ingrese password...." displayAsPassword="true" />
+	<s:TextInput id="txtrepassword" x="453" y="308" prompt="reingreso password" displayAsPassword="true"/>
 </s:Group>
