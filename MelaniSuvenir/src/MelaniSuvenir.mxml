@@ -98,6 +98,7 @@
 					panelCentral.removeAllChildren();
 					panelCentral.addChild(new cargarVendedores());						
 				}
+				
 				if(event.item.@label =="Cargar Datos Completo"){
 					panelCentral.removeAllChildren();
 					panelCentral.addChild(new ClienteDomicilioTelefono());						

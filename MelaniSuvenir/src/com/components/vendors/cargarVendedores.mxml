@@ -8,42 +8,120 @@
 	<fx:Script>
 		<![CDATA[
 			import mx.controls.Alert;
+			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			import mx.validators.Validator;
+			[Bindable]
+			private var listEmpleados:XMLList;
 			
 			protected function operationAddEmpleadosFulltime1_resultHandler(event:ResultEvent):void
 			{
-				// TODO Auto-generated method stub
+				var iresult:int=int(event.result);
+				switch(iresult)
+				{
+					case 0:
+					{
+						Alert.show("NO PASÓ NADA!!!");
+						break;
+					}
+					case -1:{
+						Alert.show("SE PRODUJO UN ERROR AL ALMACENAR UN EMPLEADO REVISE!!!");
+						break;
+					}	
+					case -2:{
+						Alert.show("YA EXISTE UNA PERSONA CON ESE DOCUMENTO!!!");
+						break;
+					}	
+					case -4:{
+						Alert.show("YA EXISTE ESE EMAIL EN LA BASE DE DATOS!!!");
+						break;
+					}	
+					case -3:{
+						Alert.show("SE PRODUJO UN ERROR EN EL SERVIDOR REVISE!!!");
+						break;
+					}
+					case -6:{
+						Alert.show("EL NOMBRE DE USUARIO YA EXISTE EN LA BASE DE DATOS");
+						break;
+					}	
+						
+					default:
+					{
+						limpiarcontroles();
+						wsempleado.selectAllEmpleados();
+						break;
+					}
+				}
 				
 			}
 			
 			protected function operation1AddEmpladosFullTime_faultHandler(event:FaultEvent):void
 			{
-				// TODO Auto-generated method stub
+				Alert.show("SE PRODUJO UN ERROR AL ALMACENAR EMPLEADO PARTIME");
 				
 			}
 			
 			protected function operationAddEmpleadosPartime1_resultHandler(event:ResultEvent):void
 			{
-				// TODO Auto-generated method stub
+				
+				var iresult:int=int(event.result);
+				
+				switch(iresult)
+				{
+					case 0:
+					{
+						Alert.show("NO PASÓ NADA!!!");
+						break;
+					}
+					case -1:{
+						Alert.show("SE PRODUJO UN ERROR AL ALMACENAR UN EMPLEADO REVISE!!!");
+						break;
+					}	
+					case -2:{
+						Alert.show("YA EXISTE UNA PERSONA CON ESE DOCUMENTO!!!");
+						break;
+					}
+					case -4:{
+						Alert.show("YA EXISTE ESE EMAIL EN LA BASE DE DATOS!!!");
+						break;
+					}	
+					case -3:{
+						Alert.show("SE PRODUJO UN ERROR EN EL SERVIDOR REVISE!!!");
+						break;
+					}
+					case -6:{
+						Alert.show("EL NOMBRE DE USUARIO YA EXISTE EN LA BASE DE DATOS");
+						break;
+					}	
+						
+					default:
+					{
+						limpiarcontroles();
+						wsempleado.selectAllEmpleados();
+						break;
+					}
+				}
 				
 			}
 			
 			protected function operationAddEmpleadosPartime1_faultHandler(event:FaultEvent):void
 			{
-				// TODO Auto-generated method stub
+				Alert.show("SE PRODUJO UN ERROR AL ALMACENAR DATOS DE EMPLEADO");
 				
 			}
 			
 			protected function operationSelectAllEmpleados_resultHandler(event:ResultEvent):void
 			{
-				Alert.show(event.result.toString());
+				
+				listEmpleados=new XMLList(event.result);
+				
 			}
 			
 			protected function operationselectAllEmpleados_faultHandler(event:FaultEvent):void
 			{
-				// TODO Auto-generated method stub
+				Alert.show("Se PRODUJO UN ERROR AL TRAER LA LISTA DE EMPLEADOS");
 				
 			}
 			
@@ -61,17 +139,61 @@
 			
 			protected function btnnuevo_clickHandler(event:MouseEvent):void
 			{
+				if(txtnombre.text.length>0)
+					limpiarcontroles();
 				txtnombre.setFocus();
 				
+				
 			}
-			
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			public function validateForm():Boolean{
+				var validatorArray:Array=new Array();
+				validatorArray.push(emV);
+				validatorArray.push(apeV);
+				validatorArray.push(nomV);
+				validatorArray.push(txtdocumento);
+				validatorArray.push(cmbTiposdocu);
+				validatorArray.push(cmbGeneros);
+				validatorArray.push(nomuserV);
+				validatorArray.push(passV);
+				validatorArray.push(passreV);
+				validatorArray.push(msksalario);
+				validatorArray.push(msksalarioxhora);
+				
+				
+				var validatorErrorArray:Array = Validator.validateAll(validatorArray);
+				var isValidForm:Boolean = validatorErrorArray.length == 0;                
+				return isValidForm
+				
+				
+			}
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			protected function group1_creationCompleteHandler(event:FlexEvent):void
 			{
-				wsempleado.selectAllEmpleados();
+				
+				cmbGeneros.selectedItemId=2;
+				cmbTiposdocu.selectedItemId=3;
+				
 				txtapellido.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtdocumento.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtemail.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtnameuser.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtnombre.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtobservaciones.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtpassword.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtrepassword.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				msksalario.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				msksalarioxhora.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				cmbTiposdocu.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				cmbGeneros.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				btnguardar.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				
+				wsempleado.selectAllEmpleados();
 			}
+			
 			private function tranferirFocus(keyPress:KeyboardEvent):void{
 				if (keyPress.keyCode==Keyboard.ENTER){
+					
 						if(keyPress.currentTarget.toString().indexOf("txtnombre")!=-1){
 							txtapellido.setFocus();
 							return;
@@ -84,6 +206,7 @@
 							cmbTiposdocu.setFocus();
 							return;
 						}
+						
 						if(keyPress.currentTarget.toString().indexOf("cmbTiposdocu")!=-1){
 							txtdocumento.setFocus();
 							return;
@@ -101,6 +224,10 @@
 							return;
 						}
 						if(keyPress.currentTarget.toString().indexOf("txtpassword")!=-1){
+							txtrepassword.setFocus();
+							return;
+						}
+						if(keyPress.currentTarget.toString().indexOf("txtrepassword")!=-1){
 							if(msksalario.visible==true)
 								msksalario.setFocus();
 							else{
@@ -110,21 +237,32 @@
 							return;
 						}
 						
+						if(keyPress.currentTarget.toString().indexOf("msksalario")!=-1&&msksalario.visible==true){
+								btnguardar.setFocus();
+								return;
+						
+						}
+						if(keyPress.currentTarget.toString().indexOf("msksalarioxhora")!=-1&&msksalarioxhora.visible==true){
+							btnguardar.setFocus();
+							return;
+							
+						}
+						
 				
 				}
 			
 			}
 			
-			protected function vgroup1_clickHandler(event:MouseEvent):void
+			protected function enabledisableradiobutton():void
 			{
-				if(rbempleadofull.enabled==true){
+				if(rbempleadofull.selected==true){
 						labelsalariofull.visible=true;
 						msksalario.visible=true;
 						labelsalariopart.visible=false;
 						msksalarioxhora.visible=false;
 						
 				}else{
-					if(rbempleadopart.enabled==true){
+					if(rbempleadopart.selected==true){
 						labelsalariofull.visible=false;
 						msksalario.visible=false;
 						labelsalariopart.visible=true;
@@ -134,15 +272,67 @@
 				
 				}
 			}
+			protected function limpiarcontroles():void{
+				
+				txtapellido.text="";
+				txtdocumento.text="";
+				txtemail.text="";
+				txtnameuser.text="";
+				txtnombre.text="";
+				txtobservaciones.text="";
+				txtpassword.text="";
+				txtrepassword.text="";
+				cmbGeneros.selectedItemId=2;
+				cmbTiposdocu.selectedItemId=3;
+				
+				if(btnguardar.enabled==false)
+					btnguardar.enabled=true;
+				
+				
+				
 			
+			
+			}
+			protected function guardarEmpleado(evt:CloseEvent):void{
+				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
+				
+				if(btnguardar.enabled==true)
+					btnguardar.enabled=false;
+				if(txtpassword.text!=txtrepassword.text){
+					Alert.show("LOS PASSWORD NO COINCIDEN, CORRIJA!!!");
+					return;
+				}
+				
+				
+				if(rbempleadofull.selected==true){
+					if(msksalario.text.length==0)
+						msksalario.text="0";	
+						wsempleado.addEmpleadoFullTime(txtapellido.text,txtnameuser.text,txtnombre.text,txtpassword.text,txtrepassword.text,txtemail.text,int(cmbTiposdocu.selectedItem.id),int(txtdocumento.text),Number(msksalario.text).toFixed(2),int(cmbGeneros.selectedItem.id),txtobservaciones.text);
+					
+				}else{
+					if(rbempleadopart.selected==true){
+						if(msksalarioxhora.text.length==0)
+							msksalarioxhora.text="0";
+						wsempleado.addEmpleadoParttime(txtapellido.text,txtnameuser.text,txtnombre.text,txtpassword.text,txtrepassword.text,txtemail.text,int(cmbTiposdocu.selectedItem.id),int(txtdocumento.text),Number(msksalarioxhora.text),int(cmbGeneros.selectedItem.id),txtobservaciones.text);
+					}
+				}
+			
+			}
 			protected function btnguardar_clickHandler(event:MouseEvent):void
 			{
-				if(rbempleadofull.enabled==true)
-					wsempleado.addEmpleadoFullTime(txtapellido,txtnameuser,txtpassword,"",txtemail,cmbTiposdocu.selectedItem.id,int(txtdocumento.text),Number(msksalario),cmbGeneros.selectedItem.id,txtobservaciones);
-				else{
-					if(rbempleadopart.enabled==true)
-						wsempleado.addEmpleadoParttime();
-				}
+			
+				Alert.show("Desea Guardar Datos de Empleado?","Confirmar Operación", Alert.YES | Alert.NO, this, guardarEmpleado, null, Alert.NO);
+				
+			}
+			
+			protected function rbempleadopart_clickHandler(event:MouseEvent):void
+			{
+				enabledisableradiobutton();
+			}
+			
+			protected function rbempleadofull_clickHandler(event:MouseEvent):void
+			{
+			enabledisableradiobutton();
 			}
 			
 		]]>
@@ -172,7 +362,9 @@
 				
 			</s:operation>
 		</s:WebService>
+		<s:XMLListCollection id="xmllistEmpleados" source="{listEmpleados.item}"/>
 		<mx:XMLListCollection id="xmlListTiposDocu" source="{xmlTiposdocu.Tipo}"/>
+		<mx:XMLListCollection id="xmlListGeneros" source="{xmlGeneros.Genero}"/>
 		<mx:EmailValidator id="emV" source="{txtemail}" property="text"					   
 						   required="false" invalidCharError="La dirección de email contiene caracteres inválidos!!!"
 						   tooManyAtSignsError="La dirección de email contiene muchos caracteres!!!"
@@ -187,8 +379,18 @@
 		<mx:StringValidator id="nomV" source="{txtnombre}" 
 							property="text" minLength="2" maxLength="30"
 							required="true" requiredFieldError="Debe Ingresar el Nombre"/>
+		<mx:StringValidator id="passV" source="{txtpassword}" 
+							property="text" minLength="4" maxLength="8"
+							required="true" requiredFieldError="Debe Ingresar Password"/>
+		<mx:StringValidator id="passreV" source="{txtrepassword}" 
+							property="text" minLength="4" maxLength="8"
+							required="true" requiredFieldError="Debe Reingresar el Password"/>
+		<mx:StringValidator id="nomuserV" source="{txtnameuser}" 
+							property="text" minLength="2" maxLength="10"
+							required="true" requiredFieldError="Debe Ingresar el Nombre de Usuario"/>
 		
-		<mx:XMLListCollection id="xmlListTiposDocu" source="{xmlTiposdocu.Tipo}"/>
+		
+	
 		<fx:XML format="e4x" id="xmlTiposdocu">
 			<TiposDocumentos>
 				<Tipo>
@@ -223,41 +425,37 @@
 		</fx:XML>	
 		<s:RadioButtonGroup id="rdgroupEmpleados"/>
 	</fx:Declarations>
-	<s:DataGrid x="50" y="32" width="459" height="148" requestedRowCount="4">
+	<s:DataGrid x="50" y="32"  width="531" height="148" requestedRowCount="4" dataProvider="{xmllistEmpleados}">
 		<s:columns>
 			<s:ArrayList>
-				<s:GridColumn dataField="dataField1" headerText="Column 1"></s:GridColumn>
-				<s:GridColumn dataField="dataField2" headerText="Column 2"></s:GridColumn>
-				<s:GridColumn dataField="dataField3" headerText="Column 3"></s:GridColumn>
+				<s:GridColumn dataField="id" headerText="ID" visible="false"></s:GridColumn>
+				<s:GridColumn dataField="nombre" headerText="Nombre"></s:GridColumn>
+				<s:GridColumn dataField="apellido" headerText="Apellido"></s:GridColumn>
+				<s:GridColumn dataField="nameuser" headerText="Usuario"></s:GridColumn>
+				<s:GridColumn dataField="estado" headerText="Estado">
+				
+				</s:GridColumn>
+				
 			</s:ArrayList>
-		</s:columns>
-		<s:typicalItem>
-			<fx:Object dataField1="Sample Data" dataField2="Sample Data" dataField3="Sample Data"></fx:Object>
-		</s:typicalItem>
-		<s:ArrayList>
-			<fx:Object dataField1="data1" dataField2="data1" dataField3="data1"></fx:Object>
-			<fx:Object dataField1="data2" dataField2="data2" dataField3="data2"></fx:Object>
-			<fx:Object dataField1="data3" dataField2="data3" dataField3="data3"></fx:Object>
-			<fx:Object dataField1="data4" dataField2="data4" dataField3="data4"></fx:Object>
-		</s:ArrayList>
+		</s:columns>		
 	</s:DataGrid>
 	<s:Label x="48" y="14" fontFamily="Verdana" fontSize="14"
 			 text="CARGA DE EMPLEADOS PARA OPERAR EL SISTEMA" textAlign="center"/>
 	<s:Label x="23" y="192" fontSize="20" fontWeight="bold" text="Nombre:"/>
-	<s:TextInput id="txtnombre" x="105" y="188" width="178" prompt="ingrese su nombre propio...."/>
-	<s:Label x="291" y="193" fontSize="20" fontWeight="bold" text="Apellido:"/>
-	<s:TextInput id="txtapellido" x="379" y="185" width="164" prompt="ingrese su apellido"/>
+	<s:TextInput id="txtnombre"  x="105" y="188" width="214" prompt="ingrese su nombre propio...."/>
+	<s:Label x="327" y="193" fontSize="20" fontWeight="bold" text="Apellido:"/>
+	<s:TextInput id="txtapellido" x="415" y="185" width="164" prompt="ingrese su apellido"/>
 	<s:Label x="24" y="218" fontSize="20" fontWeight="bold" text="Email:"/>
-	<s:TextInput id="txtemail" x="104" y="214" width="141"
+	<s:TextInput id="txtemail" x="104" y="214" width="214"
 				 prompt="ingrese direccion de email que mas use..."/>
-	<s:Label x="290" y="214" color="#033339" fontSize="20" text="Tipo:"/>
+	<s:Label x="326" y="214" color="#033339" fontSize="20" text="Tipo:"/>
 	<s:Label x="24" y="240" width="112" height="22" color="#033339" fontSize="20" text="Documento:"/>
 	<controls:MaskedTextInput id="txtdocumento" x="133" y="238" width="70"
-							  enter="txtdocumento_enterHandler(event)" fontFamily="Verdana"
+							   fontFamily="Verdana"
 							  fontSize="16" fontWeight="bold" inputMask="########" maxChars="8"
 							  restrict="0-9" 
 							  toolTip="Ingrese el Número de Documento!!!" required="true"/>
-	<components:AdvancedAutoComplete id="cmbTiposdocu" x="380" y="208" width="99"
+	<components:AdvancedAutoComplete id="cmbTiposdocu" x="416" y="208" width="99"
 									 allowDuplicates="false" allowEditingNewValues="false"
 									 allowEditingSelectedValues="false"
 									 allowMultipleSelection="false" allowNewValues="false"
@@ -267,8 +465,8 @@
 									 toolTip="Seleccione el Tipo de Documento!!!"
 									 verticalScrollPolicy="on">
 	</components:AdvancedAutoComplete>
-	<s:Label x="293" y="241" color="#033339" fontSize="20" text="Genero:"/>
-	<components:AdvancedAutoComplete id="cmbGeneros" x="380" y="237" width="53"
+	<s:Label x="329" y="241" color="#033339" fontSize="20" text="Genero:"/>
+	<components:AdvancedAutoComplete id="cmbGeneros" x="417" y="237" width="53"
 									 allowDuplicates="false" allowEditingNewValues="false"
 									 allowEditingSelectedValues="false"
 									 allowMultipleSelection="false" allowNewValues="false"
@@ -283,20 +481,25 @@
 				fontSize="16" fontWeight="bold" maxChars="255" tabIndex="6"/>
 	<s:Button id="btnnuevo" x="24" y="483" label="Nuevo" click="btnnuevo_clickHandler(event)"/>
 	<s:Button id="btnguardar" x="102" y="483" label="Guardar" click="btnguardar_clickHandler(event)"/>
-	<s:VGroup x="260" y="268" click="vgroup1_clickHandler(event)">
-	</s:VGroup>
-	<s:Label id="labelsalariofull" x="407" y="342" fontSize="20" text="Salario Mensual:"/>
-	<s:Label id="labelsalariopart" x="407" y="342" fontSize="20" text="Salario por Hora:" visible="false"/>
-	<controls:MaskedTextInput id="msksalario" x="553" y="339" fontSize="20" restrict="0-9."/>
-	<controls:MaskedTextInput id="msksalarioxhora" x="553" y="340" height="26" fontSize="20" restrict="0-9." visible="false"/>
-	<s:RadioButton id="rbempleadofull" x="261" y="333" label="Empleado FullTime"
-				   groupName="rdgroupEmpleados" selected="true"/>
-	<s:RadioButton id="rbempleadopart" x="261" y="357" label="Empleado PartTime"
-				   groupName="rdgroupEmpleados"/>
+	
+	<s:Label id="labelsalariofull" x="399" y="342" width="156" fontSize="20" text="Salario Mensual:"/>
+	<s:Label id="labelsalariopart" x="399" y="342" width="169" fontSize="20" text="Salario por Hora:" visible="false"/>
+	<controls:MaskedTextInput id="msksalario" x="555" y="338" height="30" fontSize="20"
+							  restrict="0-9."/>
+	<controls:MaskedTextInput id="msksalarioxhora" x="555" y="338" height="30" fontSize="20" restrict="0-9." visible="false"/>
+	
+	
 	<s:Label x="24" y="287" fontSize="20" fontWeight="bold" text="Nombre Usuario:"/>
-	<s:TextInput id="txtnameuser" x="189" y="284" prompt="ingrese un nombre de usuario"/>
+	<s:TextInput id="txtnameuser" x="189" y="284" prompt="ingrese un nombre de usuario" maxChars="10"/>
 	<s:Label x="325" y="287" fontSize="20" fontWeight="bold" text="Password:"/>
 	<s:Label x="325" y="306" fontSize="20" fontWeight="bold" text="Repassword:"/>
 	<s:TextInput id="txtpassword" x="453" y="284" prompt="ingrese password...." displayAsPassword="true" />
 	<s:TextInput id="txtrepassword" x="453" y="308" prompt="reingreso password" displayAsPassword="true"/>
+	<s:VGroup x="248" y="329" >
+	<s:RadioButton id="rbempleadofull" x="250" y="339" label="Empleado FullTime"
+				   groupName="rdgroupEmpleados" selected="true" click="rbempleadofull_clickHandler(event)"/>
+	<s:RadioButton id="rbempleadopart" x="250" y="357" label="Empleado PartTime" 
+				   click="rbempleadopart_clickHandler(event)" groupName="rdgroupEmpleados"/>
+	</s:VGroup>
+	
 </s:Group>
