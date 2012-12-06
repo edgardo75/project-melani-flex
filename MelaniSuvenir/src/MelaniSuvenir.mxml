@@ -23,6 +23,11 @@
 				<menuitem label="Cargar Datos Completo"/>
 				<menuitem type="separator"/>
 			</menuitem>
+			<menuitem label="Empleados">
+				<menuitem type="separator"/>
+				<menuitem label="Cargar Empleados"/>
+				<menuitem type="separator"/>			
+			</menuitem>
 			<menuitem label="Productos">
 				<menuitem type="separator"/>
 				<menuitem label="Cargar Productos y Editar"/>
@@ -72,6 +77,7 @@
 			import com.components.orderform.noteTheOrder;
 			import com.components.products.cargaryeditarProducto;
 			import com.components.products.datosProducto1;
+			import com.components.vendors.cargarVendedores;
 			
 			import flash.net.navigateToURL;
 			
@@ -86,6 +92,11 @@
 				if(event.item.@label =="Cargar Datos Personales"){
 					panelCentral.removeAllChildren();
 					panelCentral.addChild(new guardarDatosPersonalCliente());						
+				}
+				
+				if(event.item.@label =="Cargar Empleados"){
+					panelCentral.removeAllChildren();
+					panelCentral.addChild(new cargarVendedores());						
 				}
 				if(event.item.@label =="Cargar Datos Completo"){
 					panelCentral.removeAllChildren();
