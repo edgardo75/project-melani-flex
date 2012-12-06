@@ -168,7 +168,7 @@
 	
 	
 	
-	<clients:datosCliente id="clienteComp" x="14" y="10">
+	<clients:datosCliente id="clienteComp" x="5" y="20">
 	</clients:datosCliente>
 	<s:Button id="btnGuardarCli" x="233" y="353" label="Guardar"
 			  click="validateAndSubmit(event)"/>

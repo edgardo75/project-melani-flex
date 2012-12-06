@@ -12,14 +12,12 @@
 	<fx:Declarations>
 		<s:XMLListCollection id="infoclient" source="{xmlInfoClient.item}"/>
 		
-			<s:WebService id="serviceCLI" 
-						  wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL" 
-						  useProxy="false"
+			<s:WebService id="cliservices" 
+						  wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?wsdl" 						  
 						  showBusyCursor="true" 
 						  >
-				<s:operation name="obtenerClienteXTipoAndNumeroDocu"
-							 resultFormat="object"
-							 result="operation1_resultHandler(event)"
+				<s:operation name="obtenerClienteXTipoAndNumeroDocu"							
+							 result="operation1_resultHandlerObtenerCliente(event)"
 							 fault="operation1_faultHandler(event)">
 					
 				</s:operation>
@@ -153,13 +151,14 @@
 			
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			public function validateForm():Boolean{
+				
 			var validatorArray:Array=new Array();
-			validatorArray.push(emV);
-			validatorArray.push(apeV);
-			validatorArray.push(nomV);
-			validatorArray.push(txtdocumento);
-			var validatorErrorArray:Array = Validator.validateAll(validatorArray);
-			var isValidForm:Boolean = validatorErrorArray.length == 0;                
+					validatorArray.push(emV);
+					validatorArray.push(apeV);
+					validatorArray.push(nomV);
+					validatorArray.push(txtdocumento);
+					var validatorErrorArray:Array = Validator.validateAll(validatorArray);
+					var isValidForm:Boolean = validatorErrorArray.length == 0;                
 			return isValidForm
 			
 			
@@ -189,7 +188,7 @@
 									
 									
 									if(keyPress.currentTarget.toString().indexOf("txtdocumento")!=-1)
-											txtnombre.setFocus();
+										txtnombre.setFocus();
 									
 									if(keyPress.currentTarget.toString().indexOf("txtemail")!=-1)
 											txtobservaciones.setFocus();
@@ -204,6 +203,7 @@
 				//----------------------------------------
 				cmbGeneros.selectedItemId=2;
 				cmbTiposdocu.selectedItemId=3;
+			
 				//----------------------------------------
 				txtapellido.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				txtdocumento.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
@@ -213,6 +213,7 @@
 				//----------------------------------------
 				cmbGeneros.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);				
 				cmbTiposdocu.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				
 				//----------------------------------------
 			}
 			
@@ -220,7 +221,7 @@
 			public function clearComponenteCliente():void{
 					
 				txtapellido.text="";
-				//txtdocumento.text="";
+			
 				txtemail.text="";
 				txtnombre.text="";
 				txtobservaciones.text="";
@@ -230,7 +231,7 @@
 			
 			}
 			
-			protected function operation1_resultHandler(event:ResultEvent):void
+			protected function operation1_resultHandlerObtenerCliente(event:ResultEvent):void
 			{
 				respuesta ="";
 				respuesta = event.result.toString();
@@ -289,7 +290,8 @@
 						Alert.show("Ingrese un número de Documento de manera correcta");
 					
 					}else{
-						serviceCLI.obtenerClienteXTipoAndNumeroDocu(cmbTiposdocu.selectedItemId,int(txtdocumento.text));
+						
+						cliservices.obtenerClienteXTipoAndNumeroDocu(cmbTiposdocu.selectedItemId,int(txtdocumento.text));
 					
 					}
 				}
