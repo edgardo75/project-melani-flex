@@ -325,6 +325,18 @@
 				
 			}
 			
+<<<<<<< .mine
+			protected function rbempleadopart_clickHandler(event:MouseEvent):void
+			{
+				enabledisableradiobutton();
+			}
+			
+			protected function rbempleadofull_clickHandler(event:MouseEvent):void
+			{
+				enabledisableradiobutton();
+			}
+			
+=======
 			protected function rbempleadopart_clickHandler(event:MouseEvent):void
 			{
 				enabledisableradiobutton();
@@ -335,6 +347,7 @@
 			enabledisableradiobutton();
 			}
 			
+>>>>>>> .r69
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -425,9 +438,23 @@
 		</fx:XML>	
 		<s:RadioButtonGroup id="rdgroupEmpleados"/>
 	</fx:Declarations>
+<<<<<<< .mine
+	<s:DataGrid x="50" y="32"  width="531" height="148" requestedRowCount="4" dataProvider="{xmllistEmpleados}"z>
+=======
 	<s:DataGrid x="50" y="32"  width="531" height="148" requestedRowCount="4" dataProvider="{xmllistEmpleados}">
+>>>>>>> .r69
 		<s:columns>
 			<s:ArrayList>
+<<<<<<< .mine
+				<s:GridColumn dataField="id" headerText="ID" visible="false"></s:GridColumn>
+				<s:GridColumn dataField="nombre" headerText="Nombre"></s:GridColumn>
+				<s:GridColumn dataField="apellido" headerText="Apellido"></s:GridColumn>
+				<s:GridColumn dataField="nameuser" headerText="Usuario"></s:GridColumn>
+				<s:GridColumn dataField="estado" headerText="Estado" itemRenderer="cheqbox">
+				
+				</s:GridColumn>
+				
+=======
 				<s:GridColumn dataField="id" headerText="ID" visible="false"></s:GridColumn>
 				<s:GridColumn dataField="nombre" headerText="Nombre"></s:GridColumn>
 				<s:GridColumn dataField="apellido" headerText="Apellido"></s:GridColumn>
@@ -436,6 +463,7 @@
 				
 				</s:GridColumn>
 				
+>>>>>>> .r69
 			</s:ArrayList>
 		</s:columns>		
 	</s:DataGrid>
