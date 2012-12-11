@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" creationComplete="titlewindow1_creationCompleteHandler(event)" width="248" height="164" close="titlewindow1_closeHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			[Bindable]
+			public var arrayEmployee:ArrayCollection=new ArrayCollection();
+			
+			private var so:SharedObject=SharedObject.getLocal("userData");
+			
+			
+			protected function titlewindow1_closeHandler(event:CloseEvent):void
+			{
+				PopUpManager.removePopUp(this);
+			}
+			
+			protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void
+			{
+				txtnameuser.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtpassuser.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+			}
+			private function tranferirFocus(keyPress:KeyboardEvent):void{
+				if (keyPress.keyCode==Keyboard.ENTER){
+					
+					if(keyPress.currentTarget.toString().indexOf("txtnameuser")!=-1){
+						txtpassuser.setFocus();
+						return;
+					}
+					if(keyPress.currentTarget.toString().indexOf("txtpassuser")!=-1&&txtnameuser.text.length>0&&txtpassuser.text.length>0){
+						validarDatos();
+						return;
+					}
+				}
+			}
+			protected function validarDatos():void{
+				var b:Boolean=false;
+				for(var i:int=0;i<arrayEmployee.length;i++){
+					
+					if(arrayEmployee[i].nameuser==txtnameuser.text&&arrayEmployee[i].clave){
+							so.data.nameuser=String(arrayEmployee[i].nameuser);
+							so.data.passuser=String(arrayEmployee[i].clave);
+						
+							b=true;
+							break;
+					
+					
+					}
+						
+					
+				}
+				if(b==true){
+					Alert.show("USUARIO VALIDO");
+					PopUpManager.removePopUp(this);
+				}else
+					Alert.show("USUARIO NO VALIDO");
+				
+			
+			
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Label x="24" y="39" fontSize="16" fontWeight="bold" text="USUARIO:"/>
+	<s:Label x="5" y="62" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
+	<s:TextInput id="txtnameuser" x="109" y="29"/>
+	<s:TextInput id="txtpassuser" x="109" y="57"/>
+</s:TitleWindow>
