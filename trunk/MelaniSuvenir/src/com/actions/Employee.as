@@ -15,6 +15,9 @@ package com.actions
 		public var nameuser:String;
 		
 		[Bindable]
+		public var clave:String;
+		
+		[Bindable]
 		public var estado:Boolean=false;
 		
 		

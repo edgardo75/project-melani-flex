@@ -7,14 +7,25 @@
 		 width="722" height="514" creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Script>
 		<![CDATA[
+			import com.actions.Employee;
+			
+			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			import mx.validators.Validator;
+			
+			import popus.popupUsuario;
+			
 			[Bindable]
 			private var listEmpleados:XMLList;
+			[Bindable]
+			private var listEmployee:ArrayCollection;
+			
+			private var so:SharedObject=SharedObject.getLocal("userData");
 			
 			protected function operationAddEmpleadosFulltime1_resultHandler(event:ResultEvent):void
 			{
@@ -114,8 +125,38 @@
 			
 			protected function operationSelectAllEmpleados_resultHandler(event:ResultEvent):void
 			{
-				
+				Alert.show(event.result.toString());
 				listEmpleados=new XMLList(event.result);
+				var employee:Employee;
+				
+				
+					listEmployee=new ArrayCollection();
+				
+				for(var i:int=0;i<xmllistEmpleados.length;i++){
+					employee=new Employee();
+					employee.id=xmllistEmpleados[i].id;
+					employee.apellido=String(xmllistEmpleados[i].apellido).toUpperCase();
+					employee.nombre=String(xmllistEmpleados[i].nombre).toUpperCase();
+					employee.nameuser=xmllistEmpleados[i].nameuser;
+					employee.clave=xmllistEmpleados[i].clave;
+					if(String(xmllistEmpleados[i].estado)=="1")
+						employee.estado=true;
+					
+					
+						
+					
+					listEmployee.addItem(employee);
+					
+				
+				
+				
+				}
+				
+				listEmployee.refresh();
+				
+				if(listEmployee.length>0 && btndeshabilitar.enabled==false)
+					btndeshabilitar.enabled=true;
+				
 				
 			}
 			
@@ -189,6 +230,10 @@
 				btnguardar.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				
 				wsempleado.selectAllEmpleados();
+				
+				so.clear();
+				
+				
 			}
 			
 			private function tranferirFocus(keyPress:KeyboardEvent):void{
@@ -302,6 +347,11 @@
 					Alert.show("LOS PASSWORD NO COINCIDEN, CORRIJA!!!");
 					return;
 				}
+				if(txtapellido.text.length<2||txtnameuser.text.length<2||txtnombre.text.length<2){
+					Alert.show("LOS NOMBRES, NOMBRE DE USUARIO Y APELLIDO DEBEN SER DE POR LO MENOS 2 CARACTERES");
+					return;
+				}
+					
 				
 				
 				if(rbempleadofull.selected==true){
@@ -316,6 +366,8 @@
 						wsempleado.addEmpleadoParttime(txtapellido.text,txtnameuser.text,txtnombre.text,txtpassword.text,txtrepassword.text,txtemail.text,int(cmbTiposdocu.selectedItem.id),int(txtdocumento.text),Number(msksalarioxhora.text),int(cmbGeneros.selectedItem.id),txtobservaciones.text);
 					}
 				}
+				
+				
 			
 			}
 			protected function btnguardar_clickHandler(event:MouseEvent):void
@@ -325,7 +377,7 @@
 				
 			}
 			
-<<<<<<< .mine
+
 			protected function rbempleadopart_clickHandler(event:MouseEvent):void
 			{
 				enabledisableradiobutton();
@@ -336,18 +388,27 @@
 				enabledisableradiobutton();
 			}
 			
-=======
-			protected function rbempleadopart_clickHandler(event:MouseEvent):void
+			
+			
+			
+			
+
+			protected function btndeshabilitar_clickHandler(event:MouseEvent):void
 			{
-				enabledisableradiobutton();
+				if(dgemployee.selectedItem.estado==false){
+				if(so.size==0){
+						var popup:popupUsuario=popupUsuario(PopUpManager.createPopUp(this,popupUsuario,true));
+						
+						popup.title="Usuario y Clave";
+						popup.arrayEmployee=listEmployee;
+						
+						PopUpManager.centerPopUp(popup);
+				}else
+					Alert.show("USER "+so.data.nameuser+" PASSWORD "+so.data.passuser);
+				}else
+					Alert.show("DEBE SELECCIONAR UN ELEMENTO DE LA GRILLA");
 			}
 			
-			protected function rbempleadofull_clickHandler(event:MouseEvent):void
-			{
-			enabledisableradiobutton();
-			}
-			
->>>>>>> .r69
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -438,32 +499,34 @@
 		</fx:XML>	
 		<s:RadioButtonGroup id="rdgroupEmpleados"/>
 	</fx:Declarations>
-<<<<<<< .mine
-	<s:DataGrid x="50" y="32"  width="531" height="148" requestedRowCount="4" dataProvider="{xmllistEmpleados}"z>
-=======
-	<s:DataGrid x="50" y="32"  width="531" height="148" requestedRowCount="4" dataProvider="{xmllistEmpleados}">
->>>>>>> .r69
+
+	
+	<s:DataGrid x="24" y="32" id="dgemployee"  width="581" height="148" requestedRowCount="4" dataProvider="{listEmployee}"
+				selectionMode="singleRow">
+
 		<s:columns>
 			<s:ArrayList>
-<<<<<<< .mine
+
 				<s:GridColumn dataField="id" headerText="ID" visible="false"></s:GridColumn>
 				<s:GridColumn dataField="nombre" headerText="Nombre"></s:GridColumn>
 				<s:GridColumn dataField="apellido" headerText="Apellido"></s:GridColumn>
 				<s:GridColumn dataField="nameuser" headerText="Usuario"></s:GridColumn>
-				<s:GridColumn dataField="estado" headerText="Estado" itemRenderer="cheqbox">
+				<s:GridColumn dataField="clave" headerText="Clave" visible="false"></s:GridColumn>
+				<s:GridColumn dataField="estado" headerText="Estado" rendererIsEditable="true">
+					<s:itemRenderer>
+						<fx:Component>
+							<s:GridItemRenderer>
+								<mx:CheckBox horizontalCenter="0" click="data.estado=!data.estado" verticalCenter="0" width="90%" selected="{data.estado}"/>
+							</s:GridItemRenderer>
+						</fx:Component>
+					</s:itemRenderer>
 				
 				</s:GridColumn>
 				
-=======
-				<s:GridColumn dataField="id" headerText="ID" visible="false"></s:GridColumn>
-				<s:GridColumn dataField="nombre" headerText="Nombre"></s:GridColumn>
-				<s:GridColumn dataField="apellido" headerText="Apellido"></s:GridColumn>
-				<s:GridColumn dataField="nameuser" headerText="Usuario"></s:GridColumn>
-				<s:GridColumn dataField="estado" headerText="Estado">
+
+
 				
-				</s:GridColumn>
-				
->>>>>>> .r69
+
 			</s:ArrayList>
 		</s:columns>		
 	</s:DataGrid>
@@ -529,5 +592,15 @@
 	<s:RadioButton id="rbempleadopart" x="250" y="357" label="Empleado PartTime" 
 				   click="rbempleadopart_clickHandler(event)" groupName="rdgroupEmpleados"/>
 	</s:VGroup>
+	<s:Button id="btndeshabilitar" x="180" y="483" label="Deshabilitar"
+			  click="btndeshabilitar_clickHandler(event)" enabled="false"/>
 	
 </s:Group>
+
+
+
+
+
+
+
+
