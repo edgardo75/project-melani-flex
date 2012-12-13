@@ -23,7 +23,7 @@
 			[Bindable]
 			private var listEmpleados:XMLList;
 			[Bindable]
-			private var listEmployee:ArrayCollection;
+			public var listEmployee:ArrayCollection;
 			
 			private var so:SharedObject=SharedObject.getLocal("userData");
 			
@@ -123,9 +123,10 @@
 				
 			}
 			
+			
 			protected function operationSelectAllEmpleados_resultHandler(event:ResultEvent):void
 			{
-				Alert.show(event.result.toString());
+				
 				listEmpleados=new XMLList(event.result);
 				var employee:Employee;
 				
@@ -174,7 +175,7 @@
 			
 			protected function operationDesabilitarEmpleado1_faultHandler(event:FaultEvent):void
 			{
-				// TODO Auto-generated method stub
+				Alert.show("SE PRODUJO UN ERROR EN EL SERVIDOR AL DESHABILITAR EMPLEADO");
 				
 			}
 			
@@ -327,6 +328,8 @@
 				txtobservaciones.text="";
 				txtpassword.text="";
 				txtrepassword.text="";
+				msksalario.text="";
+				msksalarioxhora.text="";
 				cmbGeneros.selectedItemId=2;
 				cmbTiposdocu.selectedItemId=3;
 				
@@ -341,8 +344,7 @@
 			protected function guardarEmpleado(evt:CloseEvent):void{
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 				
-				if(btnguardar.enabled==true)
-					btnguardar.enabled=false;
+				
 				if(txtpassword.text!=txtrepassword.text){
 					Alert.show("LOS PASSWORD NO COINCIDEN, CORRIJA!!!");
 					return;
@@ -351,7 +353,10 @@
 					Alert.show("LOS NOMBRES, NOMBRE DE USUARIO Y APELLIDO DEBEN SER DE POR LO MENOS 2 CARACTERES");
 					return;
 				}
-					
+				
+				
+				if(btnguardar.enabled==true)
+					btnguardar.enabled=false;	
 				
 				
 				if(rbempleadofull.selected==true){
@@ -396,24 +401,28 @@
 			protected function btndeshabilitar_clickHandler(event:MouseEvent):void
 			{
 				if(dgemployee.selectedItem.estado==false){
-				if(so.size==0){
+				
 						var popup:popupUsuario=popupUsuario(PopUpManager.createPopUp(this,popupUsuario,true));
 						
 						popup.title="Usuario y Clave";
 						popup.arrayEmployee=listEmployee;
+						popup.userSelected=dgemployee.selectedItem.nameuser;
+						popup.userPassSelected=dgemployee.selectedItem.clave;
+						popup.userIdSelected=dgemployee.selectedItem.id;
+						popup.userEstadoSelected=xmllistEmpleados[dgemployee.selectedIndex].estado;
+						
 						
 						PopUpManager.centerPopUp(popup);
+				
 				}else
-					Alert.show("USER "+so.data.nameuser+" PASSWORD "+so.data.passuser);
-				}else
-					Alert.show("DEBE SELECCIONAR UN ELEMENTO DE LA GRILLA");
+					Alert.show("DEBE SELECCIONAR UN EMPLEADO DE LA GRILLA O LISTADO CON EL ESTADO SIN CHEQUEAR");
 			}
 			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wsempleado" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wsempleado" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
 			<s:operation name="addEmpleadoFullTime"
 						 result="operationAddEmpleadosFulltime1_resultHandler(event)"
 						 fault="operation1AddEmpladosFullTime_faultHandler(event)"
