@@ -4,13 +4,29 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx" creationComplete="titlewindow1_creationCompleteHandler(event)" width="248" height="164" close="titlewindow1_closeHandler(event)">
 	<fx:Script>
 		<![CDATA[
+			import com.actions.Employee;
+			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			[Bindable]
+			private var listEmpleados:XMLList;
 			[Bindable]
 			public var arrayEmployee:ArrayCollection=new ArrayCollection();
+			[Bindable]
+			public var userSelected:String;
+			[Bindable]
+			public var userPassSelected:String;
+			[Bindable]
+			public var userIdSelected:String;
+			[Bindable]
+			public var userEstadoSelected:int;
+			
+			
 			
 			private var so:SharedObject=SharedObject.getLocal("userData");
 			
@@ -40,11 +56,24 @@
 			}
 			protected function validarDatos():void{
 				var b:Boolean=false;
+				
+				if(userSelected==txtnameuser.text&&userPassSelected==txtpassuser.text){
+						Alert.show("NO SE PUEDE REALIZAR LA OPERACION, EL USUARIO QUE SE LOGUEA ES EL MISMO A DESHABILITAR");
+						return;
+				
+				}
+				if(userEstadoSelected==0){
+					Alert.show("EL USUARIO YA ESTA DESHABILITADO!!!");
+					return;
+				}
+					
+				
 				for(var i:int=0;i<arrayEmployee.length;i++){
 					
-					if(arrayEmployee[i].nameuser==txtnameuser.text&&arrayEmployee[i].clave){
+					if(arrayEmployee[i].nameuser==txtnameuser.text&&arrayEmployee[i].clave&&int(arrayEmployee[i].estado)==1){
 							so.data.nameuser=String(arrayEmployee[i].nameuser);
 							so.data.passuser=String(arrayEmployee[i].clave);
+							so.data.id=int(arrayEmployee[i].id);
 						
 							b=true;
 							break;
@@ -55,21 +84,105 @@
 					
 				}
 				if(b==true){
-					Alert.show("USUARIO VALIDO");
-					PopUpManager.removePopUp(this);
+					wsempleado.deshabilitarEmpleado(int(userIdSelected),int(so.data.id));
+					
+					
 				}else
 					Alert.show("USUARIO NO VALIDO");
 				
 			
 			
 			}
+			
+			protected function operation1_resultHandler(event:ResultEvent):void
+			{
+				PopUpManager.removePopUp(this);
+				arrayEmployee.removeAll();
+				listEmpleados=new XMLList(event.result);
+				var employee:Employee;			
+				
+				for(var i:int=0;i<xmllistEmpleados.length;i++){
+					employee=new Employee();
+					employee.id=xmllistEmpleados[i].id;
+					employee.apellido=String(xmllistEmpleados[i].apellido).toUpperCase();
+					employee.nombre=String(xmllistEmpleados[i].nombre).toUpperCase();
+					employee.nameuser=xmllistEmpleados[i].nameuser;
+					employee.clave=xmllistEmpleados[i].clave;
+					if(String(xmllistEmpleados[i].estado)=="1")
+						employee.estado=true;
+					
+					
+					
+					
+					arrayEmployee.addItem(employee);
+					
+					
+					
+					
+				}
+				
+				arrayEmployee.refresh();
+				
+			}
+			
+			protected function operation1_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("ERROR EN EL SERVIDOR AL SELECCIONAR TODOS LOS EMPLEADOS, VERIFIQUE");
+				
+			}
+			
+			protected function operation2_resultHandler(event:ResultEvent):void
+			{
+				var result:int=int(event.result.toString());
+				switch(result)
+				{
+					case 0:
+					{
+						Alert.show("No paso nada");
+						
+						break;
+					}
+					case -1:
+					{
+						Alert.show("Error al deshabilitarEmpleado, Verifique");
+						
+						break;
+					}	
+						
+					default:
+					{
+						wsempleado.selectAllEmpleados();
+						break;
+					}
+				}
+				
+			}
+			
+			protected function operation2_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("ERROR EN EL SERVIDOR AL DESHABILITAR UN EMPLEADO!!!");
+				
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:WebService id="wsempleado" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
+			<s:operation name="selectAllEmpleados" result="operation1_resultHandler(event)"
+						 fault="operation1_faultHandler(event)">
+				
+			</s:operation>
+			<s:operation name="deshabilitarEmpleado"
+						 result="operation2_resultHandler(event)"
+						 fault="operation2_faultHandler(event)">
+				
+			</s:operation>
+		</s:WebService>
+		<s:XMLListCollection id="xmllistEmpleados" source="{listEmpleados.item}"/>
 	</fx:Declarations>
 	<s:Label x="24" y="39" fontSize="16" fontWeight="bold" text="USUARIO:"/>
 	<s:Label x="5" y="62" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
 	<s:TextInput id="txtnameuser" x="109" y="29"/>
-	<s:TextInput id="txtpassuser" x="109" y="57"/>
+	<s:TextInput id="txtpassuser" x="109" y="57" displayAsPassword="true"/>
 </s:TitleWindow>
