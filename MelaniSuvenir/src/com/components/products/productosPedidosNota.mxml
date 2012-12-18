@@ -1192,18 +1192,18 @@
 			<mx:AdvancedDataGridColumn width="84" dataField="name" editable="false"
 									   fontFamily="Verdana" fontSize="10" headerText="Descripcion"
 									   resizable="false" textAlign="left"/>
-			<mx:AdvancedDataGridColumn width="35" dataField="countt" editable="true"
+			<mx:AdvancedDataGridColumn width="35" dataField="countt" editable="true" rendererIsEditor="true"
 									   fontFamily="Verdana" fontSize="10" headerText="Cantidad"
 									   resizable="false" sortable="false" textAlign="center"/>
 			<mx:AdvancedDataGridColumn width="45" dataField="price" draggable="false" editable="true"
 									   fontFamily="Verdana" fontSize="10" formatter="{cf}"
-									   headerText="PrecioU" resizable="true" sortable="false"
+									   headerText="PrecioU" resizable="true" sortable="false" rendererIsEditor="true"
 									   textAlign="center"/>
 			<mx:AdvancedDataGridColumn editable="true" dataField="porc_desc" fontFamily="Verdana" fontSize="10"
-									   headerText="% Descuento" resizable="false" sortable="false"
+									   headerText="% Descuento" resizable="false" sortable="false" rendererIsEditor="true"
 									   textAlign="center" width="33"/>
 			<mx:AdvancedDataGridColumn width="33" dataField="prec_descuento" editable="false"
-									   fontFamily="Verdana" fontSize="10" formatter="{cf}"
+									   fontFamily="Verdana" fontSize="10" formatter="{cf}" rendererIsEditor="true"
 									   headerText="Precio Desc"/>
 			<mx:AdvancedDataGridColumn width="52" color="red" dataField="subtotal" draggable="false"
 									   editable="false" fontFamily="Verdana" fontSize="10"

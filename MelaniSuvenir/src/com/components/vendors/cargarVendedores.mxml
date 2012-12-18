@@ -36,26 +36,38 @@
 					case 0:
 					{
 						Alert.show("NO PASÓ NADA!!!");
+						if(btnguardar.enabled==false)
+							btnguardar.enabled=true;
 						break;
 					}
 					case -1:{
 						Alert.show("SE PRODUJO UN ERROR AL ALMACENAR UN EMPLEADO REVISE!!!");
+						if(btnguardar.enabled==false)
+							btnguardar.enabled=true;
 						break;
 					}	
 					case -2:{
 						Alert.show("YA EXISTE UNA PERSONA CON ESE DOCUMENTO!!!");
+						if(btnguardar.enabled==false)
+							btnguardar.enabled=true;
 						break;
 					}	
 					case -4:{
 						Alert.show("YA EXISTE ESE EMAIL EN LA BASE DE DATOS!!!");
+						if(btnguardar.enabled==false)
+							btnguardar.enabled=true;
 						break;
 					}	
 					case -3:{
 						Alert.show("SE PRODUJO UN ERROR EN EL SERVIDOR REVISE!!!");
+						if(btnguardar.enabled==false)
+							btnguardar.enabled=true;
 						break;
 					}
 					case -6:{
 						Alert.show("EL NOMBRE DE USUARIO YA EXISTE EN LA BASE DE DATOS");
+						if(btnguardar.enabled==false)
+							btnguardar.enabled=true;
 						break;
 					}	
 						
@@ -441,7 +453,7 @@
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wsempleado" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wsempleado" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
 			<s:operation name="addEmpleadoFullTime"
 						 result="operationAddEmpleadosFulltime1_resultHandler(event)"
 						 fault="operation1AddEmpladosFullTime_faultHandler(event)"
