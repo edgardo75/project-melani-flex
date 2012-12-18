@@ -6,7 +6,7 @@
 		 xmlns:products="com.components.products.*"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
 		 xmlns:components="com.hillelcoren.components.*"
-		 width="1016" height="608" initialize="group1_initializeHandler(event)" creationComplete="group1_creationCompleteHandler(event)">
+		 width="1050" height="608" initialize="group1_initializeHandler(event)" creationComplete="group1_creationCompleteHandler(event)">
 	
 	<fx:Script>
 		<![CDATA[
@@ -22,6 +22,9 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+
+			[Bindable]
+			private var xmlListEmpleados:XMLList;
 			[Bindable]
 			private var xmltarjetas:XMLList;
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -191,12 +194,13 @@
 				cmbTarjetasCreditoDebito.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txtnumerocuponpago.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				cmbTarjetasCreditoDebito.selectedItemId=0;
+			
 			}
 			
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
 				
-				
+				Alert.show(String(cmbTarjetasCreditoDebito.selectedItemId));
 				xmltarjetas=new XMLList(event.result);
 				cmbTarjetasCreditoDebito.dataProvider=tarjetas;
 				
@@ -211,6 +215,7 @@
 			protected function group1_initializeHandler(event:FlexEvent):void
 			{
 				wstarjetascreditodebito.searchAllTarjetasCreditoDebito();
+				wsempleados.selectAllEmpleados();
 			}
 			
 			protected function verificarProductosCargados():void{
@@ -312,8 +317,10 @@
 			if(rdbenefectivosi.selected)
 				enfectivo=1;
 			
-			
-			
+			if(cmbVendedores.text.length==0){
+				Alert.show("DEBE SELECCIONAR UN VENDENDOR");
+				return null;
+			}
 			
 			var xmlnota:String="<notapedido>\n" +
 				"<idnota>0</idnota>\n" +
@@ -329,22 +336,40 @@
 				"</porcentaje>\n" +
 				"<montototal>"+productscomp.lblTotGral.text+"</montototal>\n" +
 				"<anticipo>"+productscomp.mskanticipo.text+"</anticipo>\n" +
-				"<saldo>"+productscomp.lblsaldo.text+"</saldo>\n" +
-				"<entregado>"+entregado+"</entregado>\n" +
-				"<usuario_expidio_nota>0</usuario_expidio_nota>\n" +
-				"<stockfuturo>"+stockfuturo+"</stockfuturo>\n" +
-				"<usuario_entregado>0</usuario_entregado>\n" +
-				"<anulado>"+anulada+"</anulado>\n" +
-				"<usuario_cancelo_nota>0</usuario_cancelo_nota>\n" +
-				"<cancelado>"+canceladanota+"</cancelado>\n" +
-				"<descuentonota>"+productscomp.lbldescuento.text+"</descuentonota>\n" +				
+				"<saldo>"+productscomp.lblsaldo.text+"</saldo>\n" ;
+				if(entregado==1){
+				xmlnota+="<entregado>"+entregado+"</entregado>\n" +
+					"<usuario_entregado>"+cmbVendedores.selectedItem.id+"</usuario_entregado>\n" ;
+				}else{
+					xmlnota+="<entregado>"+entregado+"</entregado>\n" +
+						"<usuario_entregado>0</usuario_entregado>\n" ;
+				}
+				
+				xmlnota+="<usuario_expidio_nota>"+cmbVendedores.selectedItem.id+"</usuario_expidio_nota>\n" +
+				"<stockfuturo>"+stockfuturo+"</stockfuturo>\n" ;
+				if(anulada==1){
+				xmlnota+="<anulado>"+anulada+"</anulado>\n" +
+				"<id_usuario_anulado>"+cmbVendedores.selectedItem.id+"</id_usuario_anulado>\n" ;
+				}else{
+					xmlnota+="<anulado>"+anulada+"</anulado>\n" +
+						"<id_usuario_anulado>0</id_usuario_anulado>\n" ;
+						
+				}
+				if(canceladanota==1){
+				xmlnota+="<cancelado>"+canceladanota+"</cancelado>\n" +
+					"<usuario_cancelo_nota>"+cmbVendedores.selectedItem.id+"</usuario_cancelo_nota>\n" ;
+				}else{
+					xmlnota+="<cancelado>"+canceladanota+"</cancelado>\n" +
+						"<usuario_cancelo_nota>0</usuario_cancelo_nota>\n" ;
+				}
+				xmlnota+="<descuentonota>"+productscomp.lbldescuento.text+"</descuentonota>\n" +				
 				"<porcentajerecargo>"+productscomp.mskrecargo.text+"</porcentajerecargo>\n" +
 				"<montototalapagar>"+productscomp.lblTotApagar.text+"</montototalapagar>\n"+
 				"<observaciones>" +this.txtObservacionesNota.text+"</observaciones>\n" +
 				"<pendiente>"+entregado+"</pendiente>\n"+
 				"<montoiva>0</montoiva>\n"+
 				"<recargo>"+productscomp.lbltotalconrecargo.text+"</recargo>\n" +
-				"<id_usuario_anulado>0</id_usuario_anulado>\n" +
+				
 				"<fechaentrega>"+dtfentrega.text+"</fechaentrega>\n"+
 				"<numerodecupon>"+txtnumerocuponpago.text+"</numerodecupon>\n" +
 				"<enefectivo>"+enfectivo+"</enefectivo>\n"+
@@ -445,6 +470,20 @@
 			} 
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			
+			protected function operation2_faultHandlerSelectAllEmpleados(event:FaultEvent):void
+			{
+				Alert.show("ERROR AL OBTENER LISTADO DE EMPLEADOS");
+				
+			}
+			
+			protected function operation2_resultHandlerSelectAllEmpleados(event:ResultEvent):void
+			{
+				
+				xmlListEmpleados = new XMLList(event.result);
+				cmbVendedores.dataProvider=empleadoslist;
+				
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -480,10 +519,18 @@
 			</s:operation>
 			
 		</s:WebService>
+		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
+			<s:operation name="selectAllEmpleados"
+						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
+						 result="operation2_resultHandlerSelectAllEmpleados(event)">
+				
+			</s:operation>
+		</s:WebService>
 		<s:DateTimeFormatter id="dtf" dateTimePattern="dd/MM/yyyy"/>
 		<s:XMLListCollection id="xmlcli" source="{xmlcliente.item}"/>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:XMLListCollection id="tarjetas" source="{xmltarjetas.item}"/>
+		<s:XMLListCollection id="empleadoslist" source="{xmlListEmpleados.item}"/>
 	</fx:Declarations>
 	
 	
@@ -551,5 +598,9 @@
 				  fontSize="16" labelFunction="formatDateTime" parseFunction="{null}"
 				  selectableRange="{{rangeStart : new Date()}}"/>
 	<s:Label x="863" y="243" fontSize="14" fontWeight="bold" text="Fecha de entrega"/>
+	<s:Label x="856" y="304" fontSize="16" fontWeight="bold" text="VENDEDORES:"/>
+	<components:AutoComplete id="cmbVendedores" x="856" y="319" width="184" labelField="nameuser" allowDuplicates="false" dropDownRowCount="10"
+							 fontSize="16" fontWeight="bold" matchType="beginning">
+	</components:AutoComplete>
 	
 </s:Group>
