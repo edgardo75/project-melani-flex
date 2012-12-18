@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" creationComplete="titlewindow1_creationCompleteHandler(event)" width="248" height="164" close="titlewindow1_closeHandler(event)">
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="240" height="110" creationComplete="titlewindow1_creationCompleteHandler(event)" close="titlewindow1_closeHandler(event)">
 	<fx:Script>
 		<![CDATA[
 			import com.actions.Employee;
@@ -13,6 +13,7 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			
 			[Bindable]
 			private var listEmpleados:XMLList;
 			[Bindable]
@@ -22,80 +23,104 @@
 			[Bindable]
 			public var userPassSelected:String;
 			[Bindable]
-			public var userIdSelected:String;
-			[Bindable]
 			public var userEstadoSelected:int;
-			
-			
+			[Bindable]
+			public var userIdSelected:String;
 			
 			private var so:SharedObject=SharedObject.getLocal("userData");
+			protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void
+			{
+				txtnameuser.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				txtpassuser.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+			}
+			private function tranferirFocus(keyPress:KeyboardEvent):void{
+				if (keyPress.keyCode==Keyboard.ENTER){
+					
+					if(keyPress.currentTarget.toString().indexOf("txtnameuser")!=-1){
+						txtpassuser.setFocus();
+						return;
+					}
+					if(keyPress.currentTarget.toString().indexOf("txtpassuser")!=-1&&txtnameuser.text.length>0&&txtpassuser.text.length>0){
+						validarDatos();
+						return;
+					}
+				}
+			}
+			protected function validarDatos():void{
+				var b:Boolean=false;
+				if(userSelected==txtnameuser.text&&userPassSelected==txtpassuser.text){
+					Alert.show("NO SE PUEDE REALIZAR LA OPERACION, EL USUARIO QUE SE VALIDA ES EL MISMO A HABILITAR");
+					return;
+					
+				}
+				if(userEstadoSelected==1){
+					Alert.show("EL USUARIO YA ESTA HABILITADO!!!");
+					return;
+				}
+				
+				for(var i:int=0;i<arrayEmployee.length;i++){
+					
+					if(arrayEmployee[i].nameuser==txtnameuser.text&&arrayEmployee[i].clave&&int(arrayEmployee[i].estado)==1){
+						
+						so.data.nameuser=String(arrayEmployee[i].nameuser);
+						so.data.passuser=String(arrayEmployee[i].clave);
+						so.data.id=int(arrayEmployee[i].id);
+						
+						b=true;
+						break;
+						
+						
+					}
+					
+					
+				}
+					
+				if(b==true){
+					wsempleado.habilitarEmpleado(int(userIdSelected),int(so.data.id));
+					
+					
+				}else
+					Alert.show("USUARIO NO VALIDO");
 			
+			}
 			
 			protected function titlewindow1_closeHandler(event:CloseEvent):void
 			{
 				PopUpManager.removePopUp(this);
 			}
 			
-			protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void
+			protected function operation2_resultHandler(event:ResultEvent):void
 			{
-				txtnameuser.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
-				txtpassuser.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
-			}
-				private function tranferirFocus(keyPress:KeyboardEvent):void{
-					if (keyPress.keyCode==Keyboard.ENTER){
+				var result:int=int(event.result.toString());
+				switch(result)
+				{
+					case 0:
+					{
+						Alert.show("No paso nada");
 						
-						if(keyPress.currentTarget.toString().indexOf("txtnameuser")!=-1){
-							txtpassuser.setFocus();
-							return;
-						}
-						if(keyPress.currentTarget.toString().indexOf("txtpassuser")!=-1&&txtnameuser.text.length>0&&txtpassuser.text.length>0){
-							validarDatos();
-							return;
-						}
+						break;
+					}
+					case -1:
+					{
+						Alert.show("Error al Habilitar Empleado, Verifique");
+						
+						break;
+					}	
+						
+					default:
+					{
+						wsempleado.selectAllEmpleados();
+						break;
 					}
 				}
-			protected function validarDatos():void{
-				var b:Boolean=false;
 				
-				if(userSelected==txtnameuser.text&&userPassSelected==txtpassuser.text){
-						Alert.show("NO SE PUEDE REALIZAR LA OPERACION, EL USUARIO QUE SE VALIDA ES EL MISMO A DESHABILITAR");
-						return;
-				
-				}
-				if(userEstadoSelected==0){
-					Alert.show("EL USUARIO YA ESTA DESHABILITADO!!!");
-					return;
-				}
-					
-				
-				for(var i:int=0;i<arrayEmployee.length;i++){
-					
-					if(arrayEmployee[i].nameuser==txtnameuser.text&&arrayEmployee[i].clave&&int(arrayEmployee[i].estado)==1){
-						
-							so.data.nameuser=String(arrayEmployee[i].nameuser);
-							so.data.passuser=String(arrayEmployee[i].clave);
-							so.data.id=int(arrayEmployee[i].id);
-						
-							b=true;
-							break;
-					
-					
-					}
-						
-					
-				}
-				
-							if(b==true){
-								wsempleado.deshabilitarEmpleado(int(userIdSelected),int(so.data.id));
-								
-								
-							}else
-								Alert.show("USUARIO NO VALIDO");
-				
-			
-			
 			}
 			
+			protected function operation2_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("Error en el servidor al querer habilitar un empleado");
+				
+			}
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
 				PopUpManager.removePopUp(this);
@@ -133,58 +158,24 @@
 				
 			}
 			
-			protected function operation2_resultHandler(event:ResultEvent):void
-			{
-				var result:int=int(event.result.toString());
-				switch(result)
-				{
-					case 0:
-					{
-						Alert.show("No paso nada");
-						
-						break;
-					}
-					case -1:
-					{
-						Alert.show("Error al deshabilitarEmpleado, Verifique");
-						
-						break;
-					}	
-						
-					default:
-					{
-						wsempleado.selectAllEmpleados();
-						break;
-					}
-				}
-				
-			}
-			
-			protected function operation2_faultHandler(event:FaultEvent):void
-			{
-				Alert.show("ERROR EN EL SERVIDOR AL DESHABILITAR UN EMPLEADO!!!");
-				
-			}
-			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
-		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:WebService id="wsempleado" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
 			<s:operation name="selectAllEmpleados" result="operation1_resultHandler(event)"
 						 fault="operation1_faultHandler(event)">
 				
 			</s:operation>
-			<s:operation name="deshabilitarEmpleado"
+			<s:operation name="habilitarEmpleado"
 						 result="operation2_resultHandler(event)"
 						 fault="operation2_faultHandler(event)">
 				
 			</s:operation>
-		</s:WebService>
+		</s:WebService>		
 		<s:XMLListCollection id="xmllistEmpleados" source="{listEmpleados.item}"/>
 	</fx:Declarations>
-	<s:Label x="24" y="39" fontSize="16" fontWeight="bold" text="USUARIO:"/>
-	<s:Label x="5" y="62" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
-	<s:TextInput id="txtnameuser" x="109" y="29"/>
-	<s:TextInput id="txtpassuser" x="109" y="57" displayAsPassword="true"/>
+	<s:Label x="13" y="17" fontSize="16" fontWeight="bold" text="Usuario:"/>
+	<s:Label x="15" y="45" fontSize="16" fontWeight="bold" text="Clave:"/>
+	<s:TextInput id="txtnameuser" x="79" y="6"/>
+	<s:TextInput id="txtpassuser" x="79" y="34" displayAsPassword="true"/>
 </s:TitleWindow>

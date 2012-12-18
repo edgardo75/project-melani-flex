@@ -18,6 +18,7 @@
 			import mx.rpc.events.ResultEvent;
 			import mx.validators.Validator;
 			
+			import popus.PopupUsuarioHabilitado;
 			import popus.popupUsuario;
 			
 			[Bindable]
@@ -155,9 +156,10 @@
 				
 				listEmployee.refresh();
 				
-				if(listEmployee.length>0 && btndeshabilitar.enabled==false)
+				if(listEmployee.length>0 && btndeshabilitar.enabled==false||btnhabilitar.enabled==false){
 					btndeshabilitar.enabled=true;
-				
+					btnhabilitar.enabled=true;
+				}
 				
 			}
 			
@@ -418,11 +420,28 @@
 					Alert.show("DEBE SELECCIONAR UN EMPLEADO DE LA GRILLA O LISTADO CON EL ESTADO SIN CHEQUEAR");
 			}
 			
+			protected function btnhabilitar_clickHandler(event:MouseEvent):void
+			{
+				if(dgemployee.selectedItem.estado==true){
+					var popup:PopupUsuarioHabilitado=PopupUsuarioHabilitado(PopUpManager.createPopUp(this,PopupUsuarioHabilitado,true));
+					popup.title="Usuario y Clave";
+					popup.arrayEmployee=listEmployee;
+					popup.userSelected=dgemployee.selectedItem.nameuser;
+					popup.userPassSelected=dgemployee.selectedItem.clave;
+					popup.userIdSelected=dgemployee.selectedItem.id;
+					popup.userEstadoSelected=xmllistEmpleados[dgemployee.selectedIndex].estado;
+					
+					
+					PopUpManager.centerPopUp(popup);
+				}else
+					Alert.show("DEBE SELECCIONAR UN EMPLEADO DE LA GRILLA O LISTADO CON EL ESTADO CHEQUEADO");
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wsempleado" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wsempleado" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
 			<s:operation name="addEmpleadoFullTime"
 						 result="operationAddEmpleadosFulltime1_resultHandler(event)"
 						 fault="operation1AddEmpladosFullTime_faultHandler(event)"
@@ -602,7 +621,10 @@
 				   click="rbempleadopart_clickHandler(event)" groupName="rdgroupEmpleados"/>
 	</s:VGroup>
 	<s:Button id="btndeshabilitar" x="180" y="483" label="Deshabilitar"
-			  click="btndeshabilitar_clickHandler(event)" enabled="false"/>
+			  click="btndeshabilitar_clickHandler(event)" enabled="false" toolTip="Deshabilita un empleado para poder operar el Sistema"/>
+	<s:Button id="btnhabilitar" x="276" y="483" label="Habilitar"
+			  click="btnhabilitar_clickHandler(event)" enabled="false"
+			  toolTip="Habilita un empleado para poder operar el Sistema"/>
 	
 </s:Group>
 
