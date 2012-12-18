@@ -67,9 +67,7 @@
 				
 				PopUpManager.removePopUp(popup);
 				
-				cliente = new XMLList(event.result);
-				
-				
+				cliente = new XMLList(event.result);				
 				
 				if(event.result.toString().indexOf("Cliente no encontrado")!=-1)
 					Alert.show("CLIENTE NO ENCOTRADO");
@@ -200,7 +198,7 @@
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
 				
-				Alert.show(String(cmbTarjetasCreditoDebito.selectedItemId));
+			
 				xmltarjetas=new XMLList(event.result);
 				cmbTarjetasCreditoDebito.dataProvider=tarjetas;
 				
@@ -260,6 +258,13 @@
 			//***************************************************************************************************
 			protected function btnGuardarNota_clickHandler(event:MouseEvent):void
 			{
+				//********************************Chequeamos que haya un Vendedor Seleccionado en el ComboBox++++++++++++++++++++++++
+				
+				if(cmbVendedores.text.length==0){
+					Alert.show("DEBE SELECCIONAR UN VENDEDOR");
+					return;
+				}else{
+				
 				//*************************Chequeamos que haya un cliente ya seleccionado********************++
 				
 					if(txtnombrecliente.text.length>0&&txtapellidocliente.text.length>0){
@@ -272,7 +277,7 @@
 						Alert.show("Corregir Datos de Cliente!!!");
 				//********************************************************************************************
 				
-				
+				}
 				
 			}
 		protected function guardarNotaPedido(evt:CloseEvent):void{
@@ -282,8 +287,8 @@
 				popup=Progress(PopUpManager.createPopUp(this,Progress,true));
 				PopUpManager.centerPopUp(popup);
 			//llamamos al metodo del webservice para almacenar la nota de pedido en el servidor
-			//Alert.show(getDatosXML());
-				wsnotapedido.agregarNotaPedido(getDatosXML());
+			Alert.show(getDatosXML());
+			//	wsnotapedido.agregarNotaPedido(getDatosXML());
              			
 						
 		
@@ -317,10 +322,7 @@
 			if(rdbenefectivosi.selected)
 				enfectivo=1;
 			
-			if(cmbVendedores.text.length==0){
-				Alert.show("DEBE SELECCIONAR UN VENDENDOR");
-				return null;
-			}
+			
 			
 			var xmlnota:String="<notapedido>\n" +
 				"<idnota>0</idnota>\n" +
@@ -385,7 +387,7 @@
 												"<cantidad>"+productscomp.arrayDg[ii].countt+"</cantidad>\n" +
 												"<preciocondescuento>"+productscomp.arrayDg[ii].prec_descuento+"</preciocondescuento>\n" +
 												"<precio>"+productscomp.arrayDg[ii].price+"</precio>\n" +
-												"<subtotal>"+Number(productscomp.arrayDg[ii].subtotal).toFixed(3)+"</subtotal>\n" +
+												"<subtotal>"+Number(productscomp.arrayDg[ii].subtotal).toFixed(3)+"</subtotal>\n" +									
 												"<entregado>"+entregado+"</entregado>\n" +
 												"<cancelado>"+canceladanota+"</cancelado>\n" +
 												"<anulado>"+anulada+"</anulado>\n" +
@@ -519,7 +521,7 @@
 			</s:operation>
 			
 		</s:WebService>
-		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
+		<s:WebService id="wsempleados" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
 			<s:operation name="selectAllEmpleados"
 						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
 						 result="operation2_resultHandlerSelectAllEmpleados(event)">
