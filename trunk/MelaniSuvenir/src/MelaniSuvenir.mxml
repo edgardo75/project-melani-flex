@@ -55,6 +55,8 @@
 				<menuitem type="separator"/>
 				<menuitem label="Barrios"/>
 				<menuitem type="separator"/>
+				<menuitem label="Notas Entre Fechas"/>
+				<menuitem type="separator"/>
 			</menuitem>
 			<menuitem label="Ayuda">
 				<menuitem type="separator"/>
@@ -74,6 +76,7 @@
 			import com.components.budgets.GuardarPresupuesto;
 			import com.components.budgets.Verpresupuestos;
 			import com.components.guardarDatosPersonalCliente;
+			import com.components.orderform.busquedaNotasEntreFechas;
 			import com.components.orderform.noteTheOrder;
 			import com.components.products.cargaryeditarProducto;
 			import com.components.products.datosProducto1;
@@ -132,6 +135,11 @@
 				if(event.item.@label =="Acerca de...."){
 					Alert.show("          MELANI SUVENIR © 2011  -  TODOS LOS DERECHOS RESERVADOS     ");						
 				}
+				if(event.item.@label=="Notas Entre Fechas"){
+					panelCentral.removeAllChildren();
+					panelCentral.addChild(new busquedaNotasEntreFechas());
+				}
+				
 			}
 			protected function verInformeCliente():void{
 				var source:String="http://192.168.1.101:8080/WebMelanie/ShowReportClient";
