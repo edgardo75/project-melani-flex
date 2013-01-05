@@ -107,28 +107,39 @@
 			protected function btnenviar_clickHandler(event:MouseEvent):void
 			{
 				if(cmbVendedores.text.length>0&&dtfechaini.text.length>0&&dtffechafin.text.length>0){
+					var source:String="http://localhost:8080/WebMelanie/ShowReportEntreFechas?fstart="+dtfechaini.text+"&fend="+dtffechafin.text+"&vendor="+cmbVendedores.selectedItem.id;
+					var urlReq:URLRequest= new URLRequest(source);
 					switch(compararFechas())
 					{
 						case 1:
 						{
-							Alert.show("Despues");	
+							Alert.show("La Fecha de incio es posterior a la fecha final, corrija!!!");	
 							break;
 						}
 						case 0:
 						{
-							Alert.show("Iguales");
+							
+							
+							
+							navigateToURL(urlReq,"_blank");
+							
+							//Alert.show(" "+dtfechaini.text+" "+dtffechafin.text+" "+cmbVendedores.selectedItem.id+"");
 							break;
 						}	
 							
 						case -1:
 						{
-							Alert.show("Antes");
+							//Alert.show(" "+dtfechaini.text+" "+dtffechafin.text+" "+cmbVendedores.selectedItem.id+"");
+							
+							
+							
+							navigateToURL(urlReq,"_blank");
 							break;
 						}
 					}
 				
 				}else{
-					Alert.show("Debe seleccionar un vendedor y las fechas");
+					Alert.show("Debe seleccionar un vendedor y las fechas para generar el reporte!!!");
 				
 				}
 			}
@@ -144,7 +155,7 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:XMLListCollection id="empleadoslist" source="{xmlListEmpleados.item}"/>
-		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
+		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
 			<s:operation name="selectAllEmpleados"
 						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
 						 result="operation2_resultHandlerSelectAllEmpleados(event)">
@@ -161,7 +172,7 @@
 	<s:Label x="24" y="115" fontSize="16" fontWeight="bold" text="FECHA INICIO:"/>
 	<s:Label x="284" y="112" fontSize="16" fontWeight="bold" text="FECHA FINAL:"/>
 	<s:Button id="btnCloseClientComponent" x="550" y="10" width="16" height="19" icon="assets/icon_close.png" click="btnCloseClientComponent_clickHandler(event)"/>
-	<mx:DateField id="dtfechaini" x="146" y="105" width="126" fontSize="16" disabledDays="[0]" disabledRanges="{[ {rangeEnd: new Date(2012, 12, 1)} ]}" />
-	<mx:DateField id="dtffechafin" x="405" y="104" width="127" fontSize="16"   disabledRanges="{[ {rangeEnd: new Date(2012, 12, 1)} ]}"/>
+	<mx:DateField id="dtfechaini" x="146" y="105" width="126" fontSize="16"   />
+	<mx:DateField id="dtffechafin" x="405" y="104" width="127" fontSize="16"   />
 	<s:Button id="btnenviar" x="253" y="146" label="Enviar" enabled="true" click="btnenviar_clickHandler(event)"/>
 </s:Group>
