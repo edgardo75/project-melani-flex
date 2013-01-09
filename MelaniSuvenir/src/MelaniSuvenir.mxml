@@ -42,10 +42,10 @@
 			</menuitem>
 			<menuitem label="Notas de Pedido">
 				<menuitem type="separator"/>
-				<menuitem label="Nota de Pedido"/>
+				<menuitem label="Nota de Pedido"/>				
 				<menuitem type="separator"/>
-				<menuitem label="Ver Ordenes"/>
-				<menuitem type="separator"/>
+				<menuitem label="Ver Notas"/>
+				<menuitem type="separator"/>				
 			</menuitem>
 			<menuitem label="Informes">
 				<menuitem type="separator"/>
@@ -76,6 +76,7 @@
 			import com.components.budgets.GuardarPresupuesto;
 			import com.components.budgets.Verpresupuestos;
 			import com.components.guardarDatosPersonalCliente;
+			import com.components.orderform.VerNotasPedido;
 			import com.components.orderform.busquedaNotasEntreFechas;
 			import com.components.orderform.noteTheOrder;
 			import com.components.products.cargaryeditarProducto;
@@ -126,6 +127,12 @@
 					panelCentral.addChild(new noteTheOrder());
 							
 				}
+				if(event.item.@label=="Ver Notas"){
+					panelCentral.removeAllChildren();
+					panelCentral.addChild(new VerNotasPedido());
+				
+				}
+					
 				if(event.item.@label=="Productos")
 				    	verInformeProductos();				
 				
