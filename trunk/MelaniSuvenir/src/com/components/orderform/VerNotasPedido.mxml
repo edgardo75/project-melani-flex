@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="1028" height="534" creationComplete="group1_creationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			[Bindable]
+			private var indexPage:int=0;
+			[Bindable]
+			private static var SIZEPAGE:int=100;
+			[Bindable]
+			private var totalReg:int=0;
+			[Bindable]
+			private static var TOTALPAGES:int=0;
+			[Bindable]
+			private var pageEnum:int=0;
+			[Bindable]
+			private var xmlNotas:XMLList;
+			
+			protected function operation1_resultHandler(event:ResultEvent):void
+			{
+				totalReg = int(event.result.toString());
+				
+				if(totalReg==0){
+					Alert.show("NO HAY NOTAS CARGADAS AÚN!!!");
+				}else{
+					
+					if(totalReg<100)
+						wsnotas.selectAllNotas();
+					else{
+						last_btn.enabled=true;
+						next_btn.enabled=true;
+						first_btn.enabled=true;
+						prev_btn.enabled=true;
+						TOTALPAGES=int(totalReg/SIZEPAGE);		
+						
+						wsnotas.verNotasPedidoPaginadas(indexPage,SIZEPAGE);
+					}
+				
+				}
+				
+			}
+			
+			protected function operation1_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("ERROR AL BUSCAR CANTIDAD TOTAL DE NOTAS DE PEDIDO EN BASE DE DATOS");
+			}
+			
+			protected function operation2_resultHandler(event:ResultEvent):void
+			{
+				Alert.show(event.result.toString());
+				xmlNotas=new XMLList(event.result);
+				
+				addgrid();
+			}
+			
+			//----------------------------------------------------------------------------------------------
+			private function addgrid():void{
+				
+				
+				
+				adgNotas.dataProvider=notas;
+				if(detallenotas.length>0)
+					detallenotas.removeAll();
+				
+				/*if(btnExportar.enabled==false)	
+					btnExportar.enabled=true;
+				if(btnImprimir.enabled==false)
+					btnImprimir.enabled=true;
+				if(btnRegargarlistado.enabled==true)
+					btnRegargarlistado.enabled=false;*/
+				
+				
+				
+			}
+			//----------------------------------------------------------------------------------
+			
+			protected function operation2_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function first_clickHandler(event:MouseEvent):void
+			{
+				if(indexPage==0){
+					first_btn.enabled=false;
+					prev_btn.enabled=false;
+					last_btn.enabled=true;
+					next_btn.enabled=true;
+				}else{
+					indexPage=0;
+					wsnotas.verNotasPedidoPaginadas(indexPage,SIZEPAGE);
+					first_btn.enabled=false;
+					prev_btn.enabled=false;
+					last_btn.enabled=true;
+					next_btn.enabled=true;
+					
+					
+				}
+				
+			}
+			//-------------------------------------------------------------------------------------
+			//-------------------------------------------------------------------------------------
+			protected function prev_btn_clickHandler(event:MouseEvent):void
+			{
+				
+				if(indexPage==0)
+					first_clickHandler(event);
+				else{
+					indexPage--;
+					if(last_btn.enabled==false){
+						last_btn.enabled=true;
+						next_btn.enabled=true;
+					}
+					if(indexPage==0){
+						first_btn.enabled=false;
+						prev_btn.enabled=false;
+						last_btn.enabled=true;
+						next_btn.enabled=true;
+						
+					}
+					
+					wsnotas.verNotasPedidoPaginadas(indexPage,SIZEPAGE);
+					
+					
+				}
+				
+			}
+			//-------------------------------------------------------------------------------------------
+			//-------------------------------------------------------------------------------------------
+			protected function next_btn_clickHandler(event:MouseEvent):void
+			{
+				
+				if(indexPage==TOTALPAGES)
+					last_clickHandler(event);
+				else{
+					indexPage++;
+					if(first_btn.enabled==false){
+						first_btn.enabled=true;
+						prev_btn.enabled=true;
+					}
+					if(indexPage==TOTALPAGES){
+						last_btn.enabled=false;
+						next_btn.enabled=false;
+						first_btn.enabled=true;
+						prev_btn.enabled=true;
+					}
+					
+					wsnotas.verNotasPedidoPaginadas(indexPage,SIZEPAGE);
+					
+				}
+				
+			}
+			//-------------------------------------------------------------------------------------------------------
+			//-------------------------------------------------------------------------------------------------------
+			protected function last_clickHandler(event:MouseEvent):void
+			{
+				if(indexPage==TOTALPAGES){
+					last_btn.enabled=false;
+					next_btn.enabled=false;
+					first_btn.enabled=true;
+					prev_btn.enabled=true;
+				}else{
+					indexPage=TOTALPAGES;
+					wsnotas.verNotasPedidoPaginadas(indexPage,SIZEPAGE);
+					last_btn.enabled=false;
+					next_btn.enabled=false;
+					first_btn.enabled=true;
+					prev_btn.enabled=true;
+					
+					
+				}
+				
+			}
+			//-------------------------------------------------------------------------------------------------------------
+			
+			protected function operation3_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function operation3_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				wsnotas.getRecorCountNotas();
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:WebService id="wsnotas" wsdl="http://localhost:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true">
+			<s:operation name="getRecorCountNotas"
+						 result="operation1_resultHandler(event)"
+						 fault="operation1_faultHandler(event)">
+				
+			</s:operation>
+			<s:operation name="selectAllNotas"
+						 result="operation2_resultHandler(event)"
+						 fault="operation2_faultHandler(event)">
+				
+			</s:operation>
+			<s:operation name="verNotasPedidoPaginadas"
+						 result="operation3_resultHandler(event)"
+						 fault="operation3_faultHandler(event)">
+				
+			</s:operation>
+		</s:WebService>
+		<s:XMLListCollection id="notas" source="{xmlNotas.item}"/>
+		<s:XMLListCollection id="detallenotas"/>
+	</fx:Declarations>
+	<mx:AdvancedDataGrid id="adgNotas" x="30" y="16" width="972" height="99"
+						 designViewDataType="tree">
+		<mx:columns>
+			<mx:AdvancedDataGridColumn dataField="col1" headerText="Column 1"/>
+			<mx:AdvancedDataGridColumn dataField="col2" headerText="Column 2"/>
+			<mx:AdvancedDataGridColumn dataField="col3" headerText="Column 3"/>
+		</mx:columns>
+	</mx:AdvancedDataGrid>
+	<s:Button id="first_btn" x="29" y="130" width="85" label="First"
+			  click="first_clickHandler(event)" enabled="false" fontSize="16"/>
+	<s:Button id="prev_btn" x="335" y="130" width="88" label="Prev"
+			  click="prev_btn_clickHandler(event)" enabled="false" fontSize="16"/>
+	<s:Button id="next_btn" x="646" y="131" width="84" label="Next"
+			  click="next_btn_clickHandler(event)" enabled="false" fontSize="16"/>
+	<s:Button id="last_btn" x="913" y="129" width="89" label="Last" click="last_clickHandler(event)"
+			  enabled="false" fontSize="16"/>
+</s:Group>
