@@ -65,6 +65,8 @@
 				
 				
 				adgNotas.dataProvider=notas;
+				
+
 				if(detallenotas.length>0)
 					detallenotas.removeAll();
 				
@@ -222,11 +224,14 @@
 		<s:XMLListCollection id="detallenotas"/>
 	</fx:Declarations>
 	<mx:AdvancedDataGrid id="adgNotas" x="30" y="16" width="972" height="99"
-						 designViewDataType="tree">
+						 >
 		<mx:columns>
-			<mx:AdvancedDataGridColumn dataField="col1" headerText="Column 1"/>
-			<mx:AdvancedDataGridColumn dataField="col2" headerText="Column 2"/>
-			<mx:AdvancedDataGridColumn dataField="col3" headerText="Column 3"/>
+			<mx:AdvancedDataGridColumn dataField="id" visible="false" headerText="ID" rendererIsEditor="true"/>
+			<mx:AdvancedDataGridColumn dataField="fechacompra" headerText="Compra" rendererIsEditor="true"/>
+			<mx:AdvancedDataGridColumn dataField="fechaentrega" headerText="Entrega" rendererIsEditor="true"/>
+			<mx:AdvancedDataGridColumn dataField="horacompra" headerText="Hora" rendererIsEditor="true"/>			
+			<mx:AdvancedDataGridColumn dataField="montototalapagar" headerText="Pago" rendererIsEditor="true"/>
+			<mx:AdvancedDataGridColumn dataField="total" headerText="Total Gral" rendererIsEditor="true"/>
 		</mx:columns>
 	</mx:AdvancedDataGrid>
 	<s:Button id="first_btn" x="29" y="130" width="85" label="First"
