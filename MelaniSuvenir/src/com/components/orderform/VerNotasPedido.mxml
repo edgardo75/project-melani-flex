@@ -4,6 +4,9 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx" width="1028" height="534" creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Script>
 		<![CDATA[
+			import com.actions.CabeceraNota;
+			
+			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			import mx.rpc.events.FaultEvent;
@@ -21,6 +24,8 @@
 			private var pageEnum:int=0;
 			[Bindable]
 			private var xmlNotas:XMLList;
+			[Bindable]
+			private var listNotas:ArrayCollection;
 			
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
@@ -53,7 +58,7 @@
 			
 			protected function operation2_resultHandler(event:ResultEvent):void
 			{
-				Alert.show(event.result.toString());
+				
 				xmlNotas=new XMLList(event.result);
 				
 				addgrid();
@@ -62,9 +67,16 @@
 			//----------------------------------------------------------------------------------------------
 			private function addgrid():void{
 				
-				
-				
+				var headerNota:CabeceraNota;
 				adgNotas.dataProvider=notas;
+				
+				
+				
+				
+				
+				
+				
+				
 				
 
 				if(detallenotas.length>0)
@@ -80,7 +92,7 @@
 				
 				
 			}
-			//----------------------------------------------------------------------------------
+			//---------------------------------------------------------------------------------
 			
 			protected function operation2_faultHandler(event:FaultEvent):void
 			{
@@ -198,11 +210,23 @@
 			{
 				wsnotas.getRecorCountNotas();
 			}
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			private function formatDateTime(date:Date):String {
+				return dtf.format(date);
+			} 
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			
+			protected function adgNotas_doubleClickHandler(event:MouseEvent):void
+			{
+				
+				lblnombreyapecli.text=String(notas[adgNotas.selectedIndex].cliente.apellidoynombre);
+			}
 			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:DateTimeFormatter id="dtf" dateTimePattern="dd/MM/yyyy"/>
 		<s:WebService id="wsnotas" wsdl="http://localhost:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true">
 			<s:operation name="getRecorCountNotas"
 						 result="operation1_resultHandler(event)"
@@ -222,18 +246,9 @@
 		</s:WebService>
 		<s:XMLListCollection id="notas" source="{xmlNotas.item}"/>
 		<s:XMLListCollection id="detallenotas"/>
+		
 	</fx:Declarations>
-	<mx:AdvancedDataGrid id="adgNotas" x="30" y="16" width="972" height="99"
-						 >
-		<mx:columns>
-			<mx:AdvancedDataGridColumn dataField="id" visible="false" headerText="ID" rendererIsEditor="true"/>
-			<mx:AdvancedDataGridColumn dataField="fechacompra" headerText="Compra" rendererIsEditor="true"/>
-			<mx:AdvancedDataGridColumn dataField="fechaentrega" headerText="Entrega" rendererIsEditor="true"/>
-			<mx:AdvancedDataGridColumn dataField="horacompra" headerText="Hora" rendererIsEditor="true"/>			
-			<mx:AdvancedDataGridColumn dataField="montototalapagar" headerText="Pago" rendererIsEditor="true"/>
-			<mx:AdvancedDataGridColumn dataField="total" headerText="Total Gral" rendererIsEditor="true"/>
-		</mx:columns>
-	</mx:AdvancedDataGrid>
+	
 	<s:Button id="first_btn" x="29" y="130" width="85" label="First"
 			  click="first_clickHandler(event)" enabled="false" fontSize="16"/>
 	<s:Button id="prev_btn" x="335" y="130" width="88" label="Prev"
@@ -242,4 +257,30 @@
 			  click="next_btn_clickHandler(event)" enabled="false" fontSize="16"/>
 	<s:Button id="last_btn" x="913" y="129" width="89" label="Last" click="last_clickHandler(event)"
 			  enabled="false" fontSize="16"/>
+	<s:DataGrid id="adgNotas" x="29" y="10" width="944" height="111"  variableRowHeight="true" doubleClick="adgNotas_doubleClickHandler(event)"
+				selectionMode="singleRow" doubleClickEnabled="true">
+		<s:columns>
+			<s:ArrayList>
+				<s:GridColumn headerText="Fecha Compra" dataField="fechacompra"
+							  rendererIsEditable="true"  >
+					<s:itemRenderer>
+						<fx:Component>
+							<s:GridItemRenderer>
+								<mx:DateField editable="true" text="@{data.fechacompra}" formatString="DD/MM/YYY" 
+											  horizontalCenter="0" verticalCenter="0"
+											  width="80%"/>
+							</s:GridItemRenderer>
+						</fx:Component>
+					</s:itemRenderer>
+					
+				</s:GridColumn>
+				<s:GridColumn headerText="pago" dataField="total"/>
+			</s:ArrayList>
+		</s:columns>		
+	</s:DataGrid>
+	<s:Label x="30" y="176" text="CLIENTE:"/>
+	<s:Label id="lblnombreyapecli" x="86" y="173" width="288" fontSize="16"/>
 </s:Group>
+
+
+

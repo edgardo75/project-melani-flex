@@ -146,7 +146,7 @@
 				
 					listEmployee=new ArrayCollection();
 				
-				for(var i:int=0;i<xmllistEmpleados.length;i++){
+				for(var i:int=0;i<xmllistEmpleados.length;i++){	
 					employee=new Employee();
 					employee.id=xmllistEmpleados[i].id;
 					employee.apellido=String(xmllistEmpleados[i].apellido).toUpperCase();
