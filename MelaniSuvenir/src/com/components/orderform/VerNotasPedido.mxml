@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="1028" height="534" creationComplete="group1_creationCompleteHandler(event)">
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:products="com.components.products.*"
+		 width="1028" height="598" initialize="group1_initializeHandler(event)" creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Script>
 		<![CDATA[
 			import com.actions.CabeceraNota;
+			import com.actions.detallesVerNotas;
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
@@ -25,7 +28,8 @@
 			[Bindable]
 			private var xmlNotas:XMLList;
 			[Bindable]
-			private var listNotas:ArrayCollection;
+			private var detalles:detallesVerNotas;
+			
 			
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
@@ -208,7 +212,7 @@
 			
 			protected function group1_creationCompleteHandler(event:FlexEvent):void
 			{
-				wsnotas.getRecorCountNotas();
+				//wsnotas.getRecorCountNotas();
 			}
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			private function formatDateTime(date:Date):String {
@@ -220,6 +224,46 @@
 			{
 				
 				lblnombreyapecli.text=String(notas[adgNotas.selectedIndex].cliente.apellidoynombre);
+				txtobservaciones.text=String(notas[adgNotas.selectedIndex].observaciones);
+				detallenotas.source=notas[adgNotas.selectedIndex].detallenota.itemdetalle;
+				addDetalles();
+				
+			}
+			protected function addDetalles():void{
+				
+				if(detallenotasList.length>0)
+					detallenotasList.removeAll();
+					
+				
+			
+				for(var i:int=0;i<detallenotas.length;i++){
+					
+							detalles=new detallesVerNotas();
+							detalles.idproduct=detallenotas[i].producto.id;
+							detalles.countt=detallenotas[i].cantidad;
+							detalles.id=detallenotas[i].producto.id;
+							detalles.name=detallenotas[i].producto.descripcion;
+							detalles.price=detallenotas[i].precio;
+							detalles.porc_desc=detallenotas[i].descuento;
+							detalles.prec_descuento=detallenotas[i].preciocondescuento;
+							detalles.subtotal=detallenotas[i].subtotal;
+							
+					detallenotasList.addItem(detalles);		
+							
+				}
+				
+				detallenotasList.refresh();
+				productospedidos.adglistpedprod.dataProvider=detallenotasList;
+			
+				
+			
+			
+			}
+			
+			protected function group1_initializeHandler(event:FlexEvent):void
+			{
+				wsnotas.getRecorCountNotas();
+				
 			}
 			
 		]]>
@@ -245,7 +289,8 @@
 			</s:operation>
 		</s:WebService>
 		<s:XMLListCollection id="notas" source="{xmlNotas.item}"/>
-		<s:XMLListCollection id="detallenotas"/>
+		<s:XMLListCollection id="detallenotas"/>		
+		<s:ArrayCollection id="detallenotasList"/>
 		
 	</fx:Declarations>
 	
@@ -257,10 +302,11 @@
 			  click="next_btn_clickHandler(event)" enabled="false" fontSize="16"/>
 	<s:Button id="last_btn" x="913" y="129" width="89" label="Last" click="last_clickHandler(event)"
 			  enabled="false" fontSize="16"/>
-	<s:DataGrid id="adgNotas" x="29" y="10" width="944" height="111"  variableRowHeight="true" doubleClick="adgNotas_doubleClickHandler(event)"
+	<s:DataGrid id="adgNotas" x="29" y="10" width="973" height="111"  variableRowHeight="true" doubleClick="adgNotas_doubleClickHandler(event)"
 				selectionMode="singleRow" doubleClickEnabled="true">
 		<s:columns>
 			<s:ArrayList>
+				<s:GridColumn headerText="N° Nota" dataField="id"/>
 				<s:GridColumn headerText="Fecha Compra" dataField="fechacompra"
 							  rendererIsEditable="true"  >
 					<s:itemRenderer>
@@ -274,12 +320,32 @@
 					</s:itemRenderer>
 					
 				</s:GridColumn>
-				<s:GridColumn headerText="pago" dataField="total"/>
+				<s:GridColumn headerText="Fecha Entrega" dataField="fechaentrega"
+							  rendererIsEditable="true"  >
+					<s:itemRenderer>
+						<fx:Component>
+							<s:GridItemRenderer>
+								<mx:DateField editable="true" text="@{data.fechaentrega}" formatString="DD/MM/YYY" 
+											  horizontalCenter="0" verticalCenter="0"
+											  width="80%"/>
+							</s:GridItemRenderer>
+						</fx:Component>
+					</s:itemRenderer>
+					
+				</s:GridColumn>
+				<s:GridColumn headerText="Pago" dataField="montototalapagar"/>
+				<s:GridColumn headerText="Total" dataField="total"/>
+				<s:GridColumn headerText="Saldo" dataField="saldo"/>
+				<s:GridColumn headerText="Recargo" dataField="recargo"/>
+				<s:GridColumn headerText="RecargoTotal" dataField="recargototal"/>
 			</s:ArrayList>
 		</s:columns>		
 	</s:DataGrid>
 	<s:Label x="30" y="176" text="CLIENTE:"/>
 	<s:Label id="lblnombreyapecli" x="86" y="173" width="288" fontSize="16"/>
+	<products:productosPedidos x="30" y="211" height="372" id="productospedidos" />
+	<s:TextArea id="txtobservaciones" x="495" y="176" width="447" height="110" maxChars="32000"/>
+	<s:Label x="510" y="156" text="Observaciones:"/>
 </s:Group>
 
 
