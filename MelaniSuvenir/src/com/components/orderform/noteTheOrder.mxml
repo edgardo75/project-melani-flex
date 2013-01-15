@@ -287,8 +287,8 @@
 				popup=Progress(PopUpManager.createPopUp(this,Progress,true));
 				PopUpManager.centerPopUp(popup);
 			//llamamos al metodo del webservice para almacenar la nota de pedido en el servidor
-			//Alert.show(getDatosXML());
-				wsnotapedido.agregarNotaPedido(getDatosXML());
+			Alert.show(getDatosXML());
+				//wsnotapedido.agregarNotaPedido(getDatosXML());
              			
 						
 		
@@ -405,7 +405,7 @@
 			
 			
 				 xmlnota+= "</detallesnotapedido>\n" +
-					 "<porc_descuento_total>"+productscomp.porc_desc_total+porcdescAcum+"</porc_descuento_total>\n" +
+					 "<porc_descuento_total>"+Number(productscomp.porc_desc_total+porcdescAcum).toFixed(2)+"</porc_descuento_total>\n" +
 				  "</notapedido>\n";
 				 
 				 return xmlnota;

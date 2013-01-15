@@ -31,7 +31,7 @@
 			[Bindable]
 				public var dp:Array=[];
 			[Bindable]
-				private var totGral:Number;
+				public var totGral:Number;
 			[Bindable]
 				public var totGralDesc:Number;
 			[Bindable]
