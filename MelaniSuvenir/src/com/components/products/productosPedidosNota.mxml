@@ -524,6 +524,7 @@
 									//-----------------------------------------------------------------------------------------------------------------------------
 									if(col==5&&oldValue==0){
 										//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+										
 										if(txtdescuento.text.length>0)
 											txtdescuento.text="0.0";
 										//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -556,24 +557,26 @@
 											
 										}else{
 									
+											Alert.show(String(arrayDg.length));
 											for(var p:int=0;p<arrayDg.length;p++){
 												
 												if(arrayDg[p].idproduct!=grid.selectedItem.idproduct){
 													
-													if(arrayDg[p].prec_descuento>0){
+													
 														tempTotDesc=tempTotDesc+Number(arrayDg[p].prec_descuento);
 														tempPorcDes=tempPorcDes+Number(arrayDg[p].porc_desc);
-													}
+													
 											
 													
 												}
 											}
 											
 											
-											
 											totGralDesc=0;
 											
-											totGralDesc=Number(tempTotDesc.toFixed(3))+Number(Number(grid.selectedItem.prec_descuento).toFixed(3));
+											
+											totGralDesc+=Number(tempTotDesc.toFixed(3))+Number(Number(grid.selectedItem.prec_descuento).toFixed(3));
+											
 											
 											temp_tot_porc_desc=0;
 											
@@ -581,7 +584,7 @@
 											
 											
 											
-											
+										
 											
 											
 											
@@ -620,7 +623,7 @@
 												
 												
 												
-														totGralDesc=0;
+														
 														
 														totGralDesc=Number(tempTotDesc.toFixed(3));
 														
@@ -673,13 +676,13 @@
 														
 														
 														
-															totGralDesc=0;
 															
-															totGralDesc=Number(tempTotDesc.toFixed(3))+Number(Number(grid.selectedItem.prec_descuento).toFixed(3));
 															
-															temp_tot_porc_desc=0;
+															totGralDesc+=Number(tempTotDesc.toFixed(3))+Number(Number(grid.selectedItem.prec_descuento).toFixed(3));
 															
-															temp_tot_porc_desc=Number(tempPorcDes.toFixed(3))+Number(Number(newValue).toFixed(3));
+															
+															
+															temp_tot_porc_desc+=Number(tempPorcDes.toFixed(3))+Number(Number(newValue).toFixed(3));
 														
 														
 				
@@ -900,6 +903,8 @@
 						var lbltotrecargo:Number=Number(Number(lbltotalconrecargo.text).toFixed(3));					
 						var lbltotdesc:Number=Math.abs(Number(lbldescuento.text));					
 						lblTotApagar.text=Number(lbltotrecargo).toFixed(3);
+						
+						mskrecargo.text=tot_recargo.toFixed(2);
 						
 					
 					
@@ -1152,7 +1157,7 @@
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="productosWs" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?wsdl"
+		<s:WebService id="productosWs" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?wsdl"
 					  showBusyCursor="true">
 			<s:operation name="searchAllProductos"
 						 fault="operation1_faultHandler(event)"
@@ -1166,6 +1171,8 @@
 							   decimalSeparator="." groupingSeparator="," currencyISOCode="locale and OS dependent" useCurrencySymbol="false"/>
 		<s:NumberFormatter id="nf"  decimalSeparator="."
 						   negativeNumberFormat="0" useGrouping="false"/>
+		<s:NumberValidator id="nvcount" fractionalDigits="0" fractionalDigitsError="Valores decimales no se permiten" greaterThanMaxError="Valor maximo permitido" 
+						   minValue="1" maxValue="99"/>
 		<s:ArrayCollection id="arrayDg"/>
 	</fx:Declarations>
 	<s:Label x="27" y="14" fontFamily="Verdana" fontSize="16" text="Producto:"/>
@@ -1192,7 +1199,7 @@
 			<mx:AdvancedDataGridColumn width="84" dataField="name" editable="false"
 									   fontFamily="Verdana" fontSize="10" headerText="Descripcion"
 									   resizable="false" textAlign="left"/>
-			<mx:AdvancedDataGridColumn width="35" dataField="countt" editable="true" 
+			<mx:AdvancedDataGridColumn width="35" dataField="countt" editable="true"  
 									   fontFamily="Verdana" fontSize="10" headerText="Cantidad"
 									   resizable="false" sortable="false" textAlign="center"/>
 			<mx:AdvancedDataGridColumn width="45" dataField="price" draggable="false" editable="true"
@@ -1220,7 +1227,7 @@
 	<s:Label id="lblTotGral" x="708" y="243" width="124" color="#127B1A" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
 	<s:Label x="264" y="69" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
-	<controls:MaskedTextInput text="0.0" maxChars="5" x="381" y="58" width="60" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingresa un porcentaje de descuento, aplicable a todos los productos de la planilla"/>
+	<controls:MaskedTextInput text="0.00" maxChars="5" x="381" y="58" width="60" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingresa un porcentaje de descuento, aplicable a todos los productos de la planilla"/>
 	<s:Label x="543" y="281" color="#E2AA14" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL A PAGAR $:"/>
 	<s:Label id="lblTotApagar" x="705" y="280" width="127" color="#F9BD05" fontFamily="Verdana"
@@ -1242,7 +1249,7 @@
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
 	<s:Label x="499" y="356" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="TOTAL CON RECARGO %:"
 			 textAlign="right"/>
-	<controls:MaskedTextInput id="mskrecargo" x="708" y="349" width="49" fontFamily="Verdana" text="0.0"
+	<controls:MaskedTextInput id="mskrecargo" x="708" y="349" width="60" fontFamily="Verdana" text="0.00" maxChars="5"
 							  fontSize="16" restrict="0-9." toolTip="Ingresa un Porcentaje de recargo total para los productos cargados"/>
 	<s:Button id="brncargarunproducto" x="25" y="271" label="Cargar Producto"
 			  click="brncargarunproducto_clickHandler(event)" fontSize="16"
