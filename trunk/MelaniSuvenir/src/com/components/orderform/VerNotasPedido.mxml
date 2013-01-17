@@ -235,7 +235,7 @@
 					detallenotasList.removeAll();
 					
 				
-			
+			var b:Boolean=false;
 				for(var i:int=0;i<detallenotas.length;i++){
 					
 							detalles=new detallesVerNotas();
@@ -248,39 +248,42 @@
 							detalles.prec_descuento=detallenotas[i].preciocondescuento;
 							detalles.subtotal=detallenotas[i].subtotal;
 							
+					if(int(detallenotas[i].descuento)>0&&b==false)
+						b=true;
+							
 							
 							
 					detallenotasList.addItem(detalles);		
 							
 				}
 				
-				productosPedidosNota.totGral=notas[adgNotas.selectedIndex].total;
-				productosPedidosNota.tot_recargo=notas[adgNotas.selectedIndex].recargototal;
-				productosPedidosNota.totGralDesc=notas[adgNotas.selectedIndex].descuentonota;
-				productosPedidosNota.porc_desc_total=notas[adgNotas.selectedIndex].descuento;
+				if(b==false)
+					productosPedidosNota.txtdescuento.text=notas[adgNotas.selectedIndex].porcentajedesctotal;
 				
+				
+				productosPedidosNota.totGral=notas[adgNotas.selectedIndex].total;
+				
+				productosPedidosNota.tot_recargo=notas[adgNotas.selectedIndex].porcrecargo;
+				productosPedidosNota.totGralDesc=Math.abs(Number(notas[adgNotas.selectedIndex].descuentonota));
+				productosPedidosNota.porc_desc_total=notas[adgNotas.selectedIndex].porcentajedesctotal;
+				
+				productosPedidosNota.mskanticipo.text=notas[adgNotas.selectedIndex].anticipo;
+				productosPedidosNota.mskrecargo.text=notas[adgNotas.selectedIndex].porcrecargo;
+			
 				
 				//************************************************************************************+
 				//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-				if(int(productosPedidosNota.txtdescuento.text)==0||productosPedidosNota.txtdescuento.text.length==0){
+				
 					productosPedidosNota.lblTotGral.text=String(productosPedidosNota.totGral.toFixed(3));
-					productosPedidosNota.lbldescuento.text=Number(Number(-productosPedidosNota.totGralDesc)).toFixed(3);
-					productosPedidosNota.lblTotApagar.text=Number(Number(productosPedidosNota.lblTotGral.text)-Number(productosPedidosNota.totGralDesc.toFixed(3))).toFixed(3);
-				}
+					productosPedidosNota.lbldescuento.text=Number(Number(notas[adgNotas.selectedIndex].descuentonota)).toFixed(3);
+					productosPedidosNota.lblTotApagar.text=Number(Number(notas[adgNotas.selectedIndex].montototalapagar)).toFixed(3);
+					productosPedidosNota.lblsaldo.text=Number(Number(notas[adgNotas.selectedIndex].saldo)).toFixed(3);
+					productosPedidosNota.lbltotalconrecargo.text=Number(Number(notas[adgNotas.selectedIndex].recargototal)).toFixed(3);
+			
 				
 				
-				var calcrecargo:Number=0;
-				var calcanticipo:Number=0;
 				
-				if(int(productosPedidosNota.mskrecargo.text)>0){
-					
-					productosPedidosNota.calcularRecargoVariant()
-					
-				}
-				if(int(productosPedidosNota.mskanticipo.text)>0){
-					productosPedidosNota.calcularAnticipo();
-					
-				}
+			
 			
 			
 			
@@ -288,7 +291,10 @@
 				//**************************************************************************************
 				
 				detallenotasList.refresh();
+				
 				productosPedidosNota.adglistpedprod.dataProvider=detallenotasList;
+				
+				productosPedidosNota.arrayDg=detallenotasList;
 			
 				
 			
