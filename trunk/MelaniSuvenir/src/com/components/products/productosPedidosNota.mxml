@@ -756,15 +756,15 @@
 				var b:Boolean=false;
 				var p_desc:Number=0;
 				
-				
+				arrayDg.refresh();
 				subtot=Number(Number(Number(Number(txtprecio).toFixed(3))*Number(cantidad)).toFixed(3));
 				totGral=Number(Number(totGral.toFixed(3))+Number(subtot.toFixed(3)));
 				
 				
-				
+			
 				
 				if(dp.length==0){
-					dp=[{idproduct:idprod,id:codigoId,name:descripcion,countt:cantidad,price:txtprecio,porc_desc:desc_porc,prec_descuento:p_desc,subtotal:subtot}];
+					dp=[{idproduct:idprod,id:codigoId,name:descripcion,countt:cantidad,price:txtprecio,porc_desc:"0.000",prec_descuento:p_desc,subtotal:subtot}];
 					totGralDesc=totGralDesc+Number(Number(desc_porc).toFixed(3));
 				}else{
 					
@@ -783,7 +783,7 @@
 							//------------------------------------------------------------------
 						}
 					if(!b)					
-						dp.push({idproduct:idprod,id:codigoId,name:descripcion,countt:cantidad,price:txtprecio,porc_desc:desc_porc,prec_descuento:p_desc,subtotal:subtot});
+						dp.push({idproduct:idprod,id:codigoId,name:descripcion,countt:cantidad,price:txtprecio,porc_desc:"0.000",prec_descuento:p_desc,subtotal:subtot});
 						
 					}
 			
@@ -800,9 +800,10 @@
 				
 				
 					calcularDescuentoVariant();
+					
 					calcularAnticipo();
-				
-				calcularRecargoVariant();
+					
+					calcularRecargoVariant();
 				
 				
 				
@@ -1049,16 +1050,9 @@
 				arrayDg.refresh();
 				
 				
+				Alert.show(arrayDg.length.toString(10));
 				
-				totGralDesc=0;
 				
-				totGralDesc=Number(tempTotDesc.toFixed(2));
-				
-				temp_tot_porc_desc=0;
-				
-				temp_tot_porc_desc=Number(tempPorcDes.toFixed(2));
-				
-				totGral=totgrilla;
 				
 				//-------------------------------------------------------------------------------
 				if(arrayDg.length==0){
@@ -1086,9 +1080,31 @@
 						tempTotDesc=0;
 				
 				}else{
-					lblTotApagar.text=totGralDesc.toFixed(3);
+					totGral=totgrilla;
 					lblTotGral.text=totGral.toFixed(3);
-					lbldescuento.text=Number(desc_resto).toFixed(3);
+					if(txtdescuento.text.length>0){
+							calcularDescuentoVariant();
+							calcularAnticipo();
+							
+					}else{
+					
+						totGralDesc=0;
+						
+						totGralDesc=Number(tempTotDesc.toFixed(2));
+						
+						temp_tot_porc_desc=0;
+						
+						temp_tot_porc_desc=Number(tempPorcDes.toFixed(2));
+						
+						
+						lblTotApagar.text=totGralDesc.toFixed(3);
+						
+						lbldescuento.text=Number(desc_resto).toFixed(3);
+						
+					}
+						
+					
+					
 				
 				}
 				
@@ -1182,7 +1198,7 @@
 	<s:Label x="23" y="67" fontFamily="Verdana" fontSize="16" text="Cantidad:"/>
 	<controls:MaskedTextInput id="mskcantidad" x="108" y="58" width="55" fontFamily="Verdana"
 							  tabEnabled="false" fontSize="16" fontWeight="bold" maxChars="3" restrict="0-9"/>
-	<mx:AdvancedDataGrid id="adglistpedprod" x="25" y="86" width="796" height="149"
+	<mx:AdvancedDataGrid id="adglistpedprod" x="25" y="86" width="809" height="149"
 						 alternatingItemColors="[#adf1f5, white]"
 						 dataChange="adglistpedprod_dataChangeHandler(event)"
 						 designViewDataType="flat" doubleClickEnabled="true" editable="true"
