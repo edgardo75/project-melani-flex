@@ -5,7 +5,7 @@
 		 xmlns:products="com.components.products.*"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
 		 xmlns:components="com.hillelcoren.components.*"
-		 width="1028" height="616" initialize="group1_initializeHandler(event)">
+		 width="1276" height="644" initialize="group1_initializeHandler(event)">
 	<fx:Script>
 		<![CDATA[
 			import com.actions.CabeceraNota;
@@ -24,6 +24,9 @@
 			import mx.rpc.events.ResultEvent;
 			
 			
+			
+			[Bindable]
+			private var xmlListEmpleados:XMLList;
 			[Bindable]
 			private var anticipo:Number=0;
 			
@@ -66,6 +69,8 @@
 			
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
+				
+				
 				totalReg = int(event.result.toString());
 				
 				if(totalReg==0){
@@ -259,6 +264,26 @@
 				lblnombreyapecli.text=String(notas[adgNotas.selectedIndex].cliente.apellidoynombre);
 				txtobservaciones.text=String(notas[adgNotas.selectedIndex].observaciones);
 				detallenotas.source=notas[adgNotas.selectedIndex].detallenota.itemdetalle;
+				
+				if(int(notas[adgNotas.selectedIndex].anulado)==0)
+					rdanuladano.selected=true;					
+				else
+					rdanuladasi.selected=true;
+				
+				if(int(notas[adgNotas.selectedIndex].cancelado)==0)
+					rdbcanceladanotano.selected=true;
+				else
+					rdbcanceladanotasi.selected=true;
+				
+				if(int(notas[adgNotas.selectedIndex].entregado)==0)
+					rdbentregadono.selected=true;
+				else
+					rdbentregadosi.selected=true;
+				if(int(notas[adgNotas.selectedIndex].stockfuturo)==0)
+					rdbstockfuturono.selected=true;
+				else
+					rdbstockfuturosi.selected=true;
+					
 				addDetalles();
 				
 			}
@@ -1096,11 +1121,25 @@
 			//}
 			//----------------------------------------------------------------------------------------------------------
 
+			protected function operation2_faultHandlerSelectAllEmpleados(event:FaultEvent):void
+			{
+				Alert.show("ERROR AL OBTENER LISTADO DE EMPLEADOS");
+				
+			}
+			
+			protected function operation2_resultHandlerSelectAllEmpleados(event:ResultEvent):void
+			{
+				
+				xmlListEmpleados = new XMLList(event.result);
+				cmbVendedores.dataProvider=empleadoslist;
+				
+			}
 			
 			protected function group1_initializeHandler(event:FlexEvent):void
 			{
 				wsnotas.getRecorCountNotas();
 				productosWs.searchAllProductos();
+				wsempleados.selectAllEmpleados();
 				cmbproduct.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txtpreciop.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txtdescuento.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
@@ -1508,6 +1547,13 @@
 				
 			</s:operation>
 		</s:WebService>
+		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
+			<s:operation name="selectAllEmpleados"
+						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
+						 result="operation2_resultHandlerSelectAllEmpleados(event)">
+				
+			</s:operation>
+		</s:WebService>
 		<s:WebService id="productosWs" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?wsdl"
 					  showBusyCursor="true">
 			<s:operation name="searchAllProductos"
@@ -1522,6 +1568,7 @@
 		<s:CurrencyFormatter id="cf" currencySymbol="$" fractionalDigits="3" locale="es-AR"  
 							 decimalSeparator="." groupingSeparator="," currencyISOCode="locale and OS dependent" useCurrencySymbol="false"/>
 		<s:Label x="479" y="150" text="Observaciones:"/>
+		<s:XMLListCollection id="empleadoslist" source="{xmlListEmpleados.item}"/>
 		
 	</fx:Declarations>
 	
@@ -1659,6 +1706,36 @@
 			  toolTip="Muestra una Ventana para cargar un Producto"/>
 	<s:Label x="335" y="263" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
 	<controls:MaskedTextInput text="0.00" maxChars="5" x="452" y="256" width="60" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingresa un porcentaje de descuento, aplicable a todos los productos de la planilla"/>
+	<s:Label x="1012" y="315" fontSize="16" fontWeight="bold" text="VENDEDORES:"/>
+	<components:AutoComplete id="cmbVendedores" x="1012" y="330" width="184" labelField="nameuser" allowDuplicates="false" dropDownRowCount="10"
+							 fontSize="16" fontWeight="bold" matchType="beginning">
+	</components:AutoComplete>
+	<s:Label x="1045" y="11" fontSize="14" fontWeight="bold" text="Nota de pedido entregada"/>
+	<s:Label x="1046" y="66" fontSize="14" fontWeight="bold" text="Nota de pedido stock futuro"/>
+	<s:VGroup x="1048" y="78">
+		<s:RadioButton id="rdbstockfuturosi" label="Si" groupName="stockFuturo" selected="true"/>
+		<s:RadioButton id="rdbstockfuturono" label="No" groupName="stockFuturo"/>
+	</s:VGroup>
+	<s:Label x="1049" y="129" fontSize="14" fontWeight="bold" text="Nota de pedido cancelada"/>
+	<s:VGroup x="1052" y="142">
+		<s:RadioButton id="rdbcanceladanotasi" label="Si" groupName="notaCancelada"/>
+		<s:RadioButton id="rdbcanceladanotano" label="No" selected="true" groupName="notaCancelada"/>
+	</s:VGroup>
+	<s:RadioButton id="rdbentregadosi" x="1044" y="25" label="Si" groupName="GrupoEntregado"/>
+	<s:RadioButton id="rdbentregadono" x="1044" y="43" label="No" groupName="GrupoEntregado"
+				   selected="true"/>
+	<s:Label x="1052" y="204" fontSize="14" fontWeight="bold" text="Nota anulada"/>
+	<s:VGroup x="1053" y="220" width="45" height="57">
+		<s:RadioButton id="rdanuladasi" label="Si" groupName="anulada"/>
+		<s:RadioButton id="rdanuladano" label="No" selected="true" groupName="anulada"/>
+	</s:VGroup>
+	<s:Label x="1012" y="367" fontFamily="Arial" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
+	<s:TextInput id="txtpassword" x="1013" y="390" width="183" fontSize="16" fontStyle="normal"
+				 prompt="Ingresar password de vendedor"/>
+	<s:Button id="btnguardarentregada" x="1087" y="33" label="Entregar" toolTip="Almacena el estado de Entregado de la Nota de Pedido Seleccionada"/>
+	<s:Button id="btnstockfuturo" x="1091" y="95" label="StockFuturo" toolTip="Alacena el estado de Stock futuro de la Nota de Pedido Seleccionada"/>
+	<s:Button x="1095" y="167" label="Cancelar" toolTip="Cambia el estado cancelada de la Nota de Pedido Seleccionada"/>
+	<s:Button x="1100" y="249" label="Anular" toolTip="Cambia el estado de anulada de la Nota de Pedido Seleccionada"/>
 </s:Group>
 
 
