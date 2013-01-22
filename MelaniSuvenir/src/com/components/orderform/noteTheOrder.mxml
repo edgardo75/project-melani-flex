@@ -302,6 +302,13 @@
 			var enfectivo:int=0;
 			var porcdescAcum:Number=0;
 			
+			
+			if(productscomp.txtdescuento.text.length==0)
+				productscomp.txtdescuento.text="0.0";
+			if(productscomp.mskrecargo.text.length==0)
+				productscomp.mskrecargo.text="0.0";
+			if(productscomp.mskanticipo.text.length==0)
+				productscomp.mskanticipo.text="0.0";
 			if(rdbentregadosi.selected)
 				entregado=1;
 			
