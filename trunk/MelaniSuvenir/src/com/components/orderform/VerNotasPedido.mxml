@@ -5,7 +5,7 @@
 		 xmlns:products="com.components.products.*"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
 		 xmlns:components="com.hillelcoren.components.*"
-		 width="1276" height="644" initialize="group1_initializeHandler(event)">
+		 width="1214" height="644" initialize="group1_initializeHandler(event)">
 	<fx:Script>
 		<![CDATA[
 			import com.actions.CabeceraNota;
@@ -23,12 +23,14 @@
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
-			
+			[Bindable]
+			private var xmltarjetas:XMLList;
 			
 			[Bindable]
 			private var xmlListEmpleados:XMLList;
 			[Bindable]
 			private var anticipo:Number=0;
+			
 			
 			[Bindable]
 			public var dp:Array=[];
@@ -263,7 +265,12 @@
 				
 				lblnombreyapecli.text=String(notas[adgNotas.selectedIndex].cliente.apellidoynombre);
 				txtobservaciones.text=String(notas[adgNotas.selectedIndex].observaciones);
+				cmbTarjetasCreditoDebito.selectedItemId=notas[adgNotas.selectedIndex].idtarjeta;
+				txtnumerocuponpago.text=notas[adgNotas.selectedIndex].numerocupon;
 				detallenotas.source=notas[adgNotas.selectedIndex].detallenota.itemdetalle;
+				
+				listhistoricoselected.source=notas[adgNotas.selectedIndex].detallehistorico.item;
+				
 				
 				if(int(notas[adgNotas.selectedIndex].anulado)==0)
 					rdanuladano.selected=true;					
@@ -293,6 +300,7 @@
 					detallenotasList.removeAll();
 					
 					adglistpedprod.dataProvider.removeItems();
+					//adghistorico.dataProvider.removeAll();
 					arrayDg.removeAll();
 					arrayDg.refresh();
 					
@@ -398,7 +406,7 @@
 				
 				adglistpedprod.dataProvider=arrayDg;
 				
-				
+				adghistorico.dataProvider=listhistoricoselected;
 				
 			
 				
@@ -868,7 +876,7 @@
 										
 									}else{
 										
-										Alert.show(String(arrayDg.length));
+										
 										for(var p:int=0;p<arrayDg.length;p++){
 											
 											if(arrayDg[p].idproduct!=grid.selectedItem.idproduct){
@@ -1140,6 +1148,7 @@
 				wsnotas.getRecorCountNotas();
 				productosWs.searchAllProductos();
 				wsempleados.selectAllEmpleados();
+				wstarjetascreditodebito.searchAllTarjetasCreditoDebito();
 				cmbproduct.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txtpreciop.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txtdescuento.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
@@ -1459,7 +1468,7 @@
 				arrayDg.refresh();
 				
 				
-				Alert.show(arrayDg.length.toString(10));
+				
 				
 				
 				
@@ -1523,10 +1532,27 @@
 				
 			}
 			//--------------------------------------------------------------------------------------
+			
+			protected function operation4_resultHandler(event:ResultEvent):void
+			{
+				
+				xmltarjetas=new XMLList(event.result);
+				cmbTarjetasCreditoDebito.dataProvider=tarjetas;
+				
+			}
+			
+			protected function operation4_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
+		<s:XMLListCollection id="tarjetas" source="{xmltarjetas.item}"/>
 		<s:XMLListCollection id="productlist" source="{xmlproduct.producto}"/>
+		<s:XMLListCollection id="listhistoricoselected" />
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:ArrayCollection id="arrayDg"/>
 		<s:DateTimeFormatter id="dtf" dateTimePattern="dd/MM/yyyy"/>
@@ -1554,6 +1580,13 @@
 				
 			</s:operation>
 		</s:WebService>
+		<s:WebService id="wstarjetascreditodebito" 
+					  wsdl="http://localhost:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
+					  >
+			<s:operation name="searchAllTarjetasCreditoDebito" result="operation4_resultHandler(event)" fault="operation4_faultHandler(event)">
+				
+			</s:operation>
+		</s:WebService>
 		<s:WebService id="productosWs" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?wsdl"
 					  showBusyCursor="true">
 			<s:operation name="searchAllProductos"
@@ -1563,6 +1596,7 @@
 			</s:operation>
 		</s:WebService>
 		<s:XMLListCollection id="notas" source="{xmlNotas.item}"/>
+	
 		<s:XMLListCollection id="detallenotas"/>		
 		<s:ArrayCollection id="detallenotasList"/>
 		<s:CurrencyFormatter id="cf" currencySymbol="$" fractionalDigits="3" locale="es-AR"  
@@ -1572,15 +1606,15 @@
 		
 	</fx:Declarations>
 	
-	<s:Button id="first_btn" x="29" y="130" width="85" label="First"
+	<s:Button id="first_btn" x="11" y="130" width="85" label="First"
 			  click="first_clickHandler(event)" enabled="false" fontSize="16"/>
-	<s:Button id="prev_btn" x="335" y="130" width="88" label="Prev"
+	<s:Button id="prev_btn" x="317" y="130" width="88" label="Prev"
 			  click="prev_btn_clickHandler(event)" enabled="false" fontSize="16"/>
-	<s:Button id="next_btn" x="646" y="131" width="84" label="Next"
+	<s:Button id="next_btn" x="628" y="131" width="84" label="Next"
 			  click="next_btn_clickHandler(event)" enabled="false" fontSize="16"/>
-	<s:Button id="last_btn" x="913" y="129" width="89" label="Last" click="last_clickHandler(event)"
+	<s:Button id="last_btn" x="895" y="129" width="89" label="Last" click="last_clickHandler(event)"
 			  enabled="false" fontSize="16"/>
-	<s:DataGrid id="adgNotas" x="29" y="10" width="973" height="111"  variableRowHeight="true" doubleClick="adgNotas_doubleClickHandler(event)"
+	<s:DataGrid id="adgNotas" x="11" y="10" width="973" height="111"  variableRowHeight="true" doubleClick="adgNotas_doubleClickHandler(event)"
 				selectionMode="singleRow" doubleClickEnabled="true">
 		<s:columns>
 			<s:ArrayList>
@@ -1619,11 +1653,11 @@
 			</s:ArrayList>
 		</s:columns>		
 	</s:DataGrid>
-	<s:Label x="30" y="176" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="Cliente:"/>
-	<s:Label id="lblnombreyapecli" x="104" y="171" width="288" fontSize="16"/>
-	<s:TextArea id="txtobservaciones" x="554" y="167" width="447" height="110" maxChars="32000"/>
+	<s:Label x="21" y="176" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="Cliente:"/>
+	<s:Label id="lblnombreyapecli" x="91" y="171" width="288" fontSize="16"/>
+	<s:TextArea id="txtobservaciones" x="533" y="167" width="447" height="110" maxChars="32000"/>
 	
-	<mx:AdvancedDataGrid id="adglistpedprod" x="43" y="287" width="809" height="149"
+	<mx:AdvancedDataGrid id="adglistpedprod" x="9" y="287" width="809" height="149"
 						 alternatingItemColors="[#adf1f5, white]"
 						
 						 designViewDataType="flat" doubleClickEnabled="true" editable="true"
@@ -1659,42 +1693,42 @@
 									   resizable="false" sortable="false" textAlign="right"/>
 		</mx:columns>
 	</mx:AdvancedDataGrid>
-	<s:Label x="591" y="443" color="#1D7F03" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="546" y="444" color="#1D7F03" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL GRAL $:" verticalAlign="top"/>
-	<s:Label id="lblTotGral" x="725" y="441" width="124" color="#127B1A" fontFamily="Verdana"
+	<s:Label id="lblTotGral" x="680" y="442" width="124" color="#127B1A" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
-	<s:Label x="560" y="479" color="#E2AA14" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="515" y="480" color="#E2AA14" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL A PAGAR $:"/>
-	<s:Label id="lblTotApagar" x="722" y="478" width="127" color="#F9BD05" fontFamily="Verdana"
+	<s:Label id="lblTotApagar" x="677" y="479" width="127" color="#F9BD05" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
-	<s:Label x="594" y="460" width="135" height="14" color="#F84B07" fontFamily="Verdana"
+	<s:Label x="549" y="461" width="135" height="14" color="#F84B07" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="DESCUENTO $:"/>
-	<s:Label id="lbldescuento" x="724" y="460" width="125" color="#F84B07" fontFamily="Verdana"
+	<s:Label id="lbldescuento" x="679" y="461" width="125" color="#F84B07" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label x="504" y="499" width="223" color="#04667F" fontFamily="Verdana" fontSize="16"
+	<s:Label x="459" y="500" width="223" color="#04667F" fontFamily="Verdana" fontSize="16"
 			 fontWeight="bold" text="TOTAL CON RECARGO $:" textAlign="right"/>
-	<s:Label x="504" y="517" width="223" color="#7F1E04" fontFamily="Verdana" fontSize="16"
+	<s:Label x="459" y="518" width="223" color="#7F1E04" fontFamily="Verdana" fontSize="16"
 			 fontWeight="bold" text="SALDO $:" textAlign="right"/>
-	<s:Label id="lbltotalconrecargo" x="725" y="497" width="124" color="#04667F" fontFamily="Verdana"
+	<s:Label id="lbltotalconrecargo" x="680" y="498" width="124" color="#04667F" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label id="lblsaldo" x="725" y="516" width="124" color="#7F2704" fontFamily="Verdana"
+	<s:Label id="lblsaldo" x="680" y="517" width="124" color="#7F2704" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label x="516" y="554" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="TOTAL CON RECARGO %:"
+	<s:Label x="472" y="543" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="TOTAL CON RECARGO %:"
 			 textAlign="right"/>
-	<controls:MaskedTextInput id="mskrecargo" x="725" y="547" width="60" fontFamily="Verdana" text="0.00" maxChars="5"
+	<controls:MaskedTextInput id="mskrecargo" x="681" y="536" width="60" fontFamily="Verdana" text="0.00" maxChars="5"
 							  fontSize="16" restrict="0-9." toolTip="Ingresa un Porcentaje de recargo total para los productos cargados"/>
-	<s:Label x="621" y="584" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="ANTICIPO $:"
+	<s:Label x="577" y="573" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="ANTICIPO $:"
 			 textAlign="right"/>
-	<controls:MaskedTextInput text="0.0" id="mskanticipo" x="725" y="576" width="103" fontFamily="Verdana"
+	<controls:MaskedTextInput text="0.0" id="mskanticipo" x="681" y="565" width="103" fontFamily="Verdana"
 							  fontSize="16" restrict="0-9."/>
-	<s:Label x="29" y="214" fontFamily="Verdana" fontSize="16" text="Producto:"/>
-	<s:Label x="34" y="239" fontFamily="Verdana" fontSize="16" text="Precio $:"/>
-	<s:TextInput id="txtpreciop" x="110" y="231" width="187" fontSize="16" fontWeight="bold"
+	<s:Label x="11" y="214" fontFamily="Verdana" fontSize="16" text="Producto:"/>
+	<s:Label x="16" y="239" fontFamily="Verdana" fontSize="16" text="Precio $:"/>
+	<s:TextInput id="txtpreciop" x="92" y="231" width="187" fontSize="16" fontWeight="bold"
 				 maxChars="6" restrict="0-9." tabEnabled="false"/>
-	<s:Label x="25" y="267" fontFamily="Verdana" fontSize="16" text="Cantidad:"/>
-	<controls:MaskedTextInput id="mskcantidad" x="110" y="258" width="55" fontFamily="Verdana"
+	<s:Label x="7" y="267" fontFamily="Verdana" fontSize="16" text="Cantidad:"/>
+	<controls:MaskedTextInput id="mskcantidad" x="92" y="258" width="55" fontFamily="Verdana"
 							  tabEnabled="false" fontSize="16" fontWeight="bold" maxChars="3" restrict="0-9"/>
-	<components:AutoComplete id="cmbproduct" x="110" y="201" width="203" allowDuplicates="false"
+	<components:AutoComplete id="cmbproduct" x="92" y="201" width="203" allowDuplicates="false"
 							 dropDownRowCount="10" fontSize="16" fontWeight="bold"
 							 labelField="descripcion" matchType="beginning" tabEnabled="false">
 	</components:AutoComplete>
@@ -1704,38 +1738,63 @@
 	<s:Button id="brncargarunproducto" x="43" y="505" label="Cargar Producto"
 			  click="brncargarunproducto_clickHandler(event)" fontSize="16"
 			  toolTip="Muestra una Ventana para cargar un Producto"/>
-	<s:Label x="335" y="263" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
-	<controls:MaskedTextInput text="0.00" maxChars="5" x="452" y="256" width="60" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingresa un porcentaje de descuento, aplicable a todos los productos de la planilla"/>
-	<s:Label x="1012" y="315" fontSize="16" fontWeight="bold" text="VENDEDORES:"/>
-	<components:AutoComplete id="cmbVendedores" x="1012" y="330" width="184" labelField="nameuser" allowDuplicates="false" dropDownRowCount="10"
+	<s:Label x="320" y="263" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
+	<controls:MaskedTextInput text="0.00" maxChars="5" x="437" y="256" width="60" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingresa un porcentaje de descuento, aplicable a todos los productos de la planilla"/>
+	<s:Label x="826" y="394" fontSize="16" fontWeight="bold" text="VENDEDORES:"/>
+	<components:AutoComplete id="cmbVendedores" x="826" y="409" width="184" labelField="nameuser" allowDuplicates="false" dropDownRowCount="10"
 							 fontSize="16" fontWeight="bold" matchType="beginning">
 	</components:AutoComplete>
-	<s:Label x="1045" y="11" fontSize="14" fontWeight="bold" text="Nota de pedido entregada"/>
-	<s:Label x="1046" y="66" fontSize="14" fontWeight="bold" text="Nota de pedido stock futuro"/>
-	<s:VGroup x="1048" y="78">
+	<s:Label x="994" y="10" fontSize="14" fontWeight="bold" text="Nota de pedido entregada"/>
+	<s:Label x="995" y="65" fontSize="14" fontWeight="bold" text="Nota de pedido stock futuro"/>
+	<s:VGroup x="996" y="77">
 		<s:RadioButton id="rdbstockfuturosi" label="Si" groupName="stockFuturo" selected="true"/>
 		<s:RadioButton id="rdbstockfuturono" label="No" groupName="stockFuturo"/>
 	</s:VGroup>
-	<s:Label x="1049" y="129" fontSize="14" fontWeight="bold" text="Nota de pedido cancelada"/>
-	<s:VGroup x="1052" y="142">
+	<s:Label x="997" y="128" fontSize="14" fontWeight="bold" text="Nota de pedido cancelada"/>
+	<s:VGroup x="998" y="141">
 		<s:RadioButton id="rdbcanceladanotasi" label="Si" groupName="notaCancelada"/>
 		<s:RadioButton id="rdbcanceladanotano" label="No" selected="true" groupName="notaCancelada"/>
 	</s:VGroup>
-	<s:RadioButton id="rdbentregadosi" x="1044" y="25" label="Si" groupName="GrupoEntregado"/>
-	<s:RadioButton id="rdbentregadono" x="1044" y="43" label="No" groupName="GrupoEntregado"
+	<s:RadioButton id="rdbentregadosi" x="995" y="24" label="Si" groupName="GrupoEntregado"/>
+	<s:RadioButton id="rdbentregadono" x="995" y="42" label="No" groupName="GrupoEntregado"
 				   selected="true"/>
-	<s:Label x="1052" y="204" fontSize="14" fontWeight="bold" text="Nota anulada"/>
-	<s:VGroup x="1053" y="220" width="45" height="57">
+	<s:Label x="1000" y="196" fontSize="14" fontWeight="bold" text="Nota anulada"/>
+	<s:VGroup x="1000" y="212" width="39" height="50">
 		<s:RadioButton id="rdanuladasi" label="Si" groupName="anulada"/>
 		<s:RadioButton id="rdanuladano" label="No" selected="true" groupName="anulada"/>
 	</s:VGroup>
-	<s:Label x="1012" y="367" fontFamily="Arial" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
-	<s:TextInput id="txtpassword" x="1013" y="390" width="183" fontSize="16" fontStyle="normal"
+	<s:Label x="826" y="448" fontFamily="Arial" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
+	<s:TextInput id="txtpassword" x="827" y="469" width="183" fontSize="16" fontStyle="normal"
 				 prompt="Ingresar password de vendedor"/>
-	<s:Button id="btnguardarentregada" x="1087" y="33" label="Entregar" toolTip="Almacena el estado de Entregado de la Nota de Pedido Seleccionada"/>
-	<s:Button id="btnstockfuturo" x="1091" y="95" label="StockFuturo" toolTip="Alacena el estado de Stock futuro de la Nota de Pedido Seleccionada"/>
-	<s:Button x="1095" y="167" label="Cancelar" toolTip="Cambia el estado cancelada de la Nota de Pedido Seleccionada"/>
-	<s:Button x="1100" y="249" label="Anular" toolTip="Cambia el estado de anulada de la Nota de Pedido Seleccionada"/>
+	<s:Button id="btnguardarentregada" x="1048" y="32" label="Entregar" toolTip="Almacena el estado de Entregado de la Nota de Pedido Seleccionada"/>
+	<s:Button id="btnstockfuturo" x="1049" y="94" label="StockFuturo" toolTip="Alacena el estado de Stock futuro de la Nota de Pedido Seleccionada"/>
+	<s:Button x="1049" y="166" label="Cancelar" toolTip="Cambia el estado cancelada de la Nota de Pedido Seleccionada"/>
+	<s:Button x="1048" y="240" label="Anular" toolTip="Cambia el estado de anulada de la Nota de Pedido Seleccionada"/>
+	<components:AdvancedAutoComplete id="cmbTarjetasCreditoDebito" x="825" y="302" width="221"
+									 fontSize="16" labelField="descripcion"
+									 toolTip="Seleccione una Tarjeta de Crédito o Débito si el cliente utiliza esta forma de pago!!!">
+	</components:AdvancedAutoComplete>
+	<s:Label x="825" y="290" fontSize="14" fontWeight="bold" text="Tarjetas de Crédito / Débito" toolTip="Seleccione si o no para registrar que la nota de pedido fue entregada al Cliente"/>
+	<controls:MaskedTextInput id="txtnumerocuponpago" x="827" y="359" fontFamily="Verdana"
+							  fontSize="16" inputMask="####-####-####-####" maxChars="19"
+							  toolTip="Ingrese en Número de Tarjeta de Crédito o Débito del Plástico"/>
+	<s:Label x="825" y="343" fontSize="14" fontWeight="bold"
+			 text="Número de cupón tarjeta de credito/debito:"/>
+	<s:Label x="1068" y="270" fontSize="14" fontWeight="bold" text="Pago contado"/>
+	<s:VGroup x="1069" y="285" width="43" height="50">
+		<s:RadioButton id="rdbenefectivosi" label="Si" selected="true" groupName="enfectivo"/>
+		<s:RadioButton id="rdbenefectivono" label="No" groupName="enfectivo"/>
+	</s:VGroup>
+	<s:Button x="1118" y="313" label="Pago" toolTip="Seleccione si o no para registrar forma de pago de la nota de pedido"/>
+	<s:DataGrid id="adghistorico" x="827" y="512" width="203" height="86" requestedRowCount="4">
+		<s:columns>
+			<s:ArrayList>
+				<s:GridColumn dataField="fecharegistro" headerText="FechaRegistro"></s:GridColumn>
+				<s:GridColumn dataField="anticipo" headerText="Anticipo"></s:GridColumn>				
+			</s:ArrayList>
+		</s:columns>		
+	</s:DataGrid>
+	<s:Label x="828" y="499" fontSize="16" fontWeight="bold" text="HISTORICO"/>
 </s:Group>
 
 
