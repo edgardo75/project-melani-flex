@@ -8,6 +8,8 @@
 		 width="1214" height="644" initialize="group1_initializeHandler(event)">
 	<fx:Script>
 		<![CDATA[
+			import assets.DataGridUtil;
+			
 			import com.actions.CabeceraNota;
 			import com.actions.detallesVerNotas;
 			import com.components.products.datosProducto;
@@ -126,12 +128,11 @@
 				if(detallenotas.length>0)
 					detallenotas.removeAll();
 				
-				/*if(btnExportar.enabled==false)	
-					btnExportar.enabled=true;
+				
 				if(btnImprimir.enabled==false)
 					btnImprimir.enabled=true;
 				if(btnRegargarlistado.enabled==true)
-					btnRegargarlistado.enabled=false;*/
+					btnRegargarlistado.enabled=false;
 				
 				
 				
@@ -1150,6 +1151,7 @@
 				wsempleados.selectAllEmpleados();
 				wstarjetascreditodebito.searchAllTarjetasCreditoDebito();
 				cmbproduct.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				mskisearchidnota.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txtpreciop.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txtdescuento.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				mskcantidad.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
@@ -1212,6 +1214,22 @@
 					
 					if(KeyPress.currentTarget.toString().indexOf("mskanticipo")!=-1)
 						calcularAnticipo();
+					
+					if(KeyPress.target.toString().indexOf("mskisearchidnota")!=-1){
+						
+						//searchIdPresupuesto();
+						indexPage=0;
+						//SIZEPAGE:int=100;
+						totalReg=0;
+						
+						last_btn.enabled=false;
+						next_btn.enabled=false;
+						first_btn.enabled=false;
+						prev_btn.enabled=false;
+						
+						wsnotas.selectUnaNota(int(mskisearchidnota.text));
+						
+					}
 					
 					
 				}
@@ -1547,6 +1565,49 @@
 				
 			}
 			
+			protected function btnRegargarlistado_clickHandler(event:MouseEvent):void
+			{
+				wsnotas.getRecorCountNotas();
+				
+			}
+			
+			protected function operation5_resultHandler(event:ResultEvent):void
+			{
+				
+				if(event.result.toString().indexOf("Error no paso nada ")!=-1)
+					Alert.show("LA CONSULTA NO ARROJÓ RESULTADOS!!!");
+					
+				else{
+					xmlNotas=new XMLList(event.result);
+					
+					addgrid();
+					
+					btnRegargarlistado.enabled=true;
+				}
+				
+			}
+			
+			protected function operation5_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("Error al recargar notas de pedido");
+				
+			}
+			protected function btnImprimir_clickHandler(event:MouseEvent):void
+			{
+				
+				if(adgNotas.selectedItem.id>0){
+					
+					var source:String="http://localhost:8080/WebMelanie/ShowReportNotaPedido?nronota="+adgNotas.selectedItem.id;
+					
+					var urlReq:URLRequest= new URLRequest(source);
+					navigateToURL(urlReq,"_blank");
+				}else
+					Alert.show("DEBE SELECCIONAR UNA NOTA DE PEDIDO");
+			
+				
+			}
+			//----------------------------------------------------------------------------
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -1572,6 +1633,11 @@
 						 fault="operation3_faultHandler(event)">
 				
 			</s:operation>
+			<s:operation name="selectUnaNota"
+						 result="operation5_resultHandler(event)"
+						 fault="operation5_faultHandler(event)"
+				/>
+				
 		</s:WebService>
 		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
 			<s:operation name="selectAllEmpleados"
@@ -1655,7 +1721,7 @@
 	</s:DataGrid>
 	<s:Label x="21" y="176" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="Cliente:"/>
 	<s:Label id="lblnombreyapecli" x="91" y="171" width="288" fontSize="16"/>
-	<s:TextArea id="txtobservaciones" x="533" y="167" width="447" height="110" maxChars="32000"/>
+	<s:TextArea id="txtobservaciones" x="394" y="159" width="596" height="88" maxChars="32000"/>
 	
 	<mx:AdvancedDataGrid id="adglistpedprod" x="9" y="287" width="809" height="149"
 						 alternatingItemColors="[#adf1f5, white]"
@@ -1732,10 +1798,10 @@
 							 dropDownRowCount="10" fontSize="16" fontWeight="bold"
 							 labelField="descripcion" matchType="beginning" tabEnabled="false">
 	</components:AutoComplete>
-	<s:Button id="btnremover" x="43" y="484" label="Remover Todo"
+	<s:Button id="btnremover" x="9" y="442" label="Remover Todo"
 			  click="btnremover_clickHandler(event)" enabled="false" fontSize="16"
 			  toolTip="Elimina todos Los productos del Listado!!!"/>
-	<s:Button id="brncargarunproducto" x="43" y="505" label="Cargar Producto"
+	<s:Button id="brncargarunproducto" x="9" y="463" label="Cargar Producto"
 			  click="brncargarunproducto_clickHandler(event)" fontSize="16"
 			  toolTip="Muestra una Ventana para cargar un Producto"/>
 	<s:Label x="320" y="263" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
@@ -1795,6 +1861,12 @@
 		</s:columns>		
 	</s:DataGrid>
 	<s:Label x="828" y="499" fontSize="16" fontWeight="bold" text="HISTORICO"/>
+	<s:Button id="btnRegargarlistado" x="9" y="484" width="153" label="Regargar Listado"
+			  click="btnRegargarlistado_clickHandler(event)" enabled="false" fontSize="16"/>
+	<controls:MaskedTextInput id="mskisearchidnota" x="227" y="463" width="152" restrict="0-9" toolTip="Ingrese Número de Nota de Pedido"/>
+	<s:Label x="227" y="449" text="BUSCAR NOTA DE PEDIDO"/>
+	<s:Button id="btnImprimir" x="9" y="505" width="152" label="Imprimir"
+			  click="btnImprimir_clickHandler(event)" enabled="false" fontSize="16" toolTip="Imprimie una nota de pedido seleccionada del listado"/>
 </s:Group>
 
 
