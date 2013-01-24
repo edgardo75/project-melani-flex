@@ -1138,7 +1138,7 @@
 			
 			protected function operation2_resultHandlerSelectAllEmpleados(event:ResultEvent):void
 			{
-				
+				Alert.show(event.result.toString());
 				xmlListEmpleados = new XMLList(event.result);
 				cmbVendedores.dataProvider=empleadoslist;
 				
@@ -1607,6 +1607,45 @@
 				
 			}
 			//----------------------------------------------------------------------------
+			protected function verificoVendedorConSuPassword():Boolean{
+			var b:Boolean=false;
+				
+				if(cmbVendedores.text.length>0){
+					
+					for(var i:int=0;i<empleadoslist.length;i++){
+						if(cmbVendedores.selectedItem.nameuser==empleadoslist[i].nameuser&&txtpassword.text==empleadoslist[i].clave){
+							b=true;
+							break;
+						}
+						
+						
+					}
+					
+					if(b)
+						return true;
+					else
+						Alert.show("Usuario y Password no coinciden ingrese nuevamente");
+				}else
+					Alert.show("Debe ingresar un Vendedor con su password correspondiente");
+				
+			return b;
+			}
+			protected function btnguardarentregada_clickHandler(event:MouseEvent):void
+			{
+				var b:Boolean=false;
+				
+				if(rdbentregadosi.selected==true)
+					b=verificoVendedorConSuPassword();
+				else
+					Alert.show("Debe seleccionar Entregado Si");
+				
+				
+				//Alert.show(String(cmbVendedores.text.length));
+				
+					
+					
+					
+			}
 			
 		]]>
 	</fx:Script>
@@ -1831,8 +1870,10 @@
 	</s:VGroup>
 	<s:Label x="826" y="448" fontFamily="Arial" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
 	<s:TextInput id="txtpassword" x="827" y="469" width="183" fontSize="16" fontStyle="normal"
-				 prompt="Ingresar password de vendedor"/>
-	<s:Button id="btnguardarentregada" x="1048" y="32" label="Entregar" toolTip="Almacena el estado de Entregado de la Nota de Pedido Seleccionada"/>
+				 prompt="Ingresar password de vendedor" displayAsPassword="true"/>
+	<s:Button id="btnguardarentregada" x="1048" y="32" label="Entregar"
+			  click="btnguardarentregada_clickHandler(event)"
+			  toolTip="Almacena el estado de Entregado de la Nota de Pedido Seleccionada"/>
 	<s:Button id="btnstockfuturo" x="1049" y="94" label="StockFuturo" toolTip="Alacena el estado de Stock futuro de la Nota de Pedido Seleccionada"/>
 	<s:Button x="1049" y="166" label="Cancelar" toolTip="Cambia el estado cancelada de la Nota de Pedido Seleccionada"/>
 	<s:Button x="1048" y="240" label="Anular" toolTip="Cambia el estado de anulada de la Nota de Pedido Seleccionada"/>
