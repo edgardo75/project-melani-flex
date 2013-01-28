@@ -875,8 +875,10 @@
 			}
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			public function anticipocalculoreuso():void{				
-				anticipo=Number(Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskanticipo.text)).toFixed(3));
-				lblsaldo.text=anticipo.toFixed(3);
+				if(Number(Number(Number(lblTotApagar.text).toFixed(3))>=Number(mskanticipo.text))){
+					anticipo=Number(Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskanticipo.text)).toFixed(3));
+					lblsaldo.text=anticipo.toFixed(3);
+				}else Alert.show("EL ANTICIPO NO PUEDE SER MAYOR AL TOTAL A PAGAR");
 			}
 			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			public function calcularRecargoVariant():void{
