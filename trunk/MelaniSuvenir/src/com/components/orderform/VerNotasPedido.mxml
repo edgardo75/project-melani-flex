@@ -104,7 +104,7 @@
 			
 			protected function operation2_resultHandler(event:ResultEvent):void
 			{
-				
+				//Alert.show(event.result.toString());
 				xmlNotas=new XMLList(event.result);
 				
 				addgrid();
@@ -114,14 +114,7 @@
 			private function addgrid():void{
 				
 				var headerNota:CabeceraNota;
-				adgNotas.dataProvider=notas;
-				
-				
-				
-				
-				
-				
-				
+				adgNotas.dataProvider=notas;			
 				
 				
 
@@ -141,7 +134,7 @@
 			
 			protected function operation2_faultHandler(event:FaultEvent):void
 			{
-				// TODO Auto-generated method stub
+				Alert.show("ERROR VERIFIQUE");
 				
 			}
 			
@@ -270,7 +263,12 @@
 				txtnumerocuponpago.text=notas[adgNotas.selectedIndex].numerocupon;
 				detallenotas.source=notas[adgNotas.selectedIndex].detallenota.itemdetalle;
 				
+			
+				
 				listhistoricoselected.source=notas[adgNotas.selectedIndex].detallehistorico.item;
+				
+				
+				
 				
 				
 				if(int(notas[adgNotas.selectedIndex].anulado)==0)
@@ -287,16 +285,14 @@
 					rdbentregadono.selected=true;
 				else
 					rdbentregadosi.selected=true;
-				if(int(notas[adgNotas.selectedIndex].stockfuturo)==0)
-					rdbstockfuturono.selected=true;
-				else
-					rdbstockfuturosi.selected=true;
+				
+		
 					
 				addDetalles();
 				
 			}
 			protected function addDetalles():void{
-				//Alert.show(notas[adgNotas.selectedIndex].toString());
+				
 				if(detallenotasList.length>0){
 					detallenotasList.removeAll();
 					
@@ -406,6 +402,8 @@
 				arrayDg.source=dp;
 				
 				adglistpedprod.dataProvider=arrayDg;
+				
+				
 				
 				adghistorico.dataProvider=listhistoricoselected;
 				
@@ -1065,9 +1063,12 @@
 				}
 			}
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-			public function anticipocalculoreuso():void{				
-				anticipo=Number(Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskanticipo.text)).toFixed(3));
-				lblsaldo.text=anticipo.toFixed(3);
+			public function anticipocalculoreuso():void{
+				if(Number(Number(Number(lblTotApagar.text).toFixed(3))>=Number(mskanticipo.text))){
+					anticipo=Number(Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskanticipo.text)).toFixed(3));
+					lblsaldo.text=anticipo.toFixed(3);
+				}else Alert.show("EL ANTICIPO NO PUEDE SER MAYOR AL TOTAL A PAGAR");
+					
 			}
 			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1138,7 +1139,7 @@
 			
 			protected function operation2_resultHandlerSelectAllEmpleados(event:ResultEvent):void
 			{
-				Alert.show(event.result.toString());
+				
 				xmlListEmpleados = new XMLList(event.result);
 				cmbVendedores.dataProvider=empleadoslist;
 				
@@ -1634,17 +1635,151 @@
 			{
 				var b:Boolean=false;
 				
-				if(rdbentregadosi.selected==true)
-					b=verificoVendedorConSuPassword();
-				else
-					Alert.show("Debe seleccionar Entregado Si");
+				
+				if(adgNotas.selectedItem.id>0){
+						if(rdbentregadosi.selected==true){
+							if(verificoVendedorConSuPassword())
+									wsnotas.entregarNotaPedido(adgNotas.selectedItem.id,cmbVendedores.selectedItem.id,1);
+						}else{						
+								if(rdbentregadono.selected==true){
+									if(verificoVendedorConSuPassword())
+										wsnotas.entregarNotaPedido(adgNotas.selectedItem.id,cmbVendedores.selectedItem.id,0);
+								}
+						}
+				}else
+					Alert.show("Debe seleccionar una nota en la grilla");
 				
 				
-				//Alert.show(String(cmbVendedores.text.length));
 				
 					
 					
 					
+			}
+			
+			protected function operation6_resultHandler(event:ResultEvent):void
+			{var result:int=event.result.toString();
+				cmbVendedores.text="";
+				txtpassword.text="";
+				switch(result)
+				{
+					case -1:
+					{
+						Alert.show("ERROR EN EL SERVIDOR, VERIFIQUE");
+						break;
+					}
+						
+					default:
+					{
+						Alert.show("NOTA "+result+" MODIFICADO ESTADO ENTREGADO");
+						
+						
+						wsnotas.getRecorCountNotas();
+						break;
+					}
+				}
+				
+			}
+			
+			protected function operation6_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("ERROR AL EJECUTAR ENTREGA DE NOTA DE PEDIDO");
+			}
+			
+			protected function operation7_resultHandler(event:ResultEvent):void
+			{
+				var anulado:int=event.result.toString();
+				cmbVendedores.text="";
+				txtpassword.text="";
+				switch(anulado)
+				{
+					case -1:
+					{
+						Alert.show("Error al anular nota de pedido, verifique");
+						break;
+					}
+						
+					default:
+					{
+						Alert.show("NOTA DE PEDIDO "+anulado+" CAMBIO DE ESTADO ANULADO");
+						wsnotas.getRecorCountNotas();
+						break;
+					}
+				}
+				
+			}
+			
+			protected function operation7_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("Error al anular nota de pedido");
+			}
+			
+			protected function operation8_resultHandler(event:ResultEvent):void
+			{
+				var cancelado:int=event.result.toString();
+				cmbVendedores.text="";
+				txtpassword.text="";
+				switch(cancelado)
+				{
+					case -1:
+					{
+					Alert.show("Error al cancelar nota verifique");
+						break;
+					}
+						
+					default:
+					{
+						Alert.show("NOTA DE PEDIDO "+cancelado+" CAMBIO DE ESTADO CACELADO");
+						wsnotas.getRecorCountNotas();
+						break;
+					}
+				}
+				
+			}
+			
+			protected function operation8_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("Error al cancelar nota de pedido");
+			}
+			
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				
+				var b:Boolean=false;
+				
+				
+				if(adgNotas.selectedItem.id>0){
+					if(rdbcanceladanotasi.selected==true){
+						if(verificoVendedorConSuPassword())
+							wsnotas.cancelarNotaPedido(adgNotas.selectedItem.id,cmbVendedores.selectedItem.id,1);
+					}else{						
+						if(rdbcanceladanotano.selected==true){
+							if(verificoVendedorConSuPassword())
+								wsnotas.cancelarNotaPedido(adgNotas.selectedItem.id,cmbVendedores.selectedItem.id,0);
+						}
+					}
+				}else
+					Alert.show("Debe seleccionar una nota en la grilla");
+				
+			}
+			
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				var b:Boolean=false;
+				
+				
+				if(adgNotas.selectedItem.id>0){
+					if(rdanuladasi.selected==true){
+						if(verificoVendedorConSuPassword())
+							wsnotas.anularNotaPedido(adgNotas.selectedItem.id,cmbVendedores.selectedItem.id,1);
+					}else{						
+						if(rdanuladano.selected==true){
+							if(verificoVendedorConSuPassword())
+								wsnotas.anularNotaPedido(adgNotas.selectedItem.id,cmbVendedores.selectedItem.id,0);
+						}
+					}
+				}else
+					Alert.show("Debe seleccionar una nota en la grilla");
+				
 			}
 			
 		]]>
@@ -1657,6 +1792,21 @@
 		<s:ArrayCollection id="arrayDg"/>
 		<s:DateTimeFormatter id="dtf" dateTimePattern="dd/MM/yyyy"/>
 		<s:WebService id="wsnotas" wsdl="http://localhost:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true">
+			<s:operation name="cancelarNotaPedido"
+						 result="operation8_resultHandler(event)"
+						 fault="operation8_faultHandler(event)">
+				
+			</s:operation>
+			<s:operation name="anularNotaPedido"
+						 result="operation7_resultHandler(event)"
+						 fault="operation7_faultHandler(event)">
+				
+			</s:operation>
+			<s:operation name="entregarNotaPedido"
+						 result="operation6_resultHandler(event)"
+						 fault="operation6_faultHandler(event)">
+				
+			</s:operation>
 			<s:operation name="getRecorCountNotas"
 						 result="operation1_resultHandler(event)"
 						 fault="operation1_faultHandler(event)">
@@ -1850,21 +2000,16 @@
 							 fontSize="16" fontWeight="bold" matchType="beginning">
 	</components:AutoComplete>
 	<s:Label x="994" y="10" fontSize="14" fontWeight="bold" text="Nota de pedido entregada"/>
-	<s:Label x="995" y="65" fontSize="14" fontWeight="bold" text="Nota de pedido stock futuro"/>
+	<s:Label x="995" y="64" fontSize="14" fontWeight="bold" text="Nota de pedido cancelada"/>
 	<s:VGroup x="996" y="77">
-		<s:RadioButton id="rdbstockfuturosi" label="Si" groupName="stockFuturo" selected="true"/>
-		<s:RadioButton id="rdbstockfuturono" label="No" groupName="stockFuturo"/>
-	</s:VGroup>
-	<s:Label x="997" y="128" fontSize="14" fontWeight="bold" text="Nota de pedido cancelada"/>
-	<s:VGroup x="998" y="141">
 		<s:RadioButton id="rdbcanceladanotasi" label="Si" groupName="notaCancelada"/>
 		<s:RadioButton id="rdbcanceladanotano" label="No" selected="true" groupName="notaCancelada"/>
 	</s:VGroup>
 	<s:RadioButton id="rdbentregadosi" x="995" y="24" label="Si" groupName="GrupoEntregado"/>
 	<s:RadioButton id="rdbentregadono" x="995" y="42" label="No" groupName="GrupoEntregado"
 				   selected="true"/>
-	<s:Label x="1000" y="196" fontSize="14" fontWeight="bold" text="Nota anulada"/>
-	<s:VGroup x="1000" y="212" width="39" height="50">
+	<s:Label x="998" y="132" fontSize="14" fontWeight="bold" text="Nota anulada"/>
+	<s:VGroup x="998" y="148" width="39" height="50">
 		<s:RadioButton id="rdanuladasi" label="Si" groupName="anulada"/>
 		<s:RadioButton id="rdanuladano" label="No" selected="true" groupName="anulada"/>
 	</s:VGroup>
@@ -1874,9 +2019,10 @@
 	<s:Button id="btnguardarentregada" x="1048" y="32" label="Entregar"
 			  click="btnguardarentregada_clickHandler(event)"
 			  toolTip="Almacena el estado de Entregado de la Nota de Pedido Seleccionada"/>
-	<s:Button id="btnstockfuturo" x="1049" y="94" label="StockFuturo" toolTip="Alacena el estado de Stock futuro de la Nota de Pedido Seleccionada"/>
-	<s:Button x="1049" y="166" label="Cancelar" toolTip="Cambia el estado cancelada de la Nota de Pedido Seleccionada"/>
-	<s:Button x="1048" y="240" label="Anular" toolTip="Cambia el estado de anulada de la Nota de Pedido Seleccionada"/>
+	<s:Button x="1047" y="102" label="Cancelar" click="button1_clickHandler(event)"
+			  toolTip="Cambia el estado cancelada de la Nota de Pedido Seleccionada"/>
+	<s:Button x="1046" y="176" label="Anular" click="button2_clickHandler(event)"
+			  toolTip="Cambia el estado de anulada de la Nota de Pedido Seleccionada"/>
 	<components:AdvancedAutoComplete id="cmbTarjetasCreditoDebito" x="825" y="302" width="221"
 									 fontSize="16" labelField="descripcion"
 									 toolTip="Seleccione una Tarjeta de Crédito o Débito si el cliente utiliza esta forma de pago!!!">
@@ -1887,12 +2033,6 @@
 							  toolTip="Ingrese en Número de Tarjeta de Crédito o Débito del Plástico"/>
 	<s:Label x="825" y="343" fontSize="14" fontWeight="bold"
 			 text="Número de cupón tarjeta de credito/debito:"/>
-	<s:Label x="1068" y="270" fontSize="14" fontWeight="bold" text="Pago contado"/>
-	<s:VGroup x="1069" y="285" width="43" height="50">
-		<s:RadioButton id="rdbenefectivosi" label="Si" selected="true" groupName="enfectivo"/>
-		<s:RadioButton id="rdbenefectivono" label="No" groupName="enfectivo"/>
-	</s:VGroup>
-	<s:Button x="1118" y="313" label="Pago" toolTip="Seleccione si o no para registrar forma de pago de la nota de pedido"/>
 	<s:DataGrid id="adghistorico" x="827" y="512" width="203" height="86" requestedRowCount="4">
 		<s:columns>
 			<s:ArrayList>
