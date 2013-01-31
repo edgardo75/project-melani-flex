@@ -39,6 +39,8 @@
 			[Bindable]
 			public var totGral:Number;
 			[Bindable]
+			public var totRecargo:Number;
+			[Bindable]
 			public var totGralDesc:Number;
 			[Bindable]
 			private var precio_desc:Number;
@@ -49,7 +51,7 @@
 			[Bindable]
 			public var desc_resto:Number=0;
 			[Bindable]
-			public var tot_recargo:Number=0;
+			public var tot_recargo_porc:Number=0;
 			[Bindable]
 			public var temp_tot_porc_desc:Number=0;
 			[Bindable]
@@ -69,6 +71,16 @@
 			private var xmlNotas:XMLList;
 			[Bindable]
 			private var detalles:detallesVerNotas;
+			[Bindable]
+			private var idcliente:int;
+			[Bindable]
+			private var nrodocucli:int;
+			[Bindable]
+			private var feentrega:String;
+			[Bindable]
+			private var stockfuturo:String;
+			[Bindable]
+			private var efectivo:String;
 			
 			
 			protected function operation1_resultHandler(event:ResultEvent):void
@@ -104,7 +116,7 @@
 			
 			protected function operation2_resultHandler(event:ResultEvent):void
 			{
-				//Alert.show(event.result.toString());
+				Alert.show(event.result.toString());
 				xmlNotas=new XMLList(event.result);
 				
 				addgrid();
@@ -258,10 +270,18 @@
 			{
 				
 				lblnombreyapecli.text=String(notas[adgNotas.selectedIndex].cliente.apellidoynombre);
+				nrodocucli=int(notas[adgNotas.selectedIndex].cliente.nrodocumento);
+				idcliente=int(notas[adgNotas.selectedIndex].cliente.id);
+				feentrega=String(notas[adgNotas.selectedIndex].fechaentrega);
+				stockfuturo=String(notas[adgNotas.selectedIndex].stockfuturo);
+				efectivo=String(notas[adgNotas.selectedIndex].efectivo);
 				txtobservaciones.text=String(notas[adgNotas.selectedIndex].observaciones);
 				cmbTarjetasCreditoDebito.selectedItemId=notas[adgNotas.selectedIndex].idtarjeta;
 				txtnumerocuponpago.text=notas[adgNotas.selectedIndex].numerocupon;
 				detallenotas.source=notas[adgNotas.selectedIndex].detallenota.itemdetalle;
+				
+				
+				
 				
 			
 				
@@ -319,8 +339,9 @@
 					lbltotalconrecargo.text="0.000";
 					lblsaldo.text="0.000";
 					desc_resto=0;
-					tot_recargo=0;
+					tot_recargo_porc=0;
 					anticipo=0;
+					totRecargo=0;
 				}
 				
 			var b:Boolean=false;
@@ -366,35 +387,41 @@
 				if(b==false)
 					txtdescuento.text=notas[adgNotas.selectedIndex].porcentajedesctotal;
 				
-				
 				totGral=notas[adgNotas.selectedIndex].total;
 				
-				tot_recargo=notas[adgNotas.selectedIndex].porcrecargo;
+				tot_recargo_porc=notas[adgNotas.selectedIndex].porcrecargo;
 				totGralDesc=Math.abs(Number(notas[adgNotas.selectedIndex].descuentonota));
 				porc_desc_total=notas[adgNotas.selectedIndex].porcentajedesctotal;
+				totRecargo=notas[adgNotas.selectedIndex].recargototal;
+				
+				anticipo=notas[adgNotas.selectedIndex].anticipo;
+				
 				
 				mskanticipo.text=notas[adgNotas.selectedIndex].anticipo;
 				mskrecargo.text=notas[adgNotas.selectedIndex].porcrecargo;
-			
+				
 				
 				//************************************************************************************+
 				//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				
-					lblTotGral.text=String(totGral.toFixed(3));
-					lbldescuento.text=Number(Number(notas[adgNotas.selectedIndex].descuentonota)).toFixed(3);
-					lblTotApagar.text=Number(Number(notas[adgNotas.selectedIndex].montototalapagar)).toFixed(3);
-					lblsaldo.text=Number(Number(notas[adgNotas.selectedIndex].saldo)).toFixed(3);
-					lbltotalconrecargo.text=Number(Number(notas[adgNotas.selectedIndex].recargototal)).toFixed(3);
-			
+				lblTotGral.text=String(totGral.toFixed(3));
+				lbldescuento.text=Number(Number(notas[adgNotas.selectedIndex].descuentonota)).toFixed(3);
+				lblTotApagar.text=Number(Number(notas[adgNotas.selectedIndex].montototalapagar)).toFixed(3);
+				lblsaldo.text=Number(Number(notas[adgNotas.selectedIndex].saldo)).toFixed(3);
+				lbltotalconrecargo.text=Number(Number(notas[adgNotas.selectedIndex].recargototal)).toFixed(3);
 				
 				
 				
-			
-			
-			
-			
-			//----------------------------------------------------------------------------------------------------------
+				
+				
+				
+				
+				
+				//----------------------------------------------------------------------------------------------------------
 				//**************************************************************************************
+				
+				
+				
 				
 				detallenotasList.refresh();
 				arrayDg.refresh();
@@ -497,7 +524,7 @@
 								lblsaldo.text="0.000";
 								lbltotalconrecargo.text="0.000";
 								desc_resto=0;
-								tot_recargo=0;
+								tot_recargo_porc=0;
 								temp_tot_porc_desc=0;
 								tempPorcDes=0;
 								tempTotDesc=0;
@@ -668,7 +695,7 @@
 									lblsaldo.text="0.000";
 									lbltotalconrecargo.text="0.000";
 									desc_resto=0;
-									tot_recargo=0;
+									tot_recargo_porc=0;
 									temp_tot_porc_desc=0;
 									tempPorcDes=0;
 									tempTotDesc=0;
@@ -1067,7 +1094,9 @@
 				if(Number(Number(Number(lblTotApagar.text).toFixed(3))>=Number(mskanticipo.text))){
 					anticipo=Number(Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskanticipo.text)).toFixed(3));
 					lblsaldo.text=anticipo.toFixed(3);
-				}else Alert.show("EL ANTICIPO NO PUEDE SER MAYOR AL TOTAL A PAGAR");
+				}
+				
+				//else					Alert.show("EL ANTICIPO NO PUEDE SER MAYOR AL TOTAL A PAGAR");
 					
 			}
 			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1090,26 +1119,26 @@
 				
 				if(Number(mskrecargo.text)==0||mskrecargo.text.length==0){
 					
-					tot_recargo=0;
+					tot_recargo_porc=0;
 					lbltotalconrecargo.text="0.000";
 					lblTotApagar.text=Number(totgral-descTotal).toFixed(3);
 					
 				}else{
-					if(tot_recargo==Number(mskrecargo.text))
-						tot_recargo=Number(mskrecargo.text);
+					if(tot_recargo_porc==Number(mskrecargo.text))
+						tot_recargo_porc=Number(mskrecargo.text);
 					else					
-						tot_recargo+=Number(mskrecargo.text);
+						tot_recargo_porc+=Number(mskrecargo.text);
 					
 					var calcularTotalAPagar:Number=totgral-descTotal;
 					
-					recargo=tot_recargo*Number(calcularTotalAPagar.toFixed(3))/100;
+					recargo=tot_recargo_porc*Number(calcularTotalAPagar.toFixed(3))/100;
 					lbltotalconrecargo.text=Number(Number(calcularTotalAPagar.toFixed(3))+recargo).toFixed(3);
 					
 					var lbltotrecargo:Number=Number(Number(lbltotalconrecargo.text).toFixed(3));					
 					var lbltotdesc:Number=Math.abs(Number(lbldescuento.text));					
 					lblTotApagar.text=Number(lbltotrecargo).toFixed(3);
 					
-					mskrecargo.text=tot_recargo.toFixed(2);
+					mskrecargo.text=tot_recargo_porc.toFixed(2);
 					
 					
 					
@@ -1158,6 +1187,7 @@
 				mskcantidad.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				mskrecargo.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				mskanticipo.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				btnactualizar.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				adglistpedprod.addEventListener(AdvancedDataGridEvent.ITEM_EDIT_END,itemEditEndHandler);
 				
 				
@@ -1231,10 +1261,144 @@
 						wsnotas.selectUnaNota(int(mskisearchidnota.text));
 						
 					}
+					if(KeyPress.target.toString().indexOf("btnactualizar")!=-1){
+					
+						Alert.show("Hola \n"+getDatosXML());
+					//wsnotas.actualizarNotaPedido(getDatosXML());
+					
+					}
 					
 					
 				}
 			}
+			//****************************************************************************************************
+			protected function getDatosXML():String{
+				var entregado:int=0;
+				var canceladanota:int=0;
+				var stockfuturo:int=0;
+				var anulada:int=0;
+				var enfectivo:int=0;
+				var porcdescAcum:Number=0;
+				
+				
+				if(txtdescuento.text.length==0)
+					txtdescuento.text="0.0";
+				if(mskrecargo.text.length==0)
+					mskrecargo.text="0.0";
+				if(mskanticipo.text.length==0)
+					mskanticipo.text="0.0";
+				if(rdbentregadosi.selected)
+					entregado=1;
+				
+				
+				if(rdbcanceladanotasi.selected)
+					canceladanota=1;
+				
+				
+				
+				
+				
+				
+				if(rdanuladasi.selected)
+					anulada=1;
+				
+				
+				
+				
+				
+				
+				var xmlnota:String="<notapedido>\n" +
+					"<idnota>0</idnota>\n" +
+					"<personas>\n" +
+					"<id>"+idcliente+"</id>\n" +
+					"<numerodocu>"+nrodocucli+"</numerodocu>\n" +
+					"</personas>\n" +
+					"<tarjetacredito>\n" +
+					"<id_tarjeta>"+cmbTarjetasCreditoDebito.selectedItem.id+"</id_tarjeta>\n" +
+					"</tarjetacredito>\n" +
+					"<porcentaje>\n" +
+					"<id_porcentaje>1</id_porcentaje>\n" +
+					"</porcentaje>\n" +
+					"<montototal>"+lblTotGral.text+"</montototal>\n" +
+					"<anticipo>"+mskanticipo.text+"</anticipo>\n" +
+					"<saldo>"+lblsaldo.text+"</saldo>\n" ;
+				if(entregado==1){
+					xmlnota+="<entregado>"+entregado+"</entregado>\n" +
+						"<usuario_entregado>"+cmbVendedores.selectedItem.id+"</usuario_entregado>\n" ;
+				}else{
+					xmlnota+="<entregado>"+entregado+"</entregado>\n" +
+						"<usuario_entregado>0</usuario_entregado>\n" ;
+				}
+				
+				xmlnota+="<usuario_expidio_nota>"+cmbVendedores.selectedItem.id+"</usuario_expidio_nota>\n" +
+					"<stockfuturo>"+stockfuturo+"</stockfuturo>\n" ;
+				if(anulada==1){
+					xmlnota+="<anulado>"+anulada+"</anulado>\n" +
+						"<id_usuario_anulado>"+cmbVendedores.selectedItem.id+"</id_usuario_anulado>\n" ;
+				}else{
+					xmlnota+="<anulado>"+anulada+"</anulado>\n" +
+						"<id_usuario_anulado>0</id_usuario_anulado>\n" ;
+					
+				}
+				if(canceladanota==1){
+					xmlnota+="<cancelado>"+canceladanota+"</cancelado>\n" +
+						"<usuario_cancelo_nota>"+cmbVendedores.selectedItem.id+"</usuario_cancelo_nota>\n" ;
+				}else{
+					xmlnota+="<cancelado>"+canceladanota+"</cancelado>\n" +
+						"<usuario_cancelo_nota>0</usuario_cancelo_nota>\n" ;
+				}
+				xmlnota+="<descuentonota>"+lbldescuento.text+"</descuentonota>\n" +				
+					"<porcentajerecargo>"+tot_recargo_porc+"</porcentajerecargo>\n" +
+					"<montototalapagar>"+lblTotApagar.text+"</montototalapagar>\n"+
+					"<observaciones>" +this.txtobservaciones.text+"</observaciones>\n" +
+					"<pendiente>"+entregado+"</pendiente>\n"+
+					"<montoiva>0</montoiva>\n"+
+					"<recargo>"+lbltotalconrecargo.text+"</recargo>\n" +
+					
+					"<fechaentrega>"+feentrega+"</fechaentrega>\n"+
+					"<numerodecupon>"+txtnumerocuponpago.text+"</numerodecupon>\n" +
+					"<enefectivo>"+enfectivo+"</enefectivo>\n"+
+					"<detallesnotapedido>\n" ;
+				
+				for(var ii:int=0;ii<arrayDg.length;){
+					
+					if(arrayDg[ii].price==0||arrayDg[ii].countt==0||arrayDg[ii].subtotal==0)
+						ii++;
+					else{
+						porcdescAcum+=Number(Number(arrayDg[ii].porc_desc).toFixed(2));
+						xmlnota+="<itemdetallesnota>\n" +
+							"<cantidad>"+arrayDg[ii].countt+"</cantidad>\n" +
+							"<preciocondescuento>"+arrayDg[ii].prec_descuento+"</preciocondescuento>\n" +
+							"<precio>"+arrayDg[ii].price+"</precio>\n" +
+							"<subtotal>"+Number(arrayDg[ii].subtotal).toFixed(3)+"</subtotal>\n" +									
+							"<entregado>"+entregado+"</entregado>\n" +
+							"<cancelado>"+canceladanota+"</cancelado>\n" +
+							"<anulado>"+anulada+"</anulado>\n" +
+							"<pendiente>"+entregado+"</pendiente>\n" +
+							"<descuento>"+Number(arrayDg[ii].porc_desc).toFixed(2)+"</descuento>\n" +
+							"<iva>0</iva>\n" +
+							"<id_nota>0</id_nota>\n" +
+							"<id_producto>"+arrayDg[ii].id+"</id_producto>\n" +
+							"</itemdetallesnota>\n" ;
+						ii++
+					}
+					
+				}
+				
+				
+				
+				xmlnota+= "</detallesnotapedido>\n" ;
+					if(porcdescAcum>0)
+						xmlnota+="<porc_descuento_total>"+Number(porcdescAcum).toFixed(2)+"</porc_descuento_total>\n" ;
+					else
+						xmlnota+="<porc_descuento_total>"+Number(txtdescuento.text).toFixed(2)+"</porc_descuento_total>\n" +
+					"</notapedido>\n";
+				
+				return xmlnota;
+				
+				
+			}	
+			//****************************************************************************************************
 			private function addadglistpedprod(idprod:String,codigoId:String,txtprecio:String,cantidad:String,descripcion:String,desc_porc:String):void{
 				
 				var subtot:Number;
@@ -1384,7 +1548,7 @@
 				lbltotalconrecargo.text="0.000";
 				lblsaldo.text="0.000";
 				desc_resto=0;
-				tot_recargo=0;
+				tot_recargo_porc=0;
 				anticipo=0;
 				
 				
@@ -1435,7 +1599,6 @@
 				
 			}
 			//--------------------------------------------------------------------------------------
-			//--------------------------------------------------------------------------------------
 			protected function delRowHandler(evt:CloseEvent):void{
 				var desc_parcial:Number=0;
 				var recargo:Number=0;
@@ -1447,13 +1610,7 @@
 				
 				
 				
-				//----------------------------------------Recargo si hay-------------------------------
-				if(tot_recargo>0){
-					
-					recargo=tot_recargo*totGral/100;
-					lbltotalconrecargo.text=Number(totGral+recargo).toFixed(3);
-					
-				}
+				
 				
 				
 				
@@ -1466,6 +1623,7 @@
 				
 				
 				//---------------------------------------------------------------------------------Controlo los descuentos y totales gral
+				
 				var totgrilla:Number=0;
 				for(var k:int=0;k<arrayDg.length;k++){
 					
@@ -1481,8 +1639,14 @@
 					
 					
 				}
+				totGral=totGral-Number(Number(adglistpedprod.selectedItem.countt)*Number(adglistpedprod.selectedItem.price));
+				totGralDesc=Number(totGralDesc.toFixed(3))-Number(Number(adglistpedprod.selectedItem.prec_descuento).toFixed(3));
+				porc_desc_total=porc_desc_total-Number(adglistpedprod.selectedItem.porc_desc);
+				
+				
 				//---------------------------------------------------------------------------------	
 				adglistpedprod.dataProvider.removeItemAt(adglistpedprod.selectedIndex);
+				
 				
 				arrayDg.refresh();
 				
@@ -1492,12 +1656,13 @@
 				
 				
 				//-------------------------------------------------------------------------------
+				
 				if(arrayDg.length==0){
 					
 					totGral=0;
 					totGralDesc=0;
 					precio_desc=0;
-					txtdescuento.text="0.0";
+					txtdescuento.text="0.000";
 					
 					txtpreciop.text="";
 					mskcantidad.text="";					
@@ -1505,49 +1670,32 @@
 					lblTotApagar.text="0.000";
 					lblTotGral.text="0.000";
 					porc_d=0;
-					anticipo=0;
 					porc_desc_total=0;		
 					lbldescuento.text="0.000";
-					lblsaldo.text="0.000";
 					lbltotalconrecargo.text="0.000";
+					lblsaldo.text="0.000"
 					desc_resto=0;
-					tot_recargo=0;
+					anticipo=0;
+					tot_recargo_porc=0;
 					temp_tot_porc_desc=0;
 					tempPorcDes=0;
 					tempTotDesc=0;
+					totRecargo=0;
 					
 				}else{
-					totGral=totgrilla;
-					lblTotGral.text=totGral.toFixed(3);
-					if(txtdescuento.text.length>0){
-						calcularDescuentoVariant();
-						calcularAnticipo();
-						
-					}else{
-						
-						totGralDesc=0;
-						
-						totGralDesc=Number(tempTotDesc.toFixed(2));
-						
-						temp_tot_porc_desc=0;
-						
-						temp_tot_porc_desc=Number(tempPorcDes.toFixed(2));
-						
-						
-						lblTotApagar.text=totGralDesc.toFixed(3);
-						
-						lbldescuento.text=Number(desc_resto).toFixed(3);
-						
-					}
 					
-					
-					
+					lblTotApagar.text=String(totgrilla-Number(totGralDesc.toFixed(3))+totRecargo);
+					lblTotGral.text=String(totGral);
+					lbldescuento.text=Number(-totGralDesc).toFixed(3);
+					lblsaldo.text=Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(anticipo.toFixed(3))).toFixed(3);
+					lbltotalconrecargo.text=String(totgrilla-Number(totGralDesc.toFixed(3))+totRecargo);
 					
 				}
 				
 				
 				cmbproduct.setFocus();
 				//------------------------------------------------------------------------------
+				Alert.show("DATOS2 "+arrayDg.length);
 				
 			}
 			//--------------------------------------------------------------------------------------
@@ -1782,6 +1930,21 @@
 				
 			}
 			
+			protected function operation9_resultHandler(event:ResultEvent):void
+			{
+				Alert.show(String(event.result.toString()));
+			}
+			
+			protected function operation9_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("Error al actualizar nota de pedido");
+			}
+			
+			protected function btnactualizar_clickHandler(event:MouseEvent):void
+			{
+				Alert.show(getDatosXML());
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -1792,6 +1955,11 @@
 		<s:ArrayCollection id="arrayDg"/>
 		<s:DateTimeFormatter id="dtf" dateTimePattern="dd/MM/yyyy"/>
 		<s:WebService id="wsnotas" wsdl="http://localhost:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true">
+			<s:operation name="actualizarNotaPedido"
+						 result="operation9_resultHandler(event)"
+						 fault="operation9_faultHandler(event)">
+				
+			</s:operation>
 			<s:operation name="cancelarNotaPedido"
 						 result="operation8_resultHandler(event)"
 						 fault="operation8_faultHandler(event)">
@@ -2048,6 +2216,8 @@
 	<s:Label x="227" y="449" text="BUSCAR NOTA DE PEDIDO"/>
 	<s:Button id="btnImprimir" x="9" y="505" width="152" label="Imprimir"
 			  click="btnImprimir_clickHandler(event)" enabled="false" fontSize="16" toolTip="Imprimie una nota de pedido seleccionada del listado"/>
+	<s:Button id="btnactualizar" x="611" y="597" label="Actualizar"
+			  click="btnactualizar_clickHandler(event)"/>
 </s:Group>
 
 
