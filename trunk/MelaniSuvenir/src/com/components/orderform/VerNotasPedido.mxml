@@ -1643,6 +1643,9 @@
 				totGralDesc=Number(totGralDesc.toFixed(3))-Number(Number(adglistpedprod.selectedItem.prec_descuento).toFixed(3));
 				porc_desc_total=porc_desc_total-Number(adglistpedprod.selectedItem.porc_desc);
 				
+			
+				
+				
 				
 				//---------------------------------------------------------------------------------	
 				adglistpedprod.dataProvider.removeItemAt(adglistpedprod.selectedIndex);
@@ -1681,14 +1684,39 @@
 					tempPorcDes=0;
 					tempTotDesc=0;
 					totRecargo=0;
+					notas[adgNotas.selectedIndex].saldo="0.000";
+					
+					notas[adgNotas.selectedIndex].recargototal="0.000";
+					notas[adgNotas.selectedIndex].montototalapagar="0.000";
+					notas[adgNotas.selectedIndex].total="0.000";
+					
+					notas[adgNotas.selectedIndex].descuentonota="0.000";
 					
 				}else{
 					
-					lblTotApagar.text=String(totgrilla-Number(totGralDesc.toFixed(3))+totRecargo);
+					lblTotApagar.text=String(totGral-Number(totGralDesc.toFixed(3))+totRecargo);
 					lblTotGral.text=String(totGral);
 					lbldescuento.text=Number(-totGralDesc).toFixed(3);
-					lblsaldo.text=Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(anticipo.toFixed(3))).toFixed(3);
-					lbltotalconrecargo.text=String(totgrilla-Number(totGralDesc.toFixed(3))+totRecargo);
+					
+					if(totRecargo==0){
+						lbltotalconrecargo.text="0.000";
+						lblsaldo.text="0.000"
+						notas[adgNotas.selectedIndex].saldo="0.000";
+						
+						notas[adgNotas.selectedIndex].recargototal="0.000";
+					}else{
+						lbltotalconrecargo.text=String(totgrilla-Number(totGralDesc.toFixed(3))+totRecargo);
+						notas[adgNotas.selectedIndex].saldo=Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(anticipo.toFixed(3))).toFixed(3);
+						lblsaldo.text=Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(anticipo.toFixed(3))).toFixed(3);
+						notas[adgNotas.selectedIndex].recargototal=totgrilla-Number(totGralDesc.toFixed(3))+totRecargo;
+					}
+					
+					
+					notas[adgNotas.selectedIndex].montototalapagar=totGral-Number(totGralDesc.toFixed(3))+totRecargo;
+					notas[adgNotas.selectedIndex].total=totGral.toFixed(3);
+					
+						notas[adgNotas.selectedIndex].descuentonota=Math.abs(Number(totGralDesc));
+						
 					
 				}
 				
@@ -2071,7 +2099,7 @@
 				<s:GridColumn headerText="Pago" dataField="montototalapagar"/>
 				<s:GridColumn headerText="Total" dataField="total"/>
 				<s:GridColumn headerText="Saldo" dataField="saldo"/>
-				<s:GridColumn headerText="Recargo" dataField="recargo"/>
+				<s:GridColumn headerText="DescuentoTotal" dataField="descuentonota"/>
 				<s:GridColumn headerText="RecargoTotal" dataField="recargototal"/>
 			</s:ArrayList>
 		</s:columns>		
