@@ -169,7 +169,7 @@
 								
 								txtpreciop.text="";
 								mskcantidad.text="";					
-								btnremover.enabled=false;
+								
 								lblTotApagar.text="0.000";
 								lblTotGral.text="0.000";
 								porc_d=0;
@@ -341,7 +341,7 @@
 									
 									txtpreciop.text="";
 									mskcantidad.text="";					
-									btnremover.enabled=false;
+									
 									lblTotApagar.text="0.000";
 									lblTotGral.text="0.000";
 									porc_d=0;
@@ -1066,7 +1066,7 @@
 						
 						txtpreciop.text="";
 						mskcantidad.text="";					
-						btnremover.enabled=false;
+						
 						lblTotApagar.text="0.000";
 						lblTotGral.text="0.000";
 						porc_d=0;
@@ -1124,8 +1124,10 @@
 				
 			}
 			//--------------------------------------------------------------------------------------
-			public function removerListadoPedidos(cls:CloseEvent):void{
+			public function removerListadoPedidos(evt:CloseEvent):void{
 				
+				
+				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;			
 				//----------------------------------------------------------
 				adglistpedprod.dataProvider.removeItems();
 				arrayDg.removeAll();
@@ -1140,7 +1142,7 @@
 				cmbproduct.setFocus();
 				txtpreciop.text="";
 				mskcantidad.text="";					
-				btnremover.enabled=false;
+				
 				lblTotApagar.text="0.000";
 				lblTotGral.text="0.000";
 				porc_d=0;
