@@ -2,8 +2,9 @@ package com.actions
 {
 	public class detallesVerNotas
 	{
-		public var idproduct:String;
+		public var code:String;
 		public var id:String;
+		public var idnota:String;
 		public var name:String;
 		public var countt:String;
 		public var price:String;

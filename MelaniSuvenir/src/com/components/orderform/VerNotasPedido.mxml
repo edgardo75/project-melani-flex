@@ -325,7 +325,7 @@
 					detallenotasList.removeAll();
 					
 					adglistpedprod.dataProvider.removeItems();
-					//adghistorico.dataProvider.removeAll();
+					
 					arrayDg.removeAll();
 					arrayDg.refresh();
 					
@@ -368,9 +368,10 @@
 				for(var i:int=0;i<detallenotas.length;i++){
 					
 							detalles=new detallesVerNotas();
-							detalles.idproduct=detallenotas[i].producto.id;
+							detalles.code=detallenotas[i].producto.code;
 							detalles.countt=detallenotas[i].cantidad;
 							detalles.id=detallenotas[i].producto.id;
+							detalles.idnota=detallenotas[i].idnota;
 							detalles.name=detallenotas[i].producto.descripcion;
 							detalles.price=detallenotas[i].precio;
 							detalles.porc_desc=detallenotas[i].descuento;
@@ -387,7 +388,7 @@
 							
 					
 					
-					dp.push({idproduct:detallenotas[i].producto.id,id:detallenotas[i].producto.id,name:detallenotas[i].producto.descripcion,countt:detallenotas[i].cantidad,price:detallenotas[i].precio,porc_desc:detallenotas[i].descuento,prec_descuento:detallenotas[i].preciocondescuento,subtotal:detallenotas[i].subtotal});
+					dp.push({idproduct:detallenotas[i].producto.code,idnota:detallenotas[i].idnota,id:detallenotas[i].producto.id,name:detallenotas[i].producto.descripcion,countt:detallenotas[i].cantidad,price:detallenotas[i].precio,porc_desc:detallenotas[i].descuento,prec_descuento:detallenotas[i].preciocondescuento,subtotal:detallenotas[i].subtotal});
 					
 					
 							
@@ -1209,10 +1210,10 @@
 			}
 			protected function btnremover_clickHandler(event:MouseEvent):void
 			{
-				if(arrayDg.length>0&&adgNotas.selectedIndex>0)
+				if(arrayDg.length>0&&adgNotas.selectedIndex>-1)
 					Alert.show("Esta seguro de remover los productos Listados?","Confirmar Eliminación", Alert.YES | Alert.NO, this, removerListadoPedidos, null, Alert.NO);
 				else
-					Alert.show("Debe seleccionar una nota del listado");
+					Alert.show("Debe seleccionar una nota del listado ");
 				
 			}
 			private function transferirFocus(KeyPress:KeyboardEvent):void{
@@ -1238,8 +1239,10 @@
 							
 							return;
 						}else{		
-							
-							addadglistpedprod(cmbproduct.selectedItem.idproduct,cmbproduct.selectedItem.id,txtpreciop.text,mskcantidad.text,cmbproduct.selectedItem.descripcion,txtdescuento.text);	
+							if(notas.length>0&&adgNotas.selectedIndex>-1)
+								addadglistpedprod(cmbproduct.selectedItem.idproduct,adgNotas.selectedItem.id,cmbproduct.selectedItem.id,txtpreciop.text,mskcantidad.text,cmbproduct.selectedItem.descripcion,txtdescuento.text);
+							else
+								Alert.show("Imposible procesar");
 						}
 					}
 					if(KeyPress.currentTarget.toString().indexOf("txtpreciop")!=-1&& int(txtpreciop.text)>0)
@@ -1319,7 +1322,7 @@
 				
 				
 				var xmlnota:String="<notapedido>\n" +
-					"<idnota>0</idnota>\n" +
+					"<idnota>"+adgNotas.selectedItem.id+"</idnota>\n" +
 					"<personas>\n" +
 					"<id>"+idcliente+"</id>\n" +
 					"<numerodocu>"+nrodocucli+"</numerodocu>\n" +
@@ -1388,7 +1391,7 @@
 							"<pendiente>"+entregado+"</pendiente>\n" +
 							"<descuento>"+Number(arrayDg[ii].porc_desc).toFixed(2)+"</descuento>\n" +
 							"<iva>0</iva>\n" +
-							"<id_nota>0</id_nota>\n" +
+							"<id_nota>"+arrayDg[ii].idnota+"</id_nota>\n" +
 							"<id_producto>"+arrayDg[ii].id+"</id_producto>\n" +
 							"</itemdetallesnota>\n" ;
 						ii++
@@ -1402,15 +1405,15 @@
 					if(porcdescAcum>0)
 						xmlnota+="<porc_descuento_total>"+Number(porcdescAcum).toFixed(2)+"</porc_descuento_total>\n" ;
 					else
-						xmlnota+="<porc_descuento_total>"+Number(txtdescuento.text).toFixed(2)+"</porc_descuento_total>\n" +
-					"</notapedido>\n";
+						xmlnota+="<porc_descuento_total>"+Number(txtdescuento.text).toFixed(2)+"</porc_descuento_total>\n" ;
+					
 				
-				return xmlnota;
+				return xmlnota+="</notapedido>\n";
 				
 				
 			}	
 			//****************************************************************************************************
-			private function addadglistpedprod(idprod:String,codigoId:String,txtprecio:String,cantidad:String,descripcion:String,desc_porc:String):void{
+			private function addadglistpedprod(idprod:String,codigoId:String,idnota:String,txtprecio:String,cantidad:String,descripcion:String,desc_porc:String):void{
 				
 				var subtot:Number;
 				var b:Boolean=false;
@@ -1424,7 +1427,7 @@
 				
 				
 				if(dp.length==0){
-					dp=[{idproduct:idprod,id:codigoId,name:descripcion,countt:cantidad,price:txtprecio,porc_desc:"0.000",prec_descuento:p_desc,subtotal:subtot}];
+					dp=[{idproduct:idprod,idnota:idnota,id:codigoId,name:descripcion,countt:cantidad,price:txtprecio,porc_desc:"0.000",prec_descuento:p_desc,subtotal:subtot}];
 					totGralDesc=totGralDesc+Number(Number(desc_porc).toFixed(3));
 				}else{
 					
@@ -1443,7 +1446,7 @@
 						//------------------------------------------------------------------
 					}
 					if(!b)					
-						dp.push({idproduct:idprod,id:codigoId,name:descripcion,countt:cantidad,price:txtprecio,porc_desc:"0.000",prec_descuento:p_desc,subtotal:subtot});
+						dp.push({idproduct:idprod,idnota:idnota,id:codigoId,name:descripcion,countt:cantidad,price:txtprecio,porc_desc:"0.000",prec_descuento:p_desc,subtotal:subtot});
 					
 				}
 				
@@ -1459,7 +1462,7 @@
 				
 				
 				
-				calcularDescuentoVariant();
+				//calcularDescuentoVariant();
 				
 				calcularAnticipo();
 				
@@ -1499,7 +1502,7 @@
 					return;
 				
 				
-				calcularDescuentoVariant();
+				//calcularDescuentoVariant();
 				
 				
 				if(int(lbltotalconrecargo.text)>0)
@@ -1516,7 +1519,7 @@
 				var tot_desc:Number=0;
 				var por_des_tot:Number=0;
 				
-				if(int(txtdescuento.text)>0){
+				if(int(totGralDesc)>0){
 					por_des_tot=Number(Number(txtdescuento.text).toFixed(2));
 					porc_desc_total=Number(por_des_tot.toFixed(2));							
 					tot_desc= Number(Number(lblTotGral.text).toFixed(3))*por_des_tot/100;						
@@ -1617,6 +1620,7 @@
 				var recargo:Number=0;
 				var tempTotDesc:Number=0;
 				var tempPorcDes:Number=0;
+			
 				//----------------------------------------------------------------------------------
 				
 				
@@ -1666,7 +1670,7 @@
 				adglistpedprod.dataProvider.removeItemAt(adglistpedprod.selectedIndex);
 				
 				
-				arrayDg.refresh();
+				
 				
 				
 				
@@ -1709,33 +1713,49 @@
 					
 				}else{
 					
-					lblTotApagar.text=String(totGral-Number(totGralDesc.toFixed(3))+totRecargo);
+					var calcularTotalAPagar:Number=totGral-totGralDesc;
+					
+					recargo=tot_recargo_porc*Number(calcularTotalAPagar.toFixed(3))/100;
+					
+					lblTotApagar.text=String(Number(totGral-Number(totGralDesc.toFixed(3)))+Number(recargo.toFixed(3)));
 					lblTotGral.text=String(totGral);
 					lbldescuento.text=Number(-totGralDesc).toFixed(3);
 					
 					if(totRecargo==0){
 						lbltotalconrecargo.text="0.000";
-						lblsaldo.text="0.000"
-						notas[adgNotas.selectedIndex].saldo="0.000";
+						
 						
 						notas[adgNotas.selectedIndex].recargototal="0.000";
 					}else{
 						lbltotalconrecargo.text=String(totgrilla-Number(totGralDesc.toFixed(3))+totRecargo);
-						notas[adgNotas.selectedIndex].saldo=Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(anticipo.toFixed(3))).toFixed(3);
-						lblsaldo.text=Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(anticipo.toFixed(3))).toFixed(3);
-						notas[adgNotas.selectedIndex].recargototal=totgrilla-Number(totGralDesc.toFixed(3))+totRecargo;
+						
+						notas[adgNotas.selectedIndex].recargototal=Number(Number(totGral-Number(totGralDesc.toFixed(3)))+Number(recargo.toFixed(3))).toFixed(3);
+					}
+					if(anticipo==0){
+						lblsaldo.text="0.000";
+						notas[adgNotas.selectedIndex].saldo="0.000";
+						mskanticipo.text="0.000";
+					
+					}else{
+						lblsaldo.text=Number((totGral-Number(totGralDesc.toFixed(3)))-anticipo).toFixed(3);
+						notas[adgNotas.selectedIndex].saldo=Number((totGral-Number(totGralDesc.toFixed(3)))-anticipo).toFixed(3);;
+						mskanticipo.text=String(anticipo);
+					
+					
 					}
 					
 					
-					notas[adgNotas.selectedIndex].montototalapagar=Number(totGral-Number(totGralDesc.toFixed(3))+totRecargo).toFixed(3);
-					notas[adgNotas.selectedIndex].total=totGral.toFixed(3);
-					
-						notas[adgNotas.selectedIndex].descuentonota=Math.abs(Number(totGralDesc));
+				
+					notas[adgNotas.selectedIndex].montototalapagar=Number(Number(totGral-Number(totGralDesc.toFixed(3)))+Number(recargo.toFixed(3))).toFixed(3);
+					notas[adgNotas.selectedIndex].total=totGral.toFixed(3);	
+				notas[adgNotas.selectedIndex].descuentonota=Number(-totGralDesc).toFixed(3);
+						
 						
 					
 				}
 				
-				
+				arrayDg.refresh();
+				notas.refresh();
 				cmbproduct.setFocus();
 				//------------------------------------------------------------------------------
 				
@@ -1988,7 +2008,7 @@
 			}
 			protected function btnactualizar_clickHandler(evt:MouseEvent):void
 			{
-				if(adgNotas.selectedIndex>0){
+				if(adgNotas.selectedIndex>-1){
 					Alert.show("Desea Guardar Nota De Pedido Actual?","Confirmar Operación", Alert.YES | Alert.NO, this, actualizar, null, Alert.NO);
 				
 				}
@@ -1998,10 +2018,16 @@
 			{
 				
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
-				popup=Progress(PopUpManager.createPopUp(this,Progress,true));
-				PopUpManager.centerPopUp(popup);
 				
-				Alert.show(getDatosXML());
+				if(arrayDg.length>0){
+					popup=Progress(PopUpManager.createPopUp(this,Progress,true));
+					PopUpManager.centerPopUp(popup);
+					
+					Alert.show(getDatosXML());
+				
+				}
+				
+				
 			}
 			
 		]]>
@@ -2136,7 +2162,8 @@
 		</s:columns>		
 	</s:DataGrid>
 	<s:Label x="21" y="176" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="Cliente:"/>
-	<s:Label id="lblnombreyapecli" x="91" y="165" width="288" height="33" fontSize="16"/>
+	<s:Label id="lblnombreyapecli" x="91" y="165" width="288" height="33" fontSize="16"
+			 verticalAlign="middle"/>
 	<s:TextArea id="txtobservaciones" x="394" y="159" width="596" height="88" maxChars="32000"/>
 	
 	<mx:AdvancedDataGrid id="adglistpedprod" x="9" y="287" width="809" height="149"
@@ -2148,6 +2175,7 @@
 						 variableRowHeight="true">
 		<mx:columns>
 			<mx:AdvancedDataGridColumn id="idproducto" visible="false" dataField="idproduct"/>
+			<mx:AdvancedDataGridColumn  visible="false" dataField="idnota"/>
 				
 			
 			<mx:AdvancedDataGridColumn  width="52" dataField="id" editable="false"
