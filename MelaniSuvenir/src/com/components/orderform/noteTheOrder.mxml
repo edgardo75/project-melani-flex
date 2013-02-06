@@ -218,32 +218,33 @@
 			
 			protected function verificarProductosCargados():void{
 				
-				if(dtfentrega.text.length>0){
-								
-								if(productscomp.arrayDg.length>0){
-									//*******************************************************************
-									var b:Boolean=false;
-									for(var j:int=0;j<productscomp.arrayDg.length&&!b;j++){
-										//controlamos que no haya descuento por producto y total a la vez en la nota de pedido
-										if(productscomp.porc_d>0 && productscomp.arrayDg[j].porc_desc!=0 && productscomp.porc_d!=0){
-											Alert.show("Error al procesar los datos, el descuento es Total o por Productos, corrija!!!");
-											return;
-										}
-										//controlamos que los separadores decimales no sean comas
-										if(String(productscomp.arrayDg[j].porc_desc).toString().indexOf(",")!=-1||String(productscomp.arrayDg[j].price).toString().indexOf(",")!=-1)
-											b=true;
-										
-									}
-									//*******************************************************************
-									if(!b)	
-										Alert.show("Desea Guardar Nota De Pedido Actual?","Confirmar Operación", Alert.YES | Alert.NO, this, guardarNotaPedido, null, Alert.NO);
-									else
-										Alert.show("Corrija la grilla de Productos, el separador decimal es el punto y no la coma!!!");
-									
+				
+								if(dtfentrega.text.length>0){
+												
+												if(productscomp.arrayDg.length>0){
+													//*******************************************************************
+													var b:Boolean=false;
+													for(var j:int=0;j<productscomp.arrayDg.length&&!b;j++){
+														//controlamos que no haya descuento por producto y total a la vez en la nota de pedido
+														if(productscomp.porc_d>0 && productscomp.arrayDg[j].porc_desc!=0 && productscomp.porc_d!=0){
+															Alert.show("Error al procesar los datos, el descuento es Total o por Productos, corrija!!!");
+															return;
+														}
+														//controlamos que los separadores decimales no sean comas
+														if(String(productscomp.arrayDg[j].porc_desc).toString().indexOf(",")!=-1||String(productscomp.arrayDg[j].price).toString().indexOf(",")!=-1)
+															b=true;
+														
+													}
+													//*******************************************************************
+													if(!b)	
+														Alert.show("Desea Guardar Nota De Pedido Actual?","Confirmar Operación", Alert.YES | Alert.NO, this, guardarNotaPedido, null, Alert.NO);
+													else
+														Alert.show("Corrija la grilla de Productos, el separador decimal es el punto y no la coma!!!");
+													
+												}else
+													Alert.show("NO HAY PRODUCTOS LISTADOS!!!");		
 								}else
-									Alert.show("NO HAY PRODUCTOS LISTADOS!!!");		
-				}else
-					Alert.show("Debe Seleccionar la fecha de Entrega");
+									Alert.show("Debe Seleccionar la fecha de Entrega");
 								
 				
 			}
@@ -264,18 +265,23 @@
 					Alert.show("DEBE SELECCIONAR UN VENDEDOR");
 					return;
 				}else{
+					
+					//chequear el vendendor seleccionado con su clave correspondiente
+					if(String(cmbVendedores.selectedItem.clave)==txtpassword.text){
 				
-				//*************************Chequeamos que haya un cliente ya seleccionado********************++
-				
-					if(txtnombrecliente.text.length>0&&txtapellidocliente.text.length>0){
-							if(chequearNumeroCupon())
-								Alert.show("Falta Ingresar un Número de Cupón");
-							else
-								verificarProductosCargados();
+							//*************************Chequeamos que haya un cliente ya seleccionado********************++
 							
+								if(txtnombrecliente.text.length>0&&txtapellidocliente.text.length>0){
+										if(chequearNumeroCupon())
+											Alert.show("Falta Ingresar un Número de Cupón");
+										else
+											verificarProductosCargados();
+										
+								}else
+									Alert.show("Corregir Datos de Cliente!!!");
+							//********************************************************************************************
 					}else
-						Alert.show("Corregir Datos de Cliente!!!");
-				//********************************************************************************************
+						Alert.show("No coinciden la clave del vendedor seleccionado");
 				
 				}
 				
@@ -298,6 +304,7 @@
 			var entregado:int=0;
 			var canceladanota:int=0;
 			var stockfuturo:int=0;
+			
 			var anulada:int=0;
 			var enfectivo:int=0;
 			var porcdescAcum:Number=0;
@@ -333,6 +340,7 @@
 			
 			var xmlnota:String="<notapedido>\n" +
 				"<idnota>0</idnota>\n" +
+				"<vendedor>" +cmbVendedores.selectedItem.id+"</vendedor>\n"+
 				"<personas>\n" +
 					"<id>"+lblnocli.text+"</id>\n" +
 					"<numerodocu>"+mskdocu.text+"</numerodocu>\n" +
@@ -611,5 +619,8 @@
 	<components:AutoComplete id="cmbVendedores" x="856" y="319" width="184" labelField="nameuser" allowDuplicates="false" dropDownRowCount="10"
 							 fontSize="16" fontWeight="bold" matchType="beginning">
 	</components:AutoComplete>
+	<s:Label x="855" y="352" fontFamily="Arial" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
+	<s:TextInput id="txtpassword" x="856" y="373" width="183" fontSize="16" fontStyle="normal"
+				 prompt="Ingresar password de vendedor" displayAsPassword="true"/>
 	
 </s:Group>
