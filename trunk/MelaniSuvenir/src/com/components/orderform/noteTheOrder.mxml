@@ -388,6 +388,7 @@
 				"<recargo>"+productscomp.lbltotalconrecargo.text+"</recargo>\n" +
 				
 				"<fechaentrega>"+dtfentrega.text+"</fechaentrega>\n"+
+				"<fechacompra></fechacompra>\n"+
 				"<numerodecupon>"+txtnumerocuponpago.text+"</numerodecupon>\n" +
 				"<enefectivo>"+enfectivo+"</enefectivo>\n"+
 				"<detallesnotapedido>\n" ;

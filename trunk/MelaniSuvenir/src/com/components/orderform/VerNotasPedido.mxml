@@ -91,6 +91,8 @@
 			private var stockfuturo:String;
 			[Bindable]
 			private var efectivo:String;
+			[Bindable]
+			private var idnota:int=0;
 			
 			
 			protected function operation1_resultHandler(event:ResultEvent):void
@@ -286,6 +288,7 @@
 				lblnombreyapecli.text=String(notas[adgNotas.selectedIndex].cliente.apellidoynombre);
 				nrodocucli=int(notas[adgNotas.selectedIndex].cliente.nrodocumento);
 				idcliente=int(notas[adgNotas.selectedIndex].cliente.id);
+				idnota=notas[adgNotas.selectedIndex].id;
 				feentrega=String(notas[adgNotas.selectedIndex].fechaentrega);
 				stockfuturo=String(notas[adgNotas.selectedIndex].stockfuturo);
 				efectivo=String(notas[adgNotas.selectedIndex].efectivo);
@@ -402,7 +405,7 @@
 							
 					
 					
-					dp.push({idproduct:detallenotas[i].producto.code,idnota:detallenotas[i].idnota,id:detallenotas[i].producto.id,name:detallenotas[i].producto.descripcion,countt:detallenotas[i].cantidad,price:detallenotas[i].precio,porc_desc:detallenotas[i].descuento,prec_descuento:detallenotas[i].preciocondescuento,subtotal:detallenotas[i].subtotal});
+					dp.push({idproduct:detallenotas[i].producto.code,id:detallenotas[i].producto.id,name:detallenotas[i].producto.descripcion,countt:detallenotas[i].cantidad,price:detallenotas[i].precio,porc_desc:detallenotas[i].descuento,prec_descuento:detallenotas[i].preciocondescuento,subtotal:detallenotas[i].subtotal,idnota:detallenotas[i].idnota});
 					
 					
 							
@@ -428,7 +431,7 @@
 				//************************************************************************************+
 				//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				
-				lblTotGral.text=String(totGral.toFixed(3));
+				lblTotGral.text=totGral.toFixed(3);
 				lbldescuento.text=Number(Number(notas[adgNotas.selectedIndex].descuentonota)).toFixed(3);
 				lblTotApagar.text=Number(Number(notas[adgNotas.selectedIndex].montototalapagar)).toFixed(3);
 				lblsaldo.text=Number(Number(notas[adgNotas.selectedIndex].saldo)).toFixed(3);
@@ -761,7 +764,7 @@
 											totGral=Number(grid.selectedItem.price*newValue);
 											if(Number(lbldescuento.text)!=0){
 												
-												lblTotApagar.text=Number(String(totGral-totGralDesc)).toFixed(3);
+												lblTotApagar.text=Number(totGral-totGralDesc).toFixed(3);
 											}
 										}else{
 											
@@ -1100,7 +1103,7 @@
 				//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				if(int(txtdescuento.text)==0||txtdescuento.text.length==0){
-					lblTotGral.text=String(totGral.toFixed(3));
+					lblTotGral.text=totGral.toFixed(3);
 					lbldescuento.text=Number(Number(-totGralDesc)).toFixed(3);
 					lblTotApagar.text=Number(Number(lblTotGral.text)-Number(totGralDesc.toFixed(3))).toFixed(3);
 				}
@@ -1135,8 +1138,10 @@
 				if(int(mskanticipo.text)==0||mskanticipo.text.length==0){
 					lblsaldo.text="0.000";
 					anticipo=0;
-				}else 
+				}else {
 					anticipocalculoreuso();
+					notas[adgNotas.selectedIndex].saldo=lblsaldo.text;
+				}
 				
 				
 			}
@@ -1299,12 +1304,7 @@
 						wsnotas.selectUnaNota(int(mskisearchidnota.text));
 						
 					}
-					if(KeyPress.target.toString().indexOf("btnactualizar")!=-1){
 					
-						Alert.show("Hola \n"+getDatosXML());
-					//wsnotas.actualizarNotaPedido(getDatosXML());
-					
-					}
 					
 					
 				}
@@ -1393,8 +1393,8 @@
 					"<pendiente>"+entregado+"</pendiente>\n"+
 					"<montoiva>0</montoiva>\n"+
 					"<recargo>"+lbltotalconrecargo.text+"</recargo>\n" +
-					
-					"<fechaentrega>"+feentrega+"</fechaentrega>\n"+
+					"<fechacompra>"+notas[adgNotas.selectedIndex].fechacompra+"</fechacompra>\n"+					
+					"<fechaentrega>"+notas[adgNotas.selectedIndex].fechaentrega+"</fechaentrega>\n"+
 					"<numerodecupon>"+txtnumerocuponpago.text+"</numerodecupon>\n" +
 					"<enefectivo>"+enfectivo+"</enefectivo>\n"+
 					"<detallesnotapedido>\n" ;
@@ -1452,7 +1452,7 @@
 				
 				
 				if(dp.length==0){
-					dp=[{idproduct:idprod,idnota:idnota,id:codigoId,name:descripcion,countt:cantidad,price:txtprecio,porc_desc:"0.000",prec_descuento:p_desc,subtotal:subtot}];
+					dp=[{idproduct:idprod,id:idnota,name:descripcion,countt:cantidad,price:txtprecio,porc_desc:"0.000",prec_descuento:p_desc,subtotal:subtot,idnota:codigoId}];
 					totGralDesc=totGralDesc+Number(Number(desc_porc).toFixed(3));
 				}else{
 					
@@ -1471,7 +1471,7 @@
 						//------------------------------------------------------------------
 					}
 					if(!b)					
-						dp.push({idproduct:idprod,idnota:idnota,id:codigoId,name:descripcion,countt:cantidad,price:txtprecio,porc_desc:"0.000",prec_descuento:p_desc,subtotal:subtot});
+						dp.push({idproduct:idprod,id:idnota,name:descripcion,countt:cantidad,price:txtprecio,porc_desc:"0.000",prec_descuento:p_desc,subtotal:subtot,idnota:codigoId});
 					
 				}
 				
@@ -1482,7 +1482,7 @@
 				btnremover.enabled=true;
 				
 				adglistpedprod.dataProvider=arrayDg;
-				lblTotGral.text=String(totGral.toFixed(3));
+				lblTotGral.text=totGral.toFixed(3);
 				
 				
 				
@@ -1492,12 +1492,20 @@
 				calcularAnticipo();
 				
 				calcularRecargoVariant();
-				
+					
 				
 				
 				
 				mskcantidad.text="";
 				txtpreciop.text="";
+				
+				
+					notas[adgNotas.selectedIndex].montototalapagar=lblTotApagar.text;
+					notas[adgNotas.selectedIndex].total=lblTotGral.text;
+					notas[adgNotas.selectedIndex].saldo=lblsaldo.text;
+					notas[adgNotas.selectedIndex].descuentonota=lbldescuento.text;
+						
+					notas[adgNotas.selectedIndex].recargototal=lbltotalconrecargo.text;
 				
 				cmbproduct.setFocus();
 				
@@ -1553,7 +1561,7 @@
 				}else
 					lbldescuento.text="0.000";
 				
-				lblTotApagar.text=String(Number(Number(lblTotGral.text)-tot_desc).toFixed(3));
+				lblTotApagar.text=Number(Number(lblTotGral.text)-tot_desc).toFixed(3);
 				
 			}
 			
@@ -1722,6 +1730,8 @@
 					btnremover.enabled=false;
 					lblTotApagar.text="0.000";
 					lblTotGral.text="0.000";
+					mskanticipo.text="0.000";
+					mskrecargo.text="0.000";
 					porc_d=0;
 					porc_desc_total=0;		
 					lbldescuento.text="0.000";
@@ -1748,8 +1758,8 @@
 					
 					recargo=tot_recargo_porc*Number(calcularTotalAPagar.toFixed(3))/100;
 					
-					lblTotApagar.text=String(Number(totGral-Number(totGralDesc.toFixed(3)))+Number(recargo.toFixed(3)));
-					lblTotGral.text=String(totGral);
+					lblTotApagar.text=Number(Number(totGral-Number(totGralDesc.toFixed(3)))+Number(recargo.toFixed(3))).toFixed(3);
+					lblTotGral.text=totGral.toFixed(3);
 					lbldescuento.text=Number(-totGralDesc).toFixed(3);
 					
 					if(totRecargo==0){
@@ -1758,7 +1768,7 @@
 						
 						notas[adgNotas.selectedIndex].recargototal="0.000";
 					}else{
-						lbltotalconrecargo.text=String(totgrilla-Number(totGralDesc.toFixed(3))+totRecargo);
+						lbltotalconrecargo.text=Number(totgrilla-Number(totGralDesc.toFixed(3))+totRecargo).toFixed(3);
 						
 						notas[adgNotas.selectedIndex].recargototal=Number(Number(totGral-Number(totGralDesc.toFixed(3)))+Number(recargo.toFixed(3))).toFixed(3);
 					}
@@ -1770,7 +1780,7 @@
 					}else{
 						lblsaldo.text=Number((totGral-Number(totGralDesc.toFixed(3)))-anticipo).toFixed(3);
 						notas[adgNotas.selectedIndex].saldo=Number((totGral-Number(totGralDesc.toFixed(3)))-anticipo).toFixed(3);;
-						mskanticipo.text=String(anticipo);
+						
 					
 					
 					}
@@ -1779,7 +1789,7 @@
 				
 					notas[adgNotas.selectedIndex].montototalapagar=Number(Number(totGral-Number(totGralDesc.toFixed(3)))+Number(recargo.toFixed(3))).toFixed(3);
 					notas[adgNotas.selectedIndex].total=totGral.toFixed(3);	
-				notas[adgNotas.selectedIndex].descuentonota=Number(-totGralDesc).toFixed(3);
+					notas[adgNotas.selectedIndex].descuentonota=Number(-totGralDesc).toFixed(3);
 						
 						
 					
@@ -2027,8 +2037,43 @@
 			
 			protected function operation9_resultHandler(event:ResultEvent):void
 			{
-				Alert.show(String(event.result.toString()));
+				var result:int=int(event.result.toString());
 				PopUpManager.removePopUp(popup);
+				switch(result)
+				{
+					case 0:
+					{
+						Alert.show("NO PASO NADA VERIFIQUE!!!");	
+						break;
+					}
+					case -1:
+					{
+						Alert.show("ERROR EN EL SERVIDOR AL ACTUALIZAR NOTA DE PEDIDO");
+						break;
+					}
+					case -2:
+					{
+						Alert.show("NOTA DE PEDIDO NO ENCONTRADA");
+						break;
+					}
+					case -3:
+					{
+						Alert.show("NO PASO NADA VERIFIQUE!!!");
+						break;
+					}
+					case -4:
+					{
+						Alert.show("ERROR EN EL SERVIDOR AL PROCESAR NOTA DE PEDIDO");
+						break;
+					}	
+						
+					default:
+					{
+						wsnotas.getRecorCountNotas();
+						break;
+					}
+				}
+				
 				
 				
 			}
@@ -2040,14 +2085,16 @@
 			}
 			protected function btnactualizar_clickHandler(evt:MouseEvent):void
 			{
-				if(String(cmbVendedores.selectedItem.clave)==txtpassword.text){
-						if(adgNotas.selectedIndex>-1){
-							Alert.show("Desea Guardar Nota De Pedido Actual?","Confirmar Operación", Alert.YES | Alert.NO, this, actualizar, null, Alert.NO);
-						
-						}
+				if(adgNotas.selectedIndex>-1&&idnota==int(notas[adgNotas.selectedIndex].id)){
+								if(String(cmbVendedores.selectedItem.clave)==txtpassword.text){
+										
+											Alert.show("Desea Guardar Nota De Pedido Actual?","Confirmar Operación", Alert.YES | Alert.NO, this, actualizar, null, Alert.NO);
+										
+										
+								}else
+									Alert.show("La clave del vendedor no coincide");
 				}else
-					Alert.show("La clave del vendedor no coincide");
-			
+					Alert.show("SELECCIONE LA NOTA CORRESPONDIENTE");
 			}
 			protected function actualizar(evt:CloseEvent):void
 			{
@@ -2058,7 +2105,8 @@
 					popup=Progress(PopUpManager.createPopUp(this,Progress,true));
 					PopUpManager.centerPopUp(popup);
 					
-					Alert.show(getDatosXML());
+					//Alert.show(getDatosXML());
+					wsnotas.actualizarNotaPedido(getDatosXML());
 				
 				}
 				
@@ -2203,16 +2251,13 @@
 	
 	<mx:AdvancedDataGrid id="adglistpedprod" x="9" y="287" width="809" height="149"
 						 alternatingItemColors="[#adf1f5, white]"
-						
-						 designViewDataType="flat" doubleClickEnabled="true" editable="true"
+						editable="item group summary"	
+						 designViewDataType="flat" doubleClickEnabled="true" 
 						 fontFamily="Verdana" itemDoubleClick="adglistpedprod_itemDoubleClickHandler(event)" fontSize="15"
 						 rowCount="8"
 						 variableRowHeight="true">
 		<mx:columns>
-			<mx:AdvancedDataGridColumn id="idproducto" visible="false" dataField="idproduct"/>
-			<mx:AdvancedDataGridColumn  visible="false" dataField="idnota"/>
-				
-			
+			<mx:AdvancedDataGridColumn id="idproducto" visible="false" dataField="idproduct"/>			
 			<mx:AdvancedDataGridColumn  width="52" dataField="id" editable="false"
 									   fontFamily="Verdana" fontSize="10" headerText="Codigo"
 									   resizable="false" textAlign="left" textDecoration="none"/>
@@ -2236,6 +2281,7 @@
 									   editable="false" fontFamily="Verdana" fontSize="10"
 									   fontWeight="bold" formatter="{cf}" headerText="SubTotal"
 									   resizable="false" sortable="false" textAlign="right"/>
+			<mx:AdvancedDataGridColumn  visible="false" dataField="idnota"/>
 		</mx:columns>
 	</mx:AdvancedDataGrid>
 	<s:Label x="546" y="444" color="#1D7F03" fontFamily="Verdana" fontSize="16" fontWeight="bold"

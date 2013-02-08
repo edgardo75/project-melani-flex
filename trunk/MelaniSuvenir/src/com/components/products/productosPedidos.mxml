@@ -378,7 +378,7 @@
 															totGral=Number(grid.selectedItem.price*newValue);
 															if(Number(lbldescuento.text)!=0){
 														
-																lblTotApagar.text=Number(String(totGral-totGralDesc)).toFixed(3);
+																lblTotApagar.text=Number(totGral-totGralDesc).toFixed(3);
 															}
 														}else{
 															
@@ -706,7 +706,7 @@
 				
 				//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-					lblTotGral.text=String(totGral.toFixed(3));
+					lblTotGral.text=totGral.toFixed(3);
 					lbldescuento.text=Number(Number(-totGralDesc)).toFixed(3);
 					
 					
@@ -767,7 +767,7 @@
 				btnremover.enabled=true;
 				
 				adglistpedprod.dataProvider=arrayDg;
-				lblTotGral.text=String(totGral.toFixed(3));
+				lblTotGral.text=totGral.toFixed(3);
 				
 				
 				lblTotApagar.text=Number(Number(lblTotGral.text)-totGralDesc).toFixed(3);
@@ -896,7 +896,7 @@
 				
 				 
 						lbldescuento.text=Number(Number(-tot_desc)).toFixed(3);
-						lblTotApagar.text=String(Number(Number(lblTotGral.text)-tot_desc).toFixed(3));
+						lblTotApagar.text=Number(Number(lblTotGral.text)-tot_desc).toFixed(3);
 				
 			
 			}
@@ -1106,7 +1106,7 @@
 						 alternatingItemColors="[#adf1f5, white]"
 						 dataChange="adglistpedprod_dataChangeHandler(event)"
 						 designViewDataType="flat" doubleClickEnabled="true"
-						 editable="item group summary" fontFamily="Verdana" fontSize="15"
+						  fontFamily="Verdana" fontSize="15" editable="item group summary"
 						 itemDoubleClick="adglistpedprod_itemDoubleClickHandler(event)" rowCount="8"
 						 variableRowHeight="true">
 		<mx:columns>

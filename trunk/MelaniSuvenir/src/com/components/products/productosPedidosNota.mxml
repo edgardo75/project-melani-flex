@@ -386,7 +386,7 @@
 															totGral=Number(grid.selectedItem.price*newValue);
 															if(Number(lbldescuento.text)!=0){
 														
-																lblTotApagar.text=Number(String(totGral-totGralDesc)).toFixed(3);
+																lblTotApagar.text=Number(totGral-totGralDesc).toFixed(3);
 															}
 														}else{
 															
@@ -557,7 +557,7 @@
 											
 										}else{
 									
-											Alert.show(String(arrayDg.length));
+											
 											for(var p:int=0;p<arrayDg.length;p++){
 												
 												if(arrayDg[p].idproduct!=grid.selectedItem.idproduct){
@@ -725,7 +725,7 @@
 				//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				if(int(txtdescuento.text)==0||txtdescuento.text.length==0){
-					lblTotGral.text=String(totGral.toFixed(3));
+					lblTotGral.text=totGral.toFixed(3);
 					lbldescuento.text=Number(Number(-totGralDesc)).toFixed(3);
 					lblTotApagar.text=Number(Number(lblTotGral.text)-Number(totGralDesc.toFixed(3))).toFixed(3);
 				}
@@ -794,7 +794,7 @@
 				btnremover.enabled=true;
 				
 				adglistpedprod.dataProvider=arrayDg;
-				lblTotGral.text=String(totGral.toFixed(3));
+				lblTotGral.text=totGral.toFixed(3);
 				
 				
 				
@@ -976,7 +976,7 @@
 					}else
 						lbldescuento.text="0.000";
 					
-						lblTotApagar.text=String(Number(Number(lblTotGral.text)-tot_desc).toFixed(3));
+						lblTotApagar.text=Number(Number(lblTotGral.text)-tot_desc).toFixed(3);
 			
 			}
 			
@@ -1052,7 +1052,7 @@
 				arrayDg.refresh();
 				
 				
-				Alert.show(arrayDg.length.toString(10));
+				
 				
 				
 				
@@ -1075,6 +1075,8 @@
 						lbldescuento.text="0.000";
 						lblsaldo.text="0.000";
 						lbltotalconrecargo.text="0.000";
+						mskanticipo.text="0.000";
+						mskrecargo.text="0.000";
 						desc_resto=0;
 						tot_recargo=0;
 						temp_tot_porc_desc=0;
@@ -1092,11 +1094,11 @@
 					
 						totGralDesc=0;
 						
-						totGralDesc=Number(tempTotDesc.toFixed(2));
+						totGralDesc=Number(tempTotDesc.toFixed(3));
 						
 						temp_tot_porc_desc=0;
 						
-						temp_tot_porc_desc=Number(tempPorcDes.toFixed(2));
+						temp_tot_porc_desc=Number(tempPorcDes.toFixed(3));
 						
 						
 						lblTotApagar.text=totGralDesc.toFixed(3);
@@ -1205,8 +1207,8 @@
 	<mx:AdvancedDataGrid id="adglistpedprod" x="25" y="86" width="809" height="149"
 						 alternatingItemColors="[#adf1f5, white]"
 						 dataChange="adglistpedprod_dataChangeHandler(event)"
-						 designViewDataType="flat" doubleClickEnabled="true" editable="true"
-						 fontFamily="Verdana" fontSize="15"
+						 designViewDataType="flat" doubleClickEnabled="true" 
+						 fontFamily="Verdana" fontSize="15" editable="item group summary"
 						 itemDoubleClick="adglistpedprod_itemDoubleClickHandler(event)" rowCount="8"
 						 variableRowHeight="true">
 		<mx:columns>
@@ -1236,6 +1238,7 @@
 									   editable="false" fontFamily="Verdana" fontSize="10"
 									   fontWeight="bold" formatter="{cf}" headerText="SubTotal"
 									   resizable="false" sortable="false" textAlign="right"/>
+			
 		</mx:columns>
 	</mx:AdvancedDataGrid>
 	<components:AutoComplete id="cmbproduct" x="108" y="1" width="203" allowDuplicates="false"
