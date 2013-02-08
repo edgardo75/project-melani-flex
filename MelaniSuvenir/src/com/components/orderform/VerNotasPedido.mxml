@@ -262,20 +262,19 @@
 			
 			protected function operation3_resultHandler(event:ResultEvent):void
 			{
-				// TODO Auto-generated method stub
+				xmlNotas=new XMLList(event.result);
+				
+				addgrid();
 				
 			}
 			
 			protected function operation3_faultHandler(event:FaultEvent):void
 			{
-				// TODO Auto-generated method stub
+				Alert.show("ERROR AL OBTENER LAS NOTAS ");
 				
 			}
 			
-			protected function group1_creationCompleteHandler(event:FlexEvent):void
-			{
-				//wsnotas.getRecorCountNotas();
-			}
+			
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			private function formatDateTime(date:Date):String {
 				return dtf.format(date);
