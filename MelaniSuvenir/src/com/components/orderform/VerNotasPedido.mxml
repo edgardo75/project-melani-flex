@@ -11,6 +11,7 @@
 			import assets.DataGridUtil;
 			
 			import com.actions.CabeceraNota;
+			import com.actions.Historico;
 			import com.actions.detallesVerNotas;
 			import com.components.products.datosProducto;
 			
@@ -93,6 +94,8 @@
 			private var efectivo:String;
 			[Bindable]
 			private var idnota:int=0;
+			[Bindable]
+			private var historico:Historico;
 			
 			
 			protected function operation1_resultHandler(event:ResultEvent):void
@@ -299,9 +302,10 @@
 				
 				
 				
+				
 			
 				
-				listhistoricoselected.source=notas[adgNotas.selectedIndex].detallehistorico.item;
+				
 				
 				
 				userexpidio=notas[adgNotas.selectedIndex].idusuarioexpidionota;
@@ -325,6 +329,31 @@
 					rdbentregadono.selected=true;
 				else
 					rdbentregadosi.selected=true;
+				if(listhistorico.length){
+					listhistorico.removeAll();
+					listhistoricoselected.removeAll();
+					
+				}
+				//***********************************************************************************************************++
+				listhistoricoselected.source=notas[adgNotas.selectedIndex].detallehistorico.item;
+				
+				for (var j:int=0;j<listhistoricoselected.length;j++){
+					if(Number(listhistoricoselected[j].anticipo)>0){
+					
+						historico =new Historico();
+						historico.anticipo=listhistoricoselected[j].anticipo;
+						historico.fecharegistro=listhistoricoselected[j].fecharegistro;
+						
+						listhistorico.addItem(historico);
+						
+					}
+					
+					
+				}
+				
+				
+				adghistorico.dataProvider=listhistorico;
+				//*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				
 		
 					
@@ -332,6 +361,7 @@
 				
 			}
 			protected function addDetalles():void{
+				
 				
 				if(detallenotasList.length>0){
 					detallenotasList.removeAll();
@@ -423,7 +453,7 @@
 				anticipo=notas[adgNotas.selectedIndex].anticipo;
 				
 				
-				mskanticipo.text=notas[adgNotas.selectedIndex].anticipo;
+				//mskanticipo.text=notas[adgNotas.selectedIndex].anticipo;
 				mskrecargo.text=notas[adgNotas.selectedIndex].porcrecargo;
 				
 				
@@ -457,8 +487,6 @@
 				adglistpedprod.dataProvider=arrayDg;
 				
 				
-				
-				adghistorico.dataProvider=listhistoricoselected;
 				
 			
 				
@@ -1123,12 +1151,24 @@
 			}
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			public function anticipocalculoreuso():void{
-				if(Number(Number(Number(lblTotApagar.text).toFixed(3))>=Number(mskanticipo.text))){
+				
+				if(Number(lblsaldo.text)==0){
 					anticipo=Number(Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskanticipo.text)).toFixed(3));
 					lblsaldo.text=anticipo.toFixed(3);
+				
+				}else{
+					if(Number(lblsaldo.text)<Number(mskanticipo.text))
+						Alert.show("Imposible Calcular el anticipo");
+					else{
+						var saldo:Number=Number(lblsaldo.text);
+							anticipo=Number(Number(mskanticipo.text).toFixed(3));
+							lblsaldo.text=Number(saldo-anticipo).toFixed(3);
+					}
+				
 				}
 				
-				//else					Alert.show("EL ANTICIPO NO PUEDE SER MAYOR AL TOTAL A PAGAR");
+				
+				
 					
 			}
 			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1762,9 +1802,7 @@
 					lbldescuento.text=Number(-totGralDesc).toFixed(3);
 					
 					if(totRecargo==0){
-						lbltotalconrecargo.text="0.000";
-						
-						
+						lbltotalconrecargo.text="0.000";					
 						notas[adgNotas.selectedIndex].recargototal="0.000";
 					}else{
 						lbltotalconrecargo.text=Number(totgrilla-Number(totGralDesc.toFixed(3))+totRecargo).toFixed(3);
@@ -2118,6 +2156,7 @@
 		<s:XMLListCollection id="tarjetas" source="{xmltarjetas.item}"/>
 		<s:XMLListCollection id="productlist" source="{xmlproduct.producto}"/>
 		<s:XMLListCollection id="listhistoricoselected" />
+		<s:ArrayCollection id="listhistorico"  />
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:ArrayCollection id="arrayDg"/>
 		<s:DateTimeFormatter id="dtf" dateTimePattern="dd/MM/yyyy"/>

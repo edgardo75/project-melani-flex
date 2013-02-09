@@ -874,7 +874,24 @@
 			
 			}
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-			public function anticipocalculoreuso():void{				
+			public function anticipocalculoreuso():void{
+				
+				if(Number(lblsaldo.text)==0){
+					anticipo=Number(Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskanticipo.text)).toFixed(3));
+					lblsaldo.text=anticipo.toFixed(3);
+					
+				}else{
+					if(Number(lblsaldo.text)<Number(mskanticipo.text))
+						Alert.show("Imposible Calcular el anticipo");
+					else{
+						var saldo:Number=Number(lblsaldo.text);
+						anticipo=Number(Number(mskanticipo.text).toFixed(3));
+						lblsaldo.text=Number(saldo-anticipo).toFixed(3);
+					}
+					
+				}
+				
+				
 				if(Number(Number(Number(lblTotApagar.text).toFixed(3))>=Number(mskanticipo.text))){
 					anticipo=Number(Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskanticipo.text)).toFixed(3));
 					lblsaldo.text=anticipo.toFixed(3);
