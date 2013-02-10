@@ -84,11 +84,11 @@
 	<s:Label x="9" y="9" backgroundAlpha="0.6" color="#FD0303" fontSize="16" fontWeight="bold"
 			 text="DATOS PERSONALES DE CLIENTE"/>
 	<s:TextInput id="txtnombre" x="206" y="69" width="317" fontFamily="Verdana" fontSize="16"
-				 fontWeight="bold" maxChars="30" restrict="A-ÑZa-ñz " 
+				 fontWeight="bold" maxChars="30" restrict="A-ÑZa-ñz " prompt="Ingrese su nombre propio..." 
 				 toolTip="Ingrese el Nombre Completo del Cliente!!!"/>
 	<s:Label x="128" y="74" color="#033339" fontSize="20" text="Nombre:"/>
 	<s:TextInput id="txtapellido" x="207" y="101" width="315" fontFamily="Verdana" fontSize="16"
-				 fontWeight="bold" maxChars="30" restrict="A-ÑZa-ñz " 
+				 fontWeight="bold" maxChars="30" restrict="A-ÑZa-ñz " prompt="Ingrese su apellido..." 
 				 toolTip="Ingrese el Apellido Completo del Cliente!!!"/>
 	<s:Label x="128" y="108" color="#033339" fontSize="20" text="Apellido:"/>
 	<s:Label x="51" y="44" color="#033339" fontSize="20" text="Tipo:"/>
@@ -104,11 +104,11 @@
 	<s:Label x="130" y="142" color="#033339" fontSize="20" text="Genero:"/>
 	<s:Label x="128" y="178" width="60" color="#033339" fontSize="20" text="Email:"/>
 	<s:TextInput id="txtemail" x="184" y="172" width="338" fontFamily="Verdana" fontSize="16"
-				 fontWeight="bold" maxChars="50" tabIndex="5"
+				 fontWeight="bold" maxChars="50" tabIndex="5" prompt="Ingrese el email..."
 				 toolTip="Ingrese un Correo Electrónico!!!"/>
 	<s:Label x="19" y="206" color="#033339" fontSize="20" text="Observaciones:"/>
 	<s:TextArea id="txtobservaciones" x="18" y="230" width="504" height="96" fontFamily="Verdana"
-				fontSize="16" fontWeight="bold" maxChars="255" tabIndex="6"/>
+				fontSize="16" fontWeight="bold" maxChars="255" tabIndex="6" prompt="Ingrese las Observaciones..."/>
 	<components:AdvancedAutoComplete id="cmbTiposdocu" x="97" y="36" width="99"
 									 allowDuplicates="false" allowEditingNewValues="false"
 									 allowEditingSelectedValues="false"

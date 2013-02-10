@@ -226,13 +226,13 @@
 	</components:AdvancedAutoComplete>
 	<mx:HRule x="10" y="70" width="428" height="1"/>
 	<s:Label x="12" y="58" fontSize="16" text="Teléfonos"/>
-	<controls:MaskedTextInput id="txtprefijo" x="58" y="142" width="104" fontSize="16"
+	<controls:MaskedTextInput id="txtprefijo" x="58" y="145" width="104" fontSize="16"
 							  inputMask="(#########)" maxChars="10" restrict="0-9"/>
-	<s:Label x="58" y="127" fontSize="16" text="Prefijo"/>
-	<s:Label x="279" y="128" fontSize="16" text="Número"/>
-	<controls:MaskedTextInput id="txtnumerotel" x="279" y="142" fontSize="16" inputMask="#########"
+	<s:Label x="58" y="131" fontSize="16" text="Prefijo"/>
+	<s:Label x="279" y="130" fontSize="16" text="Número"/>
+	<controls:MaskedTextInput id="txtnumerotel" x="279" y="144" fontSize="16" inputMask="#########"
 							  maxChars="20" restrict="0-9"/>
-	<s:Button id="btnAgregarTel" x="379" y="142" label="Agregar"
+	<s:Button id="btnAgregarTel" x="379" y="144" label="Agregar"
 			  click="btnAgregarTel_clickHandler(event)" fontSize="16" icon="assets/add.jpg"/>
 	<s:DataGrid id="adgTel" x="14" y="189" width="464" height="128" fontSize="16"
 				requestedRowCount="4">
