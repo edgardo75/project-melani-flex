@@ -473,14 +473,43 @@
 					
 					default:
 					{
-						Alert.show("Nota de pedido almacenada "+int(event.result.toString()));
+						//Alert.show("Nota de pedido almacenada "+int(event.result.toString()));
 						var source:String="http://localhost:8080/WebMelanie/ShowReportNotaPedido?nronota="+nro;
 						var urlReq:URLRequest= new URLRequest(source);
 						navigateToURL(urlReq,"_blank");
+						limpiarTodo();
+						
 						break;
 					}
 				}
 				
+			}
+			protected function limpiarTodo():void{
+				mskdocu.text="";
+				lblapellido.text="";
+				lblnocli.text="";
+				txtpassword.text="";
+				txtapellidocliente.text="";
+				txtnombrecliente.text="";
+				txtnumerocuponpago.text="";
+				txtObservacionesNota.text="";
+				rdbcanceladanotano.selected=true;
+				rdbcanceladanotasi.selected=false;
+				rdbenefectivono.selected=false;
+				rdbenefectivosi.selected=true;
+				rdbentregadono.selected=false;
+				rdbentregadosi.selected=true;
+				rdbstockfuturono.selected=false;
+				rdbstockfuturosi.selected=true;
+				cmbVendedores.selectedItemId=-1;
+				cmbTarjetasCreditoDebito.selectedItemId=0;
+				dtfentrega.text="";
+				productscomp.limpiarDetalleProductos();
+				mskdocu.setFocus();
+				
+				
+				
+			
 			}
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			private function formatDateTime(date:Date):String {
@@ -584,7 +613,7 @@
 	<s:Label x="46" y="97" fontSize="16" fontWeight="bold" text="Nombre:"/>
 	<s:Label x="33" y="66" fontSize="16" fontWeight="bold" text="Cliente N°:"/>
 	<s:Label id="lblnocli" x="115" y="60" width="124" fontFamily="Verdana" fontSize="18"
-			 fontWeight="bold" verticalAlign="middle"/>
+			 fontWeight="bold" verticalAlign="bottom"/>
 	<s:TextInput id="txtnombrecliente" x="114" y="85" width="188" fontSize="18" maxChars="40"
 				 prompt="Ingrese Nombre" restrict="a-z A-Z ñ-Ñ" />
 	<s:Label id="lblapellido" x="43" y="128" fontSize="16" fontWeight="bold" text="Apellido:"/>

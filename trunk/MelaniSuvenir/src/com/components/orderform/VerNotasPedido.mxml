@@ -453,7 +453,7 @@
 				anticipo=notas[adgNotas.selectedIndex].anticipo;
 				
 				
-				//mskanticipo.text=notas[adgNotas.selectedIndex].anticipo;
+				
 				mskrecargo.text=notas[adgNotas.selectedIndex].porcrecargo;
 				
 				
@@ -1330,7 +1330,7 @@
 					
 					if(KeyPress.target.toString().indexOf("mskisearchidnota")!=-1){
 						
-						//searchIdPresupuesto();
+						
 						indexPage=0;
 						//SIZEPAGE:int=100;
 						totalReg=0;
@@ -1873,6 +1873,7 @@
 					addgrid();
 					
 					btnRegargarlistado.enabled=true;
+					limpiarControles();
 				}
 				
 			}
@@ -2076,6 +2077,7 @@
 			{
 				var result:int=int(event.result.toString());
 				PopUpManager.removePopUp(popup);
+				
 				switch(result)
 				{
 					case 0:
@@ -2106,7 +2108,9 @@
 						
 					default:
 					{
+						Alert.show("NOTA DE PEDIDO ACTUALIZADA "+result);
 						wsnotas.getRecorCountNotas();
+						limpiarControles();
 						break;
 					}
 				}
@@ -2122,16 +2126,24 @@
 			}
 			protected function btnactualizar_clickHandler(evt:MouseEvent):void
 			{
-				if(adgNotas.selectedIndex>-1&&idnota==int(notas[adgNotas.selectedIndex].id)){
-								if(String(cmbVendedores.selectedItem.clave)==txtpassword.text){
-										
-											Alert.show("Desea Guardar Nota De Pedido Actual?","Confirmar Operación", Alert.YES | Alert.NO, this, actualizar, null, Alert.NO);
-										
-										
+				
+				if(String(notas[adgNotas.selectedIndex].fechaentrega).length>0){
+						if(String(notas[adgNotas.selectedIndex].fechacompra).length>0){
+							
+								if(adgNotas.selectedIndex>-1&&idnota==int(notas[adgNotas.selectedIndex].id)){
+												if(String(cmbVendedores.selectedItem.clave)==txtpassword.text){
+														
+															Alert.show("Desea Guardar Nota De Pedido Actual?","Confirmar Operación", Alert.YES | Alert.NO, this, actualizar, null, Alert.NO);
+														
+														
+												}else
+													Alert.show("La clave del vendedor no coincide");
 								}else
-									Alert.show("La clave del vendedor no coincide");
+									Alert.show("SELECCIONE LA NOTA CORRESPONDIENTE");
+						}else
+							Alert.show("Falta la fecha de compra");
 				}else
-					Alert.show("SELECCIONE LA NOTA CORRESPONDIENTE");
+					Alert.show("Falta la fecha de entrega");		
 			}
 			protected function actualizar(evt:CloseEvent):void
 			{
@@ -2142,12 +2154,63 @@
 					popup=Progress(PopUpManager.createPopUp(this,Progress,true));
 					PopUpManager.centerPopUp(popup);
 					
-					//Alert.show(getDatosXML());
+				
 					wsnotas.actualizarNotaPedido(getDatosXML());
 				
 				}
 				
 				
+			}
+			protected function limpiarControles():void{
+						
+				detallenotasList.removeAll();
+				
+				adglistpedprod.dataProvider.removeItems();
+				
+				adghistorico.dataProvider.removeAll();
+				
+				arrayDg.removeAll();
+				arrayDg.refresh();
+				listhistorico.removeAll();
+				
+				//----------------------------------------------------------
+				totGral=0;
+				txtpreciop.text="";
+				mskanticipo.text="";
+				mskrecargo.text="";
+				
+				totGralDesc=0;
+				precio_desc=0;
+				txtdescuento.text="0.0";
+				cmbproduct.text="";
+				cmbproduct.setFocus();
+				mskisearchidnota.text="";
+				txtpreciop.text="";
+				mskcantidad.text="";			
+				txtobservaciones.text="";
+				btnremover.enabled=false;
+				useranulo=0;
+				userentrego=0;
+				usercancelo=0;
+				userexpidio=0;
+				
+				lblTotApagar.text="0.000";
+				lblTotGral.text="0.000";
+				porc_d=0;
+				porc_desc_total=0;
+				lbldescuento.text="0.000";
+				lbltotalconrecargo.text="0.000";
+				lblsaldo.text="0.000";
+				desc_resto=0;
+				tot_recargo_porc=0;
+				anticipo=0;
+				totRecargo=0;
+				txtpassword.text="";
+				cmbTarjetasCreditoDebito.selectedItemId=0;
+				cmbVendedores.selectedItemId=-1;
+				cmbproduct.selectedItemId=-1;
+			
+			
 			}
 			
 		]]>
@@ -2244,7 +2307,7 @@
 	<s:Button id="last_btn" x="895" y="129" width="89" label="Last" click="last_clickHandler(event)"
 			  enabled="false" fontSize="16"/>
 	<s:DataGrid id="adgNotas" x="11" y="10" width="973" height="111"  variableRowHeight="true" doubleClick="adgNotas_doubleClickHandler(event)"
-				selectionMode="singleRow" doubleClickEnabled="true">
+				selectionMode="singleRow" doubleClickEnabled="true" toolTip="Haga doble click para seleccionar la Nota correspondiente">
 		<s:columns>
 			<s:ArrayList>
 				<s:GridColumn headerText="N° Nota" dataField="id"/>
@@ -2293,7 +2356,7 @@
 						 designViewDataType="flat" doubleClickEnabled="true" 
 						 fontFamily="Verdana" itemDoubleClick="adglistpedprod_itemDoubleClickHandler(event)" fontSize="15"
 						 rowCount="8"
-						 variableRowHeight="true">
+						 variableRowHeight="true" toolTip="Para editar, cantidad, precio, etc seleccione la celda correspondiente, para borrar un producto haga doble click">
 		<mx:columns>
 			<mx:AdvancedDataGridColumn id="idproducto" visible="false" dataField="idproduct"/>			
 			<mx:AdvancedDataGridColumn  width="52" dataField="id" editable="false"
@@ -2364,7 +2427,7 @@
 	<s:Button id="btnremover" x="9" y="442" label="Remover Todo"
 			  click="btnremover_clickHandler(event)" enabled="false" fontSize="16"
 			  toolTip="Elimina todos Los productos del Listado!!!"/>
-	<s:Button id="brncargarunproducto" x="9" y="463" label="Cargar Producto"
+	<s:Button id="brncargarunproducto" x="9" y="465" label="Cargar Producto"
 			  click="brncargarunproducto_clickHandler(event)" fontSize="16"
 			  toolTip="Muestra una Ventana para cargar un Producto"/>
 	<s:Label x="320" y="263" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
@@ -2415,14 +2478,14 @@
 			</s:ArrayList>
 		</s:columns>		
 	</s:DataGrid>
-	<s:Label x="828" y="499" fontSize="16" fontWeight="bold" text="HISTORICO"/>
-	<s:Button id="btnRegargarlistado" x="9" y="484" width="153" label="Regargar Listado"
+	<s:Label x="828" y="499" fontSize="16" fontWeight="bold" text="HISTORICO DE ANTICIPOS"/>
+	<s:Button id="btnRegargarlistado" x="9" y="488" width="153" label="Regargar Listado"
 			  click="btnRegargarlistado_clickHandler(event)" enabled="false" fontSize="16"/>
 	<controls:MaskedTextInput id="mskisearchidnota" x="227" y="463" width="152" restrict="0-9" toolTip="Ingrese Número de Nota de Pedido"/>
 	<s:Label x="227" y="449" text="BUSCAR NOTA DE PEDIDO"/>
-	<s:Button id="btnImprimir" x="9" y="505" width="152" label="Imprimir"
+	<s:Button id="btnImprimir" x="9" y="512" width="152" label="Imprimir"
 			  click="btnImprimir_clickHandler(event)" enabled="false" fontSize="16" toolTip="Imprimie una nota de pedido seleccionada del listado"/>
-	<s:Button id="btnactualizar" x="11" y="526" width="150" label="Actualizar"
+	<s:Button id="btnactualizar" x="11" y="537" width="150" label="Actualizar"
 			  click="btnactualizar_clickHandler(event)" fontSize="16"/>
 </s:Group>
 
