@@ -1108,7 +1108,7 @@
 						 designViewDataType="flat" doubleClickEnabled="true"
 						  fontFamily="Verdana" fontSize="15" editable="item group summary"
 						 itemDoubleClick="adglistpedprod_itemDoubleClickHandler(event)" rowCount="8"
-						 variableRowHeight="true">
+						 variableRowHeight="true" toolTip="Para editar, cantidad, precio, etc seleccione la celda correspondiente, para borrar un producto haga doble click">
 		<mx:columns>
 			<mx:AdvancedDataGridColumn id="idproducto" visible="false" dataField="idproduct"/>
 				
