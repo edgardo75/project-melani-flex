@@ -3,7 +3,7 @@
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
 			   xmlns:components="com.components.*"
-			   width="1263" height="702" minWidth="955" minHeight="600"
+			   width="1263" height="692" minWidth="955" minHeight="600"
 			   creationComplete="application1_creationCompleteHandler(event)">
 	
 	<fx:Declarations>
@@ -67,7 +67,7 @@
 			</menuitem>
 		</fx:XMLList>
 	</mx:MenuBar>
-	<mx:Panel id="panelCentral" x="10" y="21" width="1243" height="673">
+	<mx:Panel id="panelCentral" x="10" y="21" width="1243" height="662">
 	</mx:Panel>
 	
 	<fx:Script>
