@@ -239,7 +239,7 @@
 						  fontWeight="bold"
 						  tabIndex="0" restrict="a-z A-Z ñ-Ñ"
 						  toolTip="Ingresar la descripción del producto!!!"
-						   
+						  
 						  />			
 		</mx:FormItem>
 		<mx:FormItem label="Codigo Producto Interno" labelStyleName="myFormItemLabelStyle">

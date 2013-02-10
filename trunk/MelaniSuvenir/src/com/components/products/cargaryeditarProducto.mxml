@@ -291,18 +291,22 @@
 			<fx:Object dataField1="data4" dataField2="data4" dataField3="data4"></fx:Object>
 		</s:ArrayList>
 	</s:DataGrid>
-	<s:Label x="44" y="277" text="Descripcion:"/>
-	<s:TextInput id="txtdescripcion" x="164" y="267" width="160"/>
-	<s:Label x="337" y="273" text="CodigoProducto:"/>
-	<s:Label x="44" y="313" text="Precio:"/>
-	<s:Label x="337" y="304" text="Cantidad Inicial:"/>
-	<s:Label x="44" y="335" text="Cantidad Disponible:"/>
-	<s:TextInput id="txtcodigoproducto" x="437" y="267" width="160" editable="false"/>
-	<controls:MaskedTextInput id="txtprecio" x="164" y="298" restrict="0-9."/>
-	<controls:MaskedTextInput id="txtcantidadinicial" x="437" y="300" restrict="0-9."/>
-	<controls:MaskedTextInput id="txtcantidaddisponible" x="164" y="326" restrict="0-9."/>
-	<s:Button id="btnnuevo" x="248" y="371" label="Nuevo" click="btnnuevo_clickHandler(event)"/>
-	<s:Button id="btnguardar" x="326" y="371" label="Guardar" click="btnguardar_clickHandler(event)"/>
+	<s:Label x="118" y="249" fontSize="16" fontWeight="bold" text="Descripcion:"
+			 verticalAlign="bottom"/>
+	<s:TextInput id="txtdescripcion" x="117" y="268" width="160" prompt="Ingrese la descripcion del producto..."/>
+	<s:Label x="361" y="251" fontSize="16" fontWeight="bold" text="CodigoProducto:"
+			 verticalAlign="bottom"/>
+	<s:Label x="118" y="294" fontSize="16" fontWeight="bold" text="Precio:" verticalAlign="bottom"/>
+	<s:Label x="362" y="293" fontSize="16" fontWeight="bold" text="Cantidad Inicial:"
+			 verticalAlign="bottom"/>
+	<s:Label x="118" y="334" fontSize="16" fontWeight="bold" text="Cantidad Disponible:"
+			 verticalAlign="bottom"/>
+	<s:TextInput id="txtcodigoproducto" x="363" y="267" width="160" editable="false" prompt="Ingrese un codigo interno del producto..."/>
+	<controls:MaskedTextInput id="txtprecio" x="119" y="309" restrict="0-9."/>
+	<controls:MaskedTextInput id="txtcantidadinicial" x="363" y="308" restrict="0-9."/>
+	<controls:MaskedTextInput id="txtcantidaddisponible" x="120" y="350" restrict="0-9."/>
+	<s:Button id="btnnuevo" x="244" y="376" label="Nuevo" click="btnnuevo_clickHandler(event)"/>
+	<s:Button id="btnguardar" x="322" y="376" label="Guardar" click="btnguardar_clickHandler(event)"/>
 	<s:Button id="btnCloseClientComponent" x="617" y="10" width="16" height="19"
 			  click="btnClose_clickHandler(event)" icon="assets/icon_close.png"/>
 	<s:Label x="152" y="41" color="#ADF2C7" fontFamily="Verdana" fontSize="19" fontWeight="bold"
