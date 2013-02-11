@@ -149,14 +149,24 @@
 				switch(result){
 					case -1:{
 						Alert.show("ERROR EN EL SERVIDOR, VERIFIQUE!!!");
+						if(btnguardar.enabled==false)
+							btnguardar.enabled=true;
 						break};
 					case 0:{Alert.show("NO PASÓ NADA!!!");
+						if(btnguardar.enabled==false)
+							btnguardar.enabled=true;
 						break};
 					case -2:{Alert.show("SE PRODUJO UN ERROR AL PROCESAR LOS DATOS, VERIFIQUE!!!");
+						if(btnguardar.enabled==false)
+							btnguardar.enabled=true;
 						break};
 					case -3:{Alert.show("ERROR EN EL SERVIDOR CON LOS DATOS VERIFIQUE!!!");
+						if(btnguardar.enabled==false)
+							btnguardar.enabled=true;
 						break};
 					case -4:{Alert.show("SE ENCONTRARON CARACTERES NO VÁLIDOS, NO SE PUDO GUARDAR EL PRESUPUESTO!!!");
+						if(btnguardar.enabled==false)
+							btnguardar.enabled=true;
 						break};
 					default:{
 						Alert.show("Presupuesto N° "+result+" Generado correctamente!!!");
