@@ -57,6 +57,7 @@
 			{
 			
 				var isValidForm:Boolean= tabDatosPersonales.validateForm() && tabDomicilios.txtcodpostal.text.length>0 && tabDomicilios.txtnumero.length>0 && tabTelefonos.listtel.length>0;
+				
 				if(isValidForm)
 					Alert.show("Está Seguro de Guardar?","Confirmar Operación", Alert.YES | Alert.NO, this, getDatosCliente, null, Alert.YES);
 				else

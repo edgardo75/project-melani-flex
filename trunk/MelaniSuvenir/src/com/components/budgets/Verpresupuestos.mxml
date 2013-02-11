@@ -189,7 +189,7 @@
 			//--------------------------------------------------------------------------------------------------------
 			protected function operation2_resultHandler(event:ResultEvent):void
 			{
-				Alert.show(event.result.toString());
+			
 				
 				xmlPresupuesto=new XMLList(event.result);
 				
