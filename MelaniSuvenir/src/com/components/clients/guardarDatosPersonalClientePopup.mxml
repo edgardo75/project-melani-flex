@@ -91,7 +91,7 @@
 								"<apellido>"+clienteComp.txtapellido.text.toUpperCase()+"</apellido>\n"+
 								"<nombre>"+clienteComp.txtnombre.text.toUpperCase()+"</nombre>\n"+
 								"<email>"+clienteComp.txtemail.text.toLowerCase()+"</email>\n"+
-								"<det2allescli>"+clienteComp.txtobservaciones.text+"</det2allescli>\n"+
+								"<observaciones>"+clienteComp.txtobservaciones.text+"</observaciones>\n"+
 								"<nrodocu>"+clienteComp.txtdocumento.text+"</nrodocu>\n"+
 								"<idtipodocu>"+clienteComp.cmbTiposdocu.selectedItemId+"</idtipodocu>\n"+
 								"<totalcompras>0</totalcompras>\n"+

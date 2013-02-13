@@ -474,7 +474,7 @@
 					default:
 					{
 						//Alert.show("Nota de pedido almacenada "+int(event.result.toString()));
-						var source:String="http://192.168.1.101:8080/WebMelanie/ShowReportNotaPedido?nronota="+nro;
+						var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportNotaPedido?nronota="+nro;
 						var urlReq:URLRequest= new URLRequest(source);
 						navigateToURL(urlReq,"_blank");
 						limpiarTodo();
