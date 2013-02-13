@@ -406,7 +406,7 @@
 					last=listpresupuestos[0].id;
 					first=listpresupuestos[listpresupuestos.length-1].id;
 					
-					var source:String="http://192.168.1.101:8080/WebMelanie/ShowReportView?first="+first+"&last="+last;
+					var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportView?first="+first+"&last="+last;
 					
 					var urlReq:URLRequest= new URLRequest(source);
 					navigateToURL(urlReq,"_blank");

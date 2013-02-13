@@ -87,7 +87,12 @@
 					case -3:{
 						Alert.show("NO SE PUDO AGREGAR DOMICILIO!!!");
 						break;
+					}
+					case -8:{
+						Alert.show("EMAIL ENCONTRADO EN LA BASE DE DATOS!!!");
+						break;
 					}	
+						
 					default:
 					{
 						Alert.show("Cliente Almacenado Nº "+indice);
@@ -114,7 +119,7 @@
 			protected function validateAndSubmit(event:MouseEvent):void
 			{
 				// Validate the required fields. 
-				//Alert.show(getDatosCliente());
+			
 				vResult = clienteComp.nomV.validate();
 				//-----------------------------------------------------------
 				if(vResult.type==ValidationResultEvent.INVALID)

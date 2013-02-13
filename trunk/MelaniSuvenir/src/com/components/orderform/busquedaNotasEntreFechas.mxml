@@ -107,7 +107,7 @@
 			protected function btnenviar_clickHandler(event:MouseEvent):void
 			{
 				if(cmbVendedores.text.length>0&&dtfechaini.text.length>0&&dtffechafin.text.length>0){
-					var source:String="http://192.168.1.101:8080/WebMelanie/ShowReportEntreFechas?fstart="+dtfechaini.text+"&fend="+dtffechafin.text+"&vendor="+cmbVendedores.selectedItem.id;
+					var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportEntreFechas?fstart="+dtfechaini.text+"&fend="+dtffechafin.text+"&vendor="+cmbVendedores.selectedItem.id;
 					var urlReq:URLRequest= new URLRequest(source);
 					switch(compararFechas())
 					{

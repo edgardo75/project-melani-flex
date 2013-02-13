@@ -1888,7 +1888,7 @@
 				
 				if(adgNotas.selectedItem.id>0){
 					
-					var source:String="http://192.168.1.101:8080/WebMelanie/ShowReportNotaPedido?nronota="+adgNotas.selectedItem.id;
+					var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportNotaPedido?nronota="+adgNotas.selectedItem.id;
 					
 					var urlReq:URLRequest= new URLRequest(source);
 					navigateToURL(urlReq,"_blank");
@@ -2479,7 +2479,7 @@
 		</s:columns>		
 	</s:DataGrid>
 	<s:Label x="826" y="489" fontSize="16" fontWeight="bold" text="HISTORICO DE ANTICIPOS"/>
-	<s:Button id="btnRegargarlistado" x="7" y="478" width="153" label="Regargar Listado"
+	<s:Button id="btnRegargarlistado" x="7" y="478" width="153" label="Recargar Listado"
 			  click="btnRegargarlistado_clickHandler(event)" enabled="false" fontSize="16"/>
 	<controls:MaskedTextInput id="mskisearchidnota" x="225" y="453" width="152" restrict="0-9" toolTip="Ingrese Número de Nota de Pedido"/>
 	<s:Label x="225" y="439" text="BUSCAR NOTA DE PEDIDO"/>

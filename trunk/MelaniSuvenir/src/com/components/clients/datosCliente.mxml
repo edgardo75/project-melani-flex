@@ -305,7 +305,7 @@
 								"<apellido>"+txtapellido.text+"</apellido>\n"+
 								"<nombre>"+txtnombre.text+"</nombre>\n"+
 								"<email>"+txtemail.text+"</email>\n"+
-								"<det2allescli>"+txtobservaciones.text+"</det2allescli>\n"+
+								"<observaciones>"+txtobservaciones.text+"</observaciones>\n"+
 								"<nrodocu>"+txtdocumento.text+"</nrodocu>\n"+
 								"<idtipodocu>"+cmbTiposdocu.selectedItemId+"</idtipodocu>\n"+
 								"<totalcompras>0</totalcompras>\n"+
