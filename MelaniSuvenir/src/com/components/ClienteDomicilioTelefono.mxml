@@ -14,7 +14,7 @@
 		<s:XMLListCollection id="infodomicli" source="{tabDatosPersonales.xmlinfoclidomi}"/>
 		<s:XMLListCollection id="infotelcli" source="{tabDatosPersonales.xmlinfotelcli}"/>
 		
-		<s:WebService id="serviceCli" wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL" showBusyCursor="true">
+		<s:WebService id="serviceCli" wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL" showBusyCursor="true">
 			<s:operation name="addCliente" result="operation1_resultHandler(event)" fault="operation1_faultHandler(event)">
 				
 			</s:operation>
@@ -43,6 +43,8 @@
 			
 			import spark.events.IndexChangeEvent;
 			
+			[Bindable]
+			private var iddomicilio:int=0;
 			
 			
 			
@@ -78,12 +80,70 @@
 					"<ClienteDomicilioTelefono>\n" +
 					"<idusuario>0</idusuario>\n"+
 					tabDatosPersonales.getDatosPersonalesXML()+"" +
-					tabDomicilios.getDatosDomiciliosXML()+"" +
+					getDatosDomiciliosXML()+"" +
 					tabTelefonos.getDatosTelefonos()+"" +											
 					"</ClienteDomicilioTelefono>\n";
 				return datosCliente;
 			
 			}
+			
+			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			protected function getDatosDomiciliosXML():String{
+				if(tabDomicilios.txtarea.length==0)
+					tabDomicilios.txtarea.text="NO INGRESADO";
+				if(tabDomicilios.txtentrecalle.text.length==0)
+					tabDomicilios.txtentrecalle.text="NO INGRESADO";
+				if(tabDomicilios.txtmanzana.text.length==0)
+					tabDomicilios.txtmanzana.text="NO INGRESADO";
+				if(tabDomicilios.txtmonoblock.text.length==0)
+					tabDomicilios.txtmonoblock.text="NO INGRESADO";
+				if(tabDomicilios.txtpiso.text.length==0)
+					tabDomicilios.txtpiso.text="NO INGRESADO";
+				if(tabDomicilios.txtsector.text.length==0)
+					tabDomicilios.txtsector.text="NO INGRESADO";
+				if(tabDomicilios.txttorre.text.length==0)
+					tabDomicilios.txttorre.text="NO INGRESADO";
+				if(tabDomicilios.txtnumdepto.text.length==0)
+					tabDomicilios.txtnumdepto.text="0";
+				if(tabDomicilios.txtnumero.length==0)
+					tabDomicilios.txtnumero.text="0";
+				
+				
+				
+				var xmlDomiclio:String=
+					"<Domicilio>\n"+
+					"<domicilioId>"+iddomicilio+"</domicilioId>\n"+
+					"<piso>"+tabDomicilios.txtpiso.text+"</piso>\n"+
+					"<manzana>"+tabDomicilios.txtmanzana.text+"</manzana>\n"+
+					"<entrecalleycalle>"+tabDomicilios.txtentrecalle.text+"</entrecalleycalle>\n"+
+					"<sector>"+tabDomicilios.txtsector.text+"</sector>\n"+
+					"<torre>"+tabDomicilios.txttorre.text+"</torre>\n"+
+					"<monoblock>"+tabDomicilios.txtmonoblock.text+"</monoblock>\n"+
+					"<barrios>\n"+
+					"<barrioId>"+tabDomicilios.cmbbarrios.selectedItemId+"</barrioId>\n"+
+					"</barrios>\n"+
+					"<calles>\n"+
+					"<calleId>"+tabDomicilios.cmbcalles.selectedItemId+"</calleId>\n"+
+					"</calles>\n"+
+					"<area>"+tabDomicilios.txtarea.text+"</area>\n"+
+					"<orientacion>\n"+
+					"<idOrientacion>"+tabDomicilios.cmborientacion.selectedItemId+"</idOrientacion>\n"+
+					"</orientacion>\n"+
+					"<numero>"+tabDomicilios.txtnumero.text+"</numero>\n"+
+					"<numdepto>"+tabDomicilios.txtnumdepto.text+"</numdepto>\n"+
+					"<localidad>\n"+
+					"<idlocalidad>"+tabDomicilios.cmbLocalidades.selectedItemId+"</idlocalidad>\n"+
+					"<idProvincia>"+tabDomicilios.cmbprovincias.selectedItemId+"</idProvincia>\n"+
+					"<codigoPostal>"+tabDomicilios.txtcodpostal.text+"</codigoPostal>\n"+
+					"</localidad>\n"+
+					"<det1ails_homes>"+tabDomicilios.txtobservaciones.text+"</det1ails_homes>\n"+
+					"</Domicilio>\n";		
+				
+				return xmlDomiclio;
+				
+			}
+			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			
 			protected function group1_creationCompleteHandler(event:FlexEvent):void
 			{
@@ -101,7 +161,7 @@
 					btnlimpiartodo.enabled=true;
 				}
 			
-				
+				Alert.show("hola "+int(TabBar(event.target).selectedIndex));
 					
 					
 				
@@ -126,8 +186,9 @@
 						tabDomicilios.txtpiso.text=infodomicli[0].piso;
 						tabDomicilios.txtsector.text=infodomicli[0].sector;
 						tabDomicilios.txttorre.text=infodomicli[0].torre;
+						iddomicilio=infodomicli[0].id;
 						
-						
+						Alert.show("domicilio"+infodomicli[0]);
 					
 					
 					}else

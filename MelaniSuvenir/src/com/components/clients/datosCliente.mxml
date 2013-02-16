@@ -13,7 +13,7 @@
 		<s:XMLListCollection id="infoclient" source="{xmlInfoClient.item}"/>
 		
 			<s:WebService id="cliservices" 
-						  wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?wsdl" 						  
+						  wsdl="http://localhost:8080/ServiceClientes/ClientesWs?wsdl" 						  
 						  showBusyCursor="true" 
 						  >
 				<s:operation name="obtenerClienteXTipoAndNumeroDocu"							
