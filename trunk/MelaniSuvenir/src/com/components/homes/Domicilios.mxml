@@ -55,7 +55,7 @@
 				cmbbarrios.selectedItemId=0;
 				cmbcalles.selectedItemId=0;
 				cmbLocalidades.selectedItemId=0;
-				cmborientacion.selectedItemId=1;
+				cmborientacion.selectedItemId=5;
 				cmbprovincias.selectedItemId=18;
 				txtcodpostal.text="5400";
 				txtarea.text="";
@@ -276,9 +276,9 @@
 				
 				
 				cmbLocalidades.setFocus();
-					//15758;
+			
 				
-				//Alert.show(localidadeslistclone.length.toFixed(0).toString());
+			
 				
 			
 				
@@ -612,8 +612,8 @@
 									 matchType="beginning">
 	</components:AdvancedAutoComplete>
 	<s:Label x="171" y="6" fontSize="16" text="Localidades"/>
-	<components:AdvancedAutoComplete id="cmborientacion" x="11" y="67" width="198" fontSize="16"
-									 labelField="DESCRIPCION" matchType="word">
+	<components:AdvancedAutoComplete id="cmborientacion" x="11" y="67" width="198" fontSize="16" 
+									 labelField="DESCRIPCION" matchType="beginning">
 	</components:AdvancedAutoComplete>
 	<s:Label x="10" y="53" fontSize="16" text="Orientacion"/>
 	<s:Label x="466" y="6" fontSize="16" text="Cod.Postal"/>
