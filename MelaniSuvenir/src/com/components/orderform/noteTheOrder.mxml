@@ -293,7 +293,7 @@
 				popup=Progress(PopUpManager.createPopUp(this,Progress,true));
 				PopUpManager.centerPopUp(popup);
 			//llamamos al metodo del webservice para almacenar la nota de pedido en el servidor
-			//Alert.show(getDatosXML());
+			
 				wsnotapedido.agregarNotaPedido(getDatosXML());
              			
 						
