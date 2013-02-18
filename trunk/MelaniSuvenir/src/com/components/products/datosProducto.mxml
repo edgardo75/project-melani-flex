@@ -22,7 +22,7 @@
 		<mx:StringValidator id="descV" source="{txtdescripcion}"
 							property="text" minLength="2" maxLength="80"
 							required="true" requiredFieldError="Debe Ingresar la descripción y/o nombre del producto"/>
-		<mx:WebService id="servicesProducto" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?WSDL"
+		<mx:WebService id="servicesProducto" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?WSDL"
 					   
 					   showBusyCursor="true"
 					   useProxy="false">
@@ -158,12 +158,12 @@
 					}
 					case -5:
 					{
-						Alert.show("YA HAY UN PRODUCTO CON LA MISMA DESCRIPCIÓN, IMPOSIBLE ALMACENAR");
+						Alert.show("   YA HAY UN PRODUCTO CON LA MISMA DESCRIPCIÓN, IMPOSIBLE ALMACENAR   ");
 						break;
 					}	
 					case -6:
 					{
-						Alert.show("YA HAY UN PRODUCTO CON EL MISMO CODIGO INTERNO, IMPOSIBLE ALMACENAR");
+						Alert.show("   YA HAY UN PRODUCTO CON EL MISMO CODIGO INTERNO, IMPOSIBLE ALMACENAR   ");
 						break;
 					}							
 						

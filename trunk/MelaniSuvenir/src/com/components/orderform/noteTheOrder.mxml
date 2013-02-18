@@ -10,7 +10,7 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import com.components.clients.grillaClientes;
+			
 			import com.components.clients.guardarDatosPersonalClientePopup;
 			import com.components.clients.popupClienteNameSecondName;
 			
@@ -168,7 +168,7 @@
 			public function displayPopupCustomerPersonalData():void{
 				var popup2:guardarDatosPersonalClientePopup=guardarDatosPersonalClientePopup(PopUpManager.createPopUp(this,guardarDatosPersonalClientePopup,true));
 				
-				popup2.title="Ingrese Datos Personales de Cliente";
+				popup2.title="  Ingrese Datos Personales de Cliente  ";
 				
 				popup2.idcliente=lblnocli;
 				popup2.nombre=txtnombrecliente;
@@ -206,7 +206,7 @@
 			
 			protected function operation1_faultHandler(event:FaultEvent):void
 			{
-				Alert.show("Se produjo un error al querer obtener el listado de tarjetas de crédito y débito!!!");
+				Alert.show("   Se produjo un error al querer obtener el listado de tarjetas de crédito y débito!!!   ");
 				
 			}
 			
@@ -237,14 +237,14 @@
 													}
 													//*******************************************************************
 													if(!b)	
-														Alert.show("Desea Guardar Nota De Pedido Actual?","Confirmar Operación", Alert.YES | Alert.NO, this, guardarNotaPedido, null, Alert.NO);
+														Alert.show("   Desea Guardar Nota De Pedido Actual?","Confirmar Operación   ", Alert.YES | Alert.NO, this, guardarNotaPedido, null, Alert.NO);
 													else
-														Alert.show("Corrija la grilla de Productos, el separador decimal es el punto y no la coma!!!");
+														Alert.show("   Corrija la grilla de Productos, el separador decimal es el punto y no la coma!!!   ");
 													
 												}else
-													Alert.show("NO HAY PRODUCTOS LISTADOS!!!");		
+													Alert.show("   NO HAY PRODUCTOS LISTADOS!!!   ");		
 								}else
-									Alert.show("Debe Seleccionar la fecha de Entrega");
+									Alert.show("   Debe Seleccionar la fecha de Entrega   ");
 								
 				
 			}
@@ -447,34 +447,34 @@
 				{
 					case -1:
 					{
-						Alert.show("Error en metodo agregarNotaPedido, verifique");	
+						Alert.show("   Error en metodo agregarNotaPedido, verifique   ");	
 						break;
 					}
 					case -2:
 					{
-						Alert.show("Error en metodo almacenarnota, EJBNotaPedido");	
+						Alert.show("   Error en metodo almacenarnota, EJBNotaPedido   ");	
 						break;
 					}	
 					case -3:
 					{
-						Alert.show("Error en metdodo almacenardetallenota");	
+						Alert.show("   Error en metdodo almacenardetallenota   ");	
 						break;
 					}
 					case -4:
 					{
-						Alert.show("Error en metodo almacenarhistorico");	
+						Alert.show("   Error en metodo almacenarhistorico   ");	
 						break;
 					}
 					case 0:
 					{
-						Alert.show("No pasó nada, verifique!!!");	
+						Alert.show("   No pasó nada, verifique!!!   ");	
 						break;
 					}	
 					
 					default:
 					{
-						//Alert.show("Nota de pedido almacenada "+int(event.result.toString()));
-						var source:String="http://localhost:8080/WebMelanie2/ShowReportNotaPedido?nronota="+nro;
+						
+						var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportNotaPedido?nronota="+nro;
 						var urlReq:URLRequest= new URLRequest(source);
 						navigateToURL(urlReq,"_blank");
 						limpiarTodo();
@@ -519,7 +519,7 @@
 			
 			protected function operation2_faultHandlerSelectAllEmpleados(event:FaultEvent):void
 			{
-				Alert.show("ERROR AL OBTENER LISTADO DE EMPLEADOS");
+				Alert.show("   ERROR AL OBTENER LISTADO DE EMPLEADOS   ");
 				
 			}
 			
@@ -539,20 +539,20 @@
 		<s:RadioButtonGroup id="stockFuturo"/>
 		<s:RadioButtonGroup id="notaCancelada"/>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wsnotapedido" wsdl="http://localhost:8080/ServiceNotaPedido/NotaPedidoWs?WSDL">
+		<s:WebService id="wsnotapedido" wsdl="http://192.168.1.101:8080/ServiceNotaPedido/NotaPedidoWs?WSDL">
 			<s:operation name="agregarNotaPedido" fault="operationNota_faultHandler(event)"
 						 result="operationNota_resultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
 		<s:WebService id="wstarjetascreditodebito" 
-					  wsdl="http://localhost:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
+					  wsdl="http://192.168.1.101:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
 					  >
 			<s:operation name="searchAllTarjetasCreditoDebito" result="operation1_resultHandler(event)" fault="operation1_faultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
-		<s:WebService wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"
+		<s:WebService wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL"
 					  id="cli" showBusyCursor="true">
 			<s:operation fault="operationFaultGetClient(event)"
 						 result="operationResultGetClient(event)" 
@@ -566,7 +566,7 @@
 			</s:operation>
 			
 		</s:WebService>
-		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
+		<s:WebService id="wsempleados" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
 			<s:operation name="selectAllEmpleados"
 						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
 						 result="operation2_resultHandlerSelectAllEmpleados(event)">
