@@ -27,8 +27,6 @@
   </compiler>
   <applications>
     <application path="MelaniSuvenir.mxml"/>
-    <application path="Test1.mxml"/>
-    <application path="TestComponent.mxml"/>
   </applications>
   <modules/>
   <buildCSSFiles/>
