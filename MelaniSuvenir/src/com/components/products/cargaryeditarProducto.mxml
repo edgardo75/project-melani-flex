@@ -59,26 +59,32 @@
 			protected function btnguardar_clickHandler(event:MouseEvent):void
 			{
 				
-				if(txtprecio.text.length==0){
-						Alert.show("falta el precio");
-						return;
-				}
-				if(txtcantidaddisponible.text.length==0){
-					Alert.show("falta la cantidad disponible");
-					return;
-				}
-				if(txtcantidadinicial.text.length==0){
-					Alert.show("falta la cantidad inicial");
+				
+				if(txtdescripcion.text.length==0){
+					Alert.show("falta la descripcion");
 					return;
 				}
 				if(txtcodigoproducto.text.length==0){
 					Alert.show("falta el codigio de producto");
 					return;
 				}
-				if(txtdescripcion.text.length==0){
-					Alert.show("falta la descripcion");
+				
+				if(txtprecio.text.length==0){
+						Alert.show("falta el precio");
+						return;
+				}
+				
+				if(txtcantidadinicial.text.length==0){
+					Alert.show("falta la cantidad inicial");
 					return;
 				}
+				if(txtcantidaddisponible.text.length==0){
+					Alert.show("falta la cantidad disponible");
+					return;
+				}
+				
+				
+				
 				
 				//mostramos al cliente un popup de espera
 				popup=Progress(PopUpManager.createPopUp(this,Progress,true));
@@ -137,7 +143,8 @@
 						Alert.show("FALLÓ LA CONEXION CON LA BASE DE DATOS, REVISE LOS SERVICIOS SI SE HAN INICIADO CORRECTAMENTE.");
 					}else{
 						xmllistproducto=new XMLList(event.result);							
-						adgproductos.dataProvider=product;						
+						adgproductos.dataProvider=product;		
+						lbltotalproductos.text=String(product.length);
 					}
 				}
 				
@@ -311,4 +318,7 @@
 			  click="btnClose_clickHandler(event)" icon="assets/icon_close.png"/>
 	<s:Label x="152" y="41" color="#ADF2C7" fontFamily="Verdana" fontSize="19" fontWeight="bold"
 			 text="CARGAR Y EDITAR PRODUCTOS"/>
+	<s:Label x="363" y="348" fontFamily="Verdana" text="Productos Cargados:"/>
+	<s:Label id="lbltotalproductos" x="499" y="344" width="113" fontFamily="Verdana" fontSize="16"
+			 verticalAlign="middle"/>
 </s:Group>

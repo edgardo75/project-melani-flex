@@ -58,11 +58,11 @@
 				<menuitem label="Notas Entre Fechas"/>
 				<menuitem type="separator"/>
 			</menuitem>
-			<menuitem label="Ayuda">
+			<menuitem label="Extras">
 				<menuitem type="separator"/>
 				<menuitem label="Acerca de...."/>
 				<menuitem type="separator"/>
-				<menuitem label="Contactenos"/>
+				<menuitem label="Contactenos..."/>
 				<menuitem type="separator"/>				
 			</menuitem>
 		</fx:XMLList>
@@ -140,7 +140,10 @@
 					verInformeBarrios();
 				}
 				if(event.item.@label =="Acerca de...."){
-					Alert.show("          MELANI SUVENIR © 2011  -  TODOS LOS DERECHOS RESERVADOS     ");						
+					Alert.show("           MELANIE SOUVENIR © 2013  \n TODOS LOS DERECHOS RESERVADOS ");						
+				}
+				if(event.item.@label =="Contactenos..."){
+					Alert.show("       EDGARDO D. ALVAREZ  \n DESARROLLADOR BACKEND \n CONTACTO \n CEL: 0264 154562700 \n EMAIL: edgardo75@gmail.com");						
 				}
 				if(event.item.@label=="Notas Entre Fechas"){
 					panelCentral.removeAllChildren();
