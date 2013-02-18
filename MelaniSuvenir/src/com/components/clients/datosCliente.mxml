@@ -13,7 +13,7 @@
 		<s:XMLListCollection id="infoclient" source="{xmlInfoClient.item}"/>
 		
 			<s:WebService id="cliservices" 
-						  wsdl="http://localhost:8080/ServiceClientes/ClientesWs?wsdl" 						  
+						  wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?wsdl" 						  
 						  showBusyCursor="true" 
 						  >
 				<s:operation name="obtenerClienteXTipoAndNumeroDocu"							
@@ -284,10 +284,10 @@
 			protected function txtdocumento_enterHandler(event:FlexEvent):void
 			{
 				if(txtdocumento.text.length==0)
-					Alert.show("Debe Ingresar Un número de Documento");
+					Alert.show("   Debe Ingresar Un número de Documento   ");
 				else{
 					if(txtdocumento.text.length<7){
-						Alert.show("Ingrese un número de Documento de manera correcta");
+						Alert.show("   Ingrese un número de Documento de manera correcta   ");
 					
 					}else{
 						

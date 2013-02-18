@@ -105,7 +105,7 @@
 				totalReg = int(event.result.toString());
 				
 				if(totalReg==0){
-					Alert.show("NO HAY NOTAS CARGADAS AÚN!!!");
+					Alert.show("   NO HAY NOTAS CARGADAS AÚN!!!   ");
 				}else{
 					
 					if(totalReg<100)
@@ -126,7 +126,7 @@
 			
 			protected function operation1_faultHandler(event:FaultEvent):void
 			{
-				Alert.show("ERROR AL BUSCAR CANTIDAD TOTAL DE NOTAS DE PEDIDO EN BASE DE DATOS");
+				Alert.show("   ERROR AL BUSCAR CANTIDAD TOTAL DE NOTAS DE PEDIDO EN BASE DE DATOS   ");
 			}
 			
 			protected function operation2_resultHandler(event:ResultEvent):void
@@ -1158,7 +1158,7 @@
 				
 				}else{
 					if(Number(lblsaldo.text)<Number(mskanticipo.text))
-						Alert.show("Imposible Calcular el anticipo");
+						Alert.show("   Imposible Calcular el anticipo   ");
 					else{
 						var saldo:Number=Number(lblsaldo.text);
 							anticipo=Number(Number(mskanticipo.text).toFixed(3));
@@ -1236,7 +1236,7 @@
 
 			protected function operation2_faultHandlerSelectAllEmpleados(event:FaultEvent):void
 			{
-				Alert.show("ERROR AL OBTENER LISTADO DE EMPLEADOS");
+				Alert.show("   ERROR AL OBTENER LISTADO DE EMPLEADOS   ");
 				
 			}
 			
@@ -1279,9 +1279,9 @@
 			protected function btnremover_clickHandler(event:MouseEvent):void
 			{
 				if(arrayDg.length>0&&adgNotas.selectedIndex>-1)
-					Alert.show("Esta seguro de remover los productos Listados?","Confirmar Eliminación", Alert.YES | Alert.NO, this, removerListadoPedidos, null, Alert.NO);
+					Alert.show("   Esta seguro de remover los productos Listados?","Confirmar Eliminación   ", Alert.YES | Alert.NO, this, removerListadoPedidos, null, Alert.NO);
 				else
-					Alert.show("Debe seleccionar una nota del listado ");
+					Alert.show("   Debe seleccionar una nota del listado   ");
 				
 			}
 			private function transferirFocus(KeyPress:KeyboardEvent):void{
@@ -1318,12 +1318,12 @@
 					
 					if(KeyPress.currentTarget.toString().indexOf("txtdescuento")!=-1 && Number(Number(txtdescuento.text).toFixed(3))>0){
 						
-						Alert.show("Desea Agregar el Descuento al Listado?","Confirmar Operación", Alert.YES | Alert.NO, this, calcularDescuentoTotal, null, Alert.NO);
+						Alert.show("   Desea Agregar el Descuento al Listado?","Confirmar Operación   ", Alert.YES | Alert.NO, this, calcularDescuentoTotal, null, Alert.NO);
 						
 						
 					}
 					if(KeyPress.currentTarget.toString().indexOf("mskrecargo")!=-1)
-						Alert.show("Desea Agregar el Recargo al Listado?","Confirmar Operación", Alert.YES | Alert.NO, this, calcularRecargo, null, Alert.NO);
+						Alert.show("   Desea Agregar el Recargo al Listado?","Confirmar Operación   ", Alert.YES | Alert.NO, this, calcularRecargo, null, Alert.NO);
 					
 					if(KeyPress.currentTarget.toString().indexOf("mskanticipo")!=-1)
 						calcularAnticipo();
@@ -1526,8 +1526,7 @@
 				
 				
 				
-				//calcularDescuentoVariant();
-				
+		
 				calcularAnticipo();
 				
 				calcularRecargoVariant();
@@ -1574,7 +1573,7 @@
 					return;
 				
 				
-				//calcularDescuentoVariant();
+			
 				
 				
 				if(int(lbltotalconrecargo.text)>0)
@@ -1669,7 +1668,7 @@
 					Alert.show("LA CONSULTA NO ARROJÓ RESULTADOS");
 				else{
 					if(String(event.result.toString())=="NADA"){
-						Alert.show("FALLÓ LA CONEXION CON LA BASE DE DATOS, REVISE LOS SERVICIOS SI SE HAN INICIADO CORRECTAMENTE.");
+						Alert.show("   FALLÓ LA CONEXION CON LA BASE DE DATOS, REVISE LOS SERVICIOS SI SE HAN INICIADO CORRECTAMENTE.   ");
 					}else{
 						xmlproduct=new XMLList(event.result);							
 						cmbproduct.dataProvider=productlist;						
@@ -1685,7 +1684,7 @@
 			{
 				// TODO Auto-generated method stub
 				
-				Alert.show("Está seguro de eliminar el Registro actual?","Confirmar Eliminación", Alert.YES | Alert.NO, this, delRowHandler, null, Alert.NO);
+				Alert.show("   Está seguro de eliminar el Registro actual?","Confirmar Eliminación   ", Alert.YES | Alert.NO, this, delRowHandler, null, Alert.NO);
 				
 				
 			}
@@ -1888,7 +1887,7 @@
 				
 				if(adgNotas.selectedItem.id>0){
 					
-					var source:String="http://localhost:8080/WebMelanie2/ShowReportNotaPedido?nronota="+adgNotas.selectedItem.id;
+					var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportNotaPedido?nronota="+adgNotas.selectedItem.id;
 					
 					var urlReq:URLRequest= new URLRequest(source);
 					navigateToURL(urlReq,"_blank");
@@ -1915,9 +1914,9 @@
 					if(b)
 						return true;
 					else
-						Alert.show("Usuario y Password no coinciden ingrese nuevamente");
+						Alert.show("   Usuario y Password no coinciden ingrese nuevamente   ");
 				}else
-					Alert.show("Debe ingresar un Vendedor con su password correspondiente");
+					Alert.show("   Debe ingresar un Vendedor con su password correspondiente   ");
 				
 			return b;
 			}
@@ -1937,7 +1936,7 @@
 								}
 						}
 				}else
-					Alert.show("Debe seleccionar una nota en la grilla");
+					Alert.show("   Debe seleccionar una nota en la grilla   ");
 				
 				
 				
@@ -1973,7 +1972,7 @@
 			
 			protected function operation6_faultHandler(event:FaultEvent):void
 			{
-				Alert.show("ERROR AL EJECUTAR ENTREGA DE NOTA DE PEDIDO");
+				Alert.show("   ERROR AL EJECUTAR ENTREGA DE NOTA DE PEDIDO   ");
 			}
 			
 			protected function operation7_resultHandler(event:ResultEvent):void
@@ -2019,7 +2018,7 @@
 						
 					default:
 					{
-						Alert.show("NOTA DE PEDIDO "+cancelado+" CAMBIO DE ESTADO CACELADO");
+						Alert.show("   NOTA DE PEDIDO "+cancelado+" CAMBIO DE ESTADO CACELADO   ");
 						wsnotas.getRecorCountNotas();
 						break;
 					}
@@ -2087,7 +2086,7 @@
 					}
 					case -1:
 					{
-						Alert.show("ERROR EN EL SERVIDOR AL ACTUALIZAR NOTA DE PEDIDO");
+						Alert.show("  ERROR EN EL SERVIDOR AL ACTUALIZAR NOTA DE PEDIDO  ");
 						break;
 					}
 					case -2:
@@ -2102,7 +2101,7 @@
 					}
 					case -4:
 					{
-						Alert.show("ERROR EN EL SERVIDOR AL PROCESAR NOTA DE PEDIDO");
+						Alert.show("  ERROR EN EL SERVIDOR AL PROCESAR NOTA DE PEDIDO  ");
 						break;
 					}	
 						
@@ -2133,7 +2132,7 @@
 								if(adgNotas.selectedIndex>-1&&idnota==int(notas[adgNotas.selectedIndex].id)){
 												if(String(cmbVendedores.selectedItem.clave)==txtpassword.text){
 														
-															Alert.show("Desea Guardar Nota De Pedido Actual?","Confirmar Operación", Alert.YES | Alert.NO, this, actualizar, null, Alert.NO);
+															Alert.show("   Desea Guardar Nota De Pedido Actual?","Confirmar Operación  ", Alert.YES | Alert.NO, this, actualizar, null, Alert.NO);
 														
 														
 												}else
@@ -2223,7 +2222,7 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:ArrayCollection id="arrayDg"/>
 		<s:DateTimeFormatter id="dtf" dateTimePattern="dd/MM/yyyy"/>
-		<s:WebService id="wsnotas" wsdl="http://localhost:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wsnotas" wsdl="http://192.168.1.101:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true">
 			<s:operation name="actualizarNotaPedido"
 						 result="operation9_resultHandler(event)"
 						 fault="operation9_faultHandler(event)">
@@ -2265,7 +2264,7 @@
 				/>
 				
 		</s:WebService>
-		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
+		<s:WebService id="wsempleados" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
 			<s:operation name="selectAllEmpleados"
 						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
 						 result="operation2_resultHandlerSelectAllEmpleados(event)">
@@ -2273,13 +2272,13 @@
 			</s:operation>
 		</s:WebService>
 		<s:WebService id="wstarjetascreditodebito" 
-					  wsdl="http://localhost:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
+					  wsdl="http://192.168.1.101:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
 					  >
 			<s:operation name="searchAllTarjetasCreditoDebito" result="operation4_resultHandler(event)" fault="operation4_faultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
-		<s:WebService id="productosWs" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?wsdl"
+		<s:WebService id="productosWs" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?wsdl"
 					  showBusyCursor="true">
 			<s:operation name="searchAllProductos"
 						 fault="operation1_faultGetRecord(event)"

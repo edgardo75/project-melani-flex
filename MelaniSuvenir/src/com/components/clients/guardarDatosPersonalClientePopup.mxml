@@ -6,7 +6,7 @@
 		 width="570" height="438" creationComplete="group1_creationCompleteHandler(event)" xmlns:clients="com.components.clients.*" close="titlewindow1_closeHandler()">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="servicesCliente" wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"					  
+		<s:WebService id="servicesCliente" wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL"					  
 					  showBusyCursor="true"
 					  useProxy="false">
 			
@@ -63,7 +63,7 @@
 			protected function operationDatosPersonalesREstHandler(event:ResultEvent):void{
 				
 				xmlClienteDatosPersonales=new XMLList(event.result);
-				
+				PopUpManager.removePopUp(this);
 				if(xmlClienteDatosPersonales.toString().indexOf("<id>")!=-1){
 						idcliente.text=String(datoscliente[0].id);
 						nrodocu.text=String(datoscliente[0].nrodocu);
@@ -79,7 +79,7 @@
 			}
 			//*********************************************************************************************
 			protected function operationDatosPersonalesFaultHandelr(event:FaultEvent):void{
-				Alert.show("Se produjo un error al almacenar datos personales de clientes!!!");
+				Alert.show("   Se produjo un error al almacenar datos personales de clientes!!!   ");
 			}
 			//************************************************************************************************
 				protected function getDatosCliente():String{
@@ -122,24 +122,24 @@
 				{
 					case 0:
 					{
-						Alert.show("NO PASÓ NADA!!!"+indice);	
+						Alert.show("   NO PASÓ NADA!!!   "+indice);	
 						break;
 					}
 					case -1:{
-						Alert.show("ERROR EN EL SERVIDOR!!!"+indice);	
+						Alert.show("   ERROR EN EL SERVIDOR!!!   "+indice);	
 						break;
 					}	
 					case -2:{
-						Alert.show("ERROR CLIENTE NO ENCOTRADO!!!"+indice);	
+						Alert.show("   ERROR CLIENTE NO ENCOTRADO!!!   "+indice);	
 						break;
 					}	
 					case -3:{
-						Alert.show("NO SE PUDO AGREGAR DOMICILIO!!!");
+						Alert.show("   NO SE PUDO AGREGAR DOMICILIO!!!   ");
 						break;
 					}	
 					default:
 					{
-						Alert.show("Cliente Almacenado Nº "+indice);
+						Alert.show("   Cliente Almacenado Nº "+indice);
 						
 						clienteComp.clearComponenteCliente();
 						
@@ -152,7 +152,7 @@
 			//-----------------------------------------------------------
 			protected function operation1_faultHandler(event:FaultEvent):void
 			{
-				Alert.show("Error en el Servidor al querer almacenar datos personales de cliente, verifique por favor!!!");
+				Alert.show("   Error en el Servidor al querer almacenar datos personales de cliente, verifique por favor!!!   ");
 				
 			}
 			
@@ -160,7 +160,7 @@
 			protected function validateAndSubmit(event:MouseEvent):void
 			{
 				// Validate the required fields. 
-				//Alert.show(getDatosCliente());
+			
 				vResult = clienteComp.nomV.validate();
 				//-----------------------------------------------------------
 				if(vResult.type==ValidationResultEvent.INVALID)
@@ -175,23 +175,23 @@
 				}
 				//-----------------------------------------------------------
 				if(clienteComp.cmbTiposdocu.selectedItem==null){
-					Alert.show("Seleccione un Tipo de Documento DNI, LE, LC, PASAPORTE");
+					Alert.show("   Seleccione un Tipo de Documento DNI, LE, LC, PASAPORTE   ");
 					return;
 				}
 				//-----------------------------------------------------------
 				if(clienteComp.txtdocumento.text.length==0){
-					Alert.show("Ingrese un número de Documento!!!");
+					Alert.show("   Ingrese un número de Documento!!!    ");
 					return;
 				}else{
 					if(clienteComp.txtdocumento.text.length<7){
-						Alert.show("Ingrese un número de Documento de manera correcta");
+						Alert.show("   Ingrese un número de Documento de manera correcta   ");
 						return;
 						
 					}
 				}
 				//------------------------------------------------------------
 				if(clienteComp.cmbGeneros.selectedItem==null){
-					Alert.show("Debe Seleccionar el Genero F o M");
+					Alert.show("  Debe Seleccionar el Genero F o M   ");
 					return;
 				}
 				//-------------------------------------------------------------					
@@ -199,8 +199,8 @@
 				
 				
 				///SendData to Server
-				//popupWait = BarraProgreso(PopUpManager.createPopUp(this, BarraProgreso, true));				
-				//PopUpManager.centerPopUp(popupWait);
+				popupWait = BarraProgreso(PopUpManager.createPopUp(this, BarraProgreso, true));				
+				PopUpManager.centerPopUp(popupWait);
 				//-------------------------------------------------------------
 				
 				//-------------------------------------------------------------
@@ -211,7 +211,7 @@
 			
 			protected function titlewindow1_closeHandler():void
 			{
-				// TODO Auto-generated method stub
+				
 				
 				PopUpManager.removePopUp(this);
 				

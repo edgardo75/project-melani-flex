@@ -6,7 +6,7 @@
 		 width="924" height="534" creationComplete="group1_creationCompleteHandler(event)" xmlns:products="com.components.products.*">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="servicePresupuesto" wsdl="http://localhost:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="true">
+		<s:WebService id="servicePresupuesto" wsdl="http://192.168.1.101:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="true">
 			<s:operation name="addBudgets" result="operation1_resultHandler(event)"
 						 fault="operation1_faultHandler(event)">
 				
@@ -82,7 +82,7 @@
 					for(var j:int=0;j<productordered.arrayDg.length&&!b;j++){
 						//controlamos que no haya descuento por producto y total a la vez
 						if(productordered.porc_d>0 && productordered.arrayDg[j].porc_desc!=0 && productordered.porc_d!=0){
-							Alert.show("Error al procesar los datos, el descuento es Total o por Productos, corrija!!!");
+							Alert.show("          Error al procesar los datos, el descuento es Total o por Productos, corrija!!!      ");
 							return;
 						}
 						//controlamos que los separadores decimales no sean comas
@@ -94,10 +94,10 @@
 				if(!b)	
 				   Alert.show("Desea Guardar el Presupuesto Actual?","Confirmar Operación", Alert.YES | Alert.NO, this, guardarpresupuesto, null, Alert.NO);
 				else
-					Alert.show("Corrija la grilla de Productos, el separador decimal es el punto y no la coma!!!");
+					Alert.show("    Corrija la grilla de Productos, el separador decimal es el punto y no la coma!!!   ");
 				   
 				}else
-					Alert.show("NO HAY PRODUCTOS LISTADOS!!!");
+					Alert.show("   NO HAY PRODUCTOS LISTADOS!!!   ");
 			}
 			//------------------------------------------------------------------------------------
 			private function guardarpresupuesto(evt:CloseEvent):void{
@@ -148,29 +148,29 @@
 				
 				switch(result){
 					case -1:{
-						Alert.show("ERROR EN EL SERVIDOR, VERIFIQUE!!!");
+						Alert.show("  ERROR EN EL SERVIDOR, VERIFIQUE!!!   ");
 						if(btnguardar.enabled==false)
 							btnguardar.enabled=true;
 						break};
-					case 0:{Alert.show("NO PASÓ NADA!!!");
+					case 0:{Alert.show("   NO PASÓ NADA!!!   ");
 						if(btnguardar.enabled==false)
 							btnguardar.enabled=true;
 						break};
-					case -2:{Alert.show("SE PRODUJO UN ERROR AL PROCESAR LOS DATOS, VERIFIQUE!!!");
+					case -2:{Alert.show("   SE PRODUJO UN ERROR AL PROCESAR LOS DATOS, VERIFIQUE!!!   ");
 						if(btnguardar.enabled==false)
 							btnguardar.enabled=true;
 						break};
-					case -3:{Alert.show("ERROR EN EL SERVIDOR CON LOS DATOS VERIFIQUE!!!");
+					case -3:{Alert.show("   ERROR EN EL SERVIDOR CON LOS DATOS VERIFIQUE!!!   ");
 						if(btnguardar.enabled==false)
 							btnguardar.enabled=true;
 						break};
-					case -4:{Alert.show("SE ENCONTRARON CARACTERES NO VÁLIDOS, NO SE PUDO GUARDAR EL PRESUPUESTO!!!");
+					case -4:{Alert.show("   SE ENCONTRARON CARACTERES NO VÁLIDOS, NO SE PUDO GUARDAR EL PRESUPUESTO!!!   ");
 						if(btnguardar.enabled==false)
 							btnguardar.enabled=true;
 						break};
 					default:{
-						Alert.show("Presupuesto N° "+result+" Generado correctamente!!!");
-						var source:String="http://localhost:8080/WebMelanie2/ShowReportPresupuesto?presnro="+result;
+						Alert.show("   Presupuesto N° "+result+" Generado correctamente!!!   ");
+						var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportPresupuesto?presnro="+result;
 						var urlReq:URLRequest= new URLRequest(source);
 						navigateToURL(urlReq,"_blank");
 						

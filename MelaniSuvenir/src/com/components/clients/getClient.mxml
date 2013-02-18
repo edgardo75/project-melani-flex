@@ -107,7 +107,7 @@
 			protected function operationFaultSearchClient(event:FaultEvent):void
 			{
 				PopUpManager.removePopUp(popup);
-				Alert.show("Error en el Servidor, verifique!!!");	
+				Alert.show("   Error en el Servidor, verifique!!!   ");	
 				
 			}
 			
@@ -172,7 +172,7 @@
 		]]>
 	</fx:Script>
 	<fx:Declarations>
-		<s:WebService wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"
+		<s:WebService wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL"
 					  id="cli" showBusyCursor="true">
 			<s:operation fault="operationFaultGetClient(event)"
 						 result="operationResultGetClient(event)" 

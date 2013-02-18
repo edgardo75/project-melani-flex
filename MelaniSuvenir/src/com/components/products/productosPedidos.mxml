@@ -62,7 +62,7 @@
 					Alert.show("LA CONSULTA NO ARROJÓ RESULTADOS");
 				else{
 					if(String(event.result.toString())=="NADA"){
-							Alert.show("FALLÓ LA CONEXION CON LA BASE DE DATOS, REVISE LOS SERVICIOS SI SE HAN INICIADO CORRECTAMENTE.");
+							Alert.show("   FALLÓ LA CONEXION CON LA BASE DE DATOS, REVISE LOS SERVICIOS SI SE HAN INICIADO CORRECTAMENTE.   ");
 						}else{
 							xmlproduct=new XMLList(event.result);							
 							cmbproduct.dataProvider=productlist;						
@@ -919,7 +919,7 @@
 			{
 				// TODO Auto-generated method stub
 			
-				Alert.show("Está seguro de eliminar el Registro actual?","Confirmar Eliminación", Alert.YES | Alert.NO, this, delRowHandler, null, Alert.NO);
+				Alert.show("   Está seguro de eliminar el Registro actual?","Confirmar Eliminación   ", Alert.YES | Alert.NO, this, delRowHandler, null, Alert.NO);
 					
 				
 			}
@@ -1026,7 +1026,7 @@
 			protected function btnremover_clickHandler(event:MouseEvent):void
 			{
 				if(arrayDg.length>0)
-					Alert.show("Esta seguro de remover los productos Listados?","Confirmar Eliminación", Alert.YES | Alert.NO, this, removerListadoPedidos, null, Alert.NO);
+					Alert.show("   Esta seguro de remover los productos Listados?","Confirmar Eliminación   ", Alert.YES | Alert.NO, this, removerListadoPedidos, null, Alert.NO);
 				
 			}
 			//--------------------------------------------------------------------------------------
@@ -1079,7 +1079,7 @@
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="productosWs" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?wsdl"
+		<s:WebService id="productosWs" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?wsdl"
 					  showBusyCursor="true">
 			<s:operation name="searchAllProductos"
 						 fault="operation1_faultHandler(event)"

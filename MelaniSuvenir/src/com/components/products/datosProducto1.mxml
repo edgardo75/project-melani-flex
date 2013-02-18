@@ -22,7 +22,7 @@
 		<mx:StringValidator id="descV" source="{cmbproduct}"
 							property="text" minLength="2" maxLength="80"
 							required="true" requiredFieldError="Debe Ingresar la descripción y/o nombre del producto"/>
-		<mx:WebService id="servicesProducto" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?WSDL"
+		<mx:WebService id="servicesProducto" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?WSDL"
 					   
 					   showBusyCursor="true"
 					   useProxy="false">
@@ -83,7 +83,7 @@
 					Alert.show("LA CONSULTA NO ARROJÓ RESULTADOS");
 				else{
 					if(String(event.result.toString())=="NADA"){
-						Alert.show("FALLÓ LA CONEXION CON LA BASE DE DATOS, REVISE LOS SERVICIOS SI SE HAN INICIADO CORRECTAMENTE.");
+						Alert.show("   FALLÓ LA CONEXION CON LA BASE DE DATOS, REVISE LOS SERVICIOS SI SE HAN INICIADO CORRECTAMENTE.   ");
 					}else{
 						xmllistproducto=new XMLList(event.result);							
 						cmbproduct.dataProvider=product;						
@@ -198,9 +198,9 @@
 				//------------------------------------------------------------------
 		
 				//mostramos al cliente un popup de espera
-				//popup=Progress(PopUpManager.createPopUp(this,Progress,true));
-				//PopUpManager.centerPopUp(popup);
-				Alert.show(getDatos());
+				popup=Progress(PopUpManager.createPopUp(this,Progress,true));
+				PopUpManager.centerPopUp(popup);
+				
 				
 				servicesProducto.actualizarProducto(getDatos());
 				
