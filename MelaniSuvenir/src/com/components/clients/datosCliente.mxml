@@ -13,8 +13,8 @@
 		<s:XMLListCollection id="infoclient" source="{xmlInfoClient.item}"/>
 		
 			<s:WebService id="cliservices" 
-						  wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?wsdl" 						  
-						  showBusyCursor="true" 
+						  wsdl="http://localhost:8080/ServiceClientes/ClientesWs?wsdl" 						  
+						  showBusyCursor="false" 
 						  >
 				<s:operation name="obtenerClienteXTipoAndNumeroDocu"							
 							 result="operation1_resultHandlerObtenerCliente(event)"
@@ -133,8 +133,11 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import com.components.utils.BarraProgreso;
+			
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			import mx.validators.Validator;
@@ -148,6 +151,8 @@
 			public var xmlinfoclidomi:XMLList;
 			[Bindable]
 			public var xmlinfotelcli:XMLList;
+			
+			private var popup:BarraProgreso;
 			
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			public function validateForm():Boolean{
@@ -233,14 +238,16 @@
 			
 			protected function operation1_resultHandlerObtenerCliente(event:ResultEvent):void
 			{
+				
 				respuesta ="";
 				respuesta = event.result.toString();
+				
 				
 				xmlInfoClient=new XMLList(event.result);
 				xmlinfoclidomi=new XMLList(xmlInfoClient.item.personadomicilio.domicilio);
 				xmlinfotelcli=new XMLList(xmlInfoClient.item.personatelefono.telefono);
 				
-				
+				PopUpManager.removePopUp(popup);
 				if(respuesta.indexOf("NO ENCONTRADO")!=-1){
 					clearComponenteCliente();
 					txtnombre.setFocus();
@@ -277,6 +284,7 @@
 			
 			protected function operation1_faultHandler(event:FaultEvent):void
 			{
+				PopUpManager.removePopUp(popup);
 				Alert.show("FALLÓ EL SERVICIO, VERIFIQUE!!!"+event.fault.toString());
 				
 			}
@@ -290,6 +298,10 @@
 						Alert.show("   Ingrese un número de Documento de manera correcta   ");
 					
 					}else{
+						
+						///SendData to Server
+						popup = BarraProgreso(PopUpManager.createPopUp(this, BarraProgreso, true));				
+						PopUpManager.centerPopUp(popup);
 						
 						cliservices.obtenerClienteXTipoAndNumeroDocu(cmbTiposdocu.selectedItemId,int(txtdocumento.text));
 					

@@ -14,11 +14,21 @@
 		<s:XMLListCollection id="infodomicli" source="{tabDatosPersonales.xmlinfoclidomi}" />
 		<s:XMLListCollection id="infotelcli" source="{tabDatosPersonales.xmlinfotelcli}"/>
 		
-		<s:WebService id="serviceCli" wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL" showBusyCursor="true">
+		<s:WebService id="serviceCli" wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL" showBusyCursor="false">
 			<s:operation name="addCliente" result="operation1_resultHandler(event)" fault="operation1_faultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
+		<s:WebService id="wslocaliades" wsdl="http://localhost:8080/ServicesLocalidades/LocalidadesWs?WSDL" showBusyCursor="true">
+			<s:operation name="searchAllLocalidadesbyidprov" result="operation2_resultHandler(event)" fault="operation2_faultHandler(event)">
+				
+			</s:operation>
+			
+			
+		</s:WebService>
+		<s:XMLListCollection id="localidadeslist" source="{xmllistlocalidades.localidades}"/>
+		
+		
 	</fx:Declarations>
 	<fx:Style>
 		@namespace s "library://ns.adobe.com/flex/spark";
@@ -33,6 +43,8 @@
 	</fx:Style>
 	<fx:Script>
 		<![CDATA[
+			import com.actions.Localidades;
+			
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
@@ -51,6 +63,15 @@
 			
 			private var popup:Progress;
 			
+			[Bindable]
+			private var xmllistlocalidades:XMLList;
+			
+			[Bindable]
+			private var indicelocalidad:int=0;
+			
+			
+		
+			
 			
 			
 			
@@ -65,13 +86,17 @@
 			protected function btnGuardar_clickHandler(event:MouseEvent):void
 			{
 			
-				var isValidForm:Boolean= tabDatosPersonales.validateForm() && tabDomicilios.txtcodpostal.text.length>0 && tabDomicilios.txtnumero.length>0 && tabTelefonos.listtel.length>0;
+				var isValidForm:Boolean= tabDatosPersonales.validateForm() && tabDomicilios.txtcodpostal.text.length>0 && tabDomicilios.txtnumero.length>0 && tabDomicilios.cmbprovincias.selectedItemId>=0 && tabDomicilios.cmbLocalidades.selectedItemId>=0 && tabDomicilios.cmbcalles.selectedItemId>=0 && tabDomicilios.cmborientacion.selectedItemId>=0 && tabDomicilios.cmbbarrios.selectedItemId>=0;
+				if(tabTelefonos.listtel.length==0){
+					Alert.show("Es necesario ingresar un telefono de contacto");
+					return;
+				}else{
 				
-				if(isValidForm)
-					Alert.show("Está Seguro de Guardar?","Confirmar Operación", Alert.YES | Alert.NO, this, getDatosCliente, null, Alert.YES);
-				else
-					Alert.show("FALTAN DATOS O ESTAN MAL INGRESADOS CORRIJA!!!");
-				
+					if(isValidForm)
+						Alert.show("Está Seguro de Guardar?","Confirmar Operación", Alert.YES | Alert.NO, this, getDatosCliente, null, Alert.YES);
+					else
+						Alert.show("FALTAN DATOS O ESTAN MAL INGRESADOS \nVERIFIQUE LOS DATOS PERSONALES Y/O DOMICILIO \nCORRIJA!!!   ");
+				}
 			}
 			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			protected function getDatosCliente(evt:CloseEvent):void{
@@ -81,7 +106,7 @@
 				popup=Progress(PopUpManager.createPopUp(this,Progress,true));
 				PopUpManager.centerPopUp(popup);
 				
-				//Alert.show(sendInformation());
+				
 				serviceCli.addCliente(sendInformation());
 				
 				
@@ -160,8 +185,9 @@
 			protected function group1_creationCompleteHandler(event:FlexEvent):void
 			{
 				// TODO Auto-generated method stub
-				
+			
 				tabDatosPersonales.txtdocumento.setFocus();
+				
 				
 			}
 			
@@ -181,15 +207,15 @@
 				
 				
 			if(TabBar(event.target).selectedIndex==1){
-					
+					tabDomicilios.cmbLocalidades.setFocus();
 					if(infodomicli.length>0){
 						
 						tabDomicilios.cmbbarrios.selectedItemId=infodomicli[0].Barrio.idbarrio;
 						tabDomicilios.cmbcalles.selectedItemId=infodomicli[0].Calle.idcalle;
-						tabDomicilios.cmbLocalidades.selectedItemId=infodomicli[0].Localidad.idlocalidad;
+						
 						tabDomicilios.cmborientacion.selectedItemId=infodomicli[0].Orientacion.idorientacion;
-						tabDomicilios.cmbprovincias.selectedItemId=infodomicli[0].Localidad.idprovincia;
-						tabDomicilios.txtcodpostal.text=infodomicli[0].Localidad.codigopostal;
+						
+						
 						tabDomicilios.txtarea.text=infodomicli[0].area;
 						tabDomicilios.txtentrecalle.text=infodomicli[0].entrecalleycalle;
 						tabDomicilios.txtmanzana.text=infodomicli[0].manzana;
@@ -200,9 +226,19 @@
 						tabDomicilios.txtpiso.text=infodomicli[0].piso;
 						tabDomicilios.txtsector.text=infodomicli[0].sector;
 						tabDomicilios.txttorre.text=infodomicli[0].torre;
-						iddomicilio=infodomicli[0].id;
 						
+											
+					    tabDomicilios.cmbprovincias.selectedItemId=infodomicli[0].Localidad.idprovincia;
+							
+						if(infodomicli[0].Localidad.idprovincia!=18){
+								recargarCombolocalidades();
+								
+						}else{
+							recargarCombolocalidades();
+							tabDomicilios.cmbLocalidades.selectedItemId=infodomicli[0].Localidad.idlocalidad;
+							tabDomicilios.txtcodpostal.text=infodomicli[0].Localidad.codigopostal;
 			
+						}	
 					
 					
 					}
@@ -233,6 +269,18 @@
 						}
 					}
 	}
+			private function recargarCombolocalidades():void{
+				
+					wslocaliades.searchAllLocalidadesbyidprov(infodomicli[0].Localidad.idprovincia);
+				
+					tabDomicilios.cmbLocalidades.selectedItemId=infodomicli[0].Localidad.idlocalidad;
+					tabDomicilios.txtcodpostal.text=infodomicli[0].Localidad.codigopostal;
+					
+					
+				
+				
+			
+			}
 			private function resetearControles():void{
 				
 				if(btnGuardar.enabled==true){
@@ -240,6 +288,12 @@
 					btnlimpiartodo.enabled=false;
 				}
 				
+				
+				iddomicilio=0;
+				indicelocalidad=0;
+				
+				if(tabDomicilios.cmbprovincias.selectedItemId!=18)
+					wslocaliades.searchAllLocalidadesbyidprov(18);
 			if(infodomicli.length>0){
 				infodomicli.removeAll();
 				infodomicli.refresh();
@@ -320,6 +374,21 @@
 				tabDomicilios.setFocus();
 				tabTelefonos.setFocus();
 				tabDatosPersonales.setFocus();
+				
+			}
+			
+			protected function operation2_resultHandler(event:ResultEvent):void
+			{
+				
+				xmllistlocalidades=new XMLList(event.result);
+				tabDomicilios.cmbLocalidades.dataProvider=localidadeslist;
+				
+			}
+			
+			protected function operation2_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("error al devolver todas las localidades");
+				
 			}
 			
 		]]>

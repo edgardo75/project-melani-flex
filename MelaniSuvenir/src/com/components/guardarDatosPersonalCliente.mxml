@@ -6,9 +6,9 @@
 		 width="560" height="380" creationComplete="group1_creationCompleteHandler(event)" xmlns:clients="com.components.clients.*">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<mx:WebService id="servicesCliente" wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL"
+		<mx:WebService id="servicesCliente" wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"
 					  
-					  showBusyCursor="true"
+					  showBusyCursor="false"
 					  useProxy="false">
 			<mx:operation name="addCliente"
 						 resultFormat="object"
@@ -31,6 +31,7 @@
 			
 			private var popupWait:BarraProgreso;
 			private var vResult:ValidationResultEvent;
+			
 			
 			
 				protected function getDatosCliente():String{
@@ -73,29 +74,29 @@
 				{
 					case 0:
 					{
-						Alert.show("NO PASÓ NADA!!!"+indice);	
+						Alert.show(" NO PASÓ NADA!!! ");	
 						break;
 					}
 					case -1:{
-						Alert.show("ERROR EN EL SERVIDOR!!!"+indice);	
+						Alert.show(" ERROR EN EL SERVIDOR!!! ");	
 						break;
 					}	
 					case -2:{
-						Alert.show("ERROR CLIENTE NO ENCOTRADO!!!"+indice);	
+						Alert.show(" ERROR CLIENTE NO ENCOTRADO!!! ");	
 						break;
 					}	
 					case -3:{
-						Alert.show("NO SE PUDO AGREGAR DOMICILIO!!!");
+						Alert.show(" NO SE PUDO AGREGAR DOMICILIO!!! ");
 						break;
 					}
 					case -8:{
-						Alert.show("EMAIL ENCONTRADO EN LA BASE DE DATOS!!!");
+						Alert.show(" EMAIL ENCONTRADO EN LA BASE DE DATOS!!! ");
 						break;
 					}	
 						
 					default:
 					{
-						Alert.show("Cliente Almacenado Nº "+indice);
+						Alert.show(" Cliente Almacenado Nº "+indice);
 						clienteComp.clearComponenteCliente();
 						
 						break;
@@ -107,6 +108,7 @@
 			//-----------------------------------------------------------
 			protected function operation1_faultHandler(event:FaultEvent):void
 			{
+				PopUpManager.removePopUp(popupWait);
 				Alert.show(event.fault.toString());
 				
 			}
@@ -158,8 +160,8 @@
 				
 				
 				///SendData to Server
-				//popupWait = BarraProgreso(PopUpManager.createPopUp(this, BarraProgreso, true));				
-				//PopUpManager.centerPopUp(popupWait);
+				popupWait = BarraProgreso(PopUpManager.createPopUp(this, BarraProgreso, true));				
+				PopUpManager.centerPopUp(popupWait);
 				//-------------------------------------------------------------
 				
 				//-------------------------------------------------------------
