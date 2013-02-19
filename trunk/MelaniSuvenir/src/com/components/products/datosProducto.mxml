@@ -22,15 +22,16 @@
 		<mx:StringValidator id="descV" source="{txtdescripcion}"
 							property="text" minLength="2" maxLength="80"
 							required="true" requiredFieldError="Debe Ingresar la descripción y/o nombre del producto"/>
-		<mx:WebService id="servicesProducto" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?WSDL"
+		<mx:WebService id="servicesProducto" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?WSDL"
 					   
-					   showBusyCursor="true"
+					   showBusyCursor="false"
 					   useProxy="false">
 			<mx:operation name="addProducto"
 						  resultFormat="object"
 						  result="producto_resultHandler(event)"
 						  fault="producto_faultHandler(event)">				
 			</mx:operation>
+			
 			
 			
 		</mx:WebService>
@@ -48,20 +49,20 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			
+			import popus.Progress;
 			[Bindable]
 				private var cantIni:int;
 			[Bindable]
 				private var cantDisp:int;
 			[Bindable]
 				private var codProducto:String;
+			private var popup:Progress;
 			[Bindable]
 				private var xmllistproducto:XMLList;
 			
 			
-			//---------------------------------------------------------------------
 		
-			//----------------------------------------------------------------------
-			
 			private function tranferirFocus(keyPress:KeyboardEvent):void{
 				
 				if(keyPress.keyCode==Keyboard.ENTER){
@@ -94,25 +95,51 @@
 				
 				codProducto=txtcodigoproducto.text;
 				//------------------------------------------------------------------
+				if(txtdescripcion.text.length==0){
+					Alert.show("DEBE INGRESAR LA DESCRIPCION DEL PRODUCTO");
+					return;
+				}
+				if(txtcodigoproducto.text.length==0){
+					Alert.show("DEBE INGRESAR EL CODIGO DEL PRODUCTO");
+					return;
+				
+				}
+				
+					
 				
 				if(txtpreciounitario.text.length==0){
 					Alert.show("DEBE INGRESAR EL PRECIO DEL PRODUCTO");
 					
 					return;
 				}
+				
+				if(txtcantidadinicial.text.length==0){
+					cantIni=0;
+					Alert.show("DEBE INGRESAR LA CANTIDAD INICIAL DEL PRODUCTO");
+					return;
+				}else
+					cantIni=int(txtcantidadinicial.text.toString());
+				
+				if(txtcantidadisponible.text.length==0){
+					cantDisp=0;	
+					Alert.show("DEBE INGRESAR LA CANTIDAD DISPONIBLE DEL PRODUCTO");
+					return;
+				}else
+					cantDisp=int(txtcantidadisponible.text.toString());
 					
 				
-				if(txtcantidadinicial.text.length==0)
-					cantIni=0;
-				else
-					cantIni=int(txtcantidadinicial.text.toString());
+				
+					
+				
 				//------------------------------------------------------------------
-				if(txtcantidadisponible.text.length==0)
-					cantDisp=0;
-					else
-					cantDisp=int(txtcantidadisponible.text.toString());
+				
+				
+					
 				//------------------------------------------------------------------
-				//Alert.show(getDatos().toString());
+				//mostramos al cliente un popup de espera
+				popup=Progress(PopUpManager.createPopUp(this,Progress,true));
+				PopUpManager.centerPopUp(popup);
+				
 				servicesProducto.addProducto(getDatos());
 				
 			}
@@ -135,9 +162,10 @@
 			}
 			protected function producto_resultHandler(event:ResultEvent):void{
 				var indice:Number;
-				
+				PopUpManager.removePopUp(popup);
 				xmllistproducto=new XMLList(event.result);
-				indice = new Number(product[0].id);
+				
+				indice = new Number(product[product.length-1].id);
 				switch(indice)
 				{
 					case 0:
@@ -171,8 +199,8 @@
 					default:
 					{
 						Alert.show("OPERACIÓN EXITOSA PRODUCTO Nº "+indice);
-						
-						limpiarFormulario();
+				
+						PopUpManager.removePopUp(this);
 						
 						break;
 					}
@@ -199,7 +227,7 @@
 			
 			protected function group1_creationCompleteHandler(event:FlexEvent):void
 			{
-				//servicesProducto.searchAllProductos();
+				
 				
 				focusManager.setFocus(txtdescripcion);
 				txtcantidadinicial.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
