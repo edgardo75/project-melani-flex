@@ -22,7 +22,7 @@
 		<mx:StringValidator id="descV" source="{cmbproduct}"
 							property="text" minLength="2" maxLength="80"
 							required="true" requiredFieldError="Debe Ingresar la descripción y/o nombre del producto"/>
-		<mx:WebService id="servicesProducto" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?WSDL"
+		<mx:WebService id="servicesProducto" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?WSDL"
 					   
 					   showBusyCursor="true"
 					   useProxy="false">
@@ -179,23 +179,39 @@
 				codProducto=txtcodigoproducto.text;
 				//------------------------------------------------------------------
 				
+				if(cmbproduct.text.length==0){
+					Alert.show("DEBE INGRESAR LA DESCRIPCION DEL PRODUCTO");
+					return;
+				}
+				if(txtcodigoproducto.text.length==0){
+					Alert.show("DEBE INGRESAR EL CODIGO DEL PRODUCTO");
+					return;
+					
+				}
+				
+				
+				
 				if(txtpreciounitario.text.length==0){
 					Alert.show("DEBE INGRESAR EL PRECIO DEL PRODUCTO");
 					
 					return;
 				}
-					
 				
-				if(txtcantidadinicial.text.length==0)
+				if(txtcantidadinicial.text.length==0){
 					cantIni=0;
-				else
+					Alert.show("DEBE INGRESAR LA CANTIDAD INICIAL DEL PRODUCTO");
+					return;
+				}else
 					cantIni=int(txtcantidadinicial.text.toString());
-				//------------------------------------------------------------------
-				if(txtcantidadisponible.text.length==0)
-					cantDisp=0;
-					else
+				
+				if(txtcantidadisponible.text.length==0){
+					cantDisp=0;	
+					Alert.show("DEBE INGRESAR LA CANTIDAD DISPONIBLE DEL PRODUCTO");
+					return;
+				}else
 					cantDisp=int(txtcantidadisponible.text.toString());
-				//------------------------------------------------------------------
+				
+				
 		
 				//mostramos al cliente un popup de espera
 				popup=Progress(PopUpManager.createPopUp(this,Progress,true));
