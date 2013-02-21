@@ -47,7 +47,8 @@
 			[Bindable]
 				public var tot_recargo:Number=0;
 			[Bindable]
-				public var temp_tot_porc_desc:Number=0; 
+				public var temp_tot_porc_desc:Number=0;
+			
 			
 			//---------------------------------------------------------------------------
 			protected function operation1_faultHandler(event:FaultEvent):void
@@ -725,6 +726,7 @@
 				//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				if(int(txtdescuento.text)==0||txtdescuento.text.length==0){
+					
 					lblTotGral.text=totGral.toFixed(3);
 					lbldescuento.text=Number(Number(-totGralDesc)).toFixed(3);
 					lblTotApagar.text=Number(Number(lblTotGral.text)-Number(totGralDesc.toFixed(3))).toFixed(3);
@@ -734,15 +736,19 @@
 					var calcrecargo:Number=0;
 					var calcanticipo:Number=0;
 					
-					if(int(mskrecargo.text)>0){
-					
-						calcularRecargoVariant()
+					if(tot_recargo>0){
+						var recargo:Number=0;
+						var calcularTotalAPagar:Number=totGral-totGralDesc;
+						recargo=tot_recargo*Number(calcularTotalAPagar.toFixed(3))/100;
+						lbltotalconrecargo.text=Number(Number(calcularTotalAPagar.toFixed(3))+recargo).toFixed(3);
+						//calcularRecargoVariant()
 						
 					}
-					if(int(mskanticipo.text)>0){
+					if(anticipo>0){
 						calcularAnticipo();
 					
 					}
+					
 				}
 				
 			//}
@@ -801,9 +807,9 @@
 				
 					calcularDescuentoVariant();
 					
-					calcularAnticipo();
+					//calcularAnticipo();
 					
-					calcularRecargoVariant();
+					//calcularRecargoVariant();
 				
 				
 				
@@ -879,7 +885,9 @@
 				
 				if(Number(Number(Number(lblTotApagar.text).toFixed(3))>=Number(mskanticipo.text))){
 					anticipo=Number(Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskanticipo.text)).toFixed(3));
+					
 					lblsaldo.text=anticipo.toFixed(3);
+					
 					return;
 				}else 
 				{Alert.show("EL ANTICIPO NO PUEDE SER MAYOR AL TOTAL A PAGAR");
@@ -897,7 +905,7 @@
 						anticipo=Number(Number(mskanticipo.text).toFixed(3));
 						lblsaldo.text=Number(saldo-anticipo).toFixed(3);
 					}
-					
+				
 				}
 				
 				
@@ -932,6 +940,10 @@
 						
 						mskrecargo.text=tot_recargo.toFixed(2);
 						
+						
+						if(Number(mskanticipo.text)>0)
+							lblsaldo.text=Number(Number(lbltotrecargo.toFixed(3))-Number(mskanticipo.text)).toFixed(3);
+						
 					
 					
 				}
@@ -944,7 +956,7 @@
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 				
 				calcularRecargoVariant();
-				calcularAnticipo();
+				//calcularAnticipo();
 			
 			
 			}
@@ -957,10 +969,11 @@
 				
 				
 				for(var i:int=0;i<arrayDg.length && !b;i++){
-					if(arrayDg[i].porc_desc != 0){
+					if(Number(arrayDg[i].porc_desc) > 0){
 						b=true;
 						
 						Alert.show("No se puede calcular el descuento por que hay productos con descuentos en el listado!!!");
+						txtdescuento.text="0.0";
 						
 						
 					}
@@ -978,7 +991,7 @@
 				if(int(lbltotalconrecargo.text)>0)
 					calcularRecargoVariant();
 						
-						if(anticipo>0)
+						if(int(mskanticipo.text)>0)
 							anticipocalculoreuso();	
 						
 				
@@ -993,13 +1006,26 @@
 					if(int(txtdescuento.text)>0){
 							por_des_tot=Number(Number(txtdescuento.text).toFixed(2));
 							porc_desc_total=Number(por_des_tot.toFixed(2));							
-							tot_desc= Number(Number(lblTotGral.text).toFixed(3))*por_des_tot/100;						
+							tot_desc= Number(Number(lblTotGral.text).toFixed(3))*por_des_tot/100;
+							totGralDesc=tot_desc;
 							lbldescuento.text=Number(Number(-tot_desc)).toFixed(3);
 							
 					}else
 						lbldescuento.text="0.000";
 					
+					if(tot_recargo>0){
+						lblTotApagar.text=Number(Number(lblTotGral.text)-tot_desc+(Number(tot_recargo.toFixed(2)))).toFixed(3);
+						lbltotalconrecargo.text=Number(Number(lblTotGral.text)-tot_desc+(Number(tot_recargo.toFixed(2)))).toFixed(3);
+						
+					}else
 						lblTotApagar.text=Number(Number(lblTotGral.text)-tot_desc).toFixed(3);
+					
+						
+						if(int(mskanticipo.text)>0)
+							lblsaldo.text=Number(Number(lblTotGral.text)-tot_desc+(Number(tot_recargo.toFixed(2)))-Number(anticipo.toFixed(2))).toFixed(3);
+						
+						
+							
 			
 			}
 			
@@ -1062,7 +1088,7 @@
 							tempTotDesc=tempTotDesc+Number(arrayDg[k].prec_descuento);
 							tempPorcDes=tempPorcDes+Number(arrayDg[k].porc_desc);
 							}
-							if(arrayDg[k].subtotal>0&&arrayDg[k].porc_desc==0)
+							
 								totgrilla=totgrilla+(arrayDg[k].price*arrayDg[k].countt);	
 							
 						}
@@ -1123,10 +1149,22 @@
 						
 						temp_tot_porc_desc=Number(tempPorcDes.toFixed(3));
 						
-						
-						lblTotApagar.text=totGralDesc.toFixed(3);
+						lblTotGral.text=totGral.toFixed(3);
+						lblTotApagar.text=Number(Number(totGral.toFixed(3))-Number(totGralDesc.toFixed(3))).toFixed(3);
 						
 						lbldescuento.text=Number(desc_resto).toFixed(3);
+						
+						if(tot_recargo>0){
+							lblTotApagar.text=Number(Number(totGral.toFixed(3))-Number(totGralDesc.toFixed(3))+(tot_recargo)).toFixed(3);
+							lbltotalconrecargo.text=Number(Number(totGral.toFixed(3))-Number(totGralDesc.toFixed(3))+(tot_recargo)).toFixed(3);
+						}else
+						{
+							lblTotApagar.text=Number(Number(totGral.toFixed(3))-Number(totGralDesc.toFixed(3))).toFixed(3);
+							lbltotalconrecargo.text=Number(Number(totGral.toFixed(3))-Number(totGralDesc.toFixed(3))).toFixed(3);
+						}
+						
+						if(int(mskanticipo.text)>0)
+							lblsaldo.text=Number(Number(lblTotApagar.text)-Number(mskanticipo.text)).toFixed(3);
 						
 					}
 						
@@ -1178,6 +1216,8 @@
 				desc_resto=0;
 				tot_recargo=0;
 				anticipo=0;
+				mskrecargo.text="";
+				mskanticipo.text="";
 				
 				
 				
@@ -1343,6 +1383,6 @@
 			  toolTip="Muestra una Ventana para cargar un Producto"/>
 	<s:Label x="604" y="386" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="ANTICIPO $:"
 			 textAlign="right"/>
-	<controls:MaskedTextInput text="0.0" id="mskanticipo" x="708" y="378" width="103" fontFamily="Verdana"
+	<controls:MaskedTextInput text="0.0" id="mskanticipo" x="708" y="378" width="60" fontFamily="Verdana"
 							  fontSize="16" restrict="0-9."/>
 </s:Group>

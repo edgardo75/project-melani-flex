@@ -454,8 +454,9 @@
 	<s:Label x="450" y="12" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="VER PRESUPUESTOS MELANIE" textDecoration="underline"/>
 	<mx:AdvancedDataGrid id="adgPresupuestos" x="13" y="34" width="973" height="271"
-						 designViewDataType="flat" doubleClickEnabled="true" fontSize="16"
-						 itemDoubleClick="adgPresupuestos_itemDoubleClickHandler(event)"
+						 designViewDataType="flat" doubleClickEnabled="true" fontFamily="Verdana"
+						 fontSize="16"
+						 itemDoubleClick="adgPresupuestos_itemDoubleClickHandler(event)" alternatingItemColors="[#ffffff,#fcff4f7]" 
 						 selectable="true">
 		<mx:columns>
 			<mx:AdvancedDataGridColumn dataField="id" headerText="N°" width="50"/>
@@ -486,7 +487,7 @@
 		<s:Label x="10" y="26" text="Buscar"/>
 	</s:BorderContainer>
 	<mx:AdvancedDataGrid id="adgdetallespresupuesto" x="12" y="356" width="702" height="164"
-						 designViewDataType="flat" fontSize="16">
+						 designViewDataType="flat" fontSize="16" alternatingItemColors="[#ffffff,#fcff4f7]">
 		<mx:columns>
 			<mx:AdvancedDataGridColumn dataField="codigo_producto" headerText="Codigo" width="60"/>
 			<mx:AdvancedDataGridColumn dataField="descripcion_prod" headerText="Descripcion" width="70"/>
