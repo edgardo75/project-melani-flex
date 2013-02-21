@@ -710,7 +710,7 @@
 					lbldescuento.text=Number(Number(-totGralDesc)).toFixed(3);
 					
 					
-					lblTotApagar.text=Number(Number(lblTotGral.text)-Number(totGralDesc.toFixed(3))).toFixed(3);
+					lblTotApagar.text=Number(Number(lblTotGral.text)-Number(totGralDesc.toFixed(3))+Number(tot_recargo.toFixed(3))).toFixed(3);
 					var calcrecargo:Number=0;
 					
 					if(int(mskrecargo.text)>0){
@@ -1051,6 +1051,8 @@
 				lblTotGral.text="0.000";
 				porc_d=0;
 				porc_desc_total=0;
+				mskrecargo.text="";
+					
 				lbldescuento.text="0.000";
 				lbltotalconrecargo.text="0.000";
 				desc_resto=0;
@@ -1079,7 +1081,7 @@
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="productosWs" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?wsdl"
+		<s:WebService id="productosWs" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?wsdl"
 					  showBusyCursor="true">
 			<s:operation name="searchAllProductos"
 						 fault="operation1_faultHandler(event)"

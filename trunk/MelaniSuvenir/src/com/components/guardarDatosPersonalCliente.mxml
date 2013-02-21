@@ -6,7 +6,7 @@
 		 width="560" height="380" creationComplete="group1_creationCompleteHandler(event)" xmlns:clients="com.components.clients.*">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<mx:WebService id="servicesCliente" wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL"
+		<mx:WebService id="servicesCliente" wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"
 					  
 					  showBusyCursor="false"
 					  useProxy="false">
@@ -175,9 +175,9 @@
 	
 	
 	
-	<clients:datosCliente id="clienteComp" x="5" y="20">
+	<clients:datosCliente id="clienteComp" x="5" y="20" fontSize="16">
 	</clients:datosCliente>
-	<s:Button id="btnGuardarCli" x="233" y="353" label="Guardar"
-			  click="validateAndSubmit(event)"/>
+	<s:Button id="btnGuardarCli" x="233" y="351" width="87" height="23" label="Guardar"
+			  click="validateAndSubmit(event)" fontSize="16"/>
 	<s:Button id="btnCloseClientComponent" x="510" y="5" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
 </s:Group>

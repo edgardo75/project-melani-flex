@@ -474,7 +474,7 @@
 					default:
 					{
 						
-						var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportNotaPedido?nronota="+nro;
+						var source:String="http://localhost:8080/WebMelanie2/ShowReportNotaPedido?nronota="+nro;
 						var urlReq:URLRequest= new URLRequest(source);
 						navigateToURL(urlReq,"_blank");
 						limpiarTodo();
@@ -539,20 +539,20 @@
 		<s:RadioButtonGroup id="stockFuturo"/>
 		<s:RadioButtonGroup id="notaCancelada"/>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wsnotapedido" wsdl="http://192.168.1.101:8080/ServiceNotaPedido/NotaPedidoWs?WSDL">
+		<s:WebService id="wsnotapedido" wsdl="http://localhost:8080/ServiceNotaPedido/NotaPedidoWs?WSDL">
 			<s:operation name="agregarNotaPedido" fault="operationNota_faultHandler(event)"
 						 result="operationNota_resultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
 		<s:WebService id="wstarjetascreditodebito" 
-					  wsdl="http://192.168.1.101:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="false"
+					  wsdl="http://localhost:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="false"
 					  >
 			<s:operation name="searchAllTarjetasCreditoDebito" result="operation1_resultHandler(event)" fault="operation1_faultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
-		<s:WebService wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL"
+		<s:WebService wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"
 					  id="cli" showBusyCursor="false">
 			<s:operation fault="operationFaultGetClient(event)"
 						 result="operationResultGetClient(event)" 
@@ -566,7 +566,7 @@
 			</s:operation>
 			
 		</s:WebService>
-		<s:WebService id="wsempleados" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
+		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
 			<s:operation name="selectAllEmpleados"
 						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
 						 result="operation2_resultHandlerSelectAllEmpleados(event)">
@@ -605,7 +605,7 @@
 		<s:RadioButton id="rdbcanceladanotasi" label="Si" groupName="notaCancelada"/>
 		<s:RadioButton id="rdbcanceladanotano" label="No" selected="true" groupName="notaCancelada"/>
 	</s:VGroup>
-	<s:Button id="btnCloseClientComponent" x="994" y="10" width="16" height="19" icon="assets/icon_close.png" click="btnCloseClientComponent_clickHandler(event)"/>
+	<s:Button id="btnCloseClientComponent" x="994" y="10" width="27" height="19" icon="assets/icon_close.png" click="btnCloseClientComponent_clickHandler(event)"/>
 	<s:Label x="20" y="39" height="15" fontSize="16" fontWeight="bold" text="Documento:"/>
 	<controls:MaskedTextInput id="mskdocu" x="116" y="34" enter="mskdocu_enterHandler(event)"
 							  fontSize="18" inputMask="########" maxChars="8" restrict="0-9"
@@ -619,10 +619,13 @@
 	<s:Label id="lblapellido" x="43" y="128" fontSize="16" fontWeight="bold" text="Apellido:"/>
 	<s:TextInput id="txtapellidocliente" x="113" y="118" width="189" fontSize="18" maxChars="40"
 				 prompt="Ingrese Apellido" restrict="a-z A-Z ñ-Ñ"/>
-	<s:Button id="btninserclient" x="30" y="461" label="DatosCliente" fontSize="16"  toolTip="Muestra una Ventana para Ingresar Datos Personales de un Cliente" click="btninserclient_clickHandler(event)"/>
+	<s:Button id="btninserclient" x="29" y="468" width="134" height="30" label="DatosCliente"
+			  click="btninserclient_clickHandler(event)" fontSize="16"
+			  toolTip="Muestra una Ventana para Ingresar Datos Personales de un Cliente"/>
 
-	<s:Button id="btnGuardarNota" x="31" y="485" label="Guardar Nota" fontSize="16" toolTip="Guarda la Nota de Pedido con todos Sus Datos"
-			  click="btnGuardarNota_clickHandler(event)" enabled="true"/>
+	<s:Button id="btnGuardarNota" x="29" y="501" width="134" height="30" label="Guardar Nota"
+			  click="btnGuardarNota_clickHandler(event)" enabled="true" fontSize="16"
+			  toolTip="Guarda la Nota de Pedido con todos Sus Datos"/>
 	<products:productosPedidosNota id="productscomp" x="4" y="166" height="434"/>
 	<s:RadioButton id="rdbentregadosi" x="331" y="74" label="Si" groupName="GrupoEntregado"/>
 	<s:RadioButton id="rdbentregadono" x="331" y="92" label="No" groupName="GrupoEntregado"

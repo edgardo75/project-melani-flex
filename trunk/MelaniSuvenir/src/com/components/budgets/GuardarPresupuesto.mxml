@@ -6,7 +6,7 @@
 		 width="924" height="534" creationComplete="group1_creationCompleteHandler(event)" xmlns:products="com.components.products.*">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="servicePresupuesto" wsdl="http://192.168.1.101:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="true">
+		<s:WebService id="servicePresupuesto" wsdl="http://localhost:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="false">
 			<s:operation name="addBudgets" result="operation1_resultHandler(event)"
 						 fault="operation1_faultHandler(event)">
 				
@@ -22,8 +22,13 @@
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			
+			import popus.Progress;
+			
+			private var popup:Progress;
 			
 			//--------------------------------------------------------------------------------
 			public function getDatosXML():String{				
@@ -107,6 +112,9 @@
 				
 				
 				btnguardar.enabled=false;
+				
+				popup=Progress(PopUpManager.createPopUp(this,Progress,true));
+				PopUpManager.centerPopUp(popup);
 				servicePresupuesto.addBudgets(getDatosXML());
 				
 			
@@ -144,7 +152,7 @@
 			{
 				var result:Number=Number(event.result.toString());	
 				
-				
+				PopUpManager.removePopUp(popup);
 				
 				switch(result){
 					case -1:{
@@ -170,7 +178,7 @@
 						break};
 					default:{
 						Alert.show("   Presupuesto N° "+result+" Generado correctamente!!!   ");
-						var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportPresupuesto?presnro="+result;
+						var source:String="http://localhost:8080/WebMelanie2/ShowReportPresupuesto?presnro="+result;
 						var urlReq:URLRequest= new URLRequest(source);
 						navigateToURL(urlReq,"_blank");
 						
@@ -189,6 +197,7 @@
 						txtapellido.text="";
 						txtnombre.text="";
 						txtobservaciones.text="";
+						
 						txtnombre.setFocus();
 						productordered.removerListadoPedidos(cls);
 						
