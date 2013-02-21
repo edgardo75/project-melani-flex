@@ -292,9 +292,9 @@
 		</mx:WebService>
 	</fx:Declarations>
 	
-	<s:DataGrid id="adgproductos" x="44" y="67" width="553" height="174"
-				doubleClick="adgproductos_doubleClickHandler(event)" doubleClickEnabled="true"
-				requestedRowCount="4">
+	<s:DataGrid id="adgproductos" x="44" y="67" width="590" height="174"
+				doubleClick="adgproductos_doubleClickHandler(event)" doubleClickEnabled="true" alternatingRowColors="[#ffffff,#fcff4f7]"
+				fontFamily="Verdana" fontSize="16" requestedRowCount="4">
 		<s:columns>
 			<s:ArrayList>
 				<s:GridColumn dataField="id" headerText="id" visible="false"></s:GridColumn>
@@ -337,11 +337,11 @@
 			  click="btnguardar_clickHandler(event)" fontSize="16"/>
 	<s:Button id="btnCloseClientComponent" x="617" y="10" width="16" height="19"
 			  click="btnClose_clickHandler(event)" icon="assets/icon_close.png"/>
-	<s:Label x="152" y="41" color="#ADF2C7" fontFamily="Verdana" fontSize="19" fontWeight="bold"
+	<s:Label x="184" y="43" color="#ADF2C7" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="CARGAR Y EDITAR PRODUCTOS"/>
-	<s:Label x="455" y="250" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="455" y="252" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="Productos Cargados"/>
-	<s:Label id="lbltotalproductos" x="456" y="265" width="113" fontFamily="Verdana" fontSize="16"
+	<s:Label id="lbltotalproductos" x="456" y="267" width="113" fontFamily="Verdana" fontSize="16"
 			 verticalAlign="middle"/>
 	<s:Label x="290" y="336" fontFamily="Verdana" fontSize="16" fontWeight="bold" text="Buscar:"/>
 	<components:AutoComplete x="291" y="351" width="197" id="cmbbuscarproducto" matchType="beginning" labelField="descripcion">

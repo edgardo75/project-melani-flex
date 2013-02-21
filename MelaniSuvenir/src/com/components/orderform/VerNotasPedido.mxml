@@ -1618,6 +1618,7 @@
 						b=true;
 						
 						Alert.show("No se puede calcular el descuento por que hay productos con descuentos en el listado!!!"+arrayDg[i].porc_desc);
+						txtdescuento.text="0.0";
 						
 						
 					}
@@ -1791,7 +1792,7 @@
 							tempTotDesc=tempTotDesc+Number(arrayDg[k].prec_descuento);
 							tempPorcDes=tempPorcDes+Number(arrayDg[k].porc_desc);
 						}
-						if(arrayDg[k].subtotal>0&&arrayDg[k].porc_desc==0)
+						
 							totgrilla=totgrilla+(arrayDg[k].price*arrayDg[k].countt);	
 						
 					}
@@ -2378,7 +2379,7 @@
 	<s:Button id="last_btn" x="891" y="121" width="89" height="28" label="&gt;&gt;"
 			  click="last_clickHandler(event)" enabled="false" fontSize="16" fontWeight="bold"/>
 	<s:DataGrid id="adgNotas" x="7" y="2" width="973" height="111"  variableRowHeight="true" doubleClick="adgNotas_doubleClickHandler(event)"
-				selectionMode="singleRow" doubleClickEnabled="true" toolTip="Haga doble click para seleccionar la Nota correspondiente">
+				selectionMode="singleRow" doubleClickEnabled="true" toolTip="Haga doble click para seleccionar la Nota correspondiente" alternatingRowColors="[#ffffff,#fcff4f7]">
 		<s:columns>
 			<s:ArrayList>
 				<s:GridColumn headerText="N° Nota" dataField="id"/>
