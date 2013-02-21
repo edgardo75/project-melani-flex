@@ -3,7 +3,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
-		 width="612" height="364" toolTip="FORMULARIO PARA AGREGAR" creationComplete="group1_creationCompleteHandler(event)" xmlns:components="com.hillelcoren.components.*"
+		 width="612" height="422" toolTip="FORMULARIO PARA AGREGAR" creationComplete="group1_creationCompleteHandler(event)" xmlns:components="com.hillelcoren.components.*"
 		 title="Agregar un Producto a la Base de Datos" close="titlewindow_closeHandler()">
 	<fx:Style>
 		@namespace s "library://ns.adobe.com/flex/spark";		
@@ -22,7 +22,7 @@
 		<mx:StringValidator id="descV" source="{txtdescripcion}"
 							property="text" minLength="2" maxLength="80"
 							required="true" requiredFieldError="Debe Ingresar la descripción y/o nombre del producto"/>
-		<mx:WebService id="servicesProducto" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?WSDL"
+		<mx:WebService id="servicesProducto" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?WSDL"
 					   
 					   showBusyCursor="false"
 					   useProxy="false">
@@ -257,13 +257,13 @@
 	
 		
 	
-	<mx:Form id="frmProductos" width="561" height="285" fontFamily="Verdana" fontWeight="bold"
-			 horizontalCenter="0" textAlign="left" verticalCenter="7">
+	<mx:Form id="frmProductos" width="561" height="285" fontFamily="Verdana" fontSize="16"
+			 fontWeight="bold" horizontalCenter="0" textAlign="left" verticalCenter="7">
 		<mx:FormItem backgroundAlpha="0.85" textAlign="left">
 			<s:FormHeading label="Productos" color="#FD0505" fontSize="21"/>
 		</mx:FormItem>
 		<mx:FormItem label="Descripcion" labelStyleName="myFormItemLabelStyle">
-			<mx:TextInput id="txtdescripcion" width="214" fontFamily="Verdana" fontSize="18"
+			<mx:TextInput id="txtdescripcion" width="214" fontFamily="Verdana" fontSize="16"
 						  fontWeight="bold"
 						  tabIndex="0" restrict="a-z A-Z ñ-Ñ"
 						  toolTip="Ingresar la descripción del producto!!!"
@@ -271,22 +271,22 @@
 						  />			
 		</mx:FormItem>
 		<mx:FormItem label="Codigo Producto Interno" labelStyleName="myFormItemLabelStyle">
-			<mx:TextInput tabIndex="1" toolTip="Optativo ingreso codigo producto interno!!!" id="txtcodigoproducto" width="213" fontFamily="Verdana" fontSize="18"
+			<mx:TextInput tabIndex="1" toolTip="Optativo ingreso codigo producto interno!!!" id="txtcodigoproducto" width="213" fontFamily="Verdana" fontSize="16"
 						  fontWeight="bold" maxChars="100"/>			
 		</mx:FormItem>
 		<mx:FormItem label="Precio Unitario" labelStyleName="myFormItemLabelStyle">
-			<mx:TextInput tabIndex="2" maxChars="5" toolTip="Ingrese precion unitario!!!" id="txtpreciounitario" fontFamily="Verdana" fontSize="20"
+			<mx:TextInput tabIndex="2" maxChars="5" toolTip="Ingrese precion unitario!!!" id="txtpreciounitario" fontFamily="Verdana" fontSize="16"
 									  fontWeight="bold" restrict="0-9." />
 		</mx:FormItem>
 		<mx:FormItem label="Cantidad Inicial" labelStyleName="myFormItemLabelStyle">
-			<controls:MaskedTextInput tabIndex="3" toolTip="Ingrese cantidad inicial!!!" id="txtcantidadinicial" fontFamily="Verdana" fontSize="20"
+			<controls:MaskedTextInput tabIndex="3" toolTip="Ingrese cantidad inicial!!!" id="txtcantidadinicial" fontFamily="Verdana" fontSize="16"
 									  inputMask="#####" fontWeight="bold" restrict="0-9" />
 		</mx:FormItem>
 		<mx:FormItem label="Cantidad Disponible" labelStyleName="myFormItemLabelStyle">
-			<controls:MaskedTextInput tabIndex="4" toolTip="Ingrese cantidad disponible" id="txtcantidadisponible" fontFamily="Verdana" fontSize="20"
+			<controls:MaskedTextInput tabIndex="4" toolTip="Ingrese cantidad disponible" id="txtcantidadisponible" fontFamily="Verdana" fontSize="16"
 									  inputMask="#####" fontWeight="bold" restrict="0-9" />
 		</mx:FormItem>
 	</mx:Form>
-	<s:Button id="btnGuardarProducto" x="271" y="333" label="Guardar"
-			  click="btnGuardarProducto_clickHandler(event)"/>
+	<s:Button id="btnGuardarProducto" x="256" y="333" width="88" height="31" label="Guardar"
+			  click="btnGuardarProducto_clickHandler(event)" fontSize="16"/>
 </s:TitleWindow>

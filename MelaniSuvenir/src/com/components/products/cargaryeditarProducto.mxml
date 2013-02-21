@@ -3,6 +3,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
+		 xmlns:components="com.hillelcoren.components.*"
 		 width="644" height="418" creationComplete="group1_creationCompleteHandler(event)">
 	
 	<fx:Script>
@@ -126,10 +127,16 @@
 						return;
 						
 					}
+					if(keyPress.currentTarget.toString().indexOf("cmbbuscarproducto")!=-1){
+						addrowgrid();
+					}
 				
 				}
 			
 			
+			}
+			protected function addrowgrid():void{
+				adgproductos.setSelectedIndex(cmbbuscarproducto.selectedItemId);
 			}
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
@@ -142,6 +149,7 @@
 					}else{
 						xmllistproducto=new XMLList(event.result);							
 						adgproductos.dataProvider=product;		
+						cmbbuscarproducto.dataProvider=product;
 						lbltotalproductos.text=String(product.length);
 					}
 				}
@@ -234,6 +242,7 @@
 				txtcodigoproducto.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				txtdescripcion.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				txtprecio.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				cmbbuscarproducto.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				
 			}
 			//---------------------------------------------------------------------------
@@ -267,7 +276,7 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:XMLListCollection id="product" source="{xmllistproducto.producto}"/>
-		<mx:WebService id="servicesProducto" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?WSDL"
+		<mx:WebService id="servicesProducto" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?WSDL"
 					   
 					   showBusyCursor="true"
 					   useProxy="false">
@@ -306,27 +315,35 @@
 			<fx:Object dataField1="data4" dataField2="data4" dataField3="data4"></fx:Object>
 		</s:ArrayList>
 	</s:DataGrid>
-	<s:Label x="118" y="249" fontSize="16" fontWeight="bold" text="Descripcion:"
+	<s:Label x="45" y="249" fontSize="16" fontWeight="bold" text="Descripcion:"
 			 verticalAlign="bottom"/>
-	<s:TextInput id="txtdescripcion" x="117" y="268" width="160" prompt="Ingrese la descripcion del producto..."/>
-	<s:Label x="361" y="251" fontSize="16" fontWeight="bold" text="CodigoProducto:"
+	<s:TextInput id="txtdescripcion" x="44" y="268" width="160" fontSize="16"
+				 prompt="Ingrese la descripcion del producto..."/>
+	<s:Label x="287" y="251" fontSize="16" fontWeight="bold" text="CodigoProducto:"
 			 verticalAlign="bottom"/>
-	<s:Label x="118" y="294" fontSize="16" fontWeight="bold" text="Precio:" verticalAlign="bottom"/>
-	<s:Label x="362" y="293" fontSize="16" fontWeight="bold" text="Cantidad Inicial:"
+	<s:Label x="45" y="294" fontSize="16" fontWeight="bold" text="Precio:" verticalAlign="bottom"/>
+	<s:Label x="288" y="293" fontSize="16" fontWeight="bold" text="Cantidad Inicial:"
 			 verticalAlign="bottom"/>
-	<s:Label x="118" y="334" fontSize="16" fontWeight="bold" text="Cantidad Disponible:"
+	<s:Label x="45" y="334" fontSize="16" fontWeight="bold" text="Cantidad Disponible:"
 			 verticalAlign="bottom"/>
-	<s:TextInput id="txtcodigoproducto" x="363" y="267" width="160"  prompt="Ingrese un codigo interno del producto..."/>
-	<controls:MaskedTextInput id="txtprecio" x="119" y="309" restrict="0-9."/>
-	<controls:MaskedTextInput id="txtcantidadinicial" x="363" y="308" restrict="0-9."/>
-	<controls:MaskedTextInput id="txtcantidaddisponible" x="120" y="350" restrict="0-9."/>
-	<s:Button id="btnnuevo" x="244" y="376" label="Nuevo" click="btnnuevo_clickHandler(event)"/>
-	<s:Button id="btnguardar" x="322" y="376" label="Guardar" click="btnguardar_clickHandler(event)"/>
+	<s:TextInput id="txtcodigoproducto" x="289" y="267" width="160" fontSize="16"
+				 prompt="Ingrese un codigo interno del producto..."/>
+	<controls:MaskedTextInput id="txtprecio" x="46" y="309" fontSize="16" restrict="0-9."/>
+	<controls:MaskedTextInput id="txtcantidadinicial" x="289" y="308" fontSize="16" restrict="0-9."/>
+	<controls:MaskedTextInput id="txtcantidaddisponible" x="47" y="350" fontSize="16" restrict="0-9."/>
+	<s:Button id="btnnuevo" x="233" y="384" width="81" height="29" label="Nuevo"
+			  click="btnnuevo_clickHandler(event)" fontSize="16"/>
+	<s:Button id="btnguardar" x="322" y="384" width="89" height="29" label="Guardar"
+			  click="btnguardar_clickHandler(event)" fontSize="16"/>
 	<s:Button id="btnCloseClientComponent" x="617" y="10" width="16" height="19"
 			  click="btnClose_clickHandler(event)" icon="assets/icon_close.png"/>
 	<s:Label x="152" y="41" color="#ADF2C7" fontFamily="Verdana" fontSize="19" fontWeight="bold"
 			 text="CARGAR Y EDITAR PRODUCTOS"/>
-	<s:Label x="363" y="348" fontFamily="Verdana" text="Productos Cargados:"/>
-	<s:Label id="lbltotalproductos" x="499" y="344" width="113" fontFamily="Verdana" fontSize="16"
+	<s:Label x="455" y="250" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+			 text="Productos Cargados"/>
+	<s:Label id="lbltotalproductos" x="456" y="265" width="113" fontFamily="Verdana" fontSize="16"
 			 verticalAlign="middle"/>
+	<s:Label x="290" y="336" fontFamily="Verdana" fontSize="16" fontWeight="bold" text="Buscar:"/>
+	<components:AutoComplete x="291" y="351" width="197" id="cmbbuscarproducto" matchType="beginning" labelField="descripcion">
+	</components:AutoComplete>
 </s:Group>

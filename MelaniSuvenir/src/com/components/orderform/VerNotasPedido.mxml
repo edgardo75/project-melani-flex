@@ -5,7 +5,7 @@
 		 xmlns:products="com.components.products.*"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
 		 xmlns:components="com.hillelcoren.components.*"
-		 width="1186" height="592" initialize="group1_initializeHandler(event)">
+		 width="1214" height="626" initialize="group1_initializeHandler(event)">
 	<fx:Script>
 		<![CDATA[
 			import assets.DataGridUtil;
@@ -94,8 +94,8 @@
 			private var efectivo:String;
 			[Bindable]
 			private var idnota:int=0;
-			[Bindable]
-			private var historico:Historico;
+			
+			
 			
 			
 			protected function operation1_resultHandler(event:ResultEvent):void
@@ -108,9 +108,11 @@
 					Alert.show("   NO HAY NOTAS CARGADAS AÚN!!!   ");
 				}else{
 					
-					if(totalReg<100)
+					if(totalReg<100){
 						wsnotas.selectAllNotas();
-					else{
+						if(totGral>0)
+							limpiarControles();
+					}else{
 						last_btn.enabled=true;
 						next_btn.enabled=true;
 						first_btn.enabled=true;
@@ -118,6 +120,8 @@
 						TOTALPAGES=int(totalReg/SIZEPAGE);		
 						
 						wsnotas.verNotasPedidoPaginadas(indexPage,SIZEPAGE);
+						if(totGral>0)
+							limpiarControles();
 					}
 				
 				}
@@ -147,6 +151,8 @@
 
 				if(detallenotas.length>0)
 					detallenotas.removeAll();
+				
+				
 				
 				
 				if(btnImprimir.enabled==false)
@@ -286,6 +292,7 @@
 			
 			protected function adgNotas_doubleClickHandler(event:MouseEvent):void
 			{
+				var historico:Historico;
 				
 				lblnombreyapecli.text=String(notas[adgNotas.selectedIndex].cliente.apellidoynombre);
 				nrodocucli=int(notas[adgNotas.selectedIndex].cliente.nrodocumento);
@@ -297,21 +304,14 @@
 				txtobservaciones.text=String(notas[adgNotas.selectedIndex].observaciones);
 				cmbTarjetasCreditoDebito.selectedItemId=notas[adgNotas.selectedIndex].idtarjeta;
 				txtnumerocuponpago.text=notas[adgNotas.selectedIndex].numerocupon;
-				detallenotas.source=notas[adgNotas.selectedIndex].detallenota.itemdetalle;
-				
-				
-				
-				
-				
-			
-				
-				
-				
+				detallenotas.source=notas[adgNotas.selectedIndex].detallenota.itemdetalle;			
 				
 				userexpidio=notas[adgNotas.selectedIndex].idusuarioexpidionota;
 				userentrego=notas[adgNotas.selectedIndex].idusuarioentregonota;
 				usercancelo=notas[adgNotas.selectedIndex].idusuariocancelonota;
 				useranulo=notas[adgNotas.selectedIndex].idusuarioanulonota;
+				listhistoricoselected.source=notas[adgNotas.selectedIndex].detallehistorico.item;
+			
 				
 				
 				if(int(notas[adgNotas.selectedIndex].anulado)==0){
@@ -329,19 +329,23 @@
 					rdbentregadono.selected=true;
 				else
 					rdbentregadosi.selected=true;
-				if(listhistorico.length){
+				
+				if(listhistorico.length>0){
+					
 					listhistorico.removeAll();
-					listhistoricoselected.removeAll();
+					
 					
 				}
+				
 				//***********************************************************************************************************++
-				listhistoricoselected.source=notas[adgNotas.selectedIndex].detallehistorico.item;
+				
 				
 				for (var j:int=0;j<listhistoricoselected.length;j++){
 					if(Number(listhistoricoselected[j].anticipo)>0){
 					
 						historico =new Historico();
 						historico.anticipo=listhistoricoselected[j].anticipo;
+						anticipo=anticipo+Number(Number(listhistoricoselected[j].anticipo).toFixed(3));
 						historico.fecharegistro=listhistoricoselected[j].fecharegistro;
 						
 						listhistorico.addItem(historico);
@@ -363,13 +367,15 @@
 			protected function addDetalles():void{
 				
 				
-				if(detallenotasList.length>0){
+				/*if(detallenotasList.length>0){
 					detallenotasList.removeAll();
 					
 					adglistpedprod.dataProvider.removeItems();
 					
 					arrayDg.removeAll();
 					arrayDg.refresh();
+					
+					
 					
 					//----------------------------------------------------------
 					totGral=0;
@@ -397,7 +403,7 @@
 					tot_recargo_porc=0;
 					anticipo=0;
 					totRecargo=0;
-				}
+				}*/
 				
 			var b:Boolean=false;
 			
@@ -450,7 +456,7 @@
 				porc_desc_total=notas[adgNotas.selectedIndex].porcentajedesctotal;
 				totRecargo=notas[adgNotas.selectedIndex].recargototal;
 				
-				anticipo=notas[adgNotas.selectedIndex].anticipo;
+			
 				
 				
 				
@@ -1139,15 +1145,24 @@
 				var calcrecargo:Number=0;
 				var calcanticipo:Number=0;
 				
-				if(int(mskrecargo.text)>0){
+				if(totRecargo>0){
 					
-					calcularRecargoVariant()
-					
-				}
-				if(int(mskanticipo.text)>0){
-					calcularAnticipo();
+					lbltotalconrecargo.text=Number(Number(Number(lblTotGral.text)-Number(totGralDesc.toFixed(3)))+Number(totRecargo.toFixed(3))).toFixed(3);
+					notas[adgNotas.selectedIndex].recargototal=lbltotalconrecargo.text;
 					
 				}
+				if(anticipo>0){
+					lblsaldo.text=Number(Number(lblTotGral.text)-Number(totGralDesc.toFixed(3))-(anticipo)).toFixed(3);
+					notas[adgNotas.selectedIndex].saldo=lblsaldo.text;
+					
+				}
+				notas[adgNotas.selectedIndex].montototalapagar=lblTotApagar.text;
+				notas[adgNotas.selectedIndex].total=lblTotGral.text;
+				
+				notas[adgNotas.selectedIndex].descuentonota=lbldescuento.text;
+				
+				
+					
 			}
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			public function anticipocalculoreuso():void{
@@ -1155,17 +1170,22 @@
 				if(Number(lblsaldo.text)==0){
 					anticipo=Number(Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskanticipo.text)).toFixed(3));
 					lblsaldo.text=anticipo.toFixed(3);
+					notas[adgNotas.selectedIndex].saldo=lblsaldo.text;
+					return;
 				
 				}else{
-					if(Number(lblsaldo.text)<Number(mskanticipo.text))
+					if(Number(lblsaldo.text)<Number(mskanticipo.text)){
 						Alert.show("   Imposible Calcular el anticipo   ");
-					else{
-						var saldo:Number=Number(lblsaldo.text);
-							anticipo=Number(Number(mskanticipo.text).toFixed(3));
-							lblsaldo.text=Number(saldo-anticipo).toFixed(3);
+					return;
+					}else{
+							var saldo:Number=Number(lblsaldo.text);
+								anticipo=Number(Number(mskanticipo.text).toFixed(3));
+								lblsaldo.text=Number(saldo-anticipo).toFixed(3);
+								notas[adgNotas.selectedIndex].saldo=lblsaldo.text;
+								
+						}
+					
 					}
-				
-				}
 				
 				
 				
@@ -1179,7 +1199,7 @@
 					anticipo=0;
 				}else {
 					anticipocalculoreuso();
-					notas[adgNotas.selectedIndex].saldo=lblsaldo.text;
+					
 				}
 				
 				
@@ -1196,6 +1216,7 @@
 					tot_recargo_porc=0;
 					lbltotalconrecargo.text="0.000";
 					lblTotApagar.text=Number(totgral-descTotal).toFixed(3);
+					totRecargo=0;
 					
 				}else{
 					if(tot_recargo_porc==Number(mskrecargo.text))
@@ -1213,7 +1234,12 @@
 					lblTotApagar.text=Number(lbltotrecargo).toFixed(3);
 					
 					mskrecargo.text=tot_recargo_porc.toFixed(2);
+					totRecargo=recargo;
 					
+					notas[adgNotas.selectedIndex].recargototal=totRecargo.toFixed(3);
+					
+					if(anticipo>0)
+						lblsaldo.text=Number(lbltotrecargo-anticipo).toFixed(3);
 					
 					
 				}
@@ -1226,7 +1252,13 @@
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 				
 				calcularRecargoVariant();
-				calcularAnticipo();
+				notas[adgNotas.selectedIndex].montototalapagar=lblTotApagar.text;
+				notas[adgNotas.selectedIndex].total=lblTotGral.text;
+				notas[adgNotas.selectedIndex].saldo=lblsaldo.text;
+				notas[adgNotas.selectedIndex].descuentonota=lbldescuento.text;
+				
+				notas[adgNotas.selectedIndex].recargototal=lbltotalconrecargo.text;
+				//calcularAnticipo();
 				
 				
 			}
@@ -1281,7 +1313,7 @@
 				if(arrayDg.length>0&&adgNotas.selectedIndex>-1)
 					Alert.show("   Esta seguro de remover los productos Listados?","Confirmar Eliminación   ", Alert.YES | Alert.NO, this, removerListadoPedidos, null, Alert.NO);
 				else
-					Alert.show("   Debe seleccionar una nota del listado   ");
+					Alert.show("Debe seleccionar una nota del listado \nhaciendo doble click!!!");
 				
 			}
 			private function transferirFocus(KeyPress:KeyboardEvent):void{
@@ -1523,13 +1555,37 @@
 				adglistpedprod.dataProvider=arrayDg;
 				lblTotGral.text=totGral.toFixed(3);
 				
+				//totGral=notas[adgNotas.selectedIndex].total;
+				
+				//tot_recargo_porc=notas[adgNotas.selectedIndex].porcrecargo;
+				//totGralDesc=Math.abs(Number(notas[adgNotas.selectedIndex].descuentonota));
+				//porc_desc_total=notas[adgNotas.selectedIndex].porcentajedesctotal;
+				//totRecargo=notas[adgNotas.selectedIndex].recargototal;
+				
+				//anticipo=notas[adgNotas.selectedIndex].anticipo;
 				
 				
+				
+				//mskrecargo.text=notas[adgNotas.selectedIndex].porcrecargo;
+				
+				
+				//************************************************************************************+
+				//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+				
+				//lblTotGral.text=totGral.toFixed(3);
+				//lbldescuento.text=Number(Number(notas[adgNotas.selectedIndex].descuentonota)).toFixed(3);
+				lblTotApagar.text=Number(Number(Number(totGral).toFixed(3))-Number(Number(totGralDesc).toFixed(3))).toFixed(3);
+				
+				
+				if(totRecargo>0)
+					lbltotalconrecargo.text=Number(Number(totRecargo)+Number(lblTotApagar.text)).toFixed(3);
+				if(anticipo>0)
+					lblsaldo.text=Number(Number(lblTotApagar.text)-anticipo).toFixed(3);	
 				
 		
-				calcularAnticipo();
+				//calcularAnticipo();
 				
-				calcularRecargoVariant();
+				//calcularRecargoVariant();
 					
 				
 				
@@ -1558,10 +1614,10 @@
 				
 				
 				for(var i:int=0;i<arrayDg.length && !b;i++){
-					if(arrayDg[i].porc_desc != 0){
+					if(Number(arrayDg[i].porc_desc) > 0){
 						b=true;
 						
-						Alert.show("No se puede calcular el descuento por que hay productos con descuentos en el listado!!!");
+						Alert.show("No se puede calcular el descuento por que hay productos con descuentos en el listado!!!"+arrayDg[i].porc_desc);
 						
 						
 					}
@@ -1573,16 +1629,19 @@
 					return;
 				
 				
-			
+				calcularDescuentoVariant();
 				
 				
-				if(int(lbltotalconrecargo.text)>0)
-					calcularRecargoVariant();
-				
-				if(anticipo>0)
-					anticipocalculoreuso();	
 				
 				
+					
+				
+				notas[adgNotas.selectedIndex].montototalapagar=lblTotApagar.text;
+				notas[adgNotas.selectedIndex].total=lblTotGral.text;
+				notas[adgNotas.selectedIndex].saldo=lblsaldo.text;
+				notas[adgNotas.selectedIndex].descuentonota=lbldescuento.text;
+				
+				notas[adgNotas.selectedIndex].recargototal=lbltotalconrecargo.text;
 				
 			}
 			
@@ -1595,11 +1654,16 @@
 					porc_desc_total=Number(por_des_tot.toFixed(2));							
 					tot_desc= Number(Number(lblTotGral.text).toFixed(3))*por_des_tot/100;						
 					lbldescuento.text=Number(Number(-tot_desc)).toFixed(3);
+					totGralDesc=Number(lbldescuento.text);
 					
 				}else
 					lbldescuento.text="0.000";
 				
-				lblTotApagar.text=Number(Number(lblTotGral.text)-tot_desc).toFixed(3);
+				lblTotApagar.text=Number(Number(lblTotGral.text)-tot_desc+(totRecargo)).toFixed(3);
+				if(totRecargo>0)
+					lbltotalconrecargo.text=Number(Number(lblTotGral.text)-tot_desc+(totRecargo)).toFixed(3);
+				if(anticipo>0)
+					lblsaldo.text=Number(Number(Number(lblTotGral.text)-tot_desc+(totRecargo))-anticipo).toFixed(3);
 				
 			}
 			
@@ -1616,6 +1680,8 @@
 				adglistpedprod.dataProvider.removeItems();
 				arrayDg.removeAll();
 				arrayDg.refresh();
+				adgNotas.dataProvider=notas;	
+				
 				
 				//----------------------------------------------------------
 				totGral=0;
@@ -1887,7 +1953,7 @@
 				
 				if(adgNotas.selectedItem.id>0){
 					
-					var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportNotaPedido?nronota="+adgNotas.selectedItem.id;
+					var source:String="http://localhost:8080/WebMelanie2/ShowReportNotaPedido?nronota="+adgNotas.selectedItem.id;
 					
 					var urlReq:URLRequest= new URLRequest(source);
 					navigateToURL(urlReq,"_blank");
@@ -2211,6 +2277,12 @@
 			
 			
 			}
+			//*************************************************************************************++
+			protected function btnCloseClientComponent_clickHandler(event:MouseEvent):void
+			{
+				this.removeAllElements();	
+			}
+			//*************************************************************************************++
 			
 		]]>
 	</fx:Script>
@@ -2222,7 +2294,7 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:ArrayCollection id="arrayDg"/>
 		<s:DateTimeFormatter id="dtf" dateTimePattern="dd/MM/yyyy"/>
-		<s:WebService id="wsnotas" wsdl="http://192.168.1.101:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wsnotas" wsdl="http://localhost:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true">
 			<s:operation name="actualizarNotaPedido"
 						 result="operation9_resultHandler(event)"
 						 fault="operation9_faultHandler(event)">
@@ -2264,7 +2336,7 @@
 				/>
 				
 		</s:WebService>
-		<s:WebService id="wsempleados" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
+		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
 			<s:operation name="selectAllEmpleados"
 						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
 						 result="operation2_resultHandlerSelectAllEmpleados(event)">
@@ -2272,13 +2344,13 @@
 			</s:operation>
 		</s:WebService>
 		<s:WebService id="wstarjetascreditodebito" 
-					  wsdl="http://192.168.1.101:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
+					  wsdl="http://localhost:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
 					  >
 			<s:operation name="searchAllTarjetasCreditoDebito" result="operation4_resultHandler(event)" fault="operation4_faultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
-		<s:WebService id="productosWs" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?wsdl"
+		<s:WebService id="productosWs" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?wsdl"
 					  showBusyCursor="true">
 			<s:operation name="searchAllProductos"
 						 fault="operation1_faultGetRecord(event)"
@@ -2297,14 +2369,14 @@
 		
 	</fx:Declarations>
 	
-	<s:Button id="first_btn" x="7" y="122" width="85" label="First"
-			  click="first_clickHandler(event)" enabled="false" fontSize="16"/>
-	<s:Button id="prev_btn" x="313" y="122" width="88" label="Prev"
-			  click="prev_btn_clickHandler(event)" enabled="false" fontSize="16"/>
-	<s:Button id="next_btn" x="624" y="123" width="84" label="Next"
-			  click="next_btn_clickHandler(event)" enabled="false" fontSize="16"/>
-	<s:Button id="last_btn" x="891" y="121" width="89" label="Last" click="last_clickHandler(event)"
-			  enabled="false" fontSize="16"/>
+	<s:Button id="first_btn" x="7" y="122" width="85" height="27" label="&lt;&lt;"
+			  click="first_clickHandler(event)" enabled="false" fontSize="16" fontWeight="bold"/>
+	<s:Button id="prev_btn" x="313" y="122" width="88" height="27" label="&lt;"
+			  click="prev_btn_clickHandler(event)" enabled="false" fontSize="16" fontWeight="bold"/>
+	<s:Button id="next_btn" x="624" y="123" width="84" height="26" label="&gt;"
+			  click="next_btn_clickHandler(event)" enabled="false" fontSize="16" fontWeight="bold"/>
+	<s:Button id="last_btn" x="891" y="121" width="89" height="28" label="&gt;&gt;"
+			  click="last_clickHandler(event)" enabled="false" fontSize="16" fontWeight="bold"/>
 	<s:DataGrid id="adgNotas" x="7" y="2" width="973" height="111"  variableRowHeight="true" doubleClick="adgNotas_doubleClickHandler(event)"
 				selectionMode="singleRow" doubleClickEnabled="true" toolTip="Haga doble click para seleccionar la Nota correspondiente">
 		<s:columns>
@@ -2347,9 +2419,9 @@
 	<s:Label x="17" y="168" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="Cliente:"/>
 	<s:Label id="lblnombreyapecli" x="87" y="157" width="288" height="33" fontSize="16"
 			 verticalAlign="middle"/>
-	<s:TextArea id="txtobservaciones" x="390" y="151" width="596" height="88" maxChars="32000"/>
+	<s:TextArea id="txtobservaciones" x="390" y="154" width="596" height="88" maxChars="32000"/>
 	
-	<mx:AdvancedDataGrid id="adglistpedprod" x="7" y="277" width="809" height="149"
+	<mx:AdvancedDataGrid id="adglistpedprod" x="7" y="277" width="809" height="135"
 						 alternatingItemColors="[#adf1f5, white]"
 						editable="item group summary"	
 						 designViewDataType="flat" doubleClickEnabled="true" 
@@ -2423,10 +2495,10 @@
 							 dropDownRowCount="10" fontSize="16" fontWeight="bold"
 							 labelField="descripcion" matchType="beginning" tabEnabled="false">
 	</components:AutoComplete>
-	<s:Button id="btnremover" x="7" y="432" label="Remover Todo"
+	<s:Button id="btnremover" x="7" y="414" width="153" height="40" label="Remover Todo"
 			  click="btnremover_clickHandler(event)" enabled="false" fontSize="16"
 			  toolTip="Elimina todos Los productos del Listado!!!"/>
-	<s:Button id="brncargarunproducto" x="7" y="455" label="Cargar Producto"
+	<s:Button id="brncargarunproducto" x="7" y="458" width="153" height="38" label="Cargar Producto"
 			  click="brncargarunproducto_clickHandler(event)" fontSize="16"
 			  toolTip="Muestra una Ventana para cargar un Producto"/>
 	<s:Label x="316" y="255" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
@@ -2444,20 +2516,20 @@
 	<s:RadioButton id="rdbentregadosi" x="991" y="16" label="Si" groupName="GrupoEntregado"/>
 	<s:RadioButton id="rdbentregadono" x="991" y="34" label="No" groupName="GrupoEntregado"
 				   selected="true"/>
-	<s:Label x="994" y="124" fontSize="14" fontWeight="bold" text="Nota anulada"/>
-	<s:VGroup x="994" y="140" width="39" height="50">
-		<s:RadioButton id="rdanuladasi" label="Si" groupName="anulada"/>
-		<s:RadioButton id="rdanuladano" label="No" selected="true" groupName="anulada"/>
+	<s:Label x="994" y="117" fontSize="14" fontWeight="bold" text="Nota anulada"/>
+	<s:VGroup x="993" y="132" width="39" height="44">
 	</s:VGroup>
 	<s:Label x="824" y="438" fontFamily="Arial" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
 	<s:TextInput id="txtpassword" x="825" y="459" width="183" fontSize="16" fontStyle="normal"
 				 prompt="Ingresar password de vendedor" displayAsPassword="true"/>
-	<s:Button id="btnguardarentregada" x="1044" y="24" label="Entregar"
-			  click="btnguardarentregada_clickHandler(event)"
+	<s:Button id="btnguardarentregada" x="1032" y="17" width="93" height="33" label="Entregar"
+			  click="btnguardarentregada_clickHandler(event)" fontSize="16"
 			  toolTip="Almacena el estado de Entregado de la Nota de Pedido Seleccionada"/>
-	<s:Button x="1043" y="94" label="Cancelar" click="button1_clickHandler(event)"
+	<s:Button x="1035" y="73" width="90" height="33" label="Cancelar"
+			  click="button1_clickHandler(event)" fontSize="16"
 			  toolTip="Cambia el estado cancelada de la Nota de Pedido Seleccionada"/>
-	<s:Button x="1042" y="168" label="Anular" click="button2_clickHandler(event)"
+	<s:Button x="1037" y="138" width="88" height="33" label="Anular"
+			  click="button2_clickHandler(event)" fontSize="16"
 			  toolTip="Cambia el estado de anulada de la Nota de Pedido Seleccionada"/>
 	<components:AdvancedAutoComplete id="cmbTarjetasCreditoDebito" x="823" y="292" width="221"
 									 fontSize="16" labelField="descripcion"
@@ -2478,14 +2550,20 @@
 		</s:columns>		
 	</s:DataGrid>
 	<s:Label x="826" y="489" fontSize="16" fontWeight="bold" text="HISTORICO DE ANTICIPOS"/>
-	<s:Button id="btnRegargarlistado" x="7" y="478" width="153" label="Recargar Listado"
+	<s:Button id="btnRegargarlistado" x="7" y="499" width="153" height="34" label="Recargar Listado"
 			  click="btnRegargarlistado_clickHandler(event)" enabled="false" fontSize="16"/>
-	<controls:MaskedTextInput id="mskisearchidnota" x="225" y="453" width="152" restrict="0-9" toolTip="Ingrese Número de Nota de Pedido"/>
-	<s:Label x="225" y="439" text="BUSCAR NOTA DE PEDIDO"/>
-	<s:Button id="btnImprimir" x="7" y="502" width="152" label="Imprimir"
-			  click="btnImprimir_clickHandler(event)" enabled="false" fontSize="16" toolTip="Imprimie una nota de pedido seleccionada del listado"/>
-	<s:Button id="btnactualizar" x="9" y="527" width="150" label="Actualizar"
+	<controls:MaskedTextInput id="mskisearchidnota" x="225" y="453" width="204" fontSize="16"
+							  restrict="0-9" textAlign="center"
+							  toolTip="Ingrese Número de Nota de Pedido"/>
+	<s:Label x="225" y="439" fontSize="16" text="BUSCAR NOTA DE PEDIDO"/>
+	<s:Button id="btnImprimir" x="7" y="537" width="153" height="33" label="Imprimir"
+			  click="btnImprimir_clickHandler(event)" enabled="false" fontSize="16"
+			  toolTip="Imprimie una nota de pedido seleccionada del listado"/>
+	<s:Button id="btnactualizar" x="9" y="575" width="150" height="39" label="Actualizar"
 			  click="btnactualizar_clickHandler(event)" fontSize="16"/>
+	<s:Button id="btnCloseClientComponent" x="1181" y="2" width="27" height="19" icon="assets/icon_close.png" click="btnCloseClientComponent_clickHandler(event)"/>
+	<s:RadioButton id="rdanuladasi" x="994" y="133" label="Si" groupName="anulada"/>
+	<s:RadioButton id="rdanuladano" x="994" y="157" label="No" groupName="anulada" selected="true"/>
 </s:Group>
 
 

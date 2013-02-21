@@ -4,7 +4,7 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
 		 xmlns:components="com.hillelcoren.components.*"
-		 width="722" height="514" creationComplete="group1_creationCompleteHandler(event)">
+		 width="722" height="534" creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Script>
 		<![CDATA[
 			import com.actions.Employee;
@@ -453,7 +453,7 @@
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wsempleado" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wsempleado" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
 			<s:operation name="addEmpleadoFullTime"
 						 result="operationAddEmpleadosFulltime1_resultHandler(event)"
 						 fault="operation1AddEmpladosFullTime_faultHandler(event)"
@@ -573,15 +573,17 @@
 	<s:Label x="48" y="14" fontFamily="Verdana" fontSize="14"
 			 text="CARGA DE EMPLEADOS PARA OPERAR EL SISTEMA" textAlign="center"/>
 	<s:Label x="23" y="192" fontSize="20" fontWeight="bold" text="Nombre:"/>
-	<s:TextInput id="txtnombre"  x="105" y="188" width="214" prompt="ingrese su nombre propio...."/>
+	<s:TextInput id="txtnombre" x="105" y="188" width="214" fontSize="16"
+				 prompt="ingrese su nombre propio...."/>
 	<s:Label x="327" y="193" fontSize="20" fontWeight="bold" text="Apellido:"/>
-	<s:TextInput id="txtapellido" x="415" y="185" width="164" prompt="ingrese su apellido"/>
+	<s:TextInput id="txtapellido" x="415" y="185" width="164" fontSize="16"
+				 prompt="ingrese su apellido"/>
 	<s:Label x="24" y="218" fontSize="20" fontWeight="bold" text="Email:"/>
-	<s:TextInput id="txtemail" x="104" y="214" width="214"
+	<s:TextInput id="txtemail" x="104" y="214" width="214" fontSize="16"
 				 prompt="ingrese direccion de email que mas use..."/>
-	<s:Label x="326" y="214" color="#033339" fontSize="20" text="Tipo:"/>
-	<s:Label x="24" y="240" width="112" height="22" color="#033339" fontSize="20" text="Documento:"/>
-	<controls:MaskedTextInput id="txtdocumento" x="133" y="238" width="70"
+	<s:Label x="326" y="216" color="#033339" fontSize="20" text="Tipo:"/>
+	<s:Label x="24" y="242" width="112" height="22" color="#033339" fontSize="20" text="Documento:"/>
+	<controls:MaskedTextInput id="txtdocumento" x="133" y="241" width="87"
 							   fontFamily="Verdana"
 							  fontSize="16" fontWeight="bold" inputMask="########" maxChars="8"
 							  restrict="0-9" 
@@ -596,7 +598,7 @@
 									 toolTip="Seleccione el Tipo de Documento!!!"
 									 verticalScrollPolicy="on">
 	</components:AdvancedAutoComplete>
-	<s:Label x="329" y="241" color="#033339" fontSize="20" text="Genero:"/>
+	<s:Label x="326" y="241" color="#033339" fontSize="20" text="Genero:"/>
 	<components:AdvancedAutoComplete id="cmbGeneros" x="417" y="237" width="53"
 									 allowDuplicates="false" allowEditingNewValues="false"
 									 allowEditingSelectedValues="false"
@@ -610,32 +612,38 @@
 	<s:Label x="25" y="355" color="#033339" fontSize="20" text="Observaciones:"/>
 	<s:TextArea id="txtobservaciones" x="24" y="379" width="504" height="96" fontFamily="Verdana"
 				fontSize="16" fontWeight="bold" maxChars="255" tabIndex="6"/>
-	<s:Button id="btnnuevo" x="24" y="483" label="Nuevo" click="btnnuevo_clickHandler(event)"/>
-	<s:Button id="btnguardar" x="102" y="483" label="Guardar" click="btnguardar_clickHandler(event)"/>
+	<s:Button id="btnnuevo" x="24" y="483" height="31" label="Nuevo"
+			  click="btnnuevo_clickHandler(event)" fontSize="16"/>
+	<s:Button id="btnguardar" x="102" y="483" height="30" label="Guardar"
+			  click="btnguardar_clickHandler(event)" fontSize="16"/>
 	
 	<s:Label id="labelsalariofull" x="399" y="342" width="156" fontSize="20" text="Salario Mensual:"/>
 	<s:Label id="labelsalariopart" x="399" y="342" width="169" fontSize="20" text="Salario por Hora:" visible="false"/>
-	<controls:MaskedTextInput id="msksalario" x="555" y="338" height="30" fontSize="20"
+	<controls:MaskedTextInput id="msksalario" x="555" y="338" height="30" fontSize="16"
 							  restrict="0-9."/>
 	<controls:MaskedTextInput id="msksalarioxhora" x="555" y="338" height="30" fontSize="20" restrict="0-9." visible="false"/>
 	
 	
-	<s:Label x="24" y="287" fontSize="20" fontWeight="bold" text="Nombre Usuario:"/>
-	<s:TextInput id="txtnameuser" x="189" y="284" prompt="ingrese un nombre de usuario" maxChars="10"/>
-	<s:Label x="325" y="287" fontSize="20" fontWeight="bold" text="Password:"/>
+	<s:Label x="24" y="287" fontSize="20" fontWeight="bold" text="Usuario:"/>
+	<s:TextInput id="txtnameuser" x="107" y="284" width="210" fontSize="16" maxChars="10"
+				 prompt="ingrese un nombre de usuario"/>
+	<s:Label x="326" y="287" fontSize="20" fontWeight="bold" text="Password:"/>
 	<s:Label x="325" y="306" fontSize="20" fontWeight="bold" text="Repassword:"/>
-	<s:TextInput id="txtpassword" x="453" y="284" prompt="ingrese password...." displayAsPassword="true" />
-	<s:TextInput id="txtrepassword" x="453" y="308" prompt="reingreso password" displayAsPassword="true"/>
+	<s:TextInput id="txtpassword" x="453" y="280" displayAsPassword="true" fontSize="16"
+				 prompt="ingrese password...."/>
+	<s:TextInput id="txtrepassword" x="453" y="305" displayAsPassword="true" fontSize="16"
+				 prompt="reingreso password"/>
 	<s:VGroup x="248" y="329" >
 	<s:RadioButton id="rbempleadofull" x="250" y="339" label="Empleado FullTime"
 				   groupName="rdgroupEmpleados" selected="true" click="rbempleadofull_clickHandler(event)"/>
 	<s:RadioButton id="rbempleadopart" x="250" y="357" label="Empleado PartTime" 
 				   click="rbempleadopart_clickHandler(event)" groupName="rdgroupEmpleados"/>
 	</s:VGroup>
-	<s:Button id="btndeshabilitar" x="180" y="483" label="Deshabilitar"
-			  click="btndeshabilitar_clickHandler(event)" enabled="false" toolTip="Deshabilita un empleado para poder operar el Sistema"/>
-	<s:Button id="btnhabilitar" x="276" y="483" label="Habilitar"
-			  click="btnhabilitar_clickHandler(event)" enabled="false"
+	<s:Button id="btndeshabilitar" x="187" y="483" height="30" label="Deshabilitar"
+			  click="btndeshabilitar_clickHandler(event)" enabled="false" fontSize="16"
+			  toolTip="Deshabilita un empleado para poder operar el Sistema"/>
+	<s:Button id="btnhabilitar" x="296" y="483" height="30" label="Habilitar"
+			  click="btnhabilitar_clickHandler(event)" enabled="false" fontSize="16"
 			  toolTip="Habilita un empleado para poder operar el Sistema"/>
 	
 </s:Group>

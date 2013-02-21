@@ -137,7 +137,7 @@
 					Alert.show("           MELANIE SOUVENIR © 2013  \n TODOS LOS DERECHOS RESERVADOS ");						
 				}
 				if(event.item.@label =="Contactenos..."){
-					Alert.show("       EDGARDO D. ALVAREZ  \n DESARROLLADOR BACKEND \n CONTACTO \n CEL: 0264 154562700 \n EMAIL: edgardo75@gmail.com");						
+					Alert.show("     EDGARDO DAMIÁN ALVAREZ  \n PROGRAMADOR JAVA BACKEND \n CEL: 0264 154562700 \n EMAIL: edgardo75@gmail.com");						
 				}
 				if(event.item.@label=="Notas Entre Fechas"){
 					panelCentral.removeAllChildren();
@@ -146,7 +146,7 @@
 				
 			}
 			protected function verInformeCliente():void{
-				var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportClient";
+				var source:String="http://localhost:8080/WebMelanie2/ShowReportClient";
 				var urlReq:URLRequest=new URLRequest(source);
 				navigateToURL(urlReq,"_blank");
 			
@@ -156,12 +156,12 @@
 			
 			}
 			protected function verInformeProductos():void{
-				var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportProductos"
+				var source:String="http://localhost:8080/WebMelanie2/ShowReportProductos"
 				var urlReq:URLRequest=new URLRequest(source);
 				navigateToURL(urlReq,"_blank");
 			}
 			protected function verInformeBarrios():void{
-				var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportBarrios"
+				var source:String="http://localhost:8080/WebMelanie2/ShowReportBarrios"
 				var urlReq:URLRequest=new URLRequest(source);
 				navigateToURL(urlReq,"_blank");
 			
