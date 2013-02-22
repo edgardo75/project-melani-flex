@@ -106,6 +106,8 @@
 					if(cmbTarjetasCreditoDebito.text.length>0){
 						txtnumerocuponpago.setFocus();
 					}
+					if(keypress.currentTarget.toString().indexOf("cmbVendedores")!=-1&&cmbVendedores.selectedItemId>=0)
+						txtpassword.setFocus();
 					
 				}
 				
@@ -190,6 +192,7 @@
 				txtapellidocliente.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txtnombrecliente.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				cmbTarjetasCreditoDebito.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				cmbVendedores.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txtnumerocuponpago.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				cmbTarjetasCreditoDebito.selectedItemId=0;
 			
@@ -233,6 +236,9 @@
 														//controlamos que los separadores decimales no sean comas
 														if(String(productscomp.arrayDg[j].porc_desc).toString().indexOf(",")!=-1||String(productscomp.arrayDg[j].price).toString().indexOf(",")!=-1)
 															b=true;
+															
+														
+														
 														
 													}
 													//*******************************************************************
@@ -278,7 +284,7 @@
 											verificarProductosCargados();
 										
 								}else
-									Alert.show("Corregir Datos de Cliente!!!");
+									Alert.show("Faltan Datos del Cliente!!!");
 							//********************************************************************************************
 					}else
 						Alert.show("No coinciden la clave del vendedor seleccionado");
@@ -290,11 +296,11 @@
 			if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 			
 			//mostramos al cliente un popup de espera
-				popup=Progress(PopUpManager.createPopUp(this,Progress,true));
-				PopUpManager.centerPopUp(popup);
+				//popup=Progress(PopUpManager.createPopUp(this,Progress,true));
+				//PopUpManager.centerPopUp(popup);
 			//llamamos al metodo del webservice para almacenar la nota de pedido en el servidor
-			
-				wsnotapedido.agregarNotaPedido(getDatosXML());
+			Alert.show(getDatosXML());
+			//	wsnotapedido.agregarNotaPedido(getDatosXML());
              			
 						
 		
@@ -308,10 +314,65 @@
 			var anulada:int=0;
 			var enfectivo:int=0;
 			var porcdescAcum:Number=0;
+			var temp_tot_Gral:Number=0;
+			var temp_tot_porc_desc:Number=0;
+			var temp_tot_desc:Number=0;
 			
+			for(var i:int=0;i<productscomp.arrayDg.length;i++){
+				temp_tot_desc+=Number(Number(productscomp.arrayDg[i].prec_descuento).toFixed(3));
+				temp_tot_porc_desc+=Number(Number(productscomp.arrayDg[i].porc_desc).toFixed(3));
+				
+				
+				
+			}
+			
+			var calcularTotalAPagar:Number=productscomp.totGral-temp_tot_desc;
+			
+			var recargo:Number=productscomp.tot_recargo*Number(calcularTotalAPagar.toFixed(3))/100;
+
+			if(temp_tot_desc>0){
+				
+				//*********************************************************************************************************+++
+				productscomp.lbldescuento.text=Number(-temp_tot_desc).toFixed(3);
+						
+						if(productscomp.tot_recargo>0){
+							
+							productscomp.lbltotalconrecargo.text=Number(Number(calcularTotalAPagar.toFixed(3))+recargo).toFixed(3);
+							
+							productscomp.lblTotApagar.text=Number(Number(calcularTotalAPagar.toFixed(3))+recargo).toFixed(3);
+							
+						}else
+							productscomp.lblTotApagar.text=Number(productscomp.totGral-temp_tot_desc).toFixed(3);
+						
+						if(int(productscomp.mskanticipo.text)>0)
+							productscomp.lblsaldo.text=Number(Number(productscomp.lblTotApagar.text)-Number(productscomp.mskanticipo.text)).toFixed(3);
+						else
+							productscomp.lblsaldo.text="0.000";
+						
+						productscomp.porc_desc_total=temp_tot_porc_desc;
+						//******************************************************************************************************
+			}else{
+				//********************************************************************----------------------------------------------
+				if(productscomp.tot_recargo>0){
+					productscomp.lblTotApagar.text=Number(productscomp.totGral-productscomp.totGralDesc+(recargo)).toFixed(3);
+					productscomp.lbltotalconrecargo.text=Number(productscomp.totGral-productscomp.totGralDesc+(recargo)).toFixed(3);
+				}else
+					productscomp.lblTotApagar.text=Number(productscomp.totGral-productscomp.totGralDesc).toFixed(3);
+				
+				if(int(productscomp.mskanticipo.text)>0){
+					Alert.show(recargo.toFixed(3));
+					productscomp.lblsaldo.text=Number(Number(Number(productscomp.totGral-productscomp.totGralDesc)-(Number(productscomp.mskanticipo.text)))+recargo).toFixed(3);
+				}else
+					productscomp.lblsaldo.text="0.000";
+				
+				productscomp.porc_desc_total=Number(Number(productscomp.txtdescuento.text).toFixed(2));
+				//*****************************************************------------------------------------------------------------
+			}
 			
 			if(productscomp.txtdescuento.text.length==0)
 				productscomp.txtdescuento.text="0.0";
+			
+				
 			if(productscomp.mskrecargo.text.length==0)
 				productscomp.mskrecargo.text="0.0";
 			if(productscomp.mskanticipo.text.length==0)
@@ -335,6 +396,9 @@
 			
 			if(rdbenefectivosi.selected)
 				enfectivo=1;
+			
+			
+			
 			
 			
 			
@@ -421,7 +485,7 @@
 			
 			
 				 xmlnota+= "</detallesnotapedido>\n" +
-					 "<porc_descuento_total>"+Number(productscomp.porc_desc_total+porcdescAcum).toFixed(2)+"</porc_descuento_total>\n" +
+					 "<porc_descuento_total>"+Number(productscomp.porc_desc_total).toFixed(2)+"</porc_descuento_total>\n" +
 				  "</notapedido>\n";
 				 
 				 return xmlnota;
@@ -589,11 +653,11 @@
 							  toolTip="Ingrese en Número de Tarjeta de Crédito o Débito del Plástico"/>
 	<s:Label x="663" y="16" fontSize="14" fontWeight="bold"
 			 text="Número de cupón tarjeta de credito/debito:"/>
-	<components:AdvancedAutoComplete id="cmbTarjetasCreditoDebito" x="393" y="28" width="221"
+	<components:AdvancedAutoComplete id="cmbTarjetasCreditoDebito" x="363" y="28" width="292"
 									 fontSize="16" labelField="descripcion"
 									 toolTip="Seleccione una Tarjeta de Crédito o Débito si el cliente utiliza esta forma de pago!!!">
 	</components:AdvancedAutoComplete>
-	<s:Label x="393" y="16" fontSize="14" fontWeight="bold" text="Tarjetas de Crédito / Débito" toolTip="Seleccione si o no para registrar que la nota de pedido fue entregada al Clliente"/>
+	<s:Label x="362" y="16" fontSize="14" fontWeight="bold" text="Tarjetas de Crédito / Débito" toolTip="Seleccione si o no para registrar que la nota de pedido fue entregada al Clliente"/>
 	<s:Label x="332" y="60" fontSize="14" fontWeight="bold" text="Nota de pedido entregada"/>
 	<s:Label x="520" y="60" fontSize="14" fontWeight="bold" text="Nota de pedido stock futuro"/>
 	<s:VGroup x="522" y="72">
@@ -608,8 +672,8 @@
 	<s:Button id="btnCloseClientComponent" x="994" y="10" width="27" height="19" icon="assets/icon_close.png" click="btnCloseClientComponent_clickHandler(event)"/>
 	<s:Label x="20" y="39" height="15" fontSize="16" fontWeight="bold" text="Documento:"/>
 	<controls:MaskedTextInput id="mskdocu" x="116" y="34" enter="mskdocu_enterHandler(event)"
-							  fontSize="18" inputMask="########" maxChars="8" restrict="0-9"
-							  toolTip="Ingrese Número de Documento!!!"/>
+							  fontFamily="Verdana" fontSize="20" inputMask="########" maxChars="8"
+							  restrict="0-9" toolTip="Ingrese Número de Documento!!!"/>
 	<s:Label x="46" y="97" fontSize="16" fontWeight="bold" text="Nombre:"/>
 	<s:Label x="33" y="64" fontSize="16" fontWeight="bold" text="Cliente N°:"/>
 	<s:Label id="lblnocli" x="115" y="62" width="124" fontFamily="Verdana" fontSize="18"
