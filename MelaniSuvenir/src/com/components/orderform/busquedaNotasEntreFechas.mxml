@@ -166,12 +166,12 @@
 	<components:AutoComplete x="137" y="56" id="cmbVendedores"  width="184" labelField="nameuser" allowDuplicates="false" dropDownRowCount="10"
 							 fontSize="16" fontWeight="bold" matchType="beginning">
 	</components:AutoComplete>
-	<s:Label x="13" y="65" fontSize="16" fontWeight="bold" text="VENDEDORES:"/>
-	<s:Label x="82" y="26" fontSize="16" fontWeight="bold"
-			 text="INFORME DE NOTAS DE PEDIDO ENTRE FECHAS"/>
-	<s:Label x="24" y="115" fontSize="16" fontWeight="bold" text="FECHA INICIO:"/>
-	<s:Label x="284" y="112" fontSize="16" fontWeight="bold" text="FECHA FINAL:"/>
-	<s:Button id="btnCloseClientComponent" x="550" y="10" width="16" height="19" icon="assets/icon_close.png" click="btnCloseClientComponent_clickHandler(event)"/>
+	<s:Label x="13" y="65" fontSize="16" fontWeight="normal" text="VENDEDORES:"/>
+	<s:Label x="25" y="31" color="#B7E4E0" fontSize="18" fontWeight="bold"
+			 text="INFORME DE NOTAS DE PEDIDO ENTRE FECHAS COMPRAS"/>
+	<s:Label x="24" y="115" fontSize="16" fontWeight="normal" text="FECHA INICIO:"/>
+	<s:Label x="284" y="112" fontSize="16" fontWeight="normal" text="FECHA FINAL:"/>
+	<s:Button id="btnCloseClientComponent" x="550" y="6" width="16" height="19" icon="assets/icon_close.png" click="btnCloseClientComponent_clickHandler(event)"/>
 	<mx:DateField id="dtfechaini" x="146" y="105" width="126" fontSize="16"   />
 	<mx:DateField id="dtffechafin" x="405" y="104" width="127" fontSize="16"   />
 	<s:Button id="btnenviar" x="239" y="145" width="90" height="32" label="Enviar"

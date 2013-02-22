@@ -81,7 +81,7 @@
 	
 
 	<mx:HRule x="10" y="29" width="380" height="1"/>
-	<s:Label x="9" y="9" backgroundAlpha="0.6" color="#FD0303" fontSize="16" fontWeight="bold"
+	<s:Label x="138" y="10" backgroundAlpha="0.6" color="#D8F4F1" fontSize="16" fontWeight="bold"
 			 text="DATOS PERSONALES DE CLIENTE"/>
 	<s:TextInput id="txtnombre" x="206" y="69" width="317" fontFamily="Verdana" fontSize="16"
 				 fontWeight="bold" maxChars="30" restrict="A-ÑZa-ñz " prompt="Ingrese su nombre propio..." 
@@ -97,7 +97,7 @@
 	
 	<controls:MaskedTextInput id="txtdocumento" x="315" y="40" width="70"
 							  enter="txtdocumento_enterHandler(event)" fontFamily="Verdana"
-							  fontSize="16" fontWeight="bold" inputMask="########" maxChars="8"
+							  fontSize="20" fontWeight="bold" inputMask="########" maxChars="8"
 							  restrict="0-9" 
 							  toolTip="Ingrese el Número de Documento!!!" required="true"/>
 	
