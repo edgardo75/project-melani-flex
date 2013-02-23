@@ -1404,9 +1404,11 @@
 					mskrecargo.text="0.0";
 				if(mskanticipo.text.length==0)
 					mskanticipo.text="0.0";
-				if(rdbentregadosi.selected)
+				var pendiente:int=1;
+				if(rdbentregadosi.selected){
 					entregado=1;
-				
+					pendiente=0;
+				}
 				
 				if(rdbcanceladanotasi.selected)
 					canceladanota=1;
@@ -1469,7 +1471,7 @@
 					"<porcentajerecargo>"+tot_recargo_porc+"</porcentajerecargo>\n" +
 					"<montototalapagar>"+lblTotApagar.text+"</montototalapagar>\n"+
 					"<observaciones>" +this.txtobservaciones.text+"</observaciones>\n" +
-					"<pendiente>"+entregado+"</pendiente>\n"+
+					"<pendiente>"+pendiente+"</pendiente>\n"+
 					"<montoiva>0</montoiva>\n"+
 					"<recargo>"+lbltotalconrecargo.text+"</recargo>\n" +
 					"<fechacompra>"+notas[adgNotas.selectedIndex].fechacompra+"</fechacompra>\n"+					
@@ -1492,7 +1494,7 @@
 							"<entregado>"+entregado+"</entregado>\n" +
 							"<cancelado>"+canceladanota+"</cancelado>\n" +
 							"<anulado>"+anulada+"</anulado>\n" +
-							"<pendiente>"+entregado+"</pendiente>\n" +
+							"<pendiente>"+pendiente+"</pendiente>\n" +
 							"<descuento>"+Number(arrayDg[ii].porc_desc).toFixed(2)+"</descuento>\n" +
 							"<iva>0</iva>\n" +
 							"<id_nota>"+arrayDg[ii].idnota+"</id_nota>\n" +
