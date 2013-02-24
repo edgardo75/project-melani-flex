@@ -80,29 +80,32 @@
 			//------------------------------------------------------------------------------------
 			protected function btnguardar_clickHandler(event:MouseEvent):void
 			{
+				if(int(productordered.lblTotApagar.text)<=-1)
+					Alert.show("IMPOSIBLE ALMACENAR PRESUPUESTO \nCORRIJA POR FAVOR!!!");
+				else{
 				
-				
-				if(productordered.arrayDg.length>0){
-					var b:Boolean=false;
-					for(var j:int=0;j<productordered.arrayDg.length&&!b;j++){
-						//controlamos que no haya descuento por producto y total a la vez
-						if(productordered.porc_d>0 && productordered.arrayDg[j].porc_desc!=0 && productordered.porc_d!=0){
-							Alert.show("          Error al procesar los datos, el descuento es Total o por Productos, corrija!!!      ");
-							return;
-						}
-						//controlamos que los separadores decimales no sean comas
-						if(String(productordered.arrayDg[j].porc_desc).toString().indexOf(",")!=-1||String(productordered.arrayDg[j].price).toString().indexOf(",")!=-1)
-							b=true;
-					
-					}
-					
-				if(!b)	
-				   Alert.show("Desea Guardar el Presupuesto Actual?","Confirmar Operación", Alert.YES | Alert.NO, this, guardarpresupuesto, null, Alert.NO);
-				else
-					Alert.show("    Corrija la grilla de Productos, el separador decimal es el punto y no la coma!!!   ");
-				   
-				}else
-					Alert.show("   NO HAY PRODUCTOS LISTADOS!!!   ");
+						if(productordered.arrayDg.length>0){
+							var b:Boolean=false;
+							for(var j:int=0;j<productordered.arrayDg.length&&!b;j++){
+								//controlamos que no haya descuento por producto y total a la vez
+								if(productordered.porc_d>0 && productordered.arrayDg[j].porc_desc!=0 && productordered.porc_d!=0){
+									Alert.show("          Error al procesar los datos, el descuento es Total o por Productos, corrija!!!      ");
+									return;
+								}
+								//controlamos que los separadores decimales no sean comas
+								if(String(productordered.arrayDg[j].porc_desc).toString().indexOf(",")!=-1||String(productordered.arrayDg[j].price).toString().indexOf(",")!=-1)
+									b=true;
+							
+							}
+							
+								if(!b)	
+								   Alert.show("Desea Guardar el Presupuesto Actual?","Confirmar Operación", Alert.YES | Alert.NO, this, guardarpresupuesto, null, Alert.NO);
+								else
+									Alert.show("    Corrija la grilla de Productos, el separador decimal es el punto y no la coma!!!   ");
+						   
+						}else
+							Alert.show("   NO HAY PRODUCTOS LISTADOS!!!   ");
+				}
 			}
 			//------------------------------------------------------------------------------------
 			private function guardarpresupuesto(evt:CloseEvent):void{
@@ -230,8 +233,10 @@
 	<s:BorderContainer x="39" y="33" width="430" height="105">
 		<s:Label x="25" y="32" fontSize="16" text="Nombre:"/>
 		<s:Label x="25" y="69" fontSize="16" text="Apellido:"/>
-		<s:TextInput id="txtnombre" tabEnabled="false" x="87" y="23" width="180" maxChars="40" restrict="a-z A-Z ñ-Ñ"/>
-		<s:TextInput  id="txtapellido" tabEnabled="false" x="88" y="62" width="179" maxChars="20" restrict="a-z A-Z ñ-Ñ "/>
+		<s:TextInput id="txtnombre" x="87" y="23" width="318" fontSize="16" maxChars="40"
+					 restrict="a-z A-Z ñ-Ñ" tabEnabled="false"/>
+		<s:TextInput id="txtapellido" x="88" y="62" width="317" fontSize="16" maxChars="20"
+					 restrict="a-z A-Z ñ-Ñ " tabEnabled="false"/>
 	</s:BorderContainer>
 	<products:productosPedidos id="productordered" x="40" y="138" height="349" fontSize="16">
 	</products:productosPedidos>

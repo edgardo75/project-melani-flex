@@ -727,46 +727,26 @@
 				//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				lblTotGral.text=totGral.toFixed(3);
-				if(int(txtdescuento.text)==0||txtdescuento.text.length==0){
-					
-					
-					lbldescuento.text=Number(Number(-totGralDesc)).toFixed(3);
-					
-				}else{
-							if(int(txtdescuento.text)>0){
-									var tot_desc:Number=0;
-									var por_des_tot:Number=0;
-									
-									
-										por_des_tot=Number(Number(txtdescuento.text).toFixed(2));
-										porc_desc_total=Number(por_des_tot.toFixed(2));							
-										tot_desc= Number(Number(lblTotGral.text).toFixed(3))*por_des_tot/100;
-										totGralDesc=tot_desc;
-										lbldescuento.text=Number(Number(-tot_desc)).toFixed(3);
-							}
-					}
-				
-				
+				lbldescuento.text=Number(Number(-totGralDesc)).toFixed(3);
 					
 				
-					
-					
-					if(tot_recargo>0){
+				
+				if(int(mskrecargo.text)>0){
 						var recargo:Number=0;
 						var calcularTotalAPagar:Number=totGral-totGralDesc;
 						recargo=tot_recargo*Number(calcularTotalAPagar.toFixed(3))/100;
 						lbltotalconrecargo.text=Number(Number(calcularTotalAPagar.toFixed(3))+(recargo)).toFixed(3);
-						lblTotApagar.text=Number(Number(lblTotGral.text)-Number(totGralDesc.toFixed(3))+(recargo)).toFixed(3);
+						lblTotApagar.text=Number(Number(calcularTotalAPagar.toFixed(3))-Number(totGralDesc.toFixed(3))+(recargo)).toFixed(3);
 						
 						
-					}else{
-						lblTotApagar.text=Number(Number(lblTotGral.text)-Number(totGralDesc.toFixed(3))).toFixed(3);
-					}
+				}else
+						lblTotApagar.text=Number(Number(totGral)-Number(totGralDesc.toFixed(3))).toFixed(3);
 					
-					if(int(mskanticipo.text)>0){
-						lblsaldo.text=lblTotApagar.text=Number(Number(lblTotGral.text)-Number(totGralDesc.toFixed(3))-(Number(mskanticipo.text))).toFixed(3);	
 					
-					}
+				if(int(mskanticipo.text)>0)
+						lblsaldo.text=lblTotApagar.text=Number(Number(Number(totGral-totGralDesc))+recargo-(Number(mskanticipo.text))).toFixed(3);	
+					
+					
 					
 				}//end function edit grid
 				
@@ -823,7 +803,7 @@
 				adglistpedprod.dataProvider=arrayDg;
 				lblTotGral.text=totGral.toFixed(3);
 				lbldescuento.text=Number(-totGralDesc).toFixed(3);
-				if(tot_recargo>0){
+				if(int(mskrecargo.text)>0){
 					
 					var calcularTotalAPagar:Number=totGral-totGralDesc;
 					
@@ -956,6 +936,8 @@
 						tot_recargo=0;
 						lbltotalconrecargo.text="0.000";
 						lblTotApagar.text=Number(totgral-descTotal).toFixed(3);
+						if(Number(mskanticipo.text)>0)
+							lblsaldo.text=Number(Number(totgral-descTotal)-Number(mskanticipo.text)).toFixed(3);
 					
 				}else{
 						if(tot_recargo==Number(mskrecargo.text))
@@ -1126,13 +1108,30 @@
 						
 					}
 				//---------------------------------------------------------------------------------
-					if(tempPorcDes>0){
-						porc_desc_total=tempPorcDes;
-						totGralDesc=tempTotDesc;
+					//totGralDesc=Number(tempTotDesc.toFixed(3))-Number(Number(arrayDg[adglistpedprod.selectedIndex].prec_descuento).toFixed(3));
+					temp_tot_porc_desc=Number(tempPorcDes.toFixed(2))-Number(Number(arrayDg[adglistpedprod.selectedIndex].porc_desc).toFixed(3));
+					var tot_desc:Number=0;
+					
+					if(int(txtdescuento.text)>0){
+						tot_desc= Number(Number(totGral).toFixed(3))*porc_desc_total/100;
+						porc_desc_total=Number(Number(txtdescuento.text).toFixed(2));	
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						totGralDesc=tot_desc;
 						
 					}else{
-						totGralDesc-=Number(arrayDg[adglistpedprod.selectedIndex].prec_descuento)
-					
+						totGralDesc=tempTotDesc;
+						porc_desc_total=tempPorcDes;
 					}
 					
 				adglistpedprod.dataProvider.removeItemAt(adglistpedprod.selectedIndex);
@@ -1182,35 +1181,29 @@
 						
 						temp_tot_porc_desc=Number(tempPorcDes.toFixed(3));
 						
+						lblTotGral.text=totGral.toFixed(3);
+						var totapagar:Number=totGral-totGralDesc;
+						var calcrecagro:Number=0;
+						if(int(mskrecargo.text)>0){
+							calcrecagro=Number(Number(Number(mskrecargo.text)*Number(totapagar))/100);
+							lbltotalconrecargo.text=Number(Number(totapagar.toFixed(3))+Number(calcrecagro)).toFixed(3);
+							lblTotApagar.text=Number(Number(totapagar.toFixed(3))+Number(calcrecagro)).toFixed(3);
+						}else
+							lblTotApagar.text=totapagar.toFixed(3);
 						
 						
 						
-								if(int(txtdescuento.text)>0){
-									calcularDescuentoVariant();
-									cmbproduct.setFocus();
-									return;
-								}else{
-									txtdescuento.text=totGralDesc.toFixed(3);
-									if(tot_recargo>0){
-										var calcularTotalAPagar:Number=totGral-tempTotDesc;
-										
-										recargo=tot_recargo*Number(calcularTotalAPagar.toFixed(3))/100;
-										lbltotalconrecargo.text=Number(Number(calcularTotalAPagar.toFixed(3))+recargo).toFixed(3);
-										
-										lblTotApagar.text=Number(Number(calcularTotalAPagar.toFixed(3))+recargo).toFixed(3);
-										
-									}else
-										{
-											lblTotApagar.text=Number(Number(totGral.toFixed(3))-Number(totGralDesc.toFixed(3))).toFixed(3);
-										
-										}
+						
+						
+						
+								
 									
 									if(int(mskanticipo.text)>0)
-										lblsaldo.text=Number(Number(totGral-tempTotDesc)+recargo-(Number(mskanticipo.text))).toFixed(3);
+										lblsaldo.text=Number(Number(totGral-totGralDesc)+calcrecagro-(Number(mskanticipo.text))).toFixed(3);
 								
-								}
+								
 						
-						
+									lbldescuento.text=Number(-totGralDesc).toFixed(3);
 						
 					}
 						
