@@ -69,8 +69,10 @@
 				
 				cliente = new XMLList(event.result);				
 				
-				if(event.result.toString().indexOf("Cliente no encontrado")!=-1)
+				if(event.result.toString().indexOf("Cliente no encontrado")!=-1){
 					Alert.show("CLIENTE NO ENCOTRADO");
+					return;
+				}
 				
 				
 				
@@ -108,7 +110,8 @@
 					}
 					if(keypress.currentTarget.toString().indexOf("cmbVendedores")!=-1&&cmbVendedores.selectedItemId>=0)
 						txtpassword.setFocus();
-					
+					if(keypress.currentTarget.toString().indexOf("txtpassword")!=-1&&txtpassword.text.length>0)
+						btnGuardarNota.setFocus();
 				}
 				
 				
@@ -194,6 +197,7 @@
 				cmbTarjetasCreditoDebito.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				cmbVendedores.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txtnumerocuponpago.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				txtpassword.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				cmbTarjetasCreditoDebito.selectedItemId=0;
 			
 			}
@@ -265,30 +269,34 @@
 			//***************************************************************************************************
 			protected function btnGuardarNota_clickHandler(event:MouseEvent):void
 			{
-				//********************************Chequeamos que haya un Vendedor Seleccionado en el ComboBox++++++++++++++++++++++++
-				
-				if(cmbVendedores.text.length==0){
-					Alert.show("DEBE SELECCIONAR UN VENDEDOR");
-					return;
-				}else{
-					
-					//chequear el vendendor seleccionado con su clave correspondiente
-					if(String(cmbVendedores.selectedItem.clave)==txtpassword.text){
-				
-							//*************************Chequeamos que haya un cliente ya seleccionado********************++
+				if(int(productscomp.lblTotApagar.text)<=-1)
+					Alert.show("IMPOSIBLE ALMACENAR PRESUPUESTO \nCORRIJA POR FAVOR!!!");
+				else{
+							//********************************Chequeamos que haya un Vendedor Seleccionado en el ComboBox++++++++++++++++++++++++
 							
-								if(txtnombrecliente.text.length>0&&txtapellidocliente.text.length>0){
-										if(chequearNumeroCupon())
-											Alert.show("Falta Ingresar un Número de Cupón");
-										else
-											verificarProductosCargados();
+							if(cmbVendedores.text.length==0){
+								Alert.show("DEBE SELECCIONAR UN VENDEDOR");
+								return;
+							}else{
+								
+								//chequear el vendendor seleccionado con su clave correspondiente
+								if(String(cmbVendedores.selectedItem.clave)==txtpassword.text){
+							
+										//*************************Chequeamos que haya un cliente ya seleccionado********************++
 										
+											if(txtnombrecliente.text.length>0&&txtapellidocliente.text.length>0){
+													if(chequearNumeroCupon())
+														Alert.show("Falta Ingresar un Número de Cupón");
+													else
+														verificarProductosCargados();
+													
+											}else
+												Alert.show("Faltan Datos del Cliente!!!");
+										//********************************************************************************************
 								}else
-									Alert.show("Faltan Datos del Cliente!!!");
-							//********************************************************************************************
-					}else
-						Alert.show("No coinciden la clave del vendedor seleccionado");
-				
+									Alert.show("No coinciden la clave del vendedor seleccionado");
+							
+							}
 				}
 				
 			}
@@ -296,11 +304,11 @@
 			if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 			
 			//mostramos al cliente un popup de espera
-				//popup=Progress(PopUpManager.createPopUp(this,Progress,true));
-				//PopUpManager.centerPopUp(popup);
+				popup=Progress(PopUpManager.createPopUp(this,Progress,true));
+				PopUpManager.centerPopUp(popup);
 			//llamamos al metodo del webservice para almacenar la nota de pedido en el servidor
-			Alert.show(getDatosXML());
-			//	wsnotapedido.agregarNotaPedido(getDatosXML());
+			
+			wsnotapedido.agregarNotaPedido(getDatosXML());
              			
 						
 		
@@ -360,7 +368,7 @@
 					productscomp.lblTotApagar.text=Number(productscomp.totGral-productscomp.totGralDesc).toFixed(3);
 				
 				if(int(productscomp.mskanticipo.text)>0){
-					Alert.show(recargo.toFixed(3));
+					
 					productscomp.lblsaldo.text=Number(Number(Number(productscomp.totGral-productscomp.totGralDesc)-(Number(productscomp.mskanticipo.text)))+recargo).toFixed(3);
 				}else
 					productscomp.lblsaldo.text="0.000";
