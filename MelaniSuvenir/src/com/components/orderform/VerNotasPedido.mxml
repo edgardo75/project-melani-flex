@@ -1141,21 +1141,24 @@
 				if(int(txtdescuento.text)==0||txtdescuento.text.length==0){
 					lblTotGral.text=totGral.toFixed(3);
 					lbldescuento.text=Number(Number(-totGralDesc)).toFixed(3);
-					lblTotApagar.text=Number(Number(lblTotGral.text)-Number(totGralDesc.toFixed(3))).toFixed(3);
+					
 				}
 				
 				
 				var calcrecargo:Number=0;
-				var calcanticipo:Number=0;
 				
-				if(totRecargo>0){
-					
-					lbltotalconrecargo.text=Number(Number(Number(lblTotGral.text)-Number(totGralDesc.toFixed(3)))+Number(totRecargo.toFixed(3))).toFixed(3);
+				
+				if(int(mskrecargo.text)>0){
+					calcrecargo=Number(totGral-totGralDesc)*Number(Number(mskrecargo.text).toFixed(3))/100;
+					lbltotalconrecargo.text=Number(Number(Number(totGral.toFixed(3))-Number(totGralDesc.toFixed(3)))+Number(calcrecargo.toFixed(3))).toFixed(3);
 					notas[adgNotas.selectedIndex].recargototal=lbltotalconrecargo.text;
+					lblTotApagar.text=Number(Number(Number(totGral.toFixed(3))-Number(totGralDesc.toFixed(3)))+Number(calcrecargo.toFixed(3))).toFixed(3);
+				}else
+					lblTotApagar.text=Number(Number(totGral.toFixed(3))-Number(totGralDesc.toFixed(3))).toFixed(3);
+				
+				if(int(mskanticipo.text)>0){
 					
-				}
-				if(anticipo>0){
-					lblsaldo.text=Number(Number(lblTotGral.text)-Number(totGralDesc.toFixed(3))-(anticipo)).toFixed(3);
+					lblsaldo.text=Number(Number(totGral.toFixed(3))-Number(totGralDesc.toFixed(3))-(Number(Number(mskanticipo.text).toFixed(3)))).toFixed(3);
 					notas[adgNotas.selectedIndex].saldo=lblsaldo.text;
 					
 				}
@@ -1166,27 +1169,28 @@
 				
 				
 					
+}//end function edit grid
+			
+			private function calculeanticipo():void{
+				anticipo=Number(Number(mskanticipo.text).toFixed(3));
+				
+				lblsaldo.text=Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskanticipo.text)).toFixed(3);// calculo del saldo
+				notas[adgNotas.selectedIndex].saldo=lblsaldo.text;//celda en el grid cabecera del saldo
+			
+			
 			}
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			public function anticipocalculoreuso():void{
 				
-				if(Number(lblsaldo.text)==0){
-					anticipo=Number(Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskanticipo.text)).toFixed(3));
-					lblsaldo.text=anticipo.toFixed(3);
-					notas[adgNotas.selectedIndex].saldo=lblsaldo.text;
+				if(anticipo==0){
+					calculeanticipo();
 					return;
 				
 				}else{
-					if(Number(lblsaldo.text)<Number(mskanticipo.text)){
-						Alert.show("   Imposible Calcular el anticipo   ");
-					return;
-					}else{
-							var saldo:Number=Number(lblsaldo.text);
-								anticipo=Number(Number(mskanticipo.text).toFixed(3));
-								lblsaldo.text=Number(saldo-anticipo).toFixed(3);
-								notas[adgNotas.selectedIndex].saldo=lblsaldo.text;
-								
-						}
+							if(Number(anticipo.toFixed(3))!=Number(Number(mskanticipo.text))){
+								calculeanticipo();
+								return;
+							}
 					
 					}
 				
@@ -1201,7 +1205,15 @@
 					lblsaldo.text="0.000";
 					anticipo=0;
 				}else {
-					anticipocalculoreuso();
+					if(int(mskanticipo.text)>int(lblTotApagar.text))
+					{
+						Alert.show("IMPOSIBLE HACER EL CALCULO DE SALDO");
+						return;
+					}else{
+						anticipocalculoreuso();
+					
+					}
+					
 					
 				}
 				
@@ -1220,6 +1232,9 @@
 					lbltotalconrecargo.text="0.000";
 					lblTotApagar.text=Number(totgral-descTotal).toFixed(3);
 					totRecargo=0;
+					
+					if(int(mskanticipo.text)>0)
+						lblsaldo.text=Number((totgral-descTotal)-Number(Number(mskanticipo.text).toFixed(3))).toFixed(3);
 					
 				}else{
 					if(tot_recargo_porc==Number(mskrecargo.text))
@@ -1241,8 +1256,8 @@
 					
 					notas[adgNotas.selectedIndex].recargototal=totRecargo.toFixed(3);
 					
-					if(anticipo>0)
-						lblsaldo.text=Number(lbltotrecargo-anticipo).toFixed(3);
+					if(int(mskanticipo.text)>0)
+						lblsaldo.text=Number(lbltotrecargo-Number(Number(mskanticipo.text).toFixed(3))).toFixed(3);
 					
 					
 				}
@@ -1627,7 +1642,7 @@
 					if(Number(arrayDg[i].porc_desc) > 0){
 						b=true;
 						
-						Alert.show("No se puede calcular el descuento por que hay productos con descuentos en el listado!!!"+arrayDg[i].porc_desc);
+						Alert.show("No se puede calcular el descuento por que hay productos con descuentos en el listado!!!");
 						txtdescuento.text="0.0";
 						
 						
@@ -1799,10 +1814,10 @@
 				for(var k:int=0;k<arrayDg.length;k++){
 					
 					if(arrayDg[k].idproduct!=adglistpedprod.selectedItem.idproduct){
-						if(arrayDg[k].porc_desc>0){
+						
 							tempTotDesc=tempTotDesc+Number(arrayDg[k].prec_descuento);
 							tempPorcDes=tempPorcDes+Number(arrayDg[k].porc_desc);
-						}
+						
 						
 							totgrilla=totgrilla+(arrayDg[k].price*arrayDg[k].countt);	
 						
@@ -1873,7 +1888,7 @@
 					
 					var calcularTotalAPagar:Number=totGral-totGralDesc;
 					
-					recargo=tot_recargo_porc*Number(calcularTotalAPagar.toFixed(3))/100;
+					recargo=Number(mskrecargo.text)*Number(calcularTotalAPagar.toFixed(3))/100;
 					
 					lblTotApagar.text=Number(Number(totGral-Number(totGralDesc.toFixed(3)))+Number(recargo.toFixed(3))).toFixed(3);
 					lblTotGral.text=totGral.toFixed(3);
@@ -2490,14 +2505,14 @@
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
 	<s:Label id="lblsaldo" x="678" y="515" width="124" color="#7F2704" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label x="470" y="541" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="TOTAL CON RECARGO %:"
+	<s:Label x="470" y="543" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="TOTAL CON RECARGO %:"
 			 textAlign="right"/>
 	<controls:MaskedTextInput id="mskrecargo" x="679" y="534" width="60" fontFamily="Verdana" text="0.00" maxChars="5"
 							  fontSize="16" restrict="0-9." toolTip="Ingresa un Porcentaje de recargo total para los productos cargados"/>
-	<s:Label x="575" y="563" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="ANTICIPO $:"
+	<s:Label x="575" y="572" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="ANTICIPO $:"
 			 textAlign="right"/>
-	<controls:MaskedTextInput text="0.0" id="mskanticipo" x="679" y="563" width="103" fontFamily="Verdana"
-							  fontSize="16" restrict="0-9."/>
+	<controls:MaskedTextInput text="0" maxChars="5" id="mskanticipo" x="679" y="563" width="103" fontFamily="Verdana"
+							  fontSize="16" restrict="0-9"/>
 	<s:Label x="7" y="214" fontFamily="Verdana" fontSize="16" text="Producto:"/>
 	<s:Label x="12" y="239" fontFamily="Verdana" fontSize="16" text="Precio $:"/>
 	<s:TextInput id="txtpreciop" x="88" y="231" width="187" fontSize="16" fontWeight="bold"
