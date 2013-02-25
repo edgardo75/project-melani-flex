@@ -428,6 +428,7 @@
 				"</porcentaje>\n" +
 				"<montototal>"+productscomp.lblTotGral.text+"</montototal>\n" +
 				"<anticipo>"+productscomp.mskanticipo.text+"</anticipo>\n" +
+				"<anticipoacum>0</anticipoacum>\n" +
 				"<saldo>"+productscomp.lblsaldo.text+"</saldo>\n" ;
 				if(entregado==1){
 				xmlnota+="<entregado>"+entregado+"</entregado>\n" +
