@@ -308,10 +308,17 @@
 				
 				mskdocumento.text=String(nrodocucli);
 				
+				
+				
+				
+				
+				mskrecargo.text=notas[adgNotas.selectedIndex].porcrecargo;
+				
 				userexpidio=notas[adgNotas.selectedIndex].idusuarioexpidionota;
 				userentrego=notas[adgNotas.selectedIndex].idusuarioentregonota;
 				usercancelo=notas[adgNotas.selectedIndex].idusuariocancelonota;
 				useranulo=notas[adgNotas.selectedIndex].idusuarioanulonota;
+				
 				listhistoricoselected.source=notas[adgNotas.selectedIndex].detallehistorico.item;
 			
 				
@@ -341,7 +348,7 @@
 				
 				//***********************************************************************************************************++
 				
-				
+				anticipo=0;
 				for (var j:int=0;j<listhistoricoselected.length;j++){
 					if(Number(listhistoricoselected[j].anticipo)>0){
 					
@@ -356,6 +363,7 @@
 					
 					
 				}
+				mskanticipo.text=anticipo.toFixed(3);
 				
 				
 				adghistorico.dataProvider=listhistorico;
@@ -1139,10 +1147,18 @@
 }//end function edit grid
 			
 			private function calculeanticipo():void{
-				anticipo=Number(Number(mskanticipo.text).toFixed(3));
 				
-				lblsaldo.text=Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskanticipo.text)).toFixed(3);// calculo del saldo
-				notas[adgNotas.selectedIndex].saldo=lblsaldo.text;//celda en el grid cabecera del saldo
+				var calcularsaldo:Number=Number(Number(lblTotApagar.text).toFixed(3))-Number(mskanticipo.text);
+				if(calcularsaldo<0){
+					Alert.show("El calculo del saldo da un número negativo \nverifique o vuelva a calcular");
+					return;
+				}else{
+					
+					anticipo+=Number(Number(mskanticipo.text).toFixed(0));
+					lblsaldo.text=Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(anticipo)).toFixed(3);// calculo del saldo
+					notas[adgNotas.selectedIndex].saldo=lblsaldo.text;//celda en el grid cabecera del saldo
+				}
+				
 			
 			
 			}
@@ -1154,10 +1170,10 @@
 					return;
 				
 				}else{
-							if(Number(anticipo.toFixed(3))!=Number(Number(mskanticipo.text))){
+							
 								calculeanticipo();
-								return;
-							}
+								
+							
 					
 					}
 				
@@ -1170,7 +1186,7 @@
 			public function calcularAnticipo():void{
 				if(int(mskanticipo.text)==0||mskanticipo.text.length==0){
 					lblsaldo.text="0.000";
-					anticipo=0;
+					
 				}else {
 					if(int(mskanticipo.text)>int(lblTotApagar.text))
 					{
@@ -1243,7 +1259,7 @@
 				notas[adgNotas.selectedIndex].descuentonota=lbldescuento.text;
 				
 				notas[adgNotas.selectedIndex].recargototal=lbltotalconrecargo.text;
-				//calcularAnticipo();
+			
 				
 				
 			}
@@ -1367,7 +1383,7 @@
 					if(KeyPress.currentTarget.toString().indexOf("cmbVendedores")!=-1&&cmbVendedores.selectedItemId>=0)
 						txtpassword.setFocus();
 					
-					if(KeyPress.currentTarget.toString().indexOf("cmbVendedores")!=-1&&txtpassword.text.length>0)
+					if(KeyPress.currentTarget.toString().indexOf("txtpassword")!=-1&&txtpassword.text.length>0)
 						btnactualizar.setFocus();
 					
 					
@@ -1427,6 +1443,7 @@
 					"</porcentaje>\n" +
 					"<montototal>"+lblTotGral.text+"</montototal>\n" +
 					"<anticipo>"+mskanticipo.text+"</anticipo>\n" +
+					"<anticipoacum>"+anticipo+"</anticipoacum>\n" +
 					"<saldo>"+lblsaldo.text+"</saldo>\n" ;
 				if(entregado==1){
 					xmlnota+="<entregado>"+entregado+"</entregado>\n" +
@@ -1911,7 +1928,7 @@
 			
 			protected function operation4_faultHandler(event:FaultEvent):void
 			{
-				// TODO Auto-generated method stub
+				Alert.show("ERROR AL OBTENER LAS TARJETAS DE DEBITO");
 				
 			}
 			
@@ -2236,7 +2253,7 @@
 				//----------------------------------------------------------
 				totGral=0;
 				txtpreciop.text="";
-				mskanticipo.text="";
+				mskanticipo.text="0";
 				mskrecargo.text="";
 				
 				totGralDesc=0;
