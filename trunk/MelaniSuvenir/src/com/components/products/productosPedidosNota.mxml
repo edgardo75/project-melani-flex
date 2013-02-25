@@ -1422,6 +1422,6 @@
 			  toolTip="Muestra una Ventana para cargar un Producto"/>
 	<s:Label x="604" y="386" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="ANTICIPO $:"
 			 textAlign="right"/>
-	<controls:MaskedTextInput text="0.0" id="mskanticipo" x="708" y="378" width="60" fontFamily="Verdana"
-							  fontSize="16" restrict="0-9."/>
+	<controls:MaskedTextInput text="0" id="mskanticipo" maxChars="5" x="708" y="378" width="60" fontFamily="Verdana"
+							  fontSize="16" restrict="0-9"/>
 </s:Group>

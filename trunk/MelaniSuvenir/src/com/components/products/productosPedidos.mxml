@@ -1186,7 +1186,7 @@
 	<s:Label id="lblTotGral" x="645" y="243" width="124" color="#127B1A" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
 	<s:Label x="264" y="69" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
-	<controls:MaskedTextInput text="0.00" maxChars="5" inputMask="##.##" x="381" y="58" width="43" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingrese un porcentaje de descuento"/>
+	<controls:MaskedTextInput text="0.00" maxChars="5"  x="381" y="58" width="43" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingrese un porcentaje de descuento"/>
 	<s:Label x="481" y="279" color="#E2AA14" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL A PAGAR $:"/>
 	<s:Label id="lblTotApagar" x="641" y="279" width="127" color="#F9BD05" fontFamily="Verdana"
@@ -1204,7 +1204,7 @@
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
 	<s:Label x="436" y="330" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="TOTAL CON RECARGO %:"
 			 textAlign="right"/>
-	<controls:MaskedTextInput id="mskrecargo" x="645" y="323" width="49" fontFamily="Verdana"
+	<controls:MaskedTextInput id="mskrecargo" text="0.00" x="645" y="323" width="49" fontFamily="Verdana"
 							  fontSize="16" restrict="0-9." toolTip="Ingresa un Porcentaje de recargo total para los productos cargados"/>
 	<s:Button id="brncargarunproducto" x="25" y="291" height="32" label="Cargar Producto"
 			  click="brncargarunproducto_clickHandler(event)" fontSize="16"
