@@ -310,7 +310,10 @@
 				
 				
 				
-				
+				lblexpidiovendedor.text=notas[adgNotas.selectedIndex].usuarioexpidionota;
+				lblvendedocancelo.text=notas[adgNotas.selectedIndex].usuariocancelonota;
+				lblvendedoranulo.text=notas[adgNotas.selectedIndex].usuarioanulonota;
+				lblvendedorentrego.text=notas[adgNotas.selectedIndex].usuarioentregonota;
 				
 				mskrecargo.text=notas[adgNotas.selectedIndex].porcrecargo;
 				
@@ -2430,6 +2433,7 @@
 			</s:ArrayList>
 		</s:columns>		
 	</s:DataGrid>
+	<s:Label x="590" y="153" fontFamily="Verdana" fontSize="12" text="Vendedor Expidio:"/>
 	<s:Label x="17" y="168" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="Cliente:"/>
 	<s:Label id="lblnombreyapecli" x="87" y="157" width="288" height="33" fontSize="16"
 			 verticalAlign="middle"/>
@@ -2582,6 +2586,17 @@
 	<controls:MaskedTextInput id="mskdocumento" x="469" y="160" fontFamily="Verdana" fontSize="20"
 							  inputMask="########" maxChars="8" restrict="0-9"/>
 	<s:Label x="382" y="188" fontSize="16" fontWeight="normal" text="Observaciones:"/>
+	<s:Label id="lblvendedoranulo" x="707" y="178" width="200" fontFamily="Verdana" fontSize="10"
+			 verticalAlign="bottom"/>
+	<s:Label id="lblvendedorentrego" x="706" y="188" width="200" fontFamily="Verdana" fontSize="10"
+			 verticalAlign="middle"/>
+	<s:Label x="590" y="167" fontFamily="Verdana" fontSize="12" text="Vendedor Canceló:"/>
+	<s:Label x="591" y="179" fontFamily="Verdana" fontSize="12" text="Vendedor Anuló:"/>
+	<s:Label x="591" y="189" fontFamily="Verdana" fontSize="12" text="Vendedor Entregó:"/>
+	<s:Label id="lblexpidiovendedor" x="706" y="154" width="201" fontFamily="Verdana" fontSize="12"
+			 verticalAlign="top"/>
+	<s:Label id="lblvendedocancelo" x="708" y="164" width="197" fontFamily="Verdana" fontSize="12"
+			 verticalAlign="bottom"/>
 </s:Group>
 
 

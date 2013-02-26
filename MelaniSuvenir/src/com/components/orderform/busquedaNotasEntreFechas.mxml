@@ -62,11 +62,7 @@
 										}
 									}
 								
-									/*if(btnenviar.enabled==false){
-										btnenviar.enabled=true;
-										btnenviar.setFocus();
-									}*/
-									
+								
 								}
 							
 							}
@@ -109,7 +105,7 @@
 				var source:String;
 				var urlReq:URLRequest;
 				if(cmbVendedores.text.length>0&&dtfechaini.text.length>0&&dtffechafin.text.length>0){
-					
+				
 					if(rdbfechaentrega.selected==true){
 						 source="http://localhost:8080/WebMelanie2/ShowReportEntreFechasEntrega?fstart="+dtfechaini.text+"&fend="+dtffechafin.text+"&vendor="+cmbVendedores.selectedItem.id;
 						urlReq= new URLRequest(source);	
