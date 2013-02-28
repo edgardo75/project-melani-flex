@@ -290,14 +290,19 @@
 			
 			}
 			//----------------------------------------------------------------------------------------------
-			
-			protected function adgPresupuestos_itemDoubleClickHandler(event:ListEvent):void
-			{
+			protected function addinfopresupuesto():void{
 				detallepresupuestos.source=new XMLList(adgPresupuestos.selectedItem.detallepresupuesto.itemdetallepresupuesto);
 				
 				adgdetallespresupuesto.dataProvider=detallepresupuestos;
 				
 				txtobservaciones.text=adgPresupuestos.selectedItem.observaciones;
+			
+			}
+			//-------------------------------------------------------------------------------------------
+			
+			protected function adgPresupuestos_itemDoubleClickHandler(event:ListEvent):void
+			{
+				addinfopresupuesto();
 			}
 			
 			//------------------------------------------------------------------------------------------------------------
@@ -465,6 +470,12 @@
 				}
 			}
 			
+			protected function adgPresupuestos_clickHandler(event:MouseEvent):void
+			{
+				addinfopresupuesto();
+				
+			}
+			
 		]]>
 	</fx:Script>
 	<mx:HRule x="28" y="30" width="337" height="0"/>
@@ -472,7 +483,7 @@
 			 text="VER PRESUPUESTOS MELANIE" textDecoration="underline"/>
 	<mx:AdvancedDataGrid id="adgPresupuestos" x="13" y="34" width="973" height="271"
 						 designViewDataType="flat" doubleClickEnabled="true" fontFamily="Verdana"
-						 fontSize="16"
+						 fontSize="16" click="adgPresupuestos_clickHandler(event)" selectionMode="singleRow"
 						 itemDoubleClick="adgPresupuestos_itemDoubleClickHandler(event)" alternatingItemColors="[#ffffff,#fcff4f7]" 
 						 selectable="true">
 		<mx:columns>
