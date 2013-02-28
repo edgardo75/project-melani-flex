@@ -6,7 +6,7 @@
 		 width="1168" height="530" creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wspresupuestos" wsdl="http://localhost:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="true" >
+		<s:WebService id="wspresupuestos" wsdl="http://192.168.1.101:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="true" >
 			<s:operation name="getRecordCount" result="operation1_resultHandler(event)"
 						 fault="operation1_faultHandler(event)">
 				
@@ -31,7 +31,8 @@
 			import assets.DataGridUtil;
 			
 			import com.as3xls.xls.ExcelFile;
-			import com.as3xls.xls.Sheet;			
+			import com.as3xls.xls.Sheet;
+			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
 			import mx.controls.dataGridClasses.DataGridColumn;
@@ -211,6 +212,9 @@
 				btnImprimir.enabled=true;
 			if(btnRegargarlistado.enabled==true)
 				btnRegargarlistado.enabled=false;
+			
+			if(btnimprimirpresupuesto.enabled==false)
+				btnimprimirpresupuesto.enabled=true;
 			
 				
 			
@@ -405,7 +409,7 @@
 					last=listpresupuestos[0].id;
 					first=listpresupuestos[listpresupuestos.length-1].id;
 					
-					var source:String="http://localhost:8080/WebMelanie2/ShowReportView?first="+first+"&last="+last;
+					var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportView?first="+first+"&last="+last;
 					
 					var urlReq:URLRequest= new URLRequest(source);
 					navigateToURL(urlReq,"_blank");
@@ -446,6 +450,19 @@
 			{
 				wspresupuestos.getRecordCount();
 				
+			}
+			
+			protected function btnimprimirpresupuesto_clickHandler(event:MouseEvent):void
+			{
+				
+				if(adgPresupuestos.selectedIndex>-1){
+					var idpresupuesto:int=adgPresupuestos.selectedItem.id;
+					
+					var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportPresupuesto?presnro="+idpresupuesto;
+					
+					var urlReq:URLRequest= new URLRequest(source);
+					navigateToURL(urlReq,"_blank");
+				}
 			}
 			
 		]]>
@@ -500,7 +517,7 @@
 		</mx:columns>
 	</mx:AdvancedDataGrid>
 	<s:Button id="btnImprimir" x="994" y="202" width="152" height="32" label="Ver Presupuestos"
-			  click="btnImprimir_clickHandler(event)" enabled="false" fontSize="16"/>
+			  click="btnImprimir_clickHandler(event)" enabled="false" fontSize="16" toolTip="Imprime el rango de reporte listado en la grilla"/>
 	<s:Button id="btnExportar" x="994" y="242" height="33" label="Copiar Grilla (TAB)"
 			  click="DataGridUtil.exportADGToClipboard(adgPresupuestos, false, false)"
 			  enabled="false" fontSize="16"
@@ -511,6 +528,8 @@
 			  enabled="false" fontSize="16"/>
 	<s:TextArea id="txtobservaciones" x="722" y="366" width="402" height="154" maxChars="5000"/>
 	<s:Label x="724" y="349" fontSize="16" text="Observaciones"/>
+	<s:Button id="btnimprimirpresupuesto" x="994" y="284" width="152" height="38" label="Imprimir"
+			  click="btnimprimirpresupuesto_clickHandler(event)" enabled="false" fontSize="16" toolTip="Imprime el presupuesto seleccionado"/>
 	
 	
 </s:Group>
