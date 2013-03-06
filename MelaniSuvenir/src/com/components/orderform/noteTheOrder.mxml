@@ -6,7 +6,7 @@
 		 xmlns:products="com.components.products.*"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
 		 xmlns:components="com.hillelcoren.components.*"
-		 width="1050" height="608" initialize="group1_initializeHandler(event)" creationComplete="group1_creationCompleteHandler(event)">
+		 width="1124" height="608" initialize="group1_initializeHandler(event)" creationComplete="group1_creationCompleteHandler(event)">
 	
 	<fx:Script>
 		<![CDATA[
@@ -550,7 +550,7 @@
 					default:
 					{
 						
-						var source:String="http://localhost:8080/WebMelanie2/ShowReportNotaPedido?nronota="+nro;
+						var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportNotaPedido?nronota="+nro;
 						var urlReq:URLRequest= new URLRequest(source);
 						navigateToURL(urlReq,"_blank");
 						limpiarTodo();
@@ -615,20 +615,20 @@
 		<s:RadioButtonGroup id="stockFuturo"/>
 		<s:RadioButtonGroup id="notaCancelada"/>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wsnotapedido" wsdl="http://localhost:8080/ServiceNotaPedido/NotaPedidoWs?WSDL">
+		<s:WebService id="wsnotapedido" wsdl="http://192.168.1.101:8080/ServiceNotaPedido/NotaPedidoWs?WSDL">
 			<s:operation name="agregarNotaPedido" fault="operationNota_faultHandler(event)"
 						 result="operationNota_resultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
 		<s:WebService id="wstarjetascreditodebito" 
-					  wsdl="http://localhost:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="false"
+					  wsdl="http://192.168.1.101:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="false"
 					  >
 			<s:operation name="searchAllTarjetasCreditoDebito" result="operation1_resultHandler(event)" fault="operation1_faultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
-		<s:WebService wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"
+		<s:WebService wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL"
 					  id="cli" showBusyCursor="false">
 			<s:operation fault="operationFaultGetClient(event)"
 						 result="operationResultGetClient(event)" 
@@ -642,7 +642,7 @@
 			</s:operation>
 			
 		</s:WebService>
-		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
+		<s:WebService id="wsempleados" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
 			<s:operation name="selectAllEmpleados"
 						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
 						 result="operation2_resultHandlerSelectAllEmpleados(event)">
@@ -691,10 +691,10 @@
 	<s:Label id="lblnocli" x="115" y="62" width="124" fontFamily="Verdana" fontSize="18"
 			 fontWeight="bold" verticalAlign="bottom"/>
 	<s:TextInput id="txtnombrecliente" x="114" y="85" width="188" fontSize="18" maxChars="40"
-				 prompt="Ingrese Nombre" restrict="a-z A-Z ñ-Ñ" />
+				 prompt="Ingrese Nombre..." restrict="a-z A-Z ñ-Ñ" />
 	<s:Label id="lblapellido" x="43" y="128" fontSize="16" fontWeight="bold" text="Apellido:"/>
 	<s:TextInput id="txtapellidocliente" x="113" y="118" width="189" fontSize="18" maxChars="40"
-				 prompt="Ingrese Apellido" restrict="a-z A-Z ñ-Ñ"/>
+				 prompt="Ingrese Apellido..." restrict="a-z A-Z ñ-Ñ"/>
 	<s:Button id="btninserclient" x="29" y="468" width="134" height="30" label="DatosCliente"
 			  click="btninserclient_clickHandler(event)" fontSize="16"
 			  toolTip="Muestra una Ventana para Ingresar Datos Personales de un Cliente"/>
@@ -719,17 +719,17 @@
 		<s:RadioButton id="rdanuladasi" label="Si" groupName="anulada"/>
 		<s:RadioButton id="rdanuladano" label="No" selected="true" groupName="anulada"/>
 	</s:VGroup>
-	<mx:DateField id="dtfentrega" x="865" y="258" width="141" disabledDays="[0]"
+	<mx:DateField id="dtfentrega" x="873" y="258" width="187" disabledDays="[0]"
 				  disabledRanges="{[{rangeEnd: new Date((new Date()).getTime() - (1000*60*60*24))}]}"
 				  fontSize="16" labelFunction="formatDateTime" parseFunction="{null}"
-				  selectableRange="{{rangeStart : new Date()}}"/>
-	<s:Label x="863" y="243" fontSize="14" fontWeight="bold" text="Fecha de entrega"/>
-	<s:Label x="856" y="304" fontSize="16" fontWeight="bold" text="VENDEDORES:"/>
-	<components:AutoComplete id="cmbVendedores" x="856" y="319" width="184" labelField="nameuser" allowDuplicates="false" dropDownRowCount="10"
+				  selectableRange="{{rangeStart : new Date()}}" toolTip="Seleccione la fecha de entrega"/>
+	<s:Label x="871" y="243" fontSize="14" fontWeight="bold" text="Fecha de entrega"/>
+	<s:Label x="864" y="304" fontSize="16" fontWeight="bold" text="VENDEDORES:"/>
+	<components:AutoComplete id="cmbVendedores" x="864" toolTip="Seleccione un Vendedor" prompt="Seleccione el vendedor..." y="319" width="246" labelField="nameuser" allowDuplicates="false" dropDownRowCount="10"
 							 fontSize="16" fontWeight="bold" matchType="beginning">
 	</components:AutoComplete>
-	<s:Label x="855" y="352" fontFamily="Arial" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
-	<s:TextInput id="txtpassword" x="856" y="373" width="183" fontSize="16" fontStyle="normal"
-				 prompt="Ingresar password de vendedor" displayAsPassword="true"/>
+	<s:Label x="863" y="352" fontFamily="Arial" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
+	<s:TextInput id="txtpassword" x="864" y="373" width="246" fontSize="16" fontStyle="normal"
+				 prompt="Ingresar password de vendedor..." displayAsPassword="true"/>
 	
 </s:Group>

@@ -1985,7 +1985,7 @@
 				
 				if(adgNotas.selectedItem.id>0){
 					
-					var source:String="http://localhost:8080/WebMelanie2/ShowReportNotaPedido?nronota="+adgNotas.selectedItem.id;
+					var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportNotaPedido?nronota="+adgNotas.selectedItem.id;
 					
 					var urlReq:URLRequest= new URLRequest(source);
 					navigateToURL(urlReq,"_blank");
@@ -2333,7 +2333,7 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:ArrayCollection id="arrayDg"/>
 		<s:DateTimeFormatter id="dtf" dateTimePattern="dd/MM/yyyy"/>
-		<s:WebService id="wsnotas" wsdl="http://localhost:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wsnotas" wsdl="http://192.168.1.101:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true">
 			<s:operation name="actualizarNotaPedido"
 						 result="operation9_resultHandler(event)"
 						 fault="operation9_faultHandler(event)">
@@ -2375,7 +2375,7 @@
 				/>
 				
 		</s:WebService>
-		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
+		<s:WebService id="wsempleados" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
 			<s:operation name="selectAllEmpleados"
 						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
 						 result="operation2_resultHandlerSelectAllEmpleados(event)">
@@ -2383,13 +2383,13 @@
 			</s:operation>
 		</s:WebService>
 		<s:WebService id="wstarjetascreditodebito" 
-					  wsdl="http://localhost:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
+					  wsdl="http://192.168.1.101:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
 					  >
 			<s:operation name="searchAllTarjetasCreditoDebito" result="operation4_resultHandler(event)" fault="operation4_faultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
-		<s:WebService id="productosWs" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?wsdl"
+		<s:WebService id="productosWs" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?wsdl"
 					  showBusyCursor="true">
 			<s:operation name="searchAllProductos"
 						 fault="operation1_faultGetRecord(event)"
@@ -2496,13 +2496,13 @@
 			<mx:AdvancedDataGridColumn  visible="false" dataField="idnota"/>
 		</mx:columns>
 	</mx:AdvancedDataGrid>
-	<s:Label x="544" y="442" color="#1D7F03" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="544" y="442" color="#062C6C" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL GRAL $:" verticalAlign="top"/>
-	<s:Label id="lblTotGral" x="678" y="440" width="124" color="#127B1A" fontFamily="Verdana"
+	<s:Label id="lblTotGral" x="678" y="440" width="124" color="#062C6C" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
-	<s:Label x="513" y="478" color="#E2AA14" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="513" y="478" color="#06820F" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL A PAGAR $:"/>
-	<s:Label id="lblTotApagar" x="675" y="477" width="127" color="#F9BD05" fontFamily="Verdana"
+	<s:Label id="lblTotApagar" x="675" y="477" width="127" color="#06820F" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
 	<s:Label x="547" y="459" width="135" height="14" color="#F84B07" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="DESCUENTO $:"/>
@@ -2510,28 +2510,28 @@
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
 	<s:Label x="457" y="498" width="223" color="#04667F" fontFamily="Verdana" fontSize="16"
 			 fontWeight="bold" text="TOTAL CON RECARGO $:" textAlign="right"/>
-	<s:Label x="457" y="516" width="223" color="#7F1E04" fontFamily="Verdana" fontSize="16"
+	<s:Label x="457" y="516" width="223" color="#ACAEAD" fontFamily="Verdana" fontSize="16"
 			 fontWeight="bold" text="SALDO $:" textAlign="right"/>
 	<s:Label id="lbltotalconrecargo" x="678" y="496" width="124" color="#04667F" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label id="lblsaldo" x="678" y="515" width="124" color="#7F2704" fontFamily="Verdana"
+	<s:Label id="lblsaldo" x="678" y="515" width="124" color="#ACAEAD" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label x="470" y="543" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="TOTAL CON RECARGO %:"
+	<s:Label x="570" y="542" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="RECARGO %:"
 			 textAlign="right"/>
 	<controls:MaskedTextInput id="mskrecargo" x="679" y="534" width="60" fontFamily="Verdana" text="0.00" maxChars="5"
 							  fontSize="16" restrict="0-9." toolTip="Ingresa un Porcentaje de recargo total para los productos cargados"/>
-	<s:Label x="575" y="572" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="ANTICIPO $:"
+	<s:Label x="574" y="571" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="ANTICIPO $:"
 			 textAlign="right"/>
-	<controls:MaskedTextInput text="0" maxChars="5" id="mskanticipo" x="679" y="563" width="103" fontFamily="Verdana"
+	<controls:MaskedTextInput text="0" maxChars="5" id="mskanticipo" x="679" y="563" width="74" fontFamily="Verdana"
 							  fontSize="16" restrict="0-9"/>
-	<s:Label x="7" y="214" fontFamily="Verdana" fontSize="16" text="Producto:"/>
+	<s:Label x="7" y="211" fontFamily="Verdana" fontSize="16" text="Producto:"/>
 	<s:Label x="12" y="239" fontFamily="Verdana" fontSize="16" text="Precio $:"/>
-	<s:TextInput id="txtpreciop" x="88" y="231" width="187" fontSize="16" fontWeight="bold"
+	<s:TextInput id="txtpreciop" x="88" y="231" width="233" fontSize="16" fontWeight="bold"
 				 maxChars="6" restrict="0-9." tabEnabled="false" prompt="Ingrese precio de producto..."/>
 	<s:Label x="3" y="267" fontFamily="Verdana" fontSize="16" text="Cantidad:"/>
 	<controls:MaskedTextInput id="mskcantidad" x="88" y="258" width="55" fontFamily="Verdana"
 							  tabEnabled="false" fontSize="16" fontWeight="bold" maxChars="3" restrict="0-9"/>
-	<components:AutoComplete id="cmbproduct" x="88" y="193" width="203" allowDuplicates="false"
+	<components:AutoComplete id="cmbproduct" prompt="Ingrese un Producto..." x="88" y="199" width="233" allowDuplicates="false"
 							 dropDownRowCount="10" fontSize="16" fontWeight="bold"
 							 labelField="descripcion" matchType="beginning" tabEnabled="false">
 	</components:AutoComplete>
@@ -2544,7 +2544,7 @@
 	<s:Label x="316" y="263" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
 	<controls:MaskedTextInput text="0.00" maxChars="5" x="433" y="256" width="60" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingresa un porcentaje de descuento, aplicable a todos los productos de la planilla"/>
 	<s:Label x="824" y="392" fontSize="16" fontWeight="bold" text="VENDEDORES:"/>
-	<components:AutoComplete id="cmbVendedores" x="824" y="407" width="261" labelField="nameuser" allowDuplicates="false" dropDownRowCount="10"
+	<components:AutoComplete id="cmbVendedores" prompt="Seleccione un Vendedor..." x="824" y="407" width="261" labelField="nameuser" allowDuplicates="false" dropDownRowCount="10"
 							 fontSize="16" fontWeight="bold" matchType="beginning">
 	</components:AutoComplete>
 	<s:Label x="990" y="2" fontSize="14" fontWeight="bold" text="Nota de pedido entregada"/>
@@ -2571,7 +2571,7 @@
 	<s:Button x="1037" y="138" width="88" height="33" label="Anular"
 			  click="button2_clickHandler(event)" fontSize="16"
 			  toolTip="Cambia el estado de anulada de la Nota de Pedido Seleccionada"/>
-	<components:AdvancedAutoComplete id="cmbTarjetasCreditoDebito" x="823" y="300" width="221"
+	<components:AdvancedAutoComplete id="cmbTarjetasCreditoDebito" prompt="Seleccione una Tarjeta de Crédito..." x="823" y="300" width="295"
 									 fontSize="16" labelField="descripcion"
 									 toolTip="Seleccione una Tarjeta de Crédito o Débito si el cliente utiliza esta forma de pago!!!">
 	</components:AdvancedAutoComplete>
@@ -2592,10 +2592,11 @@
 	<s:Label x="826" y="499" fontSize="16" fontWeight="bold" text="HISTORICO DE ANTICIPOS"/>
 	<s:Button id="btnRegargarlistado" x="7" y="507" width="153" height="34" label="Recargar Listado"
 			  click="btnRegargarlistado_clickHandler(event)" enabled="false" fontSize="16"/>
-	<controls:MaskedTextInput id="mskisearchidnota" x="215" y="442" width="204" fontSize="16"
+	<controls:MaskedTextInput id="mskisearchidnota" x="215" y="442" width="232" fontSize="16"
 							  restrict="0-9" textAlign="center"
 							  toolTip="Ingrese Número de Nota de Pedido"/>
-	<s:Label x="213" y="426" fontSize="16" fontWeight="normal" text="BUSCAR NOTA DE PEDIDO"/>
+	<s:Label x="213" y="426" fontFamily="Verdana" fontSize="16" fontWeight="normal"
+			 text="BUSCAR NOTA DE PEDIDO"/>
 	<s:Button id="btnImprimir" x="7" y="545" width="153" height="33" label="Imprimir"
 			  click="btnImprimir_clickHandler(event)" enabled="false" fontSize="16"
 			  toolTip="Imprimie una nota de pedido seleccionada del listado"/>

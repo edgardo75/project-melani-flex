@@ -1118,7 +1118,7 @@
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="productosWs" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?wsdl"
+		<s:WebService id="productosWs" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?wsdl"
 					  showBusyCursor="true">
 			<s:operation name="searchAllProductos"
 						 fault="operation1_faultHandler(event)"
@@ -1136,7 +1136,7 @@
 	</fx:Declarations>
 	<s:Label x="27" y="14" fontFamily="Verdana" fontSize="16" text="Producto:"/>
 	<s:Label x="32" y="39" fontFamily="Verdana" fontSize="16" text="Precio $:"/>
-	<s:TextInput id="txtpreciop" x="108" y="31" width="203" fontSize="16" fontWeight="bold"
+	<s:TextInput id="txtpreciop" prompt="Ingrese el precio...." x="108" y="31" width="246" fontSize="16" fontWeight="bold"
 				 maxChars="6" restrict="0-9." tabEnabled="false"/>
 	<s:Label x="23" y="67" fontFamily="Verdana" fontSize="16" text="Cantidad:"/>
 	<controls:MaskedTextInput id="mskcantidad" x="108" y="58" width="55" fontFamily="Verdana"
@@ -1177,19 +1177,19 @@
 									   resizable="false" sortable="false" textAlign="right"/>
 		</mx:columns>
 	</mx:AdvancedDataGrid>
-	<components:AutoComplete id="cmbproduct" x="108" y="1" width="203" allowDuplicates="false"
+	<components:AutoComplete id="cmbproduct" prompt="Seleccione un Producto..." x="108" y="1" width="246" allowDuplicates="false"
 							 dropDownRowCount="10" fontSize="16" fontWeight="bold"
 							 labelField="descripcion" matchType="beginning" tabEnabled="false">
 	</components:AutoComplete>
-	<s:Label x="510" y="245" color="#1D7F03" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="510" y="245" color="#0C0C64" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL GRAL $:" verticalAlign="top"/>
-	<s:Label id="lblTotGral" x="645" y="243" width="124" color="#127B1A" fontFamily="Verdana"
+	<s:Label id="lblTotGral" x="645" y="243" width="124" color="#0C0C64" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
 	<s:Label x="264" y="69" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
 	<controls:MaskedTextInput text="0.00" maxChars="5"  x="381" y="58" width="43" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingrese un porcentaje de descuento"/>
-	<s:Label x="481" y="279" color="#E2AA14" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="481" y="279" color="#098C1B" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL A PAGAR $:"/>
-	<s:Label id="lblTotApagar" x="641" y="279" width="127" color="#F9BD05" fontFamily="Verdana"
+	<s:Label id="lblTotApagar" x="641" y="279" width="127" color="#098C1B" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
 	<s:Button id="btnremover" x="25" y="248" height="35" label="Remover Todo"
 			  click="btnremover_clickHandler(event)" enabled="false" fontSize="16"
@@ -1198,11 +1198,11 @@
 			 fontSize="16" fontWeight="bold" text="DESCUENTO $:"/>
 	<s:Label id="lbldescuento" x="644" y="262" width="125" color="#F84B07" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label x="425" y="301" width="223" color="#04667F" fontFamily="Verdana" fontSize="16"
+	<s:Label x="424" y="297" width="223" color="#04667F" fontFamily="Verdana" fontSize="16"
 			 fontWeight="bold" text="TOTAL CON RECARGO $:" textAlign="right"/>
-	<s:Label id="lbltotalconrecargo" x="645" y="299" width="124" color="#04667F" fontFamily="Verdana"
+	<s:Label id="lbltotalconrecargo" x="644" y="299" width="124" color="#04667F" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label x="436" y="330" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="TOTAL CON RECARGO %:"
+	<s:Label x="535" y="330" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="RECARGO %:"
 			 textAlign="right"/>
 	<controls:MaskedTextInput id="mskrecargo" text="0.00" x="645" y="323" width="49" fontFamily="Verdana"
 							  fontSize="16" restrict="0-9." toolTip="Ingresa un Porcentaje de recargo total para los productos cargados"/>
