@@ -8,11 +8,11 @@
 		 xmlns:components="com.hillelcoren.components.*"
 		 xmlns:classes="com.hillelcoren.components.autoComplete.classes.*"
 		 xmlns:phones="com.components.phones.*"
-		 width="1032" height="344" creationComplete="init(event)">
+		 width="562" height="344" creationComplete="init(event)">
 	
 	<fx:Declarations>
 		<s:XMLListCollection id="infoclient" source="{xmlInfoClient.item}"/>
-		<s:XMLListCollection id="infotelcli" source="{xmlinfotelcli}"/>
+		
 		
 			<s:WebService id="cliservices" 
 						  wsdl="http://localhost:8080/ServiceClientes/ClientesWs?wsdl" 						  
@@ -83,7 +83,7 @@
 	
 
 	<mx:HRule x="10" y="29" width="380" height="1"/>
-	<s:Label x="380" y="10" backgroundAlpha="0.6" color="#10897C" fontSize="16" fontWeight="bold"
+	<s:Label x="138" y="10" backgroundAlpha="0.6" color="#09685E" fontSize="16" fontWeight="bold"
 			 text="DATOS PERSONALES DE CLIENTE"/>
 	<s:TextInput id="txtnombre" x="206" y="69" width="317" fontFamily="Verdana" fontSize="16"
 				 fontWeight="bold" maxChars="30" restrict="A-ÑZa-ñz " prompt="Ingrese su nombre propio..." 
@@ -132,7 +132,6 @@
 									 verticalScrollPolicy="on">
 	</components:AdvancedAutoComplete>
 	<mx:HRule x="19" y="164" width="503" height="1"/>
-	<phones:Telefonos id="compTelefono" x="531" y="4"/>
 	
 	<fx:Script>
 		<![CDATA[
@@ -235,7 +234,7 @@
 				txtobservaciones.text="";
 				cmbGeneros.selectedItemId=2;
 				cmbTiposdocu.selectedItemId=3;
-				compTelefono.clearTodo();
+				
 			
 			
 			}
@@ -247,8 +246,6 @@
 				respuesta = event.result.toString();
 				
 				
-				
-				
 				xmlInfoClient=new XMLList(event.result);
 				xmlinfoclidomi=new XMLList(xmlInfoClient.item.personadomicilio.domicilio);
 				xmlinfotelcli=new XMLList(xmlInfoClient.item.personatelefono.telefono);
@@ -257,7 +254,7 @@
 				if(respuesta.indexOf("NO ENCONTRADO")!=-1){
 					clearComponenteCliente();
 					txtnombre.setFocus();
-					compTelefono.clearTodo();
+				
 					
 				
 			
@@ -281,31 +278,7 @@
 						txtobservaciones.text=infoclient[0].observaciones;
 						cmbGeneros.selectedItemId=infoclient[0].Genero.generoId;
 						cmbTiposdocu.selectedItemId=infoclient[0].idtipodocu;
-						//*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-						compTelefono.clearTodo();
-						if(infotelcli.length>0){
-							
-							longarray=compTelefono.arrayTel.length;
-							for(var j:int=0;j<longarray;j++)
-								compTelefono.arrayTel.pop();
-							
-							
-							
-							for(var i:int=0;i<infotelcli.length;i++){
-								compTelefono.arrayTel.push({prefijo:infotelcli[i].prefijo,nrotelefono:infotelcli[i].nrotelefono,descripcion:infotelcli[i].descripcion,tipotelefono:infotelcli[i].tipotelefono,idempresatel:infotelcli[i].idempresatelefonia,idtipotel:infotelcli[i].idtipotel});
-								
-							}
-							compTelefono.listtel.source=compTelefono.arrayTel;
-							compTelefono.listtel.refresh();
-							
-							
-							
-							
-							
-						}
 						
-						
-						//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 						
 						
 						

@@ -3,10 +3,10 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:components="com.components.*" toolTip="Formulario de carga para Datos Personales Básicos de un Cliente!!!"
-		 width="570" height="438" creationComplete="group1_creationCompleteHandler(event)" xmlns:clients="com.components.clients.*" close="titlewindow1_closeHandler()">
+		 width="1090" height="438" creationComplete="group1_creationCompleteHandler(event)" xmlns:clients="com.components.clients.*" close="titlewindow1_closeHandler()">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="servicesCliente" wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL"					  
+		<s:WebService id="servicesCliente" wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"					  
 					  showBusyCursor="true"
 					  useProxy="false">
 			
@@ -72,8 +72,11 @@
 						
 						titlewindow1_closeHandler();
 				
-				}else
-					Alert.show("Mensaje "+xmlClienteDatosPersonales.toString());	
+				}else{
+						if(xmlClienteDatosPersonales.toString().indexOf("<error>")!=-1)
+							Alert.show("Error en la operación, Verifique!!!");
+				}
+					
 				
 				
 			}
@@ -100,7 +103,8 @@
 								"<genero>\n"+
 									"<idgenero>"+clienteComp.cmbGeneros.selectedItemId+"</idgenero>\n"+
 								"</genero>\n"+
-							"</item>\n"+							
+							"</item>\n" +
+							""+clienteComp.compTelefono.getDatosTelefonos()+""+							
 						"</ClienteDomicilioTelefono>\n";
 					return datosCliente;
 		 }
@@ -224,8 +228,8 @@
 	<fx:Declarations>
 		<s:XMLListCollection id="datoscliente" source="{xmlClienteDatosPersonales.item}"/>
 	</fx:Declarations>
-	<clients:datosCliente id="clienteComp" x="14" y="10">
+	<clients:datosCliente id="clienteComp" x="14" y="10" width="1064">
 	</clients:datosCliente>
-	<s:Button id="btnGuardarCli" x="233" y="359" label="Guardar"
-			  click="validateAndSubmit(event)"/>
+	<s:Button id="btnGuardarCli" x="474" y="362" width="108" height="33" label="Guardar"
+			  click="validateAndSubmit(event)" fontFamily="Verdana" fontSize="16"/>
 </s:TitleWindow>
