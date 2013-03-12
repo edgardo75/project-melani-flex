@@ -146,7 +146,7 @@
 				
 			}
 			protected function verInformeCliente():void{
-				var source:String="http://localhost:8080/WebMelanie2/ShowReportClient";
+				var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportClient";
 				var urlReq:URLRequest=new URLRequest(source);
 				navigateToURL(urlReq,"_blank");
 			
@@ -156,12 +156,12 @@
 			
 			}
 			protected function verInformeProductos():void{
-				var source:String="http://localhost:8080/WebMelanie2/ShowReportProductos"
+				var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportProductos"
 				var urlReq:URLRequest=new URLRequest(source);
 				navigateToURL(urlReq,"_blank");
 			}
 			protected function verInformeBarrios():void{
-				var source:String="http://localhost:8080/WebMelanie2/ShowReportBarrios"
+				var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportBarrios"
 				var urlReq:URLRequest=new URLRequest(source);
 				navigateToURL(urlReq,"_blank");
 			
