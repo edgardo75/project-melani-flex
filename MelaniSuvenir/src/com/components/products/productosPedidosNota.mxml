@@ -87,6 +87,7 @@
 				txtdescuento.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				mskcantidad.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				mskrecargo.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				mskdescuentopesos.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				mskanticipo.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				adglistpedprod.addEventListener(AdvancedDataGridEvent.ITEM_EDIT_END,itemEditEndHandler);
 				
@@ -877,10 +878,40 @@
 					
 					if(KeyPress.currentTarget.toString().indexOf("mskanticipo")!=-1)
 						calcularAnticipo();
-							
+					
+					if(KeyPress.currentTarget.toString().indexOf("mskdescuentopesos")!=-1)
+							calculardescuento();
 				
 				}
 			
+			
+			}
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			private function calculardescuento():void{
+				var b:Boolean=false;
+				if(int(mskdescuentopesos.text)>0){
+					for(var i:int=0;i<arrayDg.length && !b;i++){
+						if(Number(arrayDg[i].porc_desc) > 0){
+							b=true;
+							
+							Alert.show("No se puede calcular el descuento por que hay productos con descuentos en el listado!!!");
+							txtdescuento.text="0.0";
+							
+							
+						}
+						
+						
+					}
+					
+					if(b)
+						return;
+				
+					if(Number(porc_desc_total.toFixed(3))>0)
+						Alert.show("YA HAY CALCULOS CON PORCENTAJES DE DESCUENTO, VERIFIQUE!!!");
+					
+				
+				}
+					
 			
 			}
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1026,9 +1057,11 @@
 							totGralDesc=tot_desc;
 							lbldescuento.text=Number(Number(-tot_desc)).toFixed(3);
 							
-					}else
+					}else{
 						lbldescuento.text="0.000";
-					
+						porc_desc_total=0;
+						totGralDesc=0;
+					}
 					if(tot_recargo>0){
 						var calcularTotalAPagar:Number=totGral-totGralDesc;
 						
@@ -1322,7 +1355,7 @@
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="productosWs" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?wsdl"
+		<s:WebService id="productosWs" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?wsdl"
 					  showBusyCursor="true">
 			<s:operation name="searchAllProductos"
 						 fault="operation1_faultHandler(event)"
@@ -1392,8 +1425,8 @@
 			 text="TOTAL GRAL $:" verticalAlign="top"/>
 	<s:Label id="lblTotGral" x="708" y="243" width="124" color="#053260" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
-	<s:Label x="264" y="69" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
-	<controls:MaskedTextInput text="0.00" maxChars="5" x="381" y="58" width="60" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingresa un porcentaje de descuento, aplicable a todos los productos de la planilla"/>
+	<s:Label x="224" y="69" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
+	<controls:MaskedTextInput text="0.00" maxChars="5" x="340" y="58" width="60" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingresa un porcentaje de descuento, aplicable a todos los productos de la planilla"/>
 	<s:Label x="543" y="281" color="#0A8412" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL A PAGAR $:"/>
 	<s:Label id="lblTotApagar" x="705" y="280" width="127" color="#0A8412" fontFamily="Verdana"
@@ -1420,8 +1453,11 @@
 	<s:Button id="btncargarProducto" x="25" y="269" height="30" label="Cargar Producto"
 			  click="btncargarProducto_clickHandler(event)" fontSize="16"
 			  toolTip="Muestra una Ventana para cargar un Producto"/>
-	<s:Label x="603" y="386" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="ANTICIPO $:"
+	<s:Label x="602" y="386" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="ANTICIPO $:"
 			 textAlign="right"/>
 	<controls:MaskedTextInput text="0" id="mskanticipo" maxChars="5" x="708" y="378" width="60" fontFamily="Verdana"
 							  fontSize="16" restrict="0-9"/>
+	<s:Label x="582" y="412" fontFamily="Verdana" fontSize="16" text="$ DESCUENTO:" />
+	<controls:MaskedTextInput id="mskdescuentopesos" x="709" y="405" width="59" fontFamily="Verdana" text="0.0" maxChars="5"  restrict="0-9."
+							  fontSize="16"/>
 </s:Group>

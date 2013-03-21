@@ -1353,7 +1353,7 @@
 						for (var i:int=0;i<arrayDg.length && !b;i++){
 							
 							if((String(arrayDg[i].name).toUpperCase()==String(cmbproduct.text).toUpperCase()) && Number(arrayDg[i].price) != Number(txtpreciop.text)){
-								Alert.show("Imposible Cargar, este Item se encuentra cargado con un Precio diferente, corrija!!!");
+								Alert.show("Imposible Cargar, este Producto se encuentra cargado con un Precio diferente, corrija!!!");
 								b=true;
 								
 							}
@@ -1366,7 +1366,7 @@
 							if(notas.length>0&&adgNotas.selectedIndex>-1)
 								addadglistpedprod(cmbproduct.selectedItem.idproduct,adgNotas.selectedItem.id,cmbproduct.selectedItem.id,txtpreciop.text,mskcantidad.text,cmbproduct.selectedItem.descripcion,txtdescuento.text);
 							else
-								Alert.show("Imposible procesar");
+								Alert.show("Imposible procesar, para agregar un Producto, \nantes deberá seleccionar una Nota de Pedido!!!");
 						}
 					}
 					if(KeyPress.currentTarget.toString().indexOf("txtpreciop")!=-1&& int(txtpreciop.text)>0)
@@ -1388,7 +1388,7 @@
 						
 						
 						indexPage=0;
-						//SIZEPAGE:int=100;
+						
 						totalReg=0;
 						
 						last_btn.enabled=false;
@@ -1745,9 +1745,14 @@
 			}
 			protected function brncargarunproducto_clickHandler(event:MouseEvent):void
 			{
+				var indice:Number=0;
 				var popup:datosProducto=datosProducto(PopUpManager.createPopUp(this,datosProducto,true));
 				
 				popup.product=productlist;
+				
+				
+				
+				
 				PopUpManager.centerPopUp(popup);
 			}
 			protected function operation1_faultGetRecord(event:FaultEvent):void
@@ -1985,7 +1990,7 @@
 				
 				if(adgNotas.selectedItem.id>0){
 					
-					var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportNotaPedido?nronota="+adgNotas.selectedItem.id;
+					var source:String="http://localhost:8080/WebMelanie2/ShowReportNotaPedido?nronota="+adgNotas.selectedItem.id;
 					
 					var urlReq:URLRequest= new URLRequest(source);
 					navigateToURL(urlReq,"_blank");
@@ -2333,7 +2338,7 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:ArrayCollection id="arrayDg"/>
 		<s:DateTimeFormatter id="dtf" dateTimePattern="dd/MM/yyyy"/>
-		<s:WebService id="wsnotas" wsdl="http://192.168.1.101:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wsnotas" wsdl="http://localhost:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true">
 			<s:operation name="actualizarNotaPedido"
 						 result="operation9_resultHandler(event)"
 						 fault="operation9_faultHandler(event)">
@@ -2375,7 +2380,7 @@
 				/>
 				
 		</s:WebService>
-		<s:WebService id="wsempleados" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
+		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
 			<s:operation name="selectAllEmpleados"
 						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
 						 result="operation2_resultHandlerSelectAllEmpleados(event)">
@@ -2383,13 +2388,13 @@
 			</s:operation>
 		</s:WebService>
 		<s:WebService id="wstarjetascreditodebito" 
-					  wsdl="http://192.168.1.101:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
+					  wsdl="http://localhost:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
 					  >
 			<s:operation name="searchAllTarjetasCreditoDebito" result="operation4_resultHandler(event)" fault="operation4_faultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
-		<s:WebService id="productosWs" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?wsdl"
+		<s:WebService id="productosWs" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?wsdl"
 					  showBusyCursor="true">
 			<s:operation name="searchAllProductos"
 						 fault="operation1_faultGetRecord(event)"
@@ -2459,7 +2464,7 @@
 	<s:Label x="17" y="168" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="Cliente:"/>
 	<s:Label id="lblnombreyapecli" x="87" y="157" width="288" height="33" fontSize="16"
 			 verticalAlign="middle"/>
-	<s:TextArea id="txtobservaciones" x="383" y="201" width="762" height="54" maxChars="32000"/>
+	<s:TextArea id="txtobservaciones" x="383" y="201" width="808" height="79" maxChars="32000"/>
 	
 	<mx:AdvancedDataGrid id="adglistpedprod" x="7" y="285" width="809" height="135"
 						 alternatingItemColors="[#adf1f5, white]"
@@ -2541,8 +2546,8 @@
 	<s:Button id="brncargarunproducto" x="7" y="466" width="153" height="38" label="Cargar Producto"
 			  click="brncargarunproducto_clickHandler(event)" fontSize="16"
 			  toolTip="Muestra una Ventana para cargar un Producto"/>
-	<s:Label x="316" y="263" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
-	<controls:MaskedTextInput text="0.00" maxChars="5" x="433" y="256" width="60" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingresa un porcentaje de descuento, aplicable a todos los productos de la planilla"/>
+	<s:Label x="206" y="263" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
+	<controls:MaskedTextInput text="0.00" maxChars="5" x="322" y="255" width="60" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingresa un porcentaje de descuento, aplicable a todos los productos de la planilla"/>
 	<s:Label x="824" y="392" fontSize="16" fontWeight="bold" text="VENDEDORES:"/>
 	<components:AutoComplete id="cmbVendedores" prompt="Seleccione un Vendedor..." x="824" y="407" width="261" labelField="nameuser" allowDuplicates="false" dropDownRowCount="10"
 							 fontSize="16" fontWeight="bold" matchType="beginning">

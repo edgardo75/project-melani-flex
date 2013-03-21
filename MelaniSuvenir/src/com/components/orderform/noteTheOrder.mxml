@@ -550,7 +550,7 @@
 					default:
 					{
 						
-						var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportNotaPedido?nronota="+nro;
+						var source:String="http://localhost:8080/WebMelanie2/ShowReportNotaPedido?nronota="+nro;
 						var urlReq:URLRequest= new URLRequest(source);
 						navigateToURL(urlReq,"_blank");
 						limpiarTodo();
@@ -615,20 +615,20 @@
 		<s:RadioButtonGroup id="stockFuturo"/>
 		<s:RadioButtonGroup id="notaCancelada"/>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wsnotapedido" wsdl="http://192.168.1.101:8080/ServiceNotaPedido/NotaPedidoWs?WSDL">
+		<s:WebService id="wsnotapedido" wsdl="http://localhost:8080/ServiceNotaPedido/NotaPedidoWs?WSDL">
 			<s:operation name="agregarNotaPedido" fault="operationNota_faultHandler(event)"
 						 result="operationNota_resultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
 		<s:WebService id="wstarjetascreditodebito" 
-					  wsdl="http://192.168.1.101:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="false"
+					  wsdl="http://localhost:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="false"
 					  >
 			<s:operation name="searchAllTarjetasCreditoDebito" result="operation1_resultHandler(event)" fault="operation1_faultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
-		<s:WebService wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL"
+		<s:WebService wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"
 					  id="cli" showBusyCursor="false">
 			<s:operation fault="operationFaultGetClient(event)"
 						 result="operationResultGetClient(event)" 
@@ -642,7 +642,7 @@
 			</s:operation>
 			
 		</s:WebService>
-		<s:WebService id="wsempleados" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
+		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
 			<s:operation name="selectAllEmpleados"
 						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
 						 result="operation2_resultHandlerSelectAllEmpleados(event)">
@@ -657,9 +657,9 @@
 	</fx:Declarations>
 	
 	
-	<s:TextArea id="txtObservacionesNota" x="460" y="137" width="402" height="97" fontSize="16"
+	<s:TextArea id="txtObservacionesNota" x="410" y="137" width="495" height="98" fontSize="16"
 				maxChars="32000"/>
-	<s:Label x="457" y="124" fontSize="14" fontWeight="bold" text="Observaciones:"/>
+	<s:Label x="409" y="124" fontSize="14" fontWeight="bold" text="Observaciones:"/>
 	<controls:MaskedTextInput id="txtnumerocuponpago" x="665" y="32" fontFamily="Verdana"
 							  fontSize="16" inputMask="####-####-####-####" maxChars="19"
 							  toolTip="Ingrese en Número de Tarjeta de Crédito o Débito del Plástico"/>
