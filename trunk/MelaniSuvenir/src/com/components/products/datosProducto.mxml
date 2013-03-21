@@ -22,7 +22,7 @@
 		<mx:StringValidator id="descV" source="{txtdescripcion}"
 							property="text" minLength="2" maxLength="80"
 							required="true" requiredFieldError="Debe Ingresar la descripción y/o nombre del producto"/>
-		<mx:WebService id="servicesProducto" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?WSDL"
+		<mx:WebService id="servicesProducto" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?WSDL"
 					   
 					   showBusyCursor="false"
 					   useProxy="false">
@@ -60,7 +60,7 @@
 			private var popup:Progress;
 			[Bindable]
 				private var xmllistproducto:XMLList;
-			
+			public var indice:Number=0;
 			
 		
 			private function tranferirFocus(keyPress:KeyboardEvent):void{
@@ -161,12 +161,12 @@
 				
 			}
 			protected function producto_resultHandler(event:ResultEvent):void{
-				var indice:Number;
 				PopUpManager.removePopUp(popup);
-				PopUpManager.removePopUp(this);
+				
 				xmllistproducto=new XMLList(event.result);
 				
 				indice = new Number(product[product.length-1].id);
+				
 				switch(indice)
 				{
 					case 0:
@@ -199,7 +199,10 @@
 						
 					default:
 					{
-						Alert.show("OPERACIÓN EXITOSA PRODUCTO Nº "+indice);
+						
+						
+						PopUpManager.removePopUp(this);
+						Alert.show("OPERACIÓN EXITOSA PRODUCTO '"+product[product.length-1].descripcion+"' \nAGREGADO CON ÉXITO");
 				
 				
 						break;
@@ -225,7 +228,7 @@
 				PopUpManager.removePopUp(this);
 				PopUpManager.removePopUp(popup);
 				
-				Alert.show("SE PRODUJO UN ERROR CON EL PRODUCTO, REVISE");			
+				Alert.show("SE PRODUJO UN ERROR AL ALMACENAR\n EL PRODUCTO, REVISE");			
 			}
 			
 			protected function group1_creationCompleteHandler(event:FlexEvent):void
@@ -268,7 +271,7 @@
 		<mx:FormItem label="Descripcion" labelStyleName="myFormItemLabelStyle">
 			<mx:TextInput id="txtdescripcion" width="214" fontFamily="Verdana" fontSize="16"
 						  fontWeight="bold"
-						  tabIndex="0" restrict="a-z A-Z ñ-Ñ"
+						  tabIndex="0" restrict="a-z A-Z ñ-Ñ 0-9_"
 						  toolTip="Ingresar la descripción del producto!!!"
 						  
 						  />			

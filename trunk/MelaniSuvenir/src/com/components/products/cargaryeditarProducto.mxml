@@ -276,7 +276,7 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:XMLListCollection id="product" source="{xmllistproducto.producto}"/>
-		<mx:WebService id="servicesProducto" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?WSDL"
+		<mx:WebService id="servicesProducto" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?WSDL"
 					   
 					   showBusyCursor="true"
 					   useProxy="false">
@@ -318,7 +318,7 @@
 	<s:Label x="45" y="249" fontSize="16" fontWeight="bold" text="Descripcion:"
 			 verticalAlign="bottom"/>
 	<s:TextInput id="txtdescripcion" x="44" y="268" width="160" fontSize="16"
-				 prompt="Ingrese la descripcion del producto..."/>
+				 prompt="Ingrese la descripcion del producto..." restrict="a-z A-Z ñ-Ñ 0-9_"/>
 	<s:Label x="287" y="251" fontSize="16" fontWeight="bold" text="CodigoProducto:"
 			 verticalAlign="bottom"/>
 	<s:Label x="45" y="294" fontSize="16" fontWeight="bold" text="Precio:" verticalAlign="bottom"/>
