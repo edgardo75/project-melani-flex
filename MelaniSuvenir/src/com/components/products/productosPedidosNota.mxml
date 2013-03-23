@@ -889,7 +889,7 @@
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			private function calculardescuento():void{
 				var b:Boolean=false;
-				if(int(mskdescuentopesos.text)>0){
+				if(Number(Number(mskdescuentopesos.text).toFixed(3))>=0){
 					for(var i:int=0;i<arrayDg.length && !b;i++){
 						if(Number(arrayDg[i].porc_desc) > 0){
 							b=true;
@@ -906,8 +906,23 @@
 					if(b)
 						return;
 				
-					if(Number(porc_desc_total.toFixed(3))>0)
+					if(Number(porc_desc_total.toFixed(3))>0){
 						Alert.show("YA HAY CALCULOS CON PORCENTAJES DE DESCUENTO, VERIFIQUE!!!");
+						return;
+					}else{
+							if(Number(lblTotApagar.text)<Number(mskdescuentopesos.text)){
+								Alert.show("EL CALCULO NO SE PUEDE REALIZAR, VERIFIQUE!!!");
+							return;
+							}else{
+							var descuentopesos:Number=0;
+							descuentopesos=Number(Number(lblTotApagar.text)-Number(mskdescuentopesos.text));
+							lbldescuento.text=Number(descuentopesos).toFixed(3);
+							}
+					
+					}
+					
+					
+					
 					
 				
 				}
