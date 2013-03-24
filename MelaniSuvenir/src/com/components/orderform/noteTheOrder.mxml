@@ -58,7 +58,7 @@
 			protected function operationFaultGetClient(event:FaultEvent):void
 			{
 				PopUpManager.removePopUp(popup);
-				Alert.show("Error "+event.fault.toString());
+				Alert.show("Error en el Servidor!!!");
 				
 			}
 			
@@ -270,7 +270,7 @@
 			protected function btnGuardarNota_clickHandler(event:MouseEvent):void
 			{
 				if(int(productscomp.lblTotApagar.text)<=-1)
-					Alert.show("IMPOSIBLE ALMACENAR PRESUPUESTO \nCORRIJA POR FAVOR!!!");
+					Alert.show("IMPOSIBLE ALMACENAR NOTA DE PEDIDO \nCORRIJA POR FAVOR!!!");
 				else{
 							//********************************Chequeamos que haya un Vendedor Seleccionado en el ComboBox++++++++++++++++++++++++
 							
@@ -455,8 +455,12 @@
 					xmlnota+="<cancelado>"+canceladanota+"</cancelado>\n" +
 						"<usuario_cancelo_nota>0</usuario_cancelo_nota>\n" ;
 				}
-				xmlnota+="<descuentonota>"+productscomp.lbldescuento.text+"</descuentonota>\n" +				
-				"<porcentajerecargo>"+productscomp.tot_recargo+"</porcentajerecargo>\n" +
+				xmlnota+="<descuentonota>"+productscomp.lbldescuento.text+"</descuentonota>\n" ;
+					if(Number(productscomp.desc_resto.toFixed(3))>0)
+						xmlnota+="<descuentopesos>" +Number(Number(productscomp.lblTotApagar.text)-Number(productscomp.lbldescuento.text)).toFixed(3)+"</descuentopesos>";
+					else
+						xmlnota+="<descuentopesos>0</descuentopesos>";
+					xmlnota+="<porcentajerecargo>"+productscomp.tot_recargo+"</porcentajerecargo>\n" +
 				"<montototalapagar>"+productscomp.lblTotApagar.text+"</montototalapagar>\n"+
 				"<observaciones>" +this.txtObservacionesNota.text+"</observaciones>\n" +
 				"<pendiente>"+pendiente+"</pendiente>\n"+
@@ -509,7 +513,7 @@
 			protected function operationNota_faultHandler(event:FaultEvent):void
 			{
 				PopUpManager.removePopUp(popup);
-				Alert.show(event.fault.toString());
+				Alert.show("ERROR EN EL SERVIDOR AL AGREGAR NOTA DE PEDIDO");
 				
 			}
 			
@@ -688,7 +692,7 @@
 							  restrict="0-9" toolTip="Ingrese Número de Documento!!!"/>
 	<s:Label x="46" y="97" fontSize="16" fontWeight="bold" text="Nombre:"/>
 	<s:Label x="33" y="64" fontSize="16" fontWeight="bold" text="Cliente N°:"/>
-	<s:Label id="lblnocli" x="115" y="62" width="124" fontFamily="Verdana" fontSize="18"
+	<s:Label id="lblnocli" x="115" y="62" width="187" fontFamily="Verdana" fontSize="18"
 			 fontWeight="bold" verticalAlign="bottom"/>
 	<s:TextInput id="txtnombrecliente" x="114" y="85" width="188" fontSize="18" maxChars="40"
 				 prompt="Ingrese Nombre..." restrict="a-z A-Z ñ-Ñ" />
