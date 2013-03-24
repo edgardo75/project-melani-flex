@@ -135,7 +135,7 @@
 			
 			protected function operation2_resultHandler(event:ResultEvent):void
 			{
-				
+			
 				xmlNotas=new XMLList(event.result);
 				
 				addgrid();
@@ -306,6 +306,10 @@
 				detallenotas.source=notas[adgNotas.selectedIndex].detallenota.itemdetalle;		
 				
 				mskdocumento.text=String(nrodocucli);
+				
+				mskdescuentopesos.text=notas[adgNotas.selectedIndex].descuentopesos;
+				
+				desc_resto=Number(notas[adgNotas.selectedIndex].descuentopesos);
 				
 				if(Number(notas[adgNotas.selectedIndex].usuarioexpidionota)==Number(0))
 					lblexpidiovendedor.text="-";
@@ -573,6 +577,8 @@
 								txtpreciop.text="";
 								mskcantidad.text="";		
 								mskrecargo.text="0.0";
+								mskdescuentopesos.text="0.0";
+								mskanticipo.text="0.0";
 								btnremover.enabled=false;
 								lblTotApagar.text="0.000";
 								lblTotGral.text="0.000";
@@ -751,6 +757,8 @@
 									mskrecargo.text="0.0";
 									btnremover.enabled=false;
 									lblTotApagar.text="0.000";
+									mskdescuentopesos.text="0.0";
+									mskanticipo.text="0.0";
 									lblTotGral.text="0.000";
 									porc_d=0;
 									porc_desc_total=0;		
@@ -929,6 +937,9 @@
 								}
 								
 							}else{
+								if(desc_resto>0){					
+									return;
+								}
 								//-----------------------------------------------------------------------------------------------------------------------------
 								if(col==5&&oldValue==0){
 									//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1005,7 +1016,9 @@
 									
 									
 								}else{
-									
+									if(desc_resto>0){					
+										return;
+									}
 									if(col==5&&newValue==0){
 										
 										grid.selectedItem.subtotal=grid.selectedItem.price*grid.selectedItem.countt;
@@ -1047,7 +1060,9 @@
 										
 										
 									}else{
-										
+										if(desc_resto>0){					
+											return;
+										}
 										if(col==5&&newValue>0){
 											
 											porcentajedescuento=newValue;
@@ -1314,6 +1329,7 @@
 				cmbVendedores.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txtdescuento.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				mskcantidad.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				mskdescuentopesos.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				mskrecargo.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				mskanticipo.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				btnactualizar.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
@@ -1406,10 +1422,56 @@
 					if(KeyPress.currentTarget.toString().indexOf("txtpassword")!=-1&&txtpassword.text.length>0)
 						btnactualizar.setFocus();
 					
+					if(KeyPress.currentTarget.toString().indexOf("mskdescuentopesos")!=-1)
+						calculardescuento();
 					
 					
 				}
 			}
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			private function calculardescuento():void{
+				var b:Boolean=false;
+				if(Number(Number(mskdescuentopesos.text).toFixed(3))>=0){
+					for(var i:int=0;i<arrayDg.length && !b;i++){
+						if(Number(arrayDg[i].porc_desc) > 0){
+							b=true;
+							
+							Alert.show("No se puede calcular el descuento por que hay productos con descuentos en el listado!!!");
+							txtdescuento.text="0.0";
+							
+							
+						}
+						
+						
+					}
+					
+					if(b)
+						return;
+					
+					if(Number(porc_desc_total.toFixed(3))>0){
+						Alert.show("YA HAY CALCULOS CON PORCENTAJES DE DESCUENTO, CORRIJA!!!");
+						return;
+					}else{
+						if(Number(lblTotApagar.text)<Number(mskdescuentopesos.text)){
+							Alert.show("EL CALCULO NO SE PUEDE REALIZAR, VERIFIQUE!!!");
+							return;
+						}else{
+							
+							desc_resto=Number(Number(lblTotApagar.text)-Number(mskdescuentopesos.text));
+							lbldescuento.text=Number(desc_resto).toFixed(3);
+						}
+						
+					}
+					
+					
+					
+					
+					
+				}
+				
+				
+			}
+			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			//****************************************************************************************************
 			protected function getDatosXML():String{
 				var entregado:int=0;
@@ -1426,6 +1488,8 @@
 					mskrecargo.text="0.0";
 				if(mskanticipo.text.length==0)
 					mskanticipo.text="0.0";
+				if(mskdescuentopesos.text.length==0)
+					mskdescuentopesos.text="0.0";
 				var pendiente:int=1;
 				if(rdbentregadosi.selected){
 					entregado=1;
@@ -1490,8 +1554,13 @@
 					xmlnota+="<cancelado>"+canceladanota+"</cancelado>\n" +
 						"<usuario_cancelo_nota>0</usuario_cancelo_nota>\n" ;
 				}
-				xmlnota+="<descuentonota>"+lbldescuento.text+"</descuentonota>\n" +				
-					"<porcentajerecargo>"+tot_recargo_porc+"</porcentajerecargo>\n" +
+				xmlnota+="<descuentonota>"+lbldescuento.text+"</descuentonota>\n" ;
+				if(Number(desc_resto.toFixed(3))>0)
+					xmlnota+="<descuentopesos>" +Number(Number(lblTotApagar.text)-Number(lbldescuento.text)).toFixed(3)+"</descuentopesos>";
+				else
+					xmlnota+="<descuentopesos>0</descuentopesos>";
+				
+					xmlnota+="<porcentajerecargo>"+tot_recargo_porc+"</porcentajerecargo>\n" +
 					"<montototalapagar>"+lblTotApagar.text+"</montototalapagar>\n"+
 					"<observaciones>" +this.txtobservaciones.text+"</observaciones>\n" +
 					"<pendiente>"+pendiente+"</pendiente>\n"+
@@ -1649,8 +1718,12 @@
 				if(b)
 					return;
 				
-				
-				calcularDescuentoVariant();
+				if(desc_resto==0)			
+					calcularDescuentoVariant();
+				else{
+					Alert.show("YA HAY CALCULADO UN DESCUENTO, VERIFIQUE!!!");
+					return;
+				}
 				
 				
 				
@@ -1719,6 +1792,8 @@
 				mskcantidad.text="";
 				mskrecargo.text="0.0";
 				mskanticipo.text="0";
+				mskdescuentopesos.text="0.0";
+				mskanticipo.text="0.0";
 				btnremover.enabled=false;
 				lblTotApagar.text="0.000";
 				lblTotGral.text="0.000";
@@ -1757,7 +1832,7 @@
 			}
 			protected function operation1_faultGetRecord(event:FaultEvent):void
 			{
-				Alert.show("ERROR "+event.fault.toString());
+				Alert.show("Error al Conectar al Servidor!!!");
 				
 			}
 			protected function operation1_resulGetRecord(event:ResultEvent):void
@@ -1868,7 +1943,9 @@
 					btnremover.enabled=false;
 					lblTotApagar.text="0.000";
 					lblTotGral.text="0.000";
-					mskanticipo.text="0.000";
+					mskanticipo.text="0.0";
+					mskdescuentopesos.text="0.0";
+					
 					mskrecargo.text="0.000";
 					porc_d=0;
 					porc_desc_total=0;		
@@ -2278,7 +2355,7 @@
 				//----------------------------------------------------------
 				totGral=0;
 				txtpreciop.text="";
-				mskanticipo.text="0";
+				
 				mskrecargo.text="";
 				
 				totGralDesc=0;
@@ -2289,6 +2366,8 @@
 				mskrecargo.text="0.0";
 				mskisearchidnota.text="";
 				txtpreciop.text="";
+				mskdescuentopesos.text="0.0";
+				mskanticipo.text="0.0";
 				mskcantidad.text="";			
 				txtobservaciones.text="";
 				nrodocucli=0;
@@ -2523,7 +2602,7 @@
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
 	<s:Label x="570" y="542" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="RECARGO %:"
 			 textAlign="right"/>
-	<controls:MaskedTextInput id="mskrecargo" x="679" y="534" width="60" fontFamily="Verdana" text="0.00" maxChars="5"
+	<controls:MaskedTextInput id="mskrecargo" x="679" y="534" width="74" fontFamily="Verdana" text="0.00" maxChars="5"
 							  fontSize="16" restrict="0-9." toolTip="Ingresa un Porcentaje de recargo total para los productos cargados"/>
 	<s:Label x="574" y="571" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="ANTICIPO $:"
 			 textAlign="right"/>
@@ -2625,6 +2704,9 @@
 			 fontSize="10" verticalAlign="bottom"/>
 	<s:Label id="lblvendedocancelo" x="699" y="160" width="197" height="16" fontFamily="Verdana"
 			 fontSize="10" verticalAlign="bottom"/>
+	<s:Label x="553" y="597" fontFamily="Verdana" fontSize="16" text="$ DESCUENTO:" />
+	<controls:MaskedTextInput id="mskdescuentopesos" x="680" y="590" width="74" fontFamily="Verdana" text="0.0" maxChars="5"  restrict="0-9."
+							  fontSize="16"/>
 </s:Group>
 
 

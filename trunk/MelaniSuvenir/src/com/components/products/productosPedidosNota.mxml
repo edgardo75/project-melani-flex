@@ -53,7 +53,7 @@
 			//---------------------------------------------------------------------------
 			protected function operation1_faultHandler(event:FaultEvent):void
 			{
-				Alert.show("ERROR "+event.fault.toString());
+				Alert.show("ERROR EN EL SERVIDOR");
 				
 			}
 			//---------------------------------------------------------------------------
@@ -178,6 +178,7 @@
 								anticipo=0;
 								porc_desc_total=0;		
 								lbldescuento.text="0.000";
+								mskdescuentopesos.text="0.000";
 								lblsaldo.text="0.000";
 								lbltotalconrecargo.text="0.000";
 								desc_resto=0;
@@ -350,6 +351,7 @@
 									porc_desc_total=0;		
 									lbldescuento.text="0.000";
 									lblsaldo.text="0.000";
+									mskdescuentopesos.text="0.000";
 									lbltotalconrecargo.text="0.000";
 									desc_resto=0;
 									tot_recargo=0;
@@ -491,27 +493,27 @@
 														
 														
 														
-														for(var r:int=0;r<arrayDg.length;r++){
-															if(arrayDg[r].idproduct!=grid.selectedItem.idproduct){
-																
-																if(arrayDg[r].porc_desc>0){
-																	tempTotDesc=tempTotDesc+Number(arrayDg[r].prec_descuento);
-																	tempPorcDes=tempPorcDes+Number(arrayDg[r].porc_desc);
+																for(var r:int=0;r<arrayDg.length;r++){
+																	if(arrayDg[r].idproduct!=grid.selectedItem.idproduct){
+																		
+																		if(arrayDg[r].porc_desc>0){
+																			tempTotDesc=tempTotDesc+Number(arrayDg[r].prec_descuento);
+																			tempPorcDes=tempPorcDes+Number(arrayDg[r].porc_desc);
+																		}
+																		if(arrayDg[r].subtotal>0)
+																			tottemp=tottemp+Number(Number(arrayDg[r].price*arrayDg[r].countt).toFixed(3));
+																	}
 																}
-																if(arrayDg[r].subtotal>0)
-																	tottemp=tottemp+Number(Number(arrayDg[r].price*arrayDg[r].countt).toFixed(3));
-															}
-														}
-														
-														totGral=tottemp;
-														
-														totGralDesc=0;
-														
-														totGralDesc=Number(tempTotDesc.toFixed(3));
-														
-														temp_tot_porc_desc=0;
-														
-														temp_tot_porc_desc=Number(tempPorcDes.toFixed(3));
+																
+																totGral=tottemp;
+																
+																totGralDesc=0;
+																
+																totGralDesc=Number(tempTotDesc.toFixed(3));
+																
+																temp_tot_porc_desc=0;
+																
+																temp_tot_porc_desc=Number(tempPorcDes.toFixed(3));
 													
 													
 													}
@@ -524,6 +526,9 @@
 								
 								}else{
 									//-----------------------------------------------------------------------------------------------------------------------------
+									if(desc_resto>0){					
+										return;
+									}
 									if(col==5&&oldValue==0){
 										//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 										
@@ -599,7 +604,9 @@
 										
 										
 									}else{
-										
+										if(desc_resto>0){					
+											return;
+										}
 										if(col==5&&newValue==0){
 										
 											grid.selectedItem.subtotal=grid.selectedItem.price*grid.selectedItem.countt;
@@ -641,7 +648,9 @@
 											
 											
 										}else{
-											
+											if(desc_resto>0){					
+												return;
+											}
 											if(col==5&&newValue>0){
 											
 													porcentajedescuento=newValue;
@@ -907,16 +916,16 @@
 						return;
 				
 					if(Number(porc_desc_total.toFixed(3))>0){
-						Alert.show("YA HAY CALCULOS CON PORCENTAJES DE DESCUENTO, VERIFIQUE!!!");
+						Alert.show("YA HAY CALCULOS CON PORCENTAJES DE DESCUENTO, CORRIJA!!!");
 						return;
 					}else{
 							if(Number(lblTotApagar.text)<Number(mskdescuentopesos.text)){
 								Alert.show("EL CALCULO NO SE PUEDE REALIZAR, VERIFIQUE!!!");
 							return;
 							}else{
-							var descuentopesos:Number=0;
-							descuentopesos=Number(Number(lblTotApagar.text)-Number(mskdescuentopesos.text));
-							lbldescuento.text=Number(descuentopesos).toFixed(3);
+							
+							desc_resto=Number(Number(lblTotApagar.text)-Number(mskdescuentopesos.text));
+							lbldescuento.text=Number(desc_resto).toFixed(3);
 							}
 					
 					}
@@ -1018,7 +1027,7 @@
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 				
 				calcularRecargoVariant();
-				//calcularAnticipo();
+			
 			
 			
 			}
@@ -1029,6 +1038,14 @@
 				
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 				
+				if(Number(txtdescuento.text)<=0){
+					lbldescuento.text="0.000";
+					porc_desc_total=0;
+					totGralDesc=0;
+					return;
+				
+				}
+					
 				
 				for(var i:int=0;i<arrayDg.length && !b;i++){
 					if(Number(arrayDg[i].porc_desc) > 0){
@@ -1046,15 +1063,13 @@
 				if(b)
 					return;
 				
+				if(desc_resto==0)			
+					calcularDescuentoVariant();
+				else
+					Alert.show("YA HAY CALCULADO UN DESCUENTO, VERIFIQUE!!!");
 				
-				calcularDescuentoVariant();
 				
-				
-				/*if(int(lbltotalconrecargo.text)>0)
-					calcularRecargoVariant();
-						
-						if(int(mskanticipo.text)>0)
-							anticipocalculoreuso();*/	
+			
 						
 				
 			
@@ -1156,7 +1171,7 @@
 						
 					}
 				//---------------------------------------------------------------------------------
-					//totGralDesc=Number(tempTotDesc.toFixed(3))-Number(Number(arrayDg[adglistpedprod.selectedIndex].prec_descuento).toFixed(3));
+					
 					temp_tot_porc_desc=Number(tempPorcDes.toFixed(2))-Number(Number(arrayDg[adglistpedprod.selectedIndex].porc_desc).toFixed(3));
 					var tot_desc:Number=0;
 					
@@ -1210,6 +1225,7 @@
 						porc_desc_total=0;		
 						lbldescuento.text="0.000";
 						lblsaldo.text="0.000";
+						mskdescuentopesos.text="0.000";
 						lbltotalconrecargo.text="0.000";
 						mskanticipo.text="0.000";
 						mskrecargo.text="0.000";
@@ -1298,6 +1314,7 @@
 				porc_d=0;
 				porc_desc_total=0;
 				lbldescuento.text="0.000";
+				mskdescuentopesos.text="0.000";
 				lbltotalconrecargo.text="0.000";
 				lblsaldo.text="0.000";
 				desc_resto=0;
@@ -1343,6 +1360,7 @@
 				lbltotalconrecargo.text="0.000";
 				mskanticipo.text="0.000";
 				mskrecargo.text="0.000";
+				mskdescuentopesos.text="0.000";
 				desc_resto=0;
 				tot_recargo=0;
 				temp_tot_porc_desc=0;
@@ -1463,16 +1481,16 @@
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
 	<s:Label x="592" y="357" fontFamily="Verdana" fontSize="16" fontWeight="normal" text=" RECARGO %:"
 			 textAlign="right"/>
-	<controls:MaskedTextInput id="mskrecargo" x="708" y="349" width="60" fontFamily="Verdana" text="0.00" maxChars="5"
+	<controls:MaskedTextInput id="mskrecargo" x="708" y="349" width="72" fontFamily="Verdana" text="0.00" maxChars="5"
 							  fontSize="16" restrict="0-9." toolTip="Ingresa un Porcentaje de recargo total para los productos cargados"/>
 	<s:Button id="btncargarProducto" x="25" y="269" height="30" label="Cargar Producto"
 			  click="btncargarProducto_clickHandler(event)" fontSize="16"
 			  toolTip="Muestra una Ventana para cargar un Producto"/>
 	<s:Label x="602" y="386" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="ANTICIPO $:"
 			 textAlign="right"/>
-	<controls:MaskedTextInput text="0" id="mskanticipo" maxChars="5" x="708" y="378" width="60" fontFamily="Verdana"
-							  fontSize="16" restrict="0-9"/>
+	<controls:MaskedTextInput text="0.0" id="mskanticipo" maxChars="5" x="708" y="378" width="72" fontFamily="Verdana"
+							  fontSize="16" restrict="0-9."/>
 	<s:Label x="582" y="412" fontFamily="Verdana" fontSize="16" text="$ DESCUENTO:" />
-	<controls:MaskedTextInput id="mskdescuentopesos" x="709" y="405" width="59" fontFamily="Verdana" text="0.0" maxChars="5"  restrict="0-9."
+	<controls:MaskedTextInput id="mskdescuentopesos" x="709" y="405" width="71" fontFamily="Verdana" text="0.0" maxChars="5"  restrict="0-9."
 							  fontSize="16"/>
 </s:Group>

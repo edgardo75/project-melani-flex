@@ -337,7 +337,7 @@
 			  click="btnguardar_clickHandler(event)" fontSize="16"/>
 	<s:Button id="btnCloseClientComponent" x="617" y="10" width="16" height="19"
 			  click="btnClose_clickHandler(event)" icon="assets/icon_close.png"/>
-	<s:Label x="184" y="43" color="#ADF2C7" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="184" y="43" color="#3FF182" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="CARGAR Y EDITAR PRODUCTOS"/>
 	<s:Label x="455" y="252" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="Productos Cargados"/>
