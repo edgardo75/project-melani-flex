@@ -110,7 +110,7 @@
 			protected function operation1_faultHandler(event:FaultEvent):void
 			{
 				PopUpManager.removePopUp(popupWait);
-				Alert.show(event.fault.toString());
+				Alert.show("ERROR EN EL SERVIDOR CON DATOS\n PERSONALES DE CLIENTE");
 				
 			}
 			//-----------------------------------------------------------

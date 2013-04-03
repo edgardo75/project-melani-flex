@@ -321,7 +321,7 @@
 			protected function operation1_faultHandler(event:FaultEvent):void
 			{
 				PopUpManager.removePopUp(popup);
-				Alert.show("FALLÓ EL SERVICIO, VERIFIQUE!!!"+event.fault.toString());
+				Alert.show("FALLÓ EL SERVICIO, VERIFIQUE!!!");
 				
 			}
 			

@@ -20,6 +20,8 @@
 			[Bindable]
 			private var idproducto:int=0;
 			private var popup:Progress;
+			
+			
 			protected function btnnuevo_clickHandler(event:MouseEvent):void
 			{
 				if(txtcodigoproducto.editable==false)
@@ -50,6 +52,7 @@
 					"<cantidaddisponible>"+txtcantidaddisponible.text+"</cantidaddisponible>\n"+
 					"<fechaCarga></fechaCarga>\n"+
 					"<img>0</img>\n" +
+					"<idusuario>12</idusuario>\n"+
 					"</producto>\n";
 				
 				return producto;	
@@ -89,7 +92,11 @@
 				popup=Progress(PopUpManager.createPopUp(this,Progress,true));
 				PopUpManager.centerPopUp(popup);
 				
-				servicesProducto.actualizarProducto(getDatos());
+				
+				if(idproducto==0)
+					servicesProducto.addProducto(getDatos());
+				else 
+					servicesProducto.actualizarProducto(getDatos());
 					
 				
 				
@@ -230,7 +237,7 @@
 			}
 			protected function producto_faultHandler(event:FaultEvent):void{
 				PopUpManager.removePopUp(popup);
-				Alert.show("   SE PRODUJO UN ERROR CON EL PRODUCTO, REVISE   ");		
+				Alert.show("   SE PRODUJO UN ERROR AL ACTUALIZAR\n UN PRODUCTO, REVISE!!!   ");		
 			
 			
 			}
@@ -248,7 +255,7 @@
 			//---------------------------------------------------------------------------
 			protected function operation1_faultHandler(event:FaultEvent):void
 			{
-				Alert.show("ERROR "+event.fault.toString());
+				Alert.show("ERROR AL BUSCAR LISTA DE PRODUCTOS");
 				
 			}
 			//---------------------------------------------------------------------------
@@ -276,23 +283,33 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:XMLListCollection id="product" source="{xmllistproducto.producto}"/>
-		<mx:WebService id="servicesProducto" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?WSDL"
+		<s:WebService id="servicesProducto" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?WSDL"
 					   
 					   showBusyCursor="true"
 					   useProxy="false">
-			<mx:operation name="actualizarProducto"
+			
+			
+			<s:operation name="actualizarProducto"
 						  resultFormat="object"
 						  result="producto_resultHandler(event)"
 						  fault="producto_faultHandler(event)">				
-			</mx:operation>
-			<mx:operation name="searchAllProductos"
+			</s:operation>
+			<s:operation name="searchAllProductos"
 						  fault="operation1_faultHandler(event)"
 						  result="operation1_resultHandler(event)">
-			</mx:operation>
-		</mx:WebService>
+			</s:operation>
+			<s:operation name="addProducto"
+						 result="producto_resultHandler(event)"
+						 fault="producto_faultHandler(event)">
+				
+				
+			</s:operation>
+			
+			
+		</s:WebService>
 	</fx:Declarations>
 	
-	<s:DataGrid id="adgproductos" x="44" y="67" width="590" height="174"
+	<s:DataGrid id="adgproductos" x="44" y="67" width="590" height="174" click="adgproductos_doubleClickHandler(event)"
 				doubleClick="adgproductos_doubleClickHandler(event)" doubleClickEnabled="true" alternatingRowColors="[#ffffff,#fcff4f7]"
 				fontFamily="Verdana" fontSize="16" requestedRowCount="4">
 		<s:columns>

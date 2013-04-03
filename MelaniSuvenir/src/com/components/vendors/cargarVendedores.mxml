@@ -571,7 +571,7 @@
 			</s:ArrayList>
 		</s:columns>		
 	</s:DataGrid>
-	<s:Label x="179" y="10" color="#ADF2C7" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="179" y="10" color="#2BCC68" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="CARGA DE EMPLEADOS PARA OPERAR EL SISTEMA" textAlign="center"/>
 	<s:Label x="27" y="190" fontSize="20" fontWeight="bold" text="Nombre:"/>
 	<s:TextInput id="txtnombre" x="109" y="186" width="214" fontSize="16"
