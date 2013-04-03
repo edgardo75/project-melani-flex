@@ -222,7 +222,7 @@
 			//----------------------------------------------------------------------------------
 			protected function operation2_faultHandler(event:FaultEvent):void
 			{
-				Alert.show(event.fault.toString());
+				Alert.show("ERROR EN EL SERVIDOR, AL SELECCIONAR \n TODO EL LISTADO DE PRESUPUESTOS");
 				
 			}
 			
@@ -237,7 +237,7 @@
 			//---------------------------------------------------------------------------------------------------
 			protected function operation3_faultHandler(event:FaultEvent):void
 			{
-				Alert.show(event.fault.toString());
+				Alert.show("ERROR AL SELECCIONAR PRESUPUESTOS \n PAGINADOS");
 				
 			}
 			//----------------------------------------------------------------------------------------------
@@ -447,7 +447,7 @@
 			
 			protected function operation4_faultHandler(event:FaultEvent):void
 			{
-				Alert.show(event.fault.toString());
+				Alert.show("ERROR EN EL SERVIDOR AL BUSCAR UN PRESUPUESTO!!!");
 				
 			}
 			

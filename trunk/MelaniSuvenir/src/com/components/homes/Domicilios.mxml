@@ -78,10 +78,10 @@
 				if(cmbprovincias.selectedItemId!=18){
 					cmbprovincias.selectedItemId=18;
 					wslocaliades.searchAllLocalidadesbyidprov(18);
-					cmbLocalidades.selectedItemId=0;
+					cmbLocalidades.selectedItemId=30002;
 				}else{
 					cmbprovincias.selectedItemId=18;
-					cmbLocalidades.selectedItemId=0;
+					cmbLocalidades.selectedItemId=30002;
 				}
 				
 			

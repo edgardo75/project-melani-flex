@@ -6,7 +6,7 @@
 		 width="438" height="256" creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Script>
 		<![CDATA[
-			import com.components.clients.grillaClientes;
+			
 			import com.components.clients.popupClienteNameSecondName;
 			import com.components.products.productosPedidos;
 			
@@ -46,7 +46,7 @@
 			protected function operationFaultGetClient(event:FaultEvent):void
 			{
 				PopUpManager.removePopUp(popup);
-				Alert.show("Error "+event.fault.toString());
+				Alert.show("Error en el servidor al obtener un cliente!!!");
 				
 			}
 			

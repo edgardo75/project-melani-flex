@@ -108,15 +108,23 @@
 					if(cmbTarjetasCreditoDebito.text.length>0){
 						txtnumerocuponpago.setFocus();
 					}
-					if(keypress.currentTarget.toString().indexOf("cmbVendedores")!=-1&&cmbVendedores.selectedItemId>=0)
-						txtpassword.setFocus();
+					if(keypress.currentTarget.toString().indexOf("cmbVendedores")!=-1&&cmbVendedores.selectedItemId>=0){
+						if(cmbVendedores.selectedItem.estado==0)
+							avisoCartelVendedorDeshabilitado();
+						else
+							txtpassword.setFocus();
+					}
+					
 					if(keypress.currentTarget.toString().indexOf("txtpassword")!=-1&&txtpassword.text.length>0)
 						btnGuardarNota.setFocus();
 				}
 				
 				
 			}
+			protected function avisoCartelVendedorDeshabilitado():void{
 			
+				Alert.show("El vendedor está deshabilitado\n para realizar esta operación!!!");
+			}
 			protected function operationFaultSearchClient(event:FaultEvent):void
 			{
 				PopUpManager.removePopUp(popup);
@@ -278,23 +286,28 @@
 								Alert.show("DEBE SELECCIONAR UN VENDEDOR");
 								return;
 							}else{
-								
+								//chequeo si el vendedor está habilitado por sistema para realizar esta operación
+								if(cmbVendedores.selectedItem.estado==0){
+									avisoCartelVendedorDeshabilitado();
+									return;
+								}else{
 								//chequear el vendendor seleccionado con su clave correspondiente
-								if(String(cmbVendedores.selectedItem.clave)==txtpassword.text){
-							
-										//*************************Chequeamos que haya un cliente ya seleccionado********************++
+											if(String(cmbVendedores.selectedItem.clave)==txtpassword.text){
 										
-											if(txtnombrecliente.text.length>0&&txtapellidocliente.text.length>0){
-													if(chequearNumeroCupon())
-														Alert.show("Falta Ingresar un Número de Cupón");
-													else
-														verificarProductosCargados();
+													//*************************Chequeamos que haya un cliente ya seleccionado********************++
 													
+														if(txtnombrecliente.text.length>0&&txtapellidocliente.text.length>0){
+																if(chequearNumeroCupon())
+																	Alert.show("Falta Ingresar un Número de Cupón");
+																else
+																	verificarProductosCargados();
+																
+														}else
+															Alert.show("Faltan Datos del Cliente!!!");
+													//********************************************************************************************
 											}else
-												Alert.show("Faltan Datos del Cliente!!!");
-										//********************************************************************************************
-								}else
-									Alert.show("No coinciden la clave del vendedor seleccionado");
+												Alert.show("No coinciden la clave del vendedor seleccionado");
+								}
 							
 							}
 				}
@@ -308,6 +321,7 @@
 				PopUpManager.centerPopUp(popup);
 			//llamamos al metodo del webservice para almacenar la nota de pedido en el servidor
 			
+				
 			wsnotapedido.agregarNotaPedido(getDatosXML());
              			
 						
@@ -328,7 +342,10 @@
 			
 			for(var i:int=0;i<productscomp.arrayDg.length;i++){
 				temp_tot_desc+=Number(Number(productscomp.arrayDg[i].prec_descuento).toFixed(3));
-				temp_tot_porc_desc+=Number(Number(productscomp.arrayDg[i].porc_desc).toFixed(3));
+				if(productscomp.desc_resto>0&&Number(productscomp.arrayDg[i].porc_desc)>0)
+					productscomp.arrayDg[i].porc_desc="0.00";
+				else				
+				   temp_tot_porc_desc+=Number(Number(productscomp.arrayDg[i].porc_desc).toFixed(3));
 				
 				
 				
@@ -455,11 +472,12 @@
 					xmlnota+="<cancelado>"+canceladanota+"</cancelado>\n" +
 						"<usuario_cancelo_nota>0</usuario_cancelo_nota>\n" ;
 				}
-				xmlnota+="<descuentonota>"+productscomp.lbldescuento.text+"</descuentonota>\n" ;
-					if(Number(productscomp.desc_resto.toFixed(3))>0)
-						xmlnota+="<descuentopesos>" +Number(Number(productscomp.lblTotApagar.text)-Number(productscomp.lbldescuento.text)).toFixed(3)+"</descuentopesos>";
+				xmlnota+="<descuentonota>"+Number(productscomp.lbldescuento.text).toFixed(3)+"</descuentonota>\n" ;
+				
+					if(Number(Number(productscomp.mskdescuentopesos.text).toFixed(3))>0)
+						xmlnota+="<descuentopesos>" +Number(productscomp.mskdescuentopesos.text).toFixed(3)+"</descuentopesos>\n";
 					else
-						xmlnota+="<descuentopesos>0</descuentopesos>";
+						xmlnota+="<descuentopesos>0</descuentopesos>\n";
 					xmlnota+="<porcentajerecargo>"+productscomp.tot_recargo+"</porcentajerecargo>\n" +
 				"<montototalapagar>"+productscomp.lblTotApagar.text+"</montototalapagar>\n"+
 				"<observaciones>" +this.txtObservacionesNota.text+"</observaciones>\n" +
@@ -585,6 +603,7 @@
 				cmbTarjetasCreditoDebito.selectedItemId=0;
 				dtfentrega.text="";
 				productscomp.limpiarDetalleProductos();
+				productscomp.cmbproduct.selectedItemId=1;
 				mskdocu.setFocus();
 				
 				

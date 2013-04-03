@@ -72,7 +72,7 @@
 			//---------------------------------------------------------------------------
 			protected function operation1_faultHandler(event:FaultEvent):void
 			{
-				Alert.show("ERROR "+event.fault.toString());
+				Alert.show("ERROR EN EL SERVIDOR AL BUSCAR\n LISTA DE PRODUCTOS");
 				
 			}
 			//---------------------------------------------------------------------------
