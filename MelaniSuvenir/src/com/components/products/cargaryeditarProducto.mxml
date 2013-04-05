@@ -4,7 +4,7 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
 		 xmlns:components="com.hillelcoren.components.*"
-		 width="644" height="418" creationComplete="group1_creationCompleteHandler(event)">
+		 width="722" height="418" creationComplete="group1_creationCompleteHandler(event)">
 	
 	<fx:Script>
 		<![CDATA[
@@ -307,19 +307,23 @@
 			
 			
 		</s:WebService>
+		<s:CurrencyFormatter id="cf" currencySymbol="$" fractionalDigits="3" locale="es-AR"  
+							 decimalSeparator="." groupingSeparator="," currencyISOCode="locale and OS dependent" useCurrencySymbol="false"/>
 	</fx:Declarations>
 	
-	<s:DataGrid id="adgproductos" x="44" y="67" width="590" height="174" click="adgproductos_doubleClickHandler(event)"
-				doubleClick="adgproductos_doubleClickHandler(event)" doubleClickEnabled="true" alternatingRowColors="[#ffffff,#fcff4f7]"
+	<s:DataGrid id="adgproductos" x="44" y="67" width="656" height="174"
+				alternatingRowColors="[#ffffff,#fcff4f7]"
+				click="adgproductos_doubleClickHandler(event)"
+				doubleClick="adgproductos_doubleClickHandler(event)" doubleClickEnabled="true"
 				fontFamily="Verdana" fontSize="16" requestedRowCount="4">
 		<s:columns>
 			<s:ArrayList>
 				<s:GridColumn dataField="id" headerText="id" visible="false"></s:GridColumn>
 				<s:GridColumn dataField="idproduct" headerText="idproduct" visible="false"></s:GridColumn>
-				<s:GridColumn dataField="descripcion" headerText="Descripcion"></s:GridColumn>
-				<s:GridColumn dataField="precio" headerText="Precio"></s:GridColumn>
-				<s:GridColumn dataField="cantidadInicial" headerText="CantInicial"></s:GridColumn>
-				<s:GridColumn dataField="cantidadDisponible" headerText="CantDisponible"></s:GridColumn>
+				<s:GridColumn dataField="descripcion" headerText="Descripcion" ></s:GridColumn>
+				<s:GridColumn dataField="precio" headerText="Precio" formatter="{cf}" width="120"></s:GridColumn>
+				<s:GridColumn dataField="cantidadInicial" headerText="CantInicial" width="110"></s:GridColumn>
+				<s:GridColumn dataField="cantidadDisponible" headerText="CantDisponible" width="110"></s:GridColumn>
 			</s:ArrayList>
 		</s:columns>
 		<s:typicalItem>
@@ -352,7 +356,7 @@
 			  click="btnnuevo_clickHandler(event)" fontSize="16"/>
 	<s:Button id="btnguardar" x="322" y="384" width="89" height="29" label="Guardar"
 			  click="btnguardar_clickHandler(event)" fontSize="16"/>
-	<s:Button id="btnCloseClientComponent" x="617" y="10" width="16" height="19"
+	<s:Button id="btnCloseClientComponent" x="700" y="9" width="16" height="19"
 			  click="btnClose_clickHandler(event)" icon="assets/icon_close.png"/>
 	<s:Label x="184" y="43" color="#3FF182" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="CARGAR Y EDITAR PRODUCTOS"/>

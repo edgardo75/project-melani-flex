@@ -1430,10 +1430,10 @@
 						
 
 					if(KeyPress.currentTarget.toString().indexOf("mskrecargo")!=-1)
-						Alert.show("   Desea Agregar el Recargo % "+mskrecargo.text+" ?","Confirmar Operación   ", Alert.YES | Alert.NO, this, calcularRecargo, null, Alert.NO);
+						Alert.show("   Desea Agregar el Recargo % "+mskrecargo.text+" \nal porcentaje existente % "+tot_recargo_porc+" ?","Confirmar Operación   ", Alert.YES | Alert.NO, this, calcularRecargo, null, Alert.NO);
 					
 					if(KeyPress.currentTarget.toString().indexOf("mskanticipo")!=-1)
-						Alert.show("   Desea Agregar el Anticipo $ "+mskanticipo.text+" ?","Confirmar Operación   ", Alert.YES | Alert.NO, this, calcularAnticipo, null, Alert.NO);
+						Alert.show("   Desea Agregar el Anticipo $ "+mskanticipo.text+" \nal anticipo existente $ "+anticipo+" ?","Confirmar Operación   ", Alert.YES | Alert.NO, this, calcularAnticipo, null, Alert.NO);
 						
 					
 								if(KeyPress.target.toString().indexOf("mskisearchidnota")!=-1){
@@ -1459,7 +1459,7 @@
 						btnactualizar.setFocus();
 					
 					if(KeyPress.currentTarget.toString().indexOf("mskdescuentopesos")!=-1)
-						Alert.show("   Desea Agregar el Descuento en $ "+mskdescuentopesos.text+" ?","Confirmar Operación   ", Alert.YES | Alert.NO, this, calculardescuentopesos, null, Alert.NO);
+						Alert.show("   Desea Agregar el Descuento en $ "+mskdescuentopesos.text+" \nal descuento existente $ "+totGralDesc+" ?","Confirmar Operación   ", Alert.YES | Alert.NO, this, calculardescuentopesos, null, Alert.NO);
 						
 					
 					
@@ -2177,7 +2177,7 @@
 			
 			protected function operation5_resultHandler(event:ResultEvent):void
 			{
-				Alert.show(event.result.toString());
+				
 				if(event.result.toString().indexOf("Error no paso nada ")!=-1)
 					Alert.show("LA CONSULTA NO ARROJÓ RESULTADOS!!!");
 					
@@ -2703,13 +2703,13 @@
 									   resizable="false" sortable="false" textAlign="center"/>
 			<mx:AdvancedDataGridColumn width="45" dataField="price" draggable="false" editable="true"
 									   fontFamily="Verdana" fontSize="10" formatter="{cf}"
-									   headerText="PrecioU" resizable="true" sortable="false"
+									   headerText="PrecioU" resizable="true" sortable="false" color="green"
 									   textAlign="center"/>
 			<mx:AdvancedDataGridColumn editable="true" dataField="porc_desc" fontFamily="Verdana" fontSize="10"
-									   headerText="% Descuento" resizable="false" sortable="false"
+									   headerText="% Descuento" resizable="false" sortable="false" color="red"
 									   textAlign="center" width="33"/>
 			<mx:AdvancedDataGridColumn width="33" dataField="prec_descuento" editable="false"
-									   fontFamily="Verdana" fontSize="10" formatter="{cf}"
+									   fontFamily="Verdana" fontSize="10" formatter="{cf}" color="red"
 									   headerText="Precio Desc"/>
 			<mx:AdvancedDataGridColumn width="52" color="red" dataField="subtotal" draggable="false"
 									   editable="false" fontFamily="Verdana" fontSize="10"
@@ -2732,11 +2732,11 @@
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
 	<s:Label x="457" y="498" width="223" color="#04667F" fontFamily="Verdana" fontSize="16"
 			 fontWeight="bold" text="TOTAL CON RECARGO $:" textAlign="right"/>
-	<s:Label x="457" y="516" width="223" color="#ACAEAD" fontFamily="Verdana" fontSize="16"
+	<s:Label x="457" y="516" width="223" color="#89908D" fontFamily="Verdana" fontSize="16"
 			 fontWeight="bold" text="SALDO $:" textAlign="right"/>
 	<s:Label id="lbltotalconrecargo" x="678" y="496" width="124" color="#04667F" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label id="lblsaldo" x="678" y="515" width="124" color="#ACAEAD" fontFamily="Verdana"
+	<s:Label id="lblsaldo" x="678" y="515" width="124" color="#89908D" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
 	<s:Label x="570" y="542" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="RECARGO %:"
 			 textAlign="right"/>
