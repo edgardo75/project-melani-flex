@@ -977,7 +977,7 @@
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			public function calcularAnticipo():void{
 				if(int(mskanticipo.text)==0||mskanticipo.text.length==0){
-					lblsaldo.text="0.000";
+					lblsaldo.text=Number(totGral-totGralDesc+tot_recargo).toFixed(3);
 					anticipo=0;
 				}else{
 					if(arrayDg.length>0)
@@ -1489,12 +1489,12 @@
 									   resizable="false" sortable="false" textAlign="center"/>
 			<mx:AdvancedDataGridColumn width="45" dataField="price" draggable="false" editable="true"
 									   fontFamily="Verdana" fontSize="10" formatter="{cf}"
-									   headerText="PrecioU" resizable="true" sortable="false"
+									   headerText="PrecioU" resizable="true" sortable="false" color="green"
 									   textAlign="center"/>
 			<mx:AdvancedDataGridColumn editable="true" dataField="porc_desc" fontFamily="Verdana" fontSize="10"
-									   headerText="% Descuento" resizable="false" sortable="false"
+									   headerText="% Descuento" resizable="false" sortable="false" color="red"
 									   textAlign="center" width="33"/>
-			<mx:AdvancedDataGridColumn width="33" dataField="prec_descuento" editable="false"
+			<mx:AdvancedDataGridColumn width="33" dataField="prec_descuento" editable="false" color="red"
 									   fontFamily="Verdana" fontSize="10" formatter="{cf}"
 									   headerText="Precio Desc"/>
 			<mx:AdvancedDataGridColumn width="52" color="red" dataField="subtotal" draggable="false"
@@ -1527,11 +1527,11 @@
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
 	<s:Label x="487" y="301" width="223" color="#04667F" fontFamily="Verdana" fontSize="16"
 			 fontWeight="bold" text="TOTAL CON RECARGO $:" textAlign="right"/>
-	<s:Label x="487" y="319" width="223" color="#9B976A" fontFamily="Verdana" fontSize="16"
+	<s:Label x="487" y="319" width="223" color="#89908D" fontFamily="Verdana" fontSize="16"
 			 fontWeight="bold" text="SALDO $:" textAlign="right"/>
 	<s:Label id="lbltotalconrecargo" x="708" y="299" width="124" color="#04667F" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label id="lblsaldo" x="708" y="318" width="124" color="#9B976A" fontFamily="Verdana"
+	<s:Label id="lblsaldo" x="708" y="318" width="124" color="#89908D" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
 	<s:Label x="592" y="357" fontFamily="Verdana" fontSize="16" fontWeight="normal" text=" RECARGO %:"
 			 textAlign="right"/>
