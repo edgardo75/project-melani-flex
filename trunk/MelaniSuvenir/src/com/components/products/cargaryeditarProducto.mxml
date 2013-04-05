@@ -283,7 +283,7 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:XMLListCollection id="product" source="{xmllistproducto.producto}"/>
-		<s:WebService id="servicesProducto" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?WSDL"
+		<s:WebService id="servicesProducto" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?WSDL"
 					   
 					   showBusyCursor="true"
 					   useProxy="false">
@@ -315,7 +315,7 @@
 				alternatingRowColors="[#ffffff,#fcff4f7]"
 				click="adgproductos_doubleClickHandler(event)"
 				doubleClick="adgproductos_doubleClickHandler(event)" doubleClickEnabled="true"
-				fontFamily="Verdana" fontSize="16" requestedRowCount="4">
+				fontFamily="Verdana" fontSize="12" requestedRowCount="4">
 		<s:columns>
 			<s:ArrayList>
 				<s:GridColumn dataField="id" headerText="id" visible="false"></s:GridColumn>

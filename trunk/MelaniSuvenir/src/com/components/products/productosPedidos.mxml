@@ -4,7 +4,7 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:components="com.hillelcoren.components.*"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
-		 width="844" height="448" initialize="group1_initializeHandler(event)">
+		 width="984" height="448" initialize="group1_initializeHandler(event)">
 	<fx:Script>
 		<![CDATA[
 			import flashx.textLayout.formats.Float;
@@ -1118,7 +1118,7 @@
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="productosWs" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?wsdl"
+		<s:WebService id="productosWs" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?wsdl"
 					  showBusyCursor="true">
 			<s:operation name="searchAllProductos"
 						 fault="operation1_faultHandler(event)"
@@ -1141,7 +1141,7 @@
 	<s:Label x="23" y="67" fontFamily="Verdana" fontSize="16" text="Cantidad:"/>
 	<controls:MaskedTextInput id="mskcantidad" x="108" y="58" width="55" fontFamily="Verdana"
 							  tabEnabled="false" fontSize="16" fontWeight="bold" maxChars="3" restrict="0-9"/>
-	<mx:AdvancedDataGrid id="adglistpedprod" x="25" y="86" width="796" height="149"
+	<mx:AdvancedDataGrid id="adglistpedprod" x="25" y="86" width="870" height="149"
 						 alternatingItemColors="[#adf1f5, white]"
 						 dataChange="adglistpedprod_dataChangeHandler(event)"
 						 designViewDataType="flat" doubleClickEnabled="true"
@@ -1163,15 +1163,15 @@
 									   resizable="false" sortable="false" textAlign="center"/>
 			<mx:AdvancedDataGridColumn width="45" dataField="price" draggable="false" editable="true"
 									   fontFamily="Verdana" fontSize="10" formatter="{cf}"
-									   headerText="PrecioU" resizable="false" sortable="false"
+									   headerText="PrecioU" resizable="false" sortable="false" color="green"
 									   textAlign="center"/>
 			<mx:AdvancedDataGridColumn editable="true" dataField="porc_desc" fontFamily="Verdana" fontSize="10"
-									   headerText="% Descuento" resizable="false" sortable="false"
-									   textAlign="center" width="33"/>
-			<mx:AdvancedDataGridColumn width="33" dataField="prec_descuento" editable="false"
+									   headerText="% Descuento" resizable="false" sortable="false" color="red"
+									   textAlign="center" width="43"/>
+			<mx:AdvancedDataGridColumn width="43" dataField="prec_descuento" editable="false" color="red"
 									   fontFamily="Verdana" fontSize="10" formatter="{cf}"
 									   headerText="Precio Desc"/>
-			<mx:AdvancedDataGridColumn width="52" color="red" dataField="subtotal" draggable="false"
+			<mx:AdvancedDataGridColumn width="52" color="red" dataField="subtotal" draggable="false" 
 									   editable="false" fontFamily="Verdana" fontSize="10"
 									   fontWeight="bold" formatter="{cf}" headerText="SubTotal"
 									   resizable="false" sortable="false" textAlign="right"/>
@@ -1181,30 +1181,30 @@
 							 dropDownRowCount="10" fontSize="16" fontWeight="bold"
 							 labelField="descripcion" matchType="beginning" tabEnabled="false">
 	</components:AutoComplete>
-	<s:Label x="510" y="245" color="#0C0C64" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="634" y="245" color="#0C0C64" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL GRAL $:" verticalAlign="top"/>
-	<s:Label id="lblTotGral" x="645" y="243" width="124" color="#0C0C64" fontFamily="Verdana"
+	<s:Label id="lblTotGral" x="769" y="243" width="124" color="#0C0C64" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
 	<s:Label x="264" y="69" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
 	<controls:MaskedTextInput text="0.00" maxChars="5"  x="381" y="58" width="43" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingrese un porcentaje de descuento"/>
-	<s:Label x="481" y="279" color="#098C1B" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="605" y="279" color="#098C1B" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL A PAGAR $:"/>
-	<s:Label id="lblTotApagar" x="641" y="279" width="127" color="#098C1B" fontFamily="Verdana"
+	<s:Label id="lblTotApagar" x="765" y="279" width="127" color="#098C1B" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
 	<s:Button id="btnremover" x="25" y="248" height="35" label="Remover Todo"
 			  click="btnremover_clickHandler(event)" enabled="false" fontSize="16"
 			  toolTip="Elimina todos Los productos del Listado!!!"/>
-	<s:Label x="514" y="262" width="135" height="14" color="#F84B07" fontFamily="Verdana"
+	<s:Label x="638" y="262" width="135" height="14" color="#F84B07" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="DESCUENTO $:"/>
-	<s:Label id="lbldescuento" x="644" y="262" width="125" color="#F84B07" fontFamily="Verdana"
+	<s:Label id="lbldescuento" x="768" y="262" width="125" color="#F84B07" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label x="424" y="297" width="223" color="#04667F" fontFamily="Verdana" fontSize="16"
+	<s:Label x="548" y="297" width="223" color="#04667F" fontFamily="Verdana" fontSize="16"
 			 fontWeight="bold" text="TOTAL CON RECARGO $:" textAlign="right"/>
-	<s:Label id="lbltotalconrecargo" x="644" y="299" width="124" color="#04667F" fontFamily="Verdana"
+	<s:Label id="lbltotalconrecargo" x="768" y="299" width="124" color="#04667F" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label x="535" y="330" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="RECARGO %:"
+	<s:Label x="662" y="337" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="RECARGO %:"
 			 textAlign="right"/>
-	<controls:MaskedTextInput id="mskrecargo" text="0.00" x="645" y="323" width="49" fontFamily="Verdana"
+	<controls:MaskedTextInput id="mskrecargo" text="0.00" x="772" y="330" width="49" fontFamily="Verdana"
 							  fontSize="16" restrict="0-9." toolTip="Ingresa un Porcentaje de recargo total para los productos cargados"/>
 	<s:Button id="brncargarunproducto" x="25" y="291" height="32" label="Cargar Producto"
 			  click="brncargarunproducto_clickHandler(event)" fontSize="16"

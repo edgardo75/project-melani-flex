@@ -250,8 +250,9 @@
 							  maxChars="20" restrict="0-9"/>
 	<s:Button id="btnAgregarTel" x="379" y="144" label="Agregar"
 			  click="btnAgregarTel_clickHandler(event)" fontSize="16" icon="assets/add.jpg"/>
-	<s:DataGrid id="adgTel" x="18" y="187" width="508" height="128" fontSize="16"
-				requestedRowCount="4" doubleClickEnabled="true" doubleClick="adgTel_doubleClickHandler(event)">
+	<s:DataGrid id="adgTel" x="18" y="187" width="508" height="128"
+				doubleClick="adgTel_doubleClickHandler(event)" doubleClickEnabled="true"
+				fontFamily="Verdana" fontSize="12" requestedRowCount="4">
 		<s:columns>
 			<s:ArrayList>
 				<s:GridColumn dataField="prefijo" headerText="Prefijo"></s:GridColumn>

@@ -15,7 +15,7 @@
 		<s:XMLListCollection id="infotelcli" source="{xmlinfotelcli}"/>
 		
 			<s:WebService id="cliservices" 
-						  wsdl="http://localhost:8080/ServiceClientes/ClientesWs?wsdl" 						  
+						  wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?wsdl" 						  
 						  showBusyCursor="false" 
 						  >
 				<s:operation name="obtenerClienteXTipoAndNumeroDocu"							

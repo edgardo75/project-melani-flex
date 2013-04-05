@@ -67,7 +67,8 @@
 	
 	
 		<mx:AdvancedDataGrid id="adgclientes" width="377" height="238" dataProvider="{clidata}"
-							 designViewDataType="flat" doubleClickEnabled="true" fontSize="16"
+							 designViewDataType="flat" doubleClickEnabled="true"
+							 fontFamily="Verdana" fontSize="12"
 							 itemDoubleClick="adgclientes_itemDoubleClickHandler(event)"
 							 resizableColumns="false">
 			<mx:columns>
