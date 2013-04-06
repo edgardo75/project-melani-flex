@@ -19,6 +19,20 @@ package com.actions
 		
 		[Bindable]
 		public var estado:Boolean=false;
+		[Bindable]
+		public var documento:String;
+		[Bindable]
+		public var email:String;
+		[Bindable]
+		public var observaciones:String;
+		[Bindable]
+		public var genero:String;
+		[Bindable]
+		public var tipodocu:String;
+		[Bindable]
+		public var emptype:String;
+		
+		
 		
 		
 		public function Employee()
