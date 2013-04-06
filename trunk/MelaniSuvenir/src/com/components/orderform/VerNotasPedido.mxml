@@ -2469,7 +2469,7 @@
 																	
 																	
 															}else
-																Alert.show("La clave del vendedor no coincide");
+																Alert.show("El password del empleado no es correcto");
 											}else
 												Alert.show("SELECCIONE LA NOTA CORRESPONDIENTE");
 									}else
@@ -2511,6 +2511,12 @@
 				//----------------------------------------------------------
 				totGral=0;
 				txtpreciop.text="";
+				mskdocumento.text="";
+				lblexpidiovendedor.text="";
+				lblnombreyapecli.text="";
+				lblvendedocancelo.text="";
+				lblvendedoranulo.text="";
+				lblvendedorentrego.text"";
 				
 				mskrecargo.text="";
 				
@@ -2546,9 +2552,8 @@
 				anticipo=0;
 				totRecargo=0;
 				txtpassword.text="";
-				cmbTarjetasCreditoDebito.selectedItemId=0;
-				cmbVendedores.selectedItemId=-1;
-				cmbproduct.selectedItemId=-1;
+				cmbTarjetasCreditoDebito.selectedItemId=0;				
+				cmbproduct.selectedItemId=1;
 				
 				
 			
@@ -2589,6 +2594,7 @@
 					default:
 					{
 						Alert.show("NOTA DE PEDIDO ELIMINADA DE LA BASE DE DATOS");
+						limpiarControles();
 						wsnotas.getRecorCountNotas();
 						break;
 					}
@@ -2605,15 +2611,25 @@
 			
 			protected function button3_clickHandler(event:MouseEvent):void
 			{
-				if(adgNotas.selectionLength>0)
-					Alert.show("Desea eliminar la nota de pedido N° "+notas[adgNotas.selectedIndex].id,"Confirmar Eliminación   ", Alert.YES | Alert.NO, this, delNoteRow, null, Alert.NO);
-				else
-					Alert.show("Debe seleccionar una nota de pedido\n para realizar la operación")
+				if(cmbVendedores.selectedItemId>0){
+					if(txtpassword.text.length>0){
+							if(cmbVendedores.selectedItem.clave==txtpassword.text){
+								if(adgNotas.selectionLength>0)
+									Alert.show("Desea eliminar la nota de pedido N° "+notas[adgNotas.selectedIndex].id,"Confirmar Eliminación   ", Alert.YES | Alert.NO, this, delNoteRow, null, Alert.NO);
+								else
+									Alert.show("Debe seleccionar una nota de pedido\n para realizar la operación")
+							}else
+								Alert.show("El password del empleado no es correcto");
+					}else
+						Alert.show("Debe ingresar el password del vendedor");
+				}else
+					Alert.show("Debe seleccionar un Empleado");
 			}
 			protected function delNoteRow(cls:CloseEvent):void{
 				if ((cls.detail == Alert.NO) || (cls.detail == Alert.CANCEL)) return;
 				var idnota:int=notas[adgNotas.selectedIndex].id;
-				wsnotas.eliminarNotaDePedido(idnota);
+				var idEmpleado:int=cmbVendedores.selectedItem.id;
+				wsnotas.eliminarNotaDePedido(idnota,idEmpleado);
 			
 			}
 			
@@ -2842,9 +2858,11 @@
 			  toolTip="Muestra una Ventana para cargar un Producto"/>
 	<s:Label x="202" y="265" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
 	<controls:MaskedTextInput text="0.00" maxChars="5" x="318" y="257" width="60" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingresa un porcentaje de descuento, aplicable a todos los productos de la planilla"/>
-	<s:Label x="824" y="392" fontSize="16" fontWeight="bold" text="VENDEDORES:"/>
-	<components:AutoComplete id="cmbVendedores" prompt="Seleccione un Vendedor..." x="824" y="407" width="261" labelField="nameuser" allowDuplicates="false" dropDownRowCount="10"
-							 fontSize="16" fontWeight="bold" matchType="beginning">
+	<s:Label x="824" y="392" fontSize="16" fontWeight="bold" text="EMPLEADOS:"/>
+	<components:AutoComplete id="cmbVendedores" x="824" y="407" width="261" allowDuplicates="false"
+							 dropDownRowCount="10" fontFamily="Verdana" fontSize="16"
+							 fontWeight="bold" labelField="nameuser" matchType="beginning"
+							 prompt="Seleccione un Empleado...">
 	</components:AutoComplete>
 	<s:Label x="1021" y="17" fontSize="14" fontWeight="bold" text="Nota de pedido entregada"/>
 	<s:Label x="1022" y="71" fontSize="14" fontWeight="bold" text="Nota de pedido cancelada"/>
@@ -2857,8 +2875,9 @@
 	<s:VGroup x="1021" y="147" width="39" height="44">
 	</s:VGroup>
 	<s:Label x="824" y="446" fontFamily="Arial" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
-	<s:TextInput id="txtpassword" x="825" y="467" width="260" fontSize="16" fontStyle="normal"
-				 prompt="Ingresar password de vendedor..." displayAsPassword="true"/>
+	<s:TextInput id="txtpassword" x="825" y="467" width="260" displayAsPassword="true"
+				 fontFamily="Verdana" fontSize="16" fontStyle="italic"
+				 prompt="Ingresar password del Empleado..."/>
 	<s:Button id="btnguardarentregada" x="1063" y="32" width="93" height="33" label="Entregar"
 			  click="btnguardarentregada_clickHandler(event)" fontSize="16"
 			  toolTip="Almacena el estado de Entregado de la Nota de Pedido Seleccionada"/>

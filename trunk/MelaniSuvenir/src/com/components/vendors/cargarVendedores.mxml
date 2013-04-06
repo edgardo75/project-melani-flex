@@ -8,6 +8,7 @@
 	<fx:Script>
 		<![CDATA[
 			import com.actions.Employee;
+			import com.hillelcoren.components.autoComplete.classes.SelectedItem;
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
@@ -151,8 +152,15 @@
 					employee.id=xmllistEmpleados[i].id;
 					employee.apellido=String(xmllistEmpleados[i].apellido).toUpperCase();
 					employee.nombre=String(xmllistEmpleados[i].nombre).toUpperCase();
+					employee.documento=String(xmllistEmpleados[i].documento);
 					employee.nameuser=xmllistEmpleados[i].nameuser;
 					employee.clave=xmllistEmpleados[i].clave;
+					employee.email=xmllistEmpleados[i].email;
+					employee.observaciones=xmllistEmpleados[i].observaciones;
+					employee.genero=xmllistEmpleados[i].genero;
+					employee.tipodocu=xmllistEmpleados[i].tipodocu;
+					employee.emptype=xmllistEmpleados[i].emptype;
+					
 					if(String(xmllistEmpleados[i].estado)=="1")
 						employee.estado=true;
 					
@@ -449,6 +457,46 @@
 					Alert.show("DEBE SELECCIONAR UN EMPLEADO DE LA GRILLA O LISTADO CON EL ESTADO CHEQUEADO");
 			}
 			
+			protected function dgemployee_clickHandler(event:MouseEvent):void
+			{
+				txtnombre.text=listEmployee[dgemployee.selectedIndex].nombre;
+				txtapellido.text=listEmployee[dgemployee.selectedIndex].apellido;
+				txtdocumento.text=listEmployee[dgemployee.selectedIndex].documento;
+				txtemail.text=listEmployee[dgemployee.selectedIndex].email;
+				txtnameuser.text=listEmployee[dgemployee.selectedIndex].nameuser;
+				txtobservaciones.text=listEmployee[dgemployee.selectedIndex].observaciones;
+				txtpassword.text=listEmployee[dgemployee.selectedIndex].clave;
+				txtrepassword.text=listEmployee[dgemployee.selectedIndex].clave;
+				cmbGeneros.selectedItemId=listEmployee[dgemployee.selectedIndex].genero;
+				cmbTiposdocu.selectedItemId=listEmployee[dgemployee.selectedIndex].tipodocu;
+				
+				if(String(listEmployee[dgemployee.selectedIndex].emptype)=="EMPFULLTIME"){
+							labelsalariofull.visible=true;
+							msksalario.visible=true;
+							labelsalariopart.visible=false;
+							msksalarioxhora.visible=false;
+							rbempleadopart.selected=false;
+							
+							rbempleadofull.selected=true;
+					
+					
+				
+				}else{
+					if(String(listEmployee[dgemployee.selectedIndex].emptype)=="EMPPARTTIME"){
+				
+						labelsalariofull.visible=false;
+						msksalario.visible=false;
+						labelsalariopart.visible=true;
+						msksalarioxhora.visible=true;
+						
+						rbempleadopart.selected=true;
+						rbempleadofull.selected=false;
+					}
+				
+				}
+				
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -541,7 +589,7 @@
 	</fx:Declarations>
 
 	
-	<s:DataGrid id="dgemployee" x="48" y="30" width="634" height="148"
+	<s:DataGrid id="dgemployee" x="48" y="30" width="634" height="148" click="dgemployee_clickHandler(event)"
 				alternatingRowColors="[#95efdf, #d9e1dd]" dataProvider="{listEmployee}"
 				fontFamily="Verdana" fontSize="12" requestedRowCount="4" selectionMode="singleRow">
 
