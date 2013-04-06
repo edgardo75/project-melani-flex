@@ -26,6 +26,8 @@
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
+			import org.osmf.net.SwitchingRuleBase;
+			
 			import popus.Progress;
 			
 			
@@ -294,6 +296,9 @@
 			protected function addinfo():void{
 			
 				var historico:Historico;
+				
+				if(btnEliminarNota.enabled==false)
+					btnEliminarNota.enabled=true;
 				
 				lblnombreyapecli.text=String(notas[adgNotas.selectedIndex].cliente.apellidoynombre);
 				nrodocucli=int(notas[adgNotas.selectedIndex].cliente.nrodocumento);
@@ -2182,12 +2187,25 @@
 					Alert.show("LA CONSULTA NO ARROJÓ RESULTADOS!!!");
 					
 				else{
-					xmlNotas=new XMLList(event.result);
+					if(event.result.toString().indexOf("Nota de Pedido no encontrada")!=-1)
+						Alert.show("NOTA DE PEDIDO NO ENCONTRADA!!!");
+					else{
+						if(event.result.toString().indexOf("No se puede realizar la operacion de Actualizacion o Borrado")!=-1)
+							Alert.show("NO SE PUEDE REALIZAR\n LA OPERACION DE ACTUALIZACIÓN O BORRADO!!!");
+						else{
+							xmlNotas=new XMLList(event.result);
+							
+							addgrid();
+							
+							btnRegargarlistado.enabled=true;
+							limpiarControles();
+						
+						
+						}
+						
 					
-					addgrid();
+					}
 					
-					btnRegargarlistado.enabled=true;
-					limpiarControles();
 				}
 				
 			}
@@ -2202,7 +2220,7 @@
 				
 				if(adgNotas.selectedItem.id>0){
 					
-					var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportNotaPedido?nronota="+adgNotas.selectedItem.id;
+					var source:String="http://localhost:8080/WebMelanie2/ShowReportNotaPedido?nronota="+adgNotas.selectedItem.id;
 					
 					var urlReq:URLRequest= new URLRequest(source);
 					navigateToURL(urlReq,"_blank");
@@ -2510,6 +2528,7 @@
 				txtobservaciones.text="";
 				nrodocucli=0;
 				btnremover.enabled=false;
+				btnEliminarNota.enabled=false;
 				useranulo=0;
 				userentrego=0;
 				usercancelo=0;
@@ -2530,6 +2549,8 @@
 				cmbTarjetasCreditoDebito.selectedItemId=0;
 				cmbVendedores.selectedItemId=-1;
 				cmbproduct.selectedItemId=-1;
+				
+				
 			
 			
 			}
@@ -2544,6 +2565,57 @@
 			{
 				addinfo();
 			}
+			protected function result_deleteNote(event:ResultEvent):void{
+				var retorno:int=int(event.result.toString());
+				
+				switch(retorno)
+				{
+					case 0:
+					{
+						Alert.show("NO PASO NADA");
+						break;
+					}
+					case -2:
+					{
+						Alert.show("NOTA DE PEDIDO NO ENCONTRADA EN LA BASE DE DATOS");
+						break;
+					}
+					case -1:
+					{
+						Alert.show("ERROR AL ELIMINAR NOTA DE PEDIDO");	
+						break;
+					}	
+						
+					default:
+					{
+						Alert.show("NOTA DE PEDIDO ELIMINADA DE LA BASE DE DATOS");
+						wsnotas.getRecorCountNotas();
+						break;
+					}
+				}
+				
+				
+			
+			}
+			protected function fault_deleteNote(event:FaultEvent):void{
+				
+				Alert.show("Se produjo un error al eliminar nota de pedido verifique!!!");
+			
+			}
+			
+			protected function button3_clickHandler(event:MouseEvent):void
+			{
+				if(adgNotas.selectionLength>0)
+					Alert.show("Desea eliminar la nota de pedido N° "+notas[adgNotas.selectedIndex].id,"Confirmar Eliminación   ", Alert.YES | Alert.NO, this, delNoteRow, null, Alert.NO);
+				else
+					Alert.show("Debe seleccionar una nota de pedido\n para realizar la operación")
+			}
+			protected function delNoteRow(cls:CloseEvent):void{
+				if ((cls.detail == Alert.NO) || (cls.detail == Alert.CANCEL)) return;
+				var idnota:int=notas[adgNotas.selectedIndex].id;
+				wsnotas.eliminarNotaDePedido(idnota);
+			
+			}
 			
 		]]>
 	</fx:Script>
@@ -2555,7 +2627,7 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:ArrayCollection id="arrayDg"/>
 		<s:DateTimeFormatter id="dtf" dateTimePattern="dd/MM/yyyy"/>
-		<s:WebService id="wsnotas" wsdl="http://192.168.1.101:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wsnotas" wsdl="http://localhost:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true">
 			<s:operation name="actualizarNotaPedido"
 						 result="operation9_resultHandler(event)"
 						 fault="operation9_faultHandler(event)">
@@ -2595,9 +2667,14 @@
 						 result="operation5_resultHandler(event)"
 						 fault="operation5_faultHandler(event)"
 				/>
+			<s:operation name="eliminarNotaDePedido"
+						 result="result_deleteNote(event)"
+						 fault="fault_deleteNote(event)">
+				
+			</s:operation>
 				
 		</s:WebService>
-		<s:WebService id="wsempleados" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
+		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
 			<s:operation name="selectAllEmpleados"
 						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
 						 result="operation2_resultHandlerSelectAllEmpleados(event)">
@@ -2605,13 +2682,13 @@
 			</s:operation>
 		</s:WebService>
 		<s:WebService id="wstarjetascreditodebito" 
-					  wsdl="http://192.168.1.101:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
+					  wsdl="http://localhost:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
 					  >
 			<s:operation name="searchAllTarjetasCreditoDebito" result="operation4_resultHandler(event)" fault="operation4_faultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
-		<s:WebService id="productosWs" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?wsdl"
+		<s:WebService id="productosWs" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?wsdl"
 					  showBusyCursor="true">
 			<s:operation name="searchAllProductos"
 						 fault="operation1_faultGetRecord(event)"
@@ -2814,10 +2891,10 @@
 	<s:Label x="826" y="499" fontSize="16" fontWeight="bold" text="HISTORICO DE ANTICIPOS"/>
 	<s:Button id="btnRegargarlistado" x="7" y="499" width="153" height="37" label="Recargar Listado"
 			  click="btnRegargarlistado_clickHandler(event)" enabled="false" fontSize="16"/>
-	<controls:MaskedTextInput id="mskisearchidnota" x="215" y="442" width="232" fontSize="16"
+	<controls:MaskedTextInput id="mskisearchidnota" x="215" y="432" width="232" fontSize="16"
 							  restrict="0-9" textAlign="center"
 							  toolTip="Ingrese Número de Nota de Pedido, debe presinar la tecla Enter para realizar la Búsqueda!!!"/>
-	<s:Label x="213" y="426" fontFamily="Verdana" fontSize="16" fontWeight="normal"
+	<s:Label x="213" y="418" fontFamily="Verdana" fontSize="16" fontWeight="normal"
 			 text="BUSCAR NOTA DE PEDIDO"/>
 	<s:Button id="btnImprimir" x="7" y="539" width="153" height="35" label="Imprimir"
 			  click="btnImprimir_clickHandler(event)" enabled="false" fontSize="16"
@@ -2848,6 +2925,9 @@
 	<s:RadioButton id="rdbcanceladanotasi" x="1023" y="84" label="Si" groupName="notaCancelada"/>
 	<s:RadioButton id="rdbcanceladanotano" x="1023" y="108" label="No" groupName="notaCancelada"
 				   selected="true"/>
+	<s:Button id="btnEliminarNota" x="215" y="459" width="139" height="38" label="Eliminar"
+			  click="button3_clickHandler(event)" enabled="false" fontFamily="Verdana" fontSize="16"
+			  toolTip="Elimina una Nota de Pedido, seleccionada previamente"/>
 </s:Group>
 
 
