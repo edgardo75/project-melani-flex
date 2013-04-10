@@ -16,7 +16,7 @@
 			[Bindable]
 			private var listEmpleados:XMLList;
 			[Bindable]
-			public var arrayEmployee:ArrayCollection=new ArrayCollection();
+			public var arrayEmployee:ArrayCollection;
 			[Bindable]
 			public var userSelected:String;
 			[Bindable]
@@ -38,6 +38,7 @@
 			
 			protected function titlewindow1_creationCompleteHandler(event:FlexEvent):void
 			{
+				txtnameuser.setFocus();
 				txtnameuser.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				txtpassuser.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 			}
@@ -99,7 +100,12 @@
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
 				PopUpManager.removePopUp(this);
-				arrayEmployee.removeAll();
+				if(arrayEmployee.length>0){
+					arrayEmployee=null;
+					arrayEmployee=new ArrayCollection();
+				}
+				
+				
 				listEmpleados=new XMLList(event.result);
 				var employee:Employee;			
 				
@@ -110,6 +116,11 @@
 					employee.nombre=String(xmllistEmpleados[i].nombre).toUpperCase();
 					employee.nameuser=xmllistEmpleados[i].nameuser;
 					employee.clave=xmllistEmpleados[i].clave;
+					employee.email=xmllistEmpleados[i].email;
+					employee.observaciones=xmllistEmpleados[i].observaciones;
+					employee.genero=xmllistEmpleados[i].genero;
+					employee.tipodocu=xmllistEmpleados[i].tipodocu;
+					employee.emptype=xmllistEmpleados[i].emptype;
 					if(String(xmllistEmpleados[i].estado)=="1")
 						employee.estado=true;
 					
