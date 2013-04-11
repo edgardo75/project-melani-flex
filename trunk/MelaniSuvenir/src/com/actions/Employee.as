@@ -31,6 +31,10 @@ package com.actions
 		public var tipodocu:String;
 		[Bindable]
 		public var emptype:String;
+		[Bindable]
+		public var salarioporhora:String;
+		[Bindable]
+		public var salario:String;
 		
 		
 		

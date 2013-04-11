@@ -273,9 +273,19 @@
 				if(infoclient.length>0){
 						txtapellido.text=infoclient[0].apellido;
 						txtdocumento.text=infoclient[0].nrodocu;
-						txtemail.text=infoclient[0].email;
+						
+						if(String(infoclient[0].email).toString().indexOf("null")!=0)
+							txtemail.text=infoclient[0].email;
+						else
+							txtemail.text="";
+						
 						txtnombre.text=infoclient[0].nombre;
-						txtobservaciones.text=infoclient[0].observaciones;
+						
+						if(String(infoclient[0].observaciones).toString().indexOf("null")!=0)
+							txtobservaciones.text=infoclient[0].observaciones;
+						else
+							txtobservaciones.text="";
+						
 						cmbGeneros.selectedItemId=infoclient[0].Genero.generoId;
 						cmbTiposdocu.selectedItemId=infoclient[0].idtipodocu;
 						

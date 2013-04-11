@@ -145,6 +145,8 @@
 					employee.genero=xmllistEmpleados[i].genero;
 					employee.tipodocu=xmllistEmpleados[i].tipodocu;
 					employee.emptype=xmllistEmpleados[i].emptype;
+					employee.salario=xmllistEmpleados[i].salario;
+					employee.salarioporhora=xmllistEmpleados[i].salarioporhora;
 					if(String(xmllistEmpleados[i].estado)=="1")
 						employee.estado=true;
 					
