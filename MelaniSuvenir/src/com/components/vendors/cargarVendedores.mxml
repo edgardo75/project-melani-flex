@@ -14,13 +14,17 @@
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
+			import mx.events.ValidationResultEvent;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			import mx.validators.ValidationResult;
 			import mx.validators.Validator;
 			
 			import popus.PopupUsuarioHabilitado;
 			import popus.popupUsuario;
+			
+			private var vResult:ValidationResultEvent;
 			
 			[Bindable]
 			private var listEmpleados:XMLList;
@@ -57,6 +61,10 @@
 					}
 					case -6:{
 						Alert.show("EL NOMBRE DE USUARIO YA EXISTE EN LA BASE DE DATOS");
+						break;
+					}	
+					case -5:{
+						Alert.show("SE PRODUJO UN ERROR EN EL METODO \n BUSCAR NOMBRE DE USUARIO E EMAIL");
 						break;
 					}	
 						
@@ -148,6 +156,8 @@
 					employee.genero=xmllistEmpleados[i].genero;
 					employee.tipodocu=xmllistEmpleados[i].tipodocu;
 					employee.emptype=xmllistEmpleados[i].emptype;
+					employee.salario=xmllistEmpleados[i].salario;
+					employee.salarioporhora=xmllistEmpleados[i].salarioporhora;
 					
 					if(String(xmllistEmpleados[i].estado)=="1")
 						employee.estado=true;
@@ -378,37 +388,64 @@
 			{
 				
 				
-				if(txtapellido.text.length<2||txtnameuser.text.length<2||txtnombre.text.length<2){
-					Alert.show("LOS NOMBRES, NOMBRE DE USUARIO Y APELLIDO DEBEN SER DE POR LO MENOS 2 CARACTERES");
+				vResult=nomV.validate();
+				
+				if(vResult.type==ValidationResultEvent.INVALID)
 					return;
+				else{
+					vResult=apeV.validate();
+					if(vResult.type==ValidationResultEvent.INVALID)
+						return;
+					else{
+						vResult=emV.validate();
+						if(vResult.type==ValidationResultEvent.INVALID)
+							return;
+						else{
+							if(cmbTiposdocu.selectedItem==null){
+								Alert.show("   Seleccione un Tipo de Documento DNI, LE, LC, PASAPORTE   ");
+								return;
+							}else{
+								if(txtdocumento.text.length==0){
+									Alert.show("   Ingrese un número de Documento!!!    ");
+									return;
+								}else{
+									if(txtdocumento.text.length<7){
+										Alert.show("   Ingrese un número de Documento de manera correcta   ");
+										return;
+										
+									}else{
+										vResult=nomuserV.validate();
+										if(vResult.type==ValidationResultEvent.INVALID)
+											return;
+										else{
+											if(txtpassword.text.length==0||txtrepassword.text.length==0)
+												Alert.show("FALTA INGRESAR O \nREINGRESAR EL PASSWORD, CORRIJA!!!");
+											else{
+												if(txtpassword.text!=txtrepassword.text)
+													Alert.show("LOS PASSWORD NO COINCIDEN, CORRIJA!!!");
+												else{
+													Alert.show("Desea Guardar Datos de Empleado?","Confirmar Operación", Alert.YES | Alert.NO, this, guardarEmpleado, null, Alert.NO);
+													
+												}
+												
+											}
+											
+											
+										}
+										
+									}
+									
+								}
+								
+							}	
+							
+						}
+					}
+					
 				}
 				
 				
-				
-				if(txtnombre.text.length==0)
-					Alert.show("FALTA EL NOMBRE, CORRIJA!!!");
-				else{
-					if(txtapellido.text.length==0)
-						Alert.show("FALTA EL APELLIDO, CORRIJA!!!");
-					else{
-						if(txtdocumento.text.length==0)
-							Alert.show("FALTA EL DOCUMENTO, CORRIJA!!!");
-						else{
-								if(txtnameuser.text.length==0)
-									Alert.show("FALTA EL NOMBRE DE USUARIO, CORRIJA!!!");
-								else{
-										if(txtpassword.text.length==0||txtrepassword.text.length==0)
-										Alert.show("FALTA INGRESAR O \nREINGRESAR EL PASSWORD, CORRIJA!!!");
-										else{
-											if(txtpassword.text!=txtrepassword.text)
-												Alert.show("LOS PASSWORD NO COINCIDEN, CORRIJA!!!");
-											else
-												Alert.show("Desea Guardar Datos de Empleado?","Confirmar Operación", Alert.YES | Alert.NO, this, guardarEmpleado, null, Alert.NO);						
-										}
-								}
-					     }
-					  }
-				   }		
+						
 			}
 			
 
@@ -500,6 +537,7 @@
 							labelsalariopart.visible=false;
 							msksalarioxhora.visible=false;
 							rbempleadopart.selected=false;
+							msksalario.text=listEmployee[dgemployee.selectedIndex].salario;
 							
 							rbempleadofull.selected=true;
 					
@@ -513,7 +551,7 @@
 						msksalario.visible=false;
 						labelsalariopart.visible=true;
 						msksalarioxhora.visible=true;
-						
+						msksalarioxhora.text=listEmployee[dgemployee.selectedIndex].salarioporhora;
 						rbempleadopart.selected=true;
 						rbempleadofull.selected=false;
 					
@@ -524,41 +562,62 @@
 			
 			protected function btnactualizar_clickHandler(event:MouseEvent):void
 			{
-				if(txtapellido.text.length<2||txtnameuser.text.length<2||txtnombre.text.length<2){
-					Alert.show("LOS NOMBRES, NOMBRE DE USUARIO Y APELLIDO DEBEN SER DE POR LO MENOS 2 CARACTERES");
+				vResult=nomV.validate();
+				
+				if(vResult.type==ValidationResultEvent.INVALID)
 					return;
-				}
-				if(dgemployee.selectionLength==0){
-					Alert.show("DEBE SELECCIONAR UN EMPLEADO DEL LISTADO");
-					return;
-				}
-				
-				
-				
-				if(txtnombre.text.length==0)
-					Alert.show("FALTA EL NOMBRE, CORRIJA!!!");
 				else{
-					if(txtapellido.text.length==0)
-						Alert.show("FALTA EL APELLIDO, CORRIJA!!!");
+					vResult=apeV.validate();
+					if(vResult.type==ValidationResultEvent.INVALID)
+						return;
 					else{
-						if(txtdocumento.text.length==0)
-							Alert.show("FALTA EL DOCUMENTO, CORRIJA!!!");
+						vResult=emV.validate();
+						if(vResult.type==ValidationResultEvent.INVALID)
+							return;
 						else{
-							if(txtnameuser.text.length==0)
-								Alert.show("FALTA EL NOMBRE DE USUARIO, CORRIJA!!!");
-							else{
-								if(txtpassword.text.length==0||txtrepassword.text.length==0)
-									Alert.show("FALTA INGRESAR O \nREINGRESAR EL PASSWORD, CORRIJA!!!");
-								else{
-									if(txtpassword.text!=txtrepassword.text)
-										Alert.show("LOS PASSWORD NO COINCIDEN, CORRIJA!!!");
-									else
-										Alert.show("Desea Actualizar los Datos de Empleado?","Confirmar Operación", Alert.YES | Alert.NO, this, actualizarEmpleado, null, Alert.NO);						
+							if(cmbTiposdocu.selectedItem==null){
+								Alert.show("   Seleccione un Tipo de Documento DNI, LE, LC, PASAPORTE   ");
+								return;
+							}else{
+								if(txtdocumento.text.length==0){
+									Alert.show("   Ingrese un número de Documento!!!    ");
+									return;
+								}else{
+									if(txtdocumento.text.length<7){
+										Alert.show("   Ingrese un número de Documento de manera correcta   ");
+										return;
+										
+									}else{
+										vResult=nomuserV.validate();
+										if(vResult.type==ValidationResultEvent.INVALID)
+											return;
+										else{
+											if(txtpassword.text.length==0||txtrepassword.text.length==0)
+												Alert.show("FALTA INGRESAR O \nREINGRESAR EL PASSWORD, CORRIJA!!!");
+											else{
+												if(txtpassword.text!=txtrepassword.text)
+													Alert.show("LOS PASSWORD NO COINCIDEN, CORRIJA!!!");
+												else{
+													Alert.show("Desea Actualizar los Datos de Empleado?","Confirmar Operación", Alert.YES | Alert.NO, this, actualizarEmpleado, null, Alert.NO);
+													
+												}
+												
+											}
+											
+											
+										}
+										
+									}
+									
 								}
-							}
+								
+							}	
+							
 						}
 					}
-				}
+					
+				}	
+			
 				
 				
 				
@@ -573,12 +632,15 @@
 			protected function actualizarEmpleado(evt:CloseEvent):void{
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 				
-				wsempleado.actualizarEmpleado(listEmployee[dgemployee.selectedIndex].id,listEmployee[dgemployee.selectedIndex].apellido,listEmployee[dgemployee.selectedIndex].nameuser,listEmployee[dgemployee.selectedIndex].nombre,
-					txtpassword.text,txtrepassword.text,txtemail.text,cmbTiposdocu.selectedItem.id,int(txtdocumento.text),0,cmbGeneros.selectedItem.id,txtobservaciones.text,listEmployee[dgemployee.selectedIndex].emptype);
+						wsempleado.actualizarEmpleado(listEmployee[dgemployee.selectedIndex].id,txtapellido.text,txtnameuser.text,txtnombre.text,
+							txtpassword.text,txtrepassword.text,txtemail.text,cmbTiposdocu.selectedItem.id,int(txtdocumento.text),0,cmbGeneros.selectedItem.id,txtobservaciones.text,listEmployee[dgemployee.selectedIndex].emptype);
 			}
 			protected function operation1_resultHandler_actualizar(event:ResultEvent):void
 			{
+				
+				
 				var retorno:int=int(event.result.toString());
+				
 				switch(retorno)
 				{
 					case 0:
@@ -614,7 +676,7 @@
 						
 					default:
 					{
-						Alert.show("Empleado Actualizado!!!");
+						Alert.show("DATOS DE EMPLEADO ACTUALIZADOS");
 						wsempleado.selectAllEmpleados();
 						limpiarcontroles();
 						break;
@@ -625,7 +687,7 @@
 			
 			protected function operation1_faultHandler_actualizar(event:FaultEvent):void
 			{
-				// TODO Auto-generated method stub
+				Alert.show("ERROR AL ACTUALIZAR DATOS DE EMPLEADO EN BASE DE DATOS");
 				
 			}
 			
@@ -760,22 +822,22 @@
 	<s:Label x="179" y="10" color="#2BCC68" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="CARGA DE EMPLEADOS PARA OPERAR EL SISTEMA" textAlign="center"/>
 	<s:Label x="27" y="190" fontSize="20" fontWeight="bold" text="Nombre:"/>
-	<s:TextInput id="txtnombre" x="109" y="186" width="214" fontSize="16"
-				 prompt="ingrese su nombre propio...."/>
-	<s:Label x="331" y="191" fontSize="20" fontWeight="bold" text="Apellido:"/>
-	<s:TextInput id="txtapellido" x="419" y="183" width="164" fontSize="16"
-				 prompt="ingrese su apellido"/>
+	<s:TextInput id="txtnombre" maxChars="30" x="109" y="183" width="237" fontSize="16"
+				 prompt="Ingrese su nombre...."/>
+	<s:Label x="354" y="191" fontSize="20" fontWeight="bold" text="Apellido:"/>
+	<s:TextInput id="txtapellido" maxChars="30" x="445" y="183" width="216" fontSize="16"
+				 prompt="Ingrese su apellido..."/>
 	<s:Label x="28" y="216" fontSize="20" fontWeight="bold" text="Email:"/>
-	<s:TextInput id="txtemail" x="108" y="212" width="214" fontSize="16"
-				 prompt="ingrese direccion de email que mas use..."/>
-	<s:Label x="330" y="219" color="#033339" fontSize="20" text="Tipo:"/>
-	<s:Label x="28" y="240" width="112" height="22" color="#033339" fontSize="20" text="Documento:"/>
-	<controls:MaskedTextInput id="txtdocumento" x="137" y="239" width="87"
+	<s:TextInput id="txtemail" x="108" y="212" width="239" fontSize="16"
+				 prompt="Ingrese email..." maxChars="50"/>
+	<s:Label x="355" y="219" color="#033339" fontSize="20" text="Tipo:"/>
+	<s:Label x="28" y="246" width="112" height="22" color="#033339" fontSize="20" text="Documento:"/>
+	<controls:MaskedTextInput id="txtdocumento" x="137" y="245" width="87"
 							   fontFamily="Verdana"
 							  fontSize="16" fontWeight="bold" inputMask="########" maxChars="8"
 							  restrict="0-9" 
 							  toolTip="Ingrese el Número de Documento!!!" required="true"/>
-	<components:AdvancedAutoComplete id="cmbTiposdocu" x="420" y="211" width="99" 
+	<components:AdvancedAutoComplete id="cmbTiposdocu" x="445" y="211" width="99" 
 									 allowDuplicates="false" allowEditingNewValues="false"
 									 allowEditingSelectedValues="false"
 									 allowMultipleSelection="false" allowNewValues="false"
@@ -785,8 +847,8 @@
 									 toolTip="Seleccione el Tipo de Documento!!!"
 									 verticalScrollPolicy="on">
 	</components:AdvancedAutoComplete>
-	<s:Label x="330" y="244" color="#033339" fontSize="20" text="Genero:"/>
-	<components:AdvancedAutoComplete id="cmbGeneros" x="421" y="240" width="53"
+	<s:Label x="355" y="246" color="#033339" fontSize="20" text="Genero:"/>
+	<components:AdvancedAutoComplete id="cmbGeneros" x="446" y="242" width="53"
 									 allowDuplicates="false" allowEditingNewValues="false"
 									 allowEditingSelectedValues="false"
 									 allowMultipleSelection="false" allowNewValues="false"
@@ -798,28 +860,29 @@
 	</components:AdvancedAutoComplete>
 	<s:Label x="29" y="353" color="#033339" fontSize="20" text="Observaciones:"/>
 	<s:TextArea id="txtobservaciones" x="28" y="377" width="504" height="96" fontFamily="Verdana"
-				fontSize="16" fontWeight="bold" maxChars="255" tabIndex="6"/>
+				fontSize="16" fontWeight="bold" maxChars="32000" tabIndex="6" prompt="Ingrese las Observaciones..."/>
 	<s:Button id="btnnuevo" x="28" y="481" height="31" label="Nuevo"
 			  click="btnnuevo_clickHandler(event)" fontSize="16"/>
 	<s:Button id="btnguardar" x="106" y="481" height="30" label="Guardar"
 			  click="btnguardar_clickHandler(event)" fontSize="16"/>
 	
-	<s:Label id="labelsalariofull" x="403" y="344" width="149" fontSize="20" text="Salario Mensual:"/>
-	<s:Label id="labelsalariopart" x="403" y="340" width="169" fontSize="20" text="Salario por Hora:" visible="false"/>
-	<controls:MaskedTextInput id="msksalario" x="551" y="335" height="30" fontSize="16"
-							  restrict="0-9." maxChars="6"/>
-	<controls:MaskedTextInput id="msksalarioxhora" x="559" y="336" height="30" fontSize="20" restrict="0-9." visible="false"/>
+	<s:Label id="labelsalariofull" x="403" y="344" width="129" fontSize="16" text="Salario Mensual $:"/>
+	<s:Label id="labelsalariopart" x="403" y="344" width="139" fontSize="16" text="Salario por Hora $:" visible="false"/>
+	<controls:MaskedTextInput id="msksalario" x="536" y="329" height="30" fontSize="16" maxChars="6"
+							  restrict="0-9." textAlign="center"/>
+	<controls:MaskedTextInput id="msksalarioxhora" visible="false" x="536" y="329" width="98"
+							  height="30" fontSize="16" restrict="0-9." textAlign="center" maxChars="6"/>
 	
 	
 	<s:Label x="28" y="285" fontSize="20" fontWeight="bold" text="Usuario:"/>
-	<s:TextInput id="txtnameuser" x="111" y="282" width="210" fontSize="16" maxChars="10"
-				 prompt="ingrese un nombre de usuario"/>
-	<s:Label x="330" y="285" fontSize="20" fontWeight="bold" text="Password:"/>
-	<s:Label x="329" y="304" fontSize="20" fontWeight="bold" text="Repassword:"/>
-	<s:TextInput id="txtpassword" x="457" y="278" displayAsPassword="true" fontSize="16"
-				 prompt="ingrese password...." maxChars="8"/>
-	<s:TextInput id="txtrepassword" x="457" y="303" displayAsPassword="true" fontSize="16"
-				 prompt="reingreso password" maxChars="8"/>
+	<s:TextInput id="txtnameuser" x="111" y="282" width="237" fontSize="16" maxChars="10"
+				 prompt="Ingrese un nombre de usuario..."/>
+	<s:Label x="356" y="285" fontSize="20" fontWeight="bold" text="Password:"/>
+	<s:Label x="355" y="308" fontSize="20" fontWeight="bold" text="Repassword:"/>
+	<s:TextInput id="txtpassword" x="483" y="277" displayAsPassword="true" fontSize="16"
+				 prompt="Ingrese password...." maxChars="8"/>
+	<s:TextInput id="txtrepassword" x="483" y="303" displayAsPassword="true" fontSize="16"
+				 prompt="Reingreso password..." maxChars="8"/>
 	<s:VGroup x="252" y="327" >
 	<s:RadioButton id="rbempleadofull" x="250" y="339" label="Empleado FullTime"
 				   groupName="rdgroupEmpleados" selected="true" click="rbempleadofull_clickHandler(event)"/>

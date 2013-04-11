@@ -110,7 +110,7 @@
 				 toolTip="Ingrese un Correo Electrónico!!!"/>
 	<s:Label x="19" y="206" color="#033339" fontSize="20" text="Observaciones:"/>
 	<s:TextArea id="txtobservaciones" x="18" y="230" width="504" height="96" fontFamily="Verdana"
-				fontSize="16" fontWeight="bold" maxChars="255" tabIndex="6" prompt="Ingrese las Observaciones..."/>
+				fontSize="16" fontWeight="bold" maxChars="32000" tabIndex="6" prompt="Ingrese las Observaciones..."/>
 	<components:AdvancedAutoComplete id="cmbTiposdocu" x="97" y="36" width="99"
 									 allowDuplicates="false" allowEditingNewValues="false"
 									 allowEditingSelectedValues="false"
@@ -276,9 +276,19 @@
 				if(infoclient.length>0){
 						txtapellido.text=infoclient[0].apellido;
 						txtdocumento.text=infoclient[0].nrodocu;
-						txtemail.text=infoclient[0].email;
+						
+						if(String(infoclient[0].email).toString().indexOf("null")!=0)
+							txtemail.text=infoclient[0].email;
+						else
+							txtemail.text="";
+						
 						txtnombre.text=infoclient[0].nombre;
-						txtobservaciones.text=infoclient[0].observaciones;
+						
+						if(String(infoclient[0].observaciones).toString().indexOf("null")!=0)
+							txtobservaciones.text=infoclient[0].observaciones;
+						else
+							txtobservaciones.text="";
+						
 						cmbGeneros.selectedItemId=infoclient[0].Genero.generoId;
 						cmbTiposdocu.selectedItemId=infoclient[0].idtipodocu;
 						//*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
