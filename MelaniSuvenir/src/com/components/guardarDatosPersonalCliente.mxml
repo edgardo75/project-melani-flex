@@ -6,7 +6,7 @@
 		 width="1088" height="396" creationComplete="group1_creationCompleteHandler(event)" xmlns:clients="com.components.clients.*">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<mx:WebService id="servicesCliente" wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"
+		<mx:WebService id="servicesCliente" wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL"
 					  
 					  showBusyCursor="false"
 					  useProxy="false">
