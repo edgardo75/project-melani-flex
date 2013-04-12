@@ -6,7 +6,7 @@
 		 width="1168" height="576" creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wspresupuestos" wsdl="http://localhost:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="true" >
+		<s:WebService id="wspresupuestos" wsdl="http://192.168.1.101:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="true" >
 			<s:operation name="getRecordCount" result="operation1_resultHandler(event)"
 						 fault="operation1_faultHandler(event)">
 				
@@ -414,7 +414,7 @@
 					last=listpresupuestos[0].id;
 					first=listpresupuestos[listpresupuestos.length-1].id;
 					
-					var source:String="http://localhost:8080/WebMelanie2/ShowReportView?first="+first+"&last="+last;
+					var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportView?first="+first+"&last="+last;
 					
 					var urlReq:URLRequest= new URLRequest(source);
 					navigateToURL(urlReq,"_blank");
@@ -463,7 +463,7 @@
 				if(adgPresupuestos.selectedIndex>-1){
 					var idpresupuesto:int=adgPresupuestos.selectedItem.id;
 					
-					var source:String="http://localhost:8080/WebMelanie2/ShowReportPresupuesto?presnro="+idpresupuesto;
+					var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportPresupuesto?presnro="+idpresupuesto;
 					
 					var urlReq:URLRequest= new URLRequest(source);
 					navigateToURL(urlReq,"_blank");
