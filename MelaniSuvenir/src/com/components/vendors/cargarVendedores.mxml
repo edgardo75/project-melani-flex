@@ -819,8 +819,8 @@
 			</s:ArrayList>
 		</s:columns>		
 	</s:DataGrid>
-	<s:Label x="179" y="10" color="#2BCC68" fontFamily="Verdana" fontSize="16" fontWeight="bold"
-			 text="CARGA DE EMPLEADOS PARA OPERAR EL SISTEMA" textAlign="center"/>
+	<s:Label x="208" y="8" color="#2BCC68" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+			 text="CARGA Y EDICIÓN DE EMPLEADOS" textAlign="center"/>
 	<s:Label x="27" y="190" fontSize="20" fontWeight="bold" text="Nombre:"/>
 	<s:TextInput id="txtnombre" maxChars="30" x="109" y="183" width="237" fontSize="16"
 				 prompt="Ingrese su nombre...."/>
