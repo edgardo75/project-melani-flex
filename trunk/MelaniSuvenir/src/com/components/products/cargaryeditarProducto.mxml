@@ -283,7 +283,7 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:XMLListCollection id="product" source="{xmllistproducto.producto}"/>
-		<s:WebService id="servicesProducto" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?WSDL"
+		<s:WebService id="servicesProducto" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?WSDL"
 					   
 					   showBusyCursor="true"
 					   useProxy="false">
@@ -320,7 +320,7 @@
 			<s:ArrayList>
 				<s:GridColumn dataField="id" headerText="id" visible="false"></s:GridColumn>
 				<s:GridColumn dataField="idproduct" headerText="idproduct" visible="false"></s:GridColumn>
-				<s:GridColumn dataField="descripcion" headerText="Descripcion" ></s:GridColumn>
+				<s:GridColumn dataField="descripcion" headerText="Descripción" ></s:GridColumn>
 				<s:GridColumn dataField="precio" headerText="Precio" formatter="{cf}" width="120"></s:GridColumn>
 				<s:GridColumn dataField="cantidadInicial" headerText="CantInicial" width="110"></s:GridColumn>
 				<s:GridColumn dataField="cantidadDisponible" headerText="CantDisponible" width="110"></s:GridColumn>
@@ -336,11 +336,11 @@
 			<fx:Object dataField1="data4" dataField2="data4" dataField3="data4"></fx:Object>
 		</s:ArrayList>
 	</s:DataGrid>
-	<s:Label x="8" y="249" fontSize="16" fontWeight="bold" text="Descripcion:"
+	<s:Label x="8" y="249" fontSize="16" fontWeight="bold" text="Descripción:"
 			 verticalAlign="bottom"/>
 	<s:TextInput id="txtdescripcion" x="9" y="263" width="244" fontSize="16"
-				 prompt="Ingrese la Descripcion del Producto..." restrict="a-z A-Z ñ-Ñ 0-9_"/>
-	<s:Label x="267" y="248" fontSize="16" fontWeight="bold" text="CodigoProducto:"
+				 prompt="Ingrese la Descripcion del Producto..." restrict="a-z A-Z ñ-Ñ 0-9_ áéíóú-ÁÉÍÓÚ"/>
+	<s:Label x="267" y="248" fontSize="16" fontWeight="bold" text="Código Producto:"
 			 verticalAlign="bottom"/>
 	<s:Label x="8" y="294" fontSize="16" fontWeight="bold" text="Precio:" verticalAlign="bottom"/>
 	<s:Label x="268" y="295" fontSize="16" fontWeight="bold" text="Cantidad Inicial:"
@@ -358,7 +358,7 @@
 			  click="btnguardar_clickHandler(event)" fontSize="16"/>
 	<s:Button id="btnCloseClientComponent" x="700" y="9" width="16" height="19"
 			  click="btnClose_clickHandler(event)" icon="assets/icon_close.png"/>
-	<s:Label x="184" y="43" color="#3FF182" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="223" y="43" color="#3FF182" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="CARGAR Y EDITAR PRODUCTOS"/>
 	<s:Label x="537" y="248" fontFamily="Arial" fontSize="16" fontWeight="bold"
 			 text="Productos Cargados:"/>

@@ -235,7 +235,7 @@
 	<components:AdvancedAutoComplete id="cmbEmpresatelefonia" x="30" y="100" width="205" fontSize="16"
 									 labelField="descripcion" matchType="beginning">
 	</components:AdvancedAutoComplete>
-	<s:Label x="31" y="84" fontSize="16" text="Empresa Telefónia"/>
+	<s:Label x="31" y="84" fontSize="16" text="Empresa Telefonía"/>
 	<s:Label x="262" y="84" fontSize="16" text="Tipo Teléfono"/>
 	<components:AdvancedAutoComplete id="cmbtipotel" x="263" y="100" width="201" fontSize="16"
 									 labelField="descripcion" matchType="beginning">
@@ -256,11 +256,11 @@
 		<s:columns>
 			<s:ArrayList>
 				<s:GridColumn dataField="prefijo" headerText="Prefijo"></s:GridColumn>
-				<s:GridColumn dataField="nrotelefono" headerText="Numero"></s:GridColumn>
+				<s:GridColumn dataField="nrotelefono" headerText="Número"></s:GridColumn>
 				<s:GridColumn dataField="descripcion" headerText="Empresa"></s:GridColumn>
-				<s:GridColumn dataField="tipotelefono" headerText="TipoTelefono"></s:GridColumn>
-				<s:GridColumn dataField="idempresatel" headerText="EmpresaTelefonia" visible="false"></s:GridColumn>
-				<s:GridColumn dataField="idtipotel" headerText="TipoTelefono" visible="false"></s:GridColumn>
+				<s:GridColumn dataField="tipotelefono" headerText="Tipo Telefono"></s:GridColumn>
+				<s:GridColumn dataField="idempresatel" headerText="Empresa Telefonía" visible="false"></s:GridColumn>
+				<s:GridColumn dataField="idtipotel" headerText="Tipo Teléfono" visible="false"></s:GridColumn>
 			</s:ArrayList>
 		</s:columns>
 	</s:DataGrid>

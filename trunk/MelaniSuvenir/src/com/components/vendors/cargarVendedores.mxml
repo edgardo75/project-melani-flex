@@ -697,7 +697,7 @@
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wsempleado" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wsempleado" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
 			<s:operation name="addEmpleadoFullTime"
 						 result="operationAddEmpleadosFulltime1_resultHandler(event)"
 						 fault="operation1AddEmpladosFullTime_faultHandler(event)"
@@ -786,7 +786,7 @@
 	</fx:Declarations>
 
 	
-	<s:DataGrid id="dgemployee" x="48" y="30" width="634" height="148" click="dgemployee_clickHandler(event)"
+	<s:DataGrid id="dgemployee" x="48" y="25" width="634" height="148" click="dgemployee_clickHandler(event)"
 				alternatingRowColors="[#95efdf, #d9e1dd]" dataProvider="{listEmployee}"
 				fontFamily="Verdana" fontSize="12" requestedRowCount="4" selectionMode="singleRow">
 
@@ -822,11 +822,11 @@
 	<s:Label x="208" y="8" color="#2BCC68" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="CARGA Y EDICIÓN DE EMPLEADOS" textAlign="center"/>
 	<s:Label x="27" y="190" fontSize="20" fontWeight="bold" text="Nombre:"/>
-	<s:TextInput id="txtnombre" maxChars="30" x="109" y="183" width="237" fontSize="16"
+	<s:TextInput id="txtnombre" maxChars="30" x="109" restrict="A-ÑZa-ñz áéíóú-ÁÉÍÓÚ" y="183" width="237" fontSize="16"
 				 prompt="Ingrese su nombre...."/>
 	<s:Label x="354" y="191" fontSize="20" fontWeight="bold" text="Apellido:"/>
 	<s:TextInput id="txtapellido" maxChars="30" x="445" y="183" width="216" fontSize="16"
-				 prompt="Ingrese su apellido..."/>
+				 prompt="Ingrese su apellido..." restrict="A-ÑZa-ñz áéíóú-ÁÉÍÓÚ"/>
 	<s:Label x="28" y="216" fontSize="20" fontWeight="bold" text="Email:"/>
 	<s:TextInput id="txtemail" x="108" y="212" width="239" fontSize="16"
 				 prompt="Ingrese email..." maxChars="50"/>
@@ -876,7 +876,7 @@
 	
 	<s:Label x="28" y="285" fontSize="20" fontWeight="bold" text="Usuario:"/>
 	<s:TextInput id="txtnameuser" x="111" y="282" width="237" fontSize="16" maxChars="10"
-				 prompt="Ingrese un nombre de usuario..."/>
+				 prompt="Ingrese un nombre de usuario..." restrict="A-ÑZa-ñz áéíóú-ÁÉÍÓÚ 0-9"/>
 	<s:Label x="356" y="285" fontSize="20" fontWeight="bold" text="Password:"/>
 	<s:Label x="355" y="308" fontSize="20" fontWeight="bold" text="Repassword:"/>
 	<s:TextInput id="txtpassword" x="483" y="277" displayAsPassword="true" fontSize="16"
