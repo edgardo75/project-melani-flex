@@ -6,7 +6,7 @@
 		 width="1062" height="566" creationComplete="group1_creationCompleteHandler(event)" xmlns:products="com.components.products.*">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="servicePresupuesto" wsdl="http://192.168.1.101:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="false">
+		<s:WebService id="servicePresupuesto" wsdl="http://localhost:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="false">
 			<s:operation name="addBudgets" result="operation1_resultHandler(event)"
 						 fault="operation1_faultHandler(event)">
 				
@@ -181,7 +181,7 @@
 						break};
 					default:{
 						Alert.show("   Presupuesto N° "+result+" Generado correctamente!!!   ");
-						var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportPresupuesto?presnro="+result;
+						var source:String="http://localhost:8080/WebMelanie2/ShowReportPresupuesto?presnro="+result;
 						var urlReq:URLRequest= new URLRequest(source);
 						navigateToURL(urlReq,"_blank");
 						
@@ -234,9 +234,9 @@
 		<s:Label x="25" y="32" fontSize="16" text="Nombre:"/>
 		<s:Label x="25" y="69" fontSize="16" text="Apellido:"/>
 		<s:TextInput id="txtnombre" x="87" y="23" width="318" fontSize="16" maxChars="40"
-					 restrict="a-z A-Z ñ-Ñ" tabEnabled="false"/>
+					 restrict="A-ÑZa-ñz áéíóú-ÁÉÍÓÚ" tabEnabled="false" prompt="Ingrese el Nombre de la Persona..."/>
 		<s:TextInput id="txtapellido" x="88" y="62" width="317" fontSize="16" maxChars="20"
-					 restrict="a-z A-Z ñ-Ñ " tabEnabled="false"/>
+					 restrict="A-ÑZa-ñz áéíóú-ÁÉÍÓÚ" tabEnabled="false" prompt="Ingrese el Apellido de la Persona..."/>
 	</s:BorderContainer>
 	<products:productosPedidos id="productordered" x="40" y="138" height="349" fontSize="16">
 	</products:productosPedidos>

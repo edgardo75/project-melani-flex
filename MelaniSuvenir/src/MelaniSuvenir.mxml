@@ -20,7 +20,7 @@
 				<menuitem type="separator"/>
 				<menuitem label="Cargar Datos Personales"/>
 				<menuitem type="separator"/>
-				<menuitem label="Cargar Datos Completo"/>
+				<menuitem label="Cargar y Editar Datos Completo"/>
 				<menuitem type="separator"/>
 			</menuitem>
 			<menuitem label="Empleados">
@@ -97,7 +97,7 @@
 					panelCentral.addChild(new cargarVendedores());						
 				}
 				
-				if(event.item.@label =="Cargar Datos Completo"){
+				if(event.item.@label =="Cargar y Editar Datos Completo"){
 					panelCentral.removeAllChildren();
 					panelCentral.addChild(new ClienteDomicilioTelefono());						
 				}
@@ -146,7 +146,7 @@
 				
 			}
 			protected function verInformeCliente():void{
-				var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportClient";
+				var source:String="http://localhost:8080/WebMelanie2/ShowReportClient";
 				var urlReq:URLRequest=new URLRequest(source);
 				navigateToURL(urlReq,"_blank");
 			
@@ -156,12 +156,12 @@
 			
 			}
 			protected function verInformeProductos():void{
-				var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportProductos"
+				var source:String="http://localhost:8080/WebMelanie2/ShowReportProductos"
 				var urlReq:URLRequest=new URLRequest(source);
 				navigateToURL(urlReq,"_blank");
 			}
 			protected function verInformeBarrios():void{
-				var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportBarrios"
+				var source:String="http://localhost:8080/WebMelanie2/ShowReportBarrios"
 				var urlReq:URLRequest=new URLRequest(source);
 				navigateToURL(urlReq,"_blank");
 			

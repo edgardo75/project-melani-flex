@@ -99,27 +99,39 @@
 						PopUpManager.centerPopUp(popup);
 						cli.searchClientForNameAndLastName(txtnombrecliente.text.toString(),txtapellidocliente.text.toString());
 						
-					}else{
-						if(keypress.currentTarget.toString().indexOf("txtnombrecliente")!=-1&&txtnombrecliente.text.length>=4){
-							txtapellidocliente.setFocus();
+							}else{
+										if(keypress.currentTarget.toString().indexOf("txtnombrecliente")!=-1 && txtnombrecliente.text.length>=4)
+											txtapellidocliente.setFocus();
+									
+									
+									    else{
+												if(cmbTarjetasCreditoDebito.text.length>0)
+													txtnumerocuponpago.setFocus();
+												else{
+														if(keypress.currentTarget.toString().indexOf("cmbVendedores")!=-1 && cmbVendedores.selectedItemId>=0){
+															if(cmbVendedores.selectedItem.estado==0)
+																avisoCartelVendedorDeshabilitado();
+															else
+																txtpassword.setFocus();
+														}else{
+															if(keypress.currentTarget.toString().indexOf("txtpassword")!=-1 && txtpassword.text.length>0)
+																btnGuardarNota.setFocus();
+														
+														    }
+												
+												
+												}
 							
-						}	
-					}
-					if(cmbTarjetasCreditoDebito.text.length>0){
-						txtnumerocuponpago.setFocus();
-					}
-					if(keypress.currentTarget.toString().indexOf("cmbVendedores")!=-1&&cmbVendedores.selectedItemId>=0){
-						if(cmbVendedores.selectedItem.estado==0)
-							avisoCartelVendedorDeshabilitado();
-						else
-							txtpassword.setFocus();
-					}
+										}
 					
-					if(keypress.currentTarget.toString().indexOf("txtpassword")!=-1&&txtpassword.text.length>0)
-						btnGuardarNota.setFocus();
+					
+					
+				
+					
 				}
 				
 				
+			  }
 			}
 			protected function avisoCartelVendedorDeshabilitado():void{
 			
@@ -135,7 +147,7 @@
 			protected function operationResultSearchClient(event:ResultEvent):void
 			{
 				PopUpManager.removePopUp(popup);
-				
+				productscomp.cmbproduct.setFocus();
 				
 				xmlcliente =new XMLList(event.result);
 				
@@ -572,7 +584,7 @@
 					default:
 					{
 						
-						var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportNotaPedido?nronota="+nro;
+						var source:String="http://localhost:8080/WebMelanie2/ShowReportNotaPedido?nronota="+nro;
 						var urlReq:URLRequest= new URLRequest(source);
 						navigateToURL(urlReq,"_blank");
 						limpiarTodo();
@@ -638,20 +650,20 @@
 		<s:RadioButtonGroup id="stockFuturo"/>
 		<s:RadioButtonGroup id="notaCancelada"/>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wsnotapedido" wsdl="http://192.168.1.101:8080/ServiceNotaPedido/NotaPedidoWs?WSDL">
+		<s:WebService id="wsnotapedido" wsdl="http://localhost:8080/ServiceNotaPedido/NotaPedidoWs?WSDL">
 			<s:operation name="agregarNotaPedido" fault="operationNota_faultHandler(event)"
 						 result="operationNota_resultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
 		<s:WebService id="wstarjetascreditodebito" 
-					  wsdl="http://192.168.1.101:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="false"
+					  wsdl="http://localhost:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="false"
 					  >
 			<s:operation name="searchAllTarjetasCreditoDebito" result="operation1_resultHandler(event)" fault="operation1_faultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
-		<s:WebService wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL"
+		<s:WebService wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"
 					  id="cli" showBusyCursor="false">
 			<s:operation fault="operationFaultGetClient(event)"
 						 result="operationResultGetClient(event)" 
@@ -665,7 +677,7 @@
 			</s:operation>
 			
 		</s:WebService>
-		<s:WebService id="wsempleados" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
+		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
 			<s:operation name="selectAllEmpleados"
 						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
 						 result="operation2_resultHandlerSelectAllEmpleados(event)">
@@ -714,10 +726,10 @@
 	<s:Label id="lblnocli" x="115" y="62" width="187" fontFamily="Verdana" fontSize="18"
 			 fontWeight="bold" verticalAlign="bottom"/>
 	<s:TextInput id="txtnombrecliente" x="114" y="85" width="188" fontSize="18" maxChars="40"
-				 prompt="Ingrese Nombre..." restrict="a-z A-Z ñ-Ñ" />
+				 prompt="Ingrese Nombre..." restrict="A-ÑZa-ñz áéíóú-ÁÉÍÓÚ" />
 	<s:Label id="lblapellido" x="43" y="128" fontSize="16" fontWeight="bold" text="Apellido:"/>
 	<s:TextInput id="txtapellidocliente" x="113" y="118" width="189" fontSize="18" maxChars="40"
-				 prompt="Ingrese Apellido..." restrict="a-z A-Z ñ-Ñ"/>
+				 prompt="Ingrese Apellido..." restrict="A-ÑZa-ñz áéíóú-ÁÉÍÓÚ"/>
 	<s:Button id="btninserclient" x="29" y="468" width="134" height="30" label="DatosCliente"
 			  click="btninserclient_clickHandler(event)" fontSize="16"
 			  toolTip="Muestra una Ventana para Ingresar Datos Personales de un Cliente"/>

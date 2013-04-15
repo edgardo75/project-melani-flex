@@ -2220,7 +2220,7 @@
 				
 				if(adgNotas.selectedItem.id>0){
 					
-					var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportNotaPedido?nronota="+adgNotas.selectedItem.id;
+					var source:String="http://localhost:8080/WebMelanie2/ShowReportNotaPedido?nronota="+adgNotas.selectedItem.id;
 					
 					var urlReq:URLRequest= new URLRequest(source);
 					navigateToURL(urlReq,"_blank");
@@ -2643,7 +2643,7 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:ArrayCollection id="arrayDg"/>
 		<s:DateTimeFormatter id="dtf" dateTimePattern="dd/MM/yyyy"/>
-		<s:WebService id="wsnotas" wsdl="http://192.168.1.101:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wsnotas" wsdl="http://localhost:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true">
 			<s:operation name="actualizarNotaPedido"
 						 result="operation9_resultHandler(event)"
 						 fault="operation9_faultHandler(event)">
@@ -2690,7 +2690,7 @@
 			</s:operation>
 				
 		</s:WebService>
-		<s:WebService id="wsempleados" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
+		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
 			<s:operation name="selectAllEmpleados"
 						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
 						 result="operation2_resultHandlerSelectAllEmpleados(event)">
@@ -2698,13 +2698,13 @@
 			</s:operation>
 		</s:WebService>
 		<s:WebService id="wstarjetascreditodebito" 
-					  wsdl="http://192.168.1.101:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
+					  wsdl="http://localhost:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
 					  >
 			<s:operation name="searchAllTarjetasCreditoDebito" result="operation4_resultHandler(event)" fault="operation4_faultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
-		<s:WebService id="productosWs" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?wsdl"
+		<s:WebService id="productosWs" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?wsdl"
 					  showBusyCursor="true">
 			<s:operation name="searchAllProductos"
 						 fault="operation1_faultGetRecord(event)"
@@ -2723,15 +2723,15 @@
 		<s:NumberFormatter id="formaternumbergrid" fractionalDigits="3" decimalSeparator="."  />
 	</fx:Declarations>
 	
-	<s:Button id="first_btn" x="7" y="115" width="85" height="27" label="&lt;&lt;"
+	<s:Button id="first_btn" x="7" y="121" width="85" height="27" label="&lt;&lt;"
 			  click="first_clickHandler(event)" enabled="false" fontSize="16" fontWeight="bold"/>
-	<s:Button id="prev_btn" x="313" y="115" width="88" height="27" label="&lt;"
+	<s:Button id="prev_btn" x="313" y="121" width="88" height="27" label="&lt;"
 			  click="prev_btn_clickHandler(event)" enabled="false" fontSize="16" fontWeight="bold"/>
-	<s:Button id="next_btn" x="624" y="115" width="84" height="26" label="&gt;"
+	<s:Button id="next_btn" x="624" y="121" width="84" height="26" label="&gt;"
 			  click="next_btn_clickHandler(event)" enabled="false" fontSize="16" fontWeight="bold"/>
-	<s:Button id="last_btn" x="922" y="115" width="89" height="28" label="&gt;&gt;"
+	<s:Button id="last_btn" x="922" y="121" width="89" height="28" label="&gt;&gt;"
 			  click="last_clickHandler(event)" enabled="false" fontSize="16" fontWeight="bold"/>
-	<s:DataGrid id="adgNotas" click="adgNotas_clickHandler(event)" x="7" y="2" width="1006" height="111"  variableRowHeight="true" doubleClick="adgNotas_doubleClickHandler(event)"
+	<s:DataGrid id="adgNotas" click="adgNotas_clickHandler(event)" x="2" y="2" width="1006" height="111"  variableRowHeight="true" doubleClick="adgNotas_doubleClickHandler(event)"
 				selectionMode="singleRow" doubleClickEnabled="true" toolTip="Haga doble click para seleccionar la Nota correspondiente" alternatingRowColors="[#ffffff,#fcff4f7]">
 		<s:columns>
 			<s:ArrayList>
