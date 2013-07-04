@@ -105,14 +105,14 @@
 									
 									
 									    else{
-												if(cmbTarjetasCreditoDebito.text.length>0)
+												if(keypress.currentTarget.toString().indexOf("cmbTarjetasCreditoDebito")!=-1 && cmbTarjetasCreditoDebito.text.length>0)
 													txtnumerocuponpago.setFocus();
 												else{
 														if(keypress.currentTarget.toString().indexOf("cmbVendedores")!=-1 && cmbVendedores.selectedItemId>=0){
-															if(cmbVendedores.selectedItem.estado==0)
-																avisoCartelVendedorDeshabilitado();
-															else
-																txtpassword.setFocus();
+																if(cmbVendedores.selectedItem.estado==0)
+																	avisoCartelVendedorDeshabilitado();
+																else
+																	txtpassword.setFocus();
 														}else{
 															if(keypress.currentTarget.toString().indexOf("txtpassword")!=-1 && txtpassword.text.length>0)
 																btnGuardarNota.setFocus();
@@ -242,7 +242,7 @@
 				wstarjetascreditodebito.searchAllTarjetasCreditoDebito();
 				wsempleados.selectAllEmpleados();
 			}
-			
+			//--------------------------------------------------------------------------------------------------------------------------------
 			protected function verificarProductosCargados():void{
 				
 				
@@ -352,20 +352,22 @@
 			var temp_tot_porc_desc:Number=0;
 			var temp_tot_desc:Number=0;
 			
-			for(var i:int=0;i<productscomp.arrayDg.length;i++){
-				temp_tot_desc+=Number(Number(productscomp.arrayDg[i].prec_descuento).toFixed(3));
-				if(productscomp.desc_resto>0&&Number(productscomp.arrayDg[i].porc_desc)>0)
-					productscomp.arrayDg[i].porc_desc="0.00";
-				else				
-				   temp_tot_porc_desc+=Number(Number(productscomp.arrayDg[i].porc_desc).toFixed(3));
-				
-				
-				
-			}
-			
 			var calcularTotalAPagar:Number=productscomp.totGral-temp_tot_desc;
-			
 			var recargo:Number=productscomp.tot_recargo*Number(calcularTotalAPagar.toFixed(3))/100;
+			
+					for(var i:int=0;i<productscomp.arrayDg.length;i++){
+						
+						temp_tot_desc+=Number(Number(productscomp.arrayDg[i].prec_descuento).toFixed(3));
+						if(productscomp.desc_resto>0&&Number(productscomp.arrayDg[i].porc_desc)>0)
+							productscomp.arrayDg[i].porc_desc="0.00";
+						else				
+						   temp_tot_porc_desc+=Number(Number(productscomp.arrayDg[i].porc_desc).toFixed(3));		
+						
+					}
+			
+				
+			
+			
 
 			if(temp_tot_desc>0){
 				
@@ -381,62 +383,64 @@
 						}else
 							productscomp.lblTotApagar.text=Number(productscomp.totGral-temp_tot_desc).toFixed(3);
 						
-						if(int(productscomp.mskanticipo.text)>0)
-							productscomp.lblsaldo.text=Number(Number(productscomp.lblTotApagar.text)-Number(productscomp.mskanticipo.text)).toFixed(3);
-						else
-							productscomp.lblsaldo.text="0.000";
+							if(int(productscomp.mskanticipo.text)>0)
+								productscomp.lblsaldo.text=Number(Number(productscomp.lblTotApagar.text)-Number(productscomp.mskanticipo.text)).toFixed(3);
+							else
+								productscomp.lblsaldo.text="0.000";
 						
 						productscomp.porc_desc_total=temp_tot_porc_desc;
 						//******************************************************************************************************
 			}else{
 				//********************************************************************----------------------------------------------
-				if(productscomp.tot_recargo>0){
-					productscomp.lblTotApagar.text=Number(productscomp.totGral-productscomp.totGralDesc+(recargo)).toFixed(3);
-					productscomp.lbltotalconrecargo.text=Number(productscomp.totGral-productscomp.totGralDesc+(recargo)).toFixed(3);
-				}else
-					productscomp.lblTotApagar.text=Number(productscomp.totGral-productscomp.totGralDesc).toFixed(3);
+						if(productscomp.tot_recargo>0){
+							productscomp.lblTotApagar.text=Number(productscomp.totGral-productscomp.totGralDesc+(recargo)).toFixed(3);
+							productscomp.lbltotalconrecargo.text=Number(productscomp.totGral-productscomp.totGralDesc+(recargo)).toFixed(3);
+						}else
+							productscomp.lblTotApagar.text=Number(productscomp.totGral-productscomp.totGralDesc).toFixed(3);
 				
-				if(int(productscomp.mskanticipo.text)>0){
-					
-					productscomp.lblsaldo.text=Number(Number(Number(productscomp.totGral-productscomp.totGralDesc)-(Number(productscomp.mskanticipo.text)))+recargo).toFixed(3);
-				}else
-					productscomp.lblsaldo.text="0.000";
+						if(int(productscomp.mskanticipo.text)>0){
+							
+							productscomp.lblsaldo.text=Number(Number(Number(productscomp.totGral-productscomp.totGralDesc)-(Number(productscomp.mskanticipo.text)))+recargo).toFixed(3);
+							
+						}else
+							productscomp.lblsaldo.text="0.000";
 				
-				productscomp.porc_desc_total=Number(Number(productscomp.txtdescuento.text).toFixed(2));
+					productscomp.porc_desc_total=Number(Number(productscomp.txtdescuento.text).toFixed(2));
 				//*****************************************************------------------------------------------------------------
 			}
 			
-			if(productscomp.txtdescuento.text.length==0)
-				productscomp.txtdescuento.text="0.0";
+						if(productscomp.txtdescuento.text.length==0)
+							productscomp.txtdescuento.text="0.0";
+						
+							
+						if(productscomp.mskrecargo.text.length==0)
+							productscomp.mskrecargo.text="0.0";
+						
+						if(productscomp.mskanticipo.text.length==0)
+							productscomp.mskanticipo.text="0.0";
+			
+					var pendiente:int=1;
+					
+					if(rdbentregadosi.selected){
+						entregado=1;
+						pendiente=0;
+					}
+			
+					if(rdbcanceladanotasi.selected)
+						 canceladanota=1;
+			
+			
+					if(rdbstockfuturosi.selected)
+						stockfuturo=1;
 			
 				
-			if(productscomp.mskrecargo.text.length==0)
-				productscomp.mskrecargo.text="0.0";
 			
-			if(productscomp.mskanticipo.text.length==0)
-				productscomp.mskanticipo.text="0.0";
-			
-			var pendiente:int=1;
-			if(rdbentregadosi.selected){
-				entregado=1;
-				pendiente=0;
-			}
-			
-			if(rdbcanceladanotasi.selected)
-				 canceladanota=1;
-			
-			
-			if(rdbstockfuturosi.selected)
-				stockfuturo=1;
-			
-				
-			
-			if(rdanuladasi.selected)
-				anulada=1;
+					if(rdanuladasi.selected)
+						anulada=1;
 						
 			
-			if(rdbenefectivosi.selected)
-				enfectivo=1;
+					if(rdbenefectivosi.selected)
+						enfectivo=1;
 			
 			
 			
@@ -458,39 +462,44 @@
 				"<montototal>"+productscomp.lblTotGral.text+"</montototal>\n" +
 				"<anticipo>"+productscomp.mskanticipo.text+"</anticipo>\n" +
 				"<anticipoacum>0</anticipoacum>\n" +
-				"<saldo>"+productscomp.lblsaldo.text+"</saldo>\n" ;
+				"<saldo>"+productscomp.lblsaldo.text+"</saldo>\n";
+			
 				if(entregado==1){
-				xmlnota+="<entregado>"+entregado+"</entregado>\n" +
-					"<usuario_entregado>"+cmbVendedores.selectedItem.id+"</usuario_entregado>\n" ;
-				}else{
 					xmlnota+="<entregado>"+entregado+"</entregado>\n" +
-						"<usuario_entregado>0</usuario_entregado>\n" ;
+					"<usuario_entregado>"+cmbVendedores.selectedItem.id+"</usuario_entregado>\n";
+				}else{
+						xmlnota+="<entregado>"+entregado+"</entregado>\n" +
+							"<usuario_entregado>0</usuario_entregado>\n" ;
 				}
 				
 				xmlnota+="<usuario_expidio_nota>"+cmbVendedores.selectedItem.id+"</usuario_expidio_nota>\n" +
 				"<stockfuturo>"+stockfuturo+"</stockfuturo>\n" ;
-				if(anulada==1){
-				xmlnota+="<anulado>"+anulada+"</anulado>\n" +
-				"<id_usuario_anulado>"+cmbVendedores.selectedItem.id+"</id_usuario_anulado>\n" ;
-				}else{
-					xmlnota+="<anulado>"+anulada+"</anulado>\n" +
-						"<id_usuario_anulado>0</id_usuario_anulado>\n" ;
-						
-				}
-				if(canceladanota==1){
-				xmlnota+="<cancelado>"+canceladanota+"</cancelado>\n" +
-					"<usuario_cancelo_nota>"+cmbVendedores.selectedItem.id+"</usuario_cancelo_nota>\n" ;
-				}else{
-					xmlnota+="<cancelado>"+canceladanota+"</cancelado>\n" +
-						"<usuario_cancelo_nota>0</usuario_cancelo_nota>\n" ;
-				}
+				
+						if(anulada==1){
+							xmlnota+="<anulado>"+anulada+"</anulado>\n" +
+							"<id_usuario_anulado>"+cmbVendedores.selectedItem.id+"</id_usuario_anulado>\n" ;
+						}else{
+							xmlnota+="<anulado>"+anulada+"</anulado>\n" +
+							"<id_usuario_anulado>0</id_usuario_anulado>\n" ;								
+						}
+				
+						if(canceladanota==1){
+							xmlnota+="<cancelado>"+canceladanota+"</cancelado>\n" +
+							"<usuario_cancelo_nota>"+cmbVendedores.selectedItem.id+"</usuario_cancelo_nota>\n" ;
+						}else{
+							xmlnota+="<cancelado>"+canceladanota+"</cancelado>\n" +
+								"<usuario_cancelo_nota>0</usuario_cancelo_nota>\n" ;
+						}
+				
 				xmlnota+="<descuentonota>"+Number(productscomp.lbldescuento.text).toFixed(3)+"</descuentonota>\n" ;
 				
 					if(Number(Number(productscomp.mskdescuentopesos.text).toFixed(3))>0)
 						xmlnota+="<descuentopesos>" +Number(productscomp.mskdescuentopesos.text).toFixed(3)+"</descuentopesos>\n";
 					else
 						xmlnota+="<descuentopesos>0</descuentopesos>\n";
-					xmlnota+="<porcentajerecargo>"+productscomp.tot_recargo+"</porcentajerecargo>\n" +
+					
+				xmlnota+="<porcentajerecargo>"+productscomp.tot_recargo+"</porcentajerecargo>\n" +
+					
 				"<montototalapagar>"+productscomp.lblTotApagar.text+"</montototalapagar>\n"+
 				"<observaciones>" +this.txtObservacionesNota.text+"</observaciones>\n" +
 				"<pendiente>"+pendiente+"</pendiente>\n"+
@@ -584,7 +593,7 @@
 					default:
 					{
 						
-						var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportNotaPedido?nronota="+nro;
+						var source:String="http://localhost:8080/WebMelanie2/ShowReportNotaPedido?nronota="+nro;
 						var urlReq:URLRequest= new URLRequest(source);
 						navigateToURL(urlReq,"_blank");
 						limpiarTodo();
@@ -595,6 +604,7 @@
 				
 			}
 			protected function limpiarTodo():void{
+				
 				mskdocu.text="";
 				lblapellido.text="";
 				lblnocli.text="";
@@ -607,8 +617,8 @@
 				rdbcanceladanotasi.selected=false;
 				rdbenefectivono.selected=false;
 				rdbenefectivosi.selected=true;
-				rdbentregadono.selected=false;
-				rdbentregadosi.selected=true;
+				rdbentregadono.selected=true;
+				rdbentregadosi.selected=false;
 				rdbstockfuturono.selected=false;
 				rdbstockfuturosi.selected=true;
 				cmbVendedores.selectedItemId=-1;
@@ -650,20 +660,20 @@
 		<s:RadioButtonGroup id="stockFuturo"/>
 		<s:RadioButtonGroup id="notaCancelada"/>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wsnotapedido" wsdl="http://192.168.1.101:8080/ServiceNotaPedido/NotaPedidoWs?WSDL">
+		<s:WebService id="wsnotapedido" wsdl="http://localhost:8080/ServiceNotaPedido/NotaPedidoWs?WSDL">
 			<s:operation name="agregarNotaPedido" fault="operationNota_faultHandler(event)"
 						 result="operationNota_resultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
 		<s:WebService id="wstarjetascreditodebito" 
-					  wsdl="http://192.168.1.101:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="false"
+					  wsdl="http://localhost:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="false"
 					  >
 			<s:operation name="searchAllTarjetasCreditoDebito" result="operation1_resultHandler(event)" fault="operation1_faultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
-		<s:WebService wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL"
+		<s:WebService wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"
 					  id="cli" showBusyCursor="false">
 			<s:operation fault="operationFaultGetClient(event)"
 						 result="operationResultGetClient(event)" 
@@ -677,7 +687,7 @@
 			</s:operation>
 			
 		</s:WebService>
-		<s:WebService id="wsempleados" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
+		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
 			<s:operation name="selectAllEmpleados"
 						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
 						 result="operation2_resultHandlerSelectAllEmpleados(event)">
