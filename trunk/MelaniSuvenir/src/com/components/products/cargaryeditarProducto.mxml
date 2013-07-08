@@ -4,7 +4,7 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
 		 xmlns:components="com.hillelcoren.components.*"
-		 width="722" height="418" creationComplete="group1_creationCompleteHandler(event)">
+		 width="1130" height="418" creationComplete="group1_creationCompleteHandler(event)">
 	
 	<fx:Script>
 		<![CDATA[
@@ -13,6 +13,8 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			
+			import org.flexunit.runner.Result;
 			
 			import popus.Progress;
 			[Bindable]
@@ -250,6 +252,7 @@
 				txtdescripcion.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				txtprecio.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				cmbbuscarproducto.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				imgProducto.source="assets/add.jpg";
 				
 			}
 			//---------------------------------------------------------------------------
@@ -268,6 +271,7 @@
 			
 			protected function adgproductos_doubleClickHandler(event:MouseEvent):void
 			{
+				var bytessImages:int=adgproductos.selectedItem.img;
 				
 				idproducto=adgproductos.selectedItem.id;
 				txtprecio.text=adgproductos.selectedItem.precio;
@@ -275,6 +279,25 @@
 				txtcantidadinicial.text=adgproductos.selectedItem.cantidadInicial;
 				txtcodigoproducto.text=adgproductos.selectedItem.idproduct;
 				txtdescripcion.text=adgproductos.selectedItem.descripcion;
+				
+				if(bytessImages>0)
+					
+					servicesProducto.obtenerImagenProducto(idproducto);
+				else
+					imgProducto.source="assets/add.jpg";
+				
+			}
+			protected function producto_imagen_seleccion(event:ResultEvent):void{
+				
+				
+				
+				var imgBytes:ByteArray=new ByteArray();	
+				imgBytes=event.result as ByteArray;
+				imgProducto.source=imgBytes;
+			}
+			protected function producto_imagen_error(event:FaultEvent):void{
+				PopUpManager.removePopUp(popup);
+				Alert.show("Error al seleccionar Imagen de Base de Datos");
 			}
 			
 		]]>
@@ -302,6 +325,11 @@
 						 result="producto_resultHandler(event)"
 						 fault="producto_faultHandler(event)">
 				
+				
+			</s:operation>
+			<s:operation name="obtenerImagenProducto"
+						 result="producto_imagen_seleccion(event)"
+						 fault="producto_imagen_error(event)">
 				
 			</s:operation>
 			
@@ -353,10 +381,10 @@
 	<controls:MaskedTextInput id="txtcantidadinicial" x="269" y="310" fontSize="16" restrict="0-9."/>
 	<controls:MaskedTextInput id="txtcantidaddisponible" x="9" y="351" fontSize="16" restrict="0-9."/>
 	<s:Button id="btnnuevo" x="233" y="384" width="81" height="29" label="Nuevo"
-			  click="btnnuevo_clickHandler(event)" fontSize="16"/>
+			  click="btnnuevo_clickHandler(event)" fontSize="16" toolTip="Cargar Nuevo Producto"/>
 	<s:Button id="btnguardar" x="322" y="384" width="89" height="29" label="Guardar"
-			  click="btnguardar_clickHandler(event)" fontSize="16"/>
-	<s:Button id="btnCloseClientComponent" x="700" y="9" width="16" height="19"
+			  click="btnguardar_clickHandler(event)" fontSize="16" toolTip="Guardar Datos de Producto"/>
+	<s:Button id="btnCloseClientComponent" x="1104" y="10" width="16" height="19"
 			  click="btnClose_clickHandler(event)" icon="assets/icon_close.png"/>
 	<s:Label x="223" y="43" color="#3FF182" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="CARGAR Y EDITAR PRODUCTOS"/>
@@ -367,4 +395,12 @@
 	<s:Label x="270" y="337" fontFamily="Arial" fontSize="16" fontWeight="bold" text="Buscar:"/>
 	<components:AutoComplete x="271" y="351" width="197" id="cmbbuscarproducto" matchType="beginning" labelField="descripcion">
 	</components:AutoComplete>
+	<mx:VRule x="720" y="10" width="1" height="398"/>
+	<s:BorderContainer x="729" y="67" width="391" height="308">
+		<s:Button id="btnExamniar" x="10" y="22" label="Examinar....."/>
+		<s:Label x="10" y="5" width="369" color="#3FF182" fontFamily="Verdana" fontSize="16"
+				 fontWeight="bold" text="CARGAR Y VER IMAGEN DE PRODUCTO" textAlign="center"/>
+		<s:Image id="imgProducto" x="10" y="48" width="363" height="219"/>
+		<s:Button id="btnSubirImagen" x="10" y="275" label="Subir"/>
+	</s:BorderContainer>
 </s:Group>
