@@ -640,8 +640,8 @@
 	<s:Label x="578" y="9" fontSize="16" text="Cod.Postal"/>
 	<controls:MaskedTextInput id="txtcodpostal" x="579" y="22" width="95" height="25" fontSize="16"
 							  maxChars="10" required="true" restrict="0-9 a-z A-Z -_"/>
-	<s:Button id="btnAddLocalidades" x="678" y="26" width="36" label="A"
-			  click="btnAddLocalidades_clickHandler(event)" enabled="false" icon="assets/add.jpg"
+	<s:Button id="btnAddLocalidades" x="678" y="26" width="36" label="+"
+			  click="btnAddLocalidades_clickHandler(event)" enabled="false"
 			  toolTip="Agregar Una Localidad"/>
 	<controls:MaskedTextInput id="txtpiso" x="220" y="116" width="65" fontSize="16" maxChars="10"
 							  restrict="0-9 a-z A-Z -_"/>
@@ -667,9 +667,9 @@
 	</components:AdvancedAutoComplete>
 	<s:Label x="540" y="53" fontSize="16" text="Barrios"/>
 	<s:Button id="btnaddcalles" x="495" y="71" width="30" label="+"
-			  click="btnaddcalles_clickHandler(event)" enabled="false" icon="assets/add.jpg"/>
+			  click="btnaddcalles_clickHandler(event)" enabled="false"/>
 	<s:Button id="btnaddbarrios" x="775" y="71" width="29" label="+"
-			  click="btnaddbarrios_clickHandler(event)" enabled="false" icon="assets/add.jpg"/>
+			  click="btnaddbarrios_clickHandler(event)" enabled="false"/>
 	<s:TextInput id="txtentrecalle" x="12" y="157" width="214" fontSize="16" maxChars="255" restrict="A-ÑZa-ñz áéíóú-ÁÉÍÓÚ"/>
 	<s:Label x="13" y="143" fontSize="16" text="Entre Calle y Calle"/>
 	<controls:MaskedTextInput id="txtnumero" x="37" y="116" width="98" fontSize="16" maxChars="10"
