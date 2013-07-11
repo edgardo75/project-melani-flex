@@ -413,7 +413,7 @@
 	</mx:VBox>
 	<s:Button id="btnGuardar" x="24" y="485" width="106" height="32" label="Guardar"
 			  click="btnGuardar_clickHandler(event)" enabled="false" fontSize="16"
-			  icon="@Embed('assets/bigfolder.png')"/>
+			  />
 	<s:Button id="btnlimpiartodo" x="171" y="487" width="99" height="29" label="Limpiar"
 			  click="btnlimpiartodo_clickHandler(event)" enabled="false" fontSize="16"/>
 </s:Group>
