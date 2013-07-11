@@ -393,7 +393,7 @@
 			
 		]]>
 	</fx:Script>
-	<s:Button id="btnCloseClientComponent" x="778" y="4" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
+	<s:Button id="btnCloseClientComponent" x="862" y="7" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
 	<mx:VBox id="box" width="838" 
 					 verticalCenter="9"  horizontalCenter="-1" height="428">		
 	
