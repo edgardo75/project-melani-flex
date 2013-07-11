@@ -22,6 +22,8 @@
 			[Bindable]
 			private var idproducto:int=0;
 			private var popup:Progress;
+			[Bindable]
+			private var cargarImagen:FileReference;
 			
 			
 			protected function btnnuevo_clickHandler(event:MouseEvent):void
@@ -252,7 +254,7 @@
 				txtdescripcion.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				txtprecio.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				cmbbuscarproducto.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
-				imgProducto.source="assets/add.jpg";
+				imgProducto.source="assets/android-logo-400x300.jpg";
 				
 			}
 			//---------------------------------------------------------------------------
@@ -284,7 +286,7 @@
 					
 					servicesProducto.obtenerImagenProducto(idproducto);
 				else
-					imgProducto.source="assets/add.jpg";
+					imgProducto.source="assets/android-logo-400x300.jpg";
 				
 			}
 			protected function producto_imagen_seleccion(event:ResultEvent):void{
@@ -298,6 +300,53 @@
 			protected function producto_imagen_error(event:FaultEvent):void{
 				PopUpManager.removePopUp(popup);
 				Alert.show("Error al seleccionar Imagen de Base de Datos");
+			}
+			
+			protected function btnExamniar_clickHandler(event:MouseEvent):void
+			{
+				var arr:Array=[];
+				cargarImagen=new FileReference();
+				arr.push(new FileFilter("Images", "*.jpg;*.gif;*.png"));
+				cargarImagen.browse(arr);
+				cargarImagen.addEventListener(Event.SELECT,imagenSeleccion);
+				cargarImagen.addEventListener(Event.COMPLETE,imagenCargaCompleta);
+			}
+			
+			protected function imagenCargaCompleta(event:Event):void{
+				
+				imgProducto.source=cargarImagen.data;
+				
+				
+			}
+			protected function imagenSeleccion(event:Event):void{
+				cargarImagen.load();
+			}
+			
+			
+			protected function btnSubirImagen_clickHandler(event:MouseEvent):void
+			{
+				
+				if(idproducto>0){
+					popup=Progress(PopUpManager.createPopUp(this,Progress,true));
+					PopUpManager.centerPopUp(popup);
+					servicesProducto.grabarImagen(idproducto,cargarImagen.data);
+				}else
+					Alert.show("Debe Seleccionar un producto\n, antes de subir la imagen.");
+			}
+			
+			protected function operation2_resultHandler(event:ResultEvent):void
+			{
+				PopUpManager.removePopUp(popup);
+				Alert.show("Resultado ");
+				servicesProducto.searchAllProductos();
+				
+			}
+			
+			protected function operation2_faultHandler(event:FaultEvent):void
+			{
+				PopUpManager.removePopUp(popup);
+				Alert.show("Fallo ");
+				
 			}
 			
 		]]>
@@ -332,7 +381,11 @@
 						 fault="producto_imagen_error(event)">
 				
 			</s:operation>
-			
+			<s:operation name="grabarImagen"
+						 result="operation2_resultHandler(event)"
+						 fault="operation2_faultHandler(event)">
+				
+			</s:operation>
 			
 		</s:WebService>
 		<s:CurrencyFormatter id="cf" currencySymbol="$" fractionalDigits="3" locale="es-AR"  
@@ -396,11 +449,13 @@
 	<components:AutoComplete x="271" y="351" width="197" id="cmbbuscarproducto" matchType="beginning" labelField="descripcion">
 	</components:AutoComplete>
 	<mx:VRule x="720" y="10" width="1" height="398"/>
-	<s:BorderContainer x="729" y="67" width="391" height="308">
-		<s:Button id="btnExamniar" x="10" y="22" label="Examinar....."/>
+	<s:BorderContainer x="729" y="39" width="391" height="308">
+		<s:Button id="btnExamniar" x="10" y="22" label="Examinar....."
+				  click="btnExamniar_clickHandler(event)"/>
 		<s:Label x="10" y="5" width="369" color="#3FF182" fontFamily="Verdana" fontSize="16"
 				 fontWeight="bold" text="CARGAR Y VER IMAGEN DE PRODUCTO" textAlign="center"/>
 		<s:Image id="imgProducto" x="10" y="48" width="363" height="219"/>
-		<s:Button id="btnSubirImagen" x="10" y="275" label="Subir"/>
+		<s:Button id="btnSubirImagen" x="10" y="275" label="Subir..."
+				  click="btnSubirImagen_clickHandler(event)"/>
 	</s:BorderContainer>
 </s:Group>

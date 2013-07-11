@@ -726,7 +726,7 @@
 		<s:RadioButton id="rdbcanceladanotasi" label="Si" groupName="notaCancelada"/>
 		<s:RadioButton id="rdbcanceladanotano" label="No" selected="true" groupName="notaCancelada"/>
 	</s:VGroup>
-	<s:Button id="btnCloseClientComponent" x="994" y="10" width="27" height="19" icon="assets/icon_close.png" click="btnCloseClientComponent_clickHandler(event)"/>
+	<s:Button id="btnCloseClientComponent" x="1087" y="10" width="27" height="19" icon="assets/icon_close.png" click="btnCloseClientComponent_clickHandler(event)"/>
 	<s:Label x="20" y="39" height="15" fontSize="16" fontWeight="bold" text="Documento:"/>
 	<controls:MaskedTextInput id="mskdocu" x="116" y="34" enter="mskdocu_enterHandler(event)"
 							  fontFamily="Verdana" fontSize="20" inputMask="########" maxChars="8"
