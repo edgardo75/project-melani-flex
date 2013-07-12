@@ -244,5 +244,5 @@
 	<s:Button id="btnguardar" x="490" y="511" width="91" height="33" label="Guardar"
 			  click="btnguardar_clickHandler(event)" enabled="true" fontSize="16"/>
 	<s:Label x="506" y="31" fontSize="16" fontWeight="normal" text="Observaciones"/>
-	<s:Button id="btnCloseClientComponent" x="898" y="9" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
+	<s:Button id="btnCloseClientComponent" x="1036" y="10" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
 </s:Group>

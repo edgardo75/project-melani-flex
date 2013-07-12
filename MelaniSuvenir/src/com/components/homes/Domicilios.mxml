@@ -94,7 +94,7 @@
 				
 				serviceProvincias.searchAllProvincias();
 				wslocaliades.searchAllLocalidadesbyidprov(18);
-				wsbarrios.searchallbarrios();
+				wsbarrios.searchAllBarrios();
 				wscalles.searchAllCalles();
 				cmborientacion.dataProvider=orientlist;
 				cmborientacion.selectedItemId=5;
@@ -742,7 +742,7 @@
 			
 		</s:WebService>
 		<s:WebService id="wsbarrios" wsdl="http://localhost:8080/ServiceBarrios/BarriosWs?WSDL" showBusyCursor="true">
-			<s:operation name="searchallbarrios" result="operation3_resultHandler(event)" fault="operation3_faultHandler(event)">
+			<s:operation name="searchAllBarrios" result="operation3_resultHandler(event)" fault="operation3_faultHandler(event)">
 				
 			</s:operation>
 			<s:operation name="addBarrio" result="operation6_resultHandler(event)" fault="operation6_faultHandler(event)">

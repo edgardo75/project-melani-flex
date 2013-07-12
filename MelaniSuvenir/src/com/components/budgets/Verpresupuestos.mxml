@@ -535,7 +535,7 @@
 			  click="DataGridUtil.exportADGToClipboard(adgPresupuestos, false, false)"
 			  enabled="false" fontSize="16"
 			  toolTip="Copiar y Pegar listado al portapapeles y visualizar en Excel"/>
-	<s:Button id="btnCloseClientComponent" x="1103" y="10" width="21" height="18" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
+	<s:Button id="btnCloseClientComponent" x="1141" y="5" width="21" height="18" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
 	<s:Button id="btnRegargarlistado" x="993" y="161" width="153" height="33"
 			  label="Regargar Listado" click="btnRegargarlistado_clickHandler(event)"
 			  enabled="false" fontSize="16"/>
