@@ -16,14 +16,14 @@
 			
 			import org.flexunit.runner.Result;
 			
-			import popus.Progress;
+			
 			[Bindable]
 			private var xmllistproducto:XMLList;
 			[Bindable]
 			private var idproducto:int=0;
-			private var popup:Progress;
+			
 			[Bindable]
-			private var cargarImagen:FileReference;
+			private var cargarImagen:FileReference=new FileReference();
 			
 			
 			protected function btnnuevo_clickHandler(event:MouseEvent):void
@@ -92,9 +92,7 @@
 				
 				
 				
-				//mostramos al cliente un popup de espera
-				popup=Progress(PopUpManager.createPopUp(this,Progress,true));
-				PopUpManager.centerPopUp(popup);
+				
 				
 				
 				if(idproducto==0)
@@ -171,7 +169,7 @@
 			}
 			protected function producto_resultHandler(event:ResultEvent):void{
 				var indice:Number;
-				PopUpManager.removePopUp(popup);
+				
 				xmllistproducto=new XMLList(event.result);
 				indice = new Number(product[0].id);
 				switch(indice)
@@ -240,13 +238,14 @@
 			
 			}
 			protected function producto_faultHandler(event:FaultEvent):void{
-				PopUpManager.removePopUp(popup);
+				
 				Alert.show("   SE PRODUJO UN ERROR AL ACTUALIZAR\n UN PRODUCTO, REVISE!!!   ");		
 			
 			
 			}
 			protected function group1_creationCompleteHandler(event:FlexEvent):void
 			{
+				
 				servicesProducto.searchAllProductos();
 				txtcantidadinicial.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				txtcantidaddisponible.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
@@ -286,7 +285,11 @@
 					
 					servicesProducto.obtenerImagenProducto(idproducto);
 				else
-					imgProducto.source="assets/android-logo-400x300.jpg";
+					
+					
+						imgProducto.source="assets/android-logo-400x300.jpg";
+				
+				
 				
 			}
 			protected function producto_imagen_seleccion(event:ResultEvent):void{
@@ -296,16 +299,20 @@
 				var imgBytes:ByteArray=new ByteArray();	
 				imgBytes=event.result as ByteArray;
 				imgProducto.source=imgBytes;
+				
+				
 			}
 			protected function producto_imagen_error(event:FaultEvent):void{
-				PopUpManager.removePopUp(popup);
+				
 				Alert.show("Error al seleccionar Imagen de Base de Datos");
 			}
 			
 			protected function btnExamniar_clickHandler(event:MouseEvent):void
 			{
+				
+				
 				var arr:Array=[];
-				cargarImagen=new FileReference();
+				
 				arr.push(new FileFilter("Images", "*.jpg;*.gif;*.png"));
 				cargarImagen.browse(arr);
 				cargarImagen.addEventListener(Event.SELECT,imagenSeleccion);
@@ -320,6 +327,7 @@
 			}
 			protected function imagenSeleccion(event:Event):void{
 				cargarImagen.load();
+				
 			}
 			
 			
@@ -327,8 +335,7 @@
 			{
 				
 				if(idproducto>0){
-					popup=Progress(PopUpManager.createPopUp(this,Progress,true));
-					PopUpManager.centerPopUp(popup);
+					
 					servicesProducto.grabarImagen(idproducto,cargarImagen.data);
 				}else
 					Alert.show("Debe Seleccionar un producto\n, antes de subir la imagen.");
@@ -336,15 +343,19 @@
 			
 			protected function operation2_resultHandler(event:ResultEvent):void
 			{
-				PopUpManager.removePopUp(popup);
+				
 				Alert.show("Imagen 'Almacenada'");
+				
+				
 				servicesProducto.searchAllProductos();
 				
 			}
 			
 			protected function operation2_faultHandler(event:FaultEvent):void
 			{
-				PopUpManager.removePopUp(popup);
+				
+				imgProducto.source="assets/android-logo-400x300.jpg";
+				
 				Alert.show("Fallo al 'Almacenar' Imagen");
 				
 			}

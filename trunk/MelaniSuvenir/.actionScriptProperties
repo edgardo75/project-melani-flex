@@ -18,10 +18,6 @@
       <libraryPathEntry kind="3" linkType="1" path="C:/tmp/libraryFlex/AutoComplete/AutoComplete/bin/AutoComplete-1.2-Fx4.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="C:/tmp/libraryFlex/flexlib.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="C:/tmp/libraryFlex/as3xls-1.0.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="1" path="C:/tmp/libraryFlex/mireportPublic.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="1" path="C:/Users/Edgardo/Downloads/SparkAutoComplete/libs/as3corelib.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="1" path="C:/tmp/FusionCharts.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="1" path="C:/tmp/FxPDF.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>

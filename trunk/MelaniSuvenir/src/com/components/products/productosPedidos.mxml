@@ -87,7 +87,7 @@
 				adglistpedprod.addEventListener(AdvancedDataGridEvent.ITEM_EDIT_END,itemEditEndHandler);
 				
 
-				cmbproduct.selectedItemId=1;
+				
 				totGral=0;
 				totGralDesc=0;
 				precio_desc=0;
