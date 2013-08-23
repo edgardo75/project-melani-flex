@@ -450,7 +450,7 @@
 			  click="btnguardar_clickHandler(event)" fontSize="16" toolTip="Guardar Datos de Producto"/>
 	<s:Button id="btnCloseClientComponent" x="1104" y="10" width="16" height="19"
 			  click="btnClose_clickHandler(event)" icon="assets/icon_close.png"/>
-	<s:Label x="223" y="43" color="#3FF182" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="223" y="43" color="#3FF182" fontFamily="Verdana" fontSize="18" fontWeight="bold"
 			 text="CARGAR Y EDITAR PRODUCTOS"/>
 	<s:Label x="537" y="248" fontFamily="Arial" fontSize="16" fontWeight="bold"
 			 text="Productos Cargados:"/>
