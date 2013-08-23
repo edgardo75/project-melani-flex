@@ -176,7 +176,7 @@
 							 fontSize="16" fontWeight="bold" matchType="beginning">
 	</components:AutoComplete>
 	<s:Label x="13" y="65" fontSize="16" fontWeight="normal" text="VENDEDORES:"/>
-	<s:Label x="78" y="22" color="#B7E4E0" fontSize="18" fontWeight="bold"
+	<s:Label x="78" y="22" color="#5C7C79" fontSize="18" fontWeight="bold"
 			 text="INFORME DE NOTAS DE PEDIDO ENTRE FECHAS"/>
 	<s:Label x="24" y="115" fontSize="16" fontWeight="normal" text="FECHA INICIO:"/>
 	<s:Label x="284" y="112" fontSize="16" fontWeight="normal" text="FECHA FINAL:"/>
