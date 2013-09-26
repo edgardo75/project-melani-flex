@@ -15,6 +15,7 @@
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			import mx.events.ValidationResultEvent;
+			import mx.graphics.RadialGradient;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
@@ -27,9 +28,11 @@
 			private var vResult:ValidationResultEvent;
 			
 			[Bindable]
-			private var listEmpleados:XMLList;
+				private var listEmpleados:XMLList;
 			[Bindable]
-			public var listEmployee:ArrayCollection;
+				public var listEmployee:ArrayCollection;
+			[Bindable]
+				private var empType:String;
 			
 			private var so:SharedObject=SharedObject.getLocal("userData");
 			
@@ -101,7 +104,7 @@
 						break;
 					}	
 					case -2:{
-						Alert.show("YA EXISTE UNA PERSONA CON ESE DOCUMENTO!!!");
+						Alert.show("YA EXISTE UNA CON ESE DOCUMENTO!!!");
 						break;
 					}
 					case -4:{
@@ -160,15 +163,9 @@
 					employee.salarioporhora=xmllistEmpleados[i].salarioporhora;
 					
 					if(String(xmllistEmpleados[i].estado)=="1")
-						employee.estado=true;
+						employee.estado=true;						
 					
-					
-						
-					
-					listEmployee.addItem(employee);
-					
-				
-				
+					listEmployee.addItem(employee);			
 				
 				}
 				
@@ -192,11 +189,9 @@
 			
 			
 			protected function btnnuevo_clickHandler(event:MouseEvent):void
-			{
-				if(txtnombre.text.length>0)
-					limpiarcontroles();
-				txtnombre.setFocus();
-				
+			{			
+					botonesEnabledDisables();
+					txtnombre.setFocus();			
 				
 			}
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -319,6 +314,7 @@
 						labelsalariopart.visible=false;
 						msksalarioxhora.visible=false;
 						msksalario.setFocus();
+						empType="FULLTIME";
 						
 				}else{
 					if(rbempleadopart.selected==true){
@@ -327,6 +323,7 @@
 						labelsalariopart.visible=true;
 						msksalarioxhora.visible=true;
 						msksalarioxhora.setFocus();
+						empType="PARTTIME";
 					
 					}
 				
@@ -345,29 +342,20 @@
 				msksalario.text="";
 				msksalarioxhora.text="";
 				cmbGeneros.selectedItemId=2;
-				cmbTiposdocu.selectedItemId=3;
-				
+				cmbTiposdocu.selectedItemId=3;	
+				botonesEnabledDisables();
+			
+			}
+			protected function botonesEnabledDisables():void{
 				if(btnguardar.enabled==false)
 					btnguardar.enabled=true;
 				
 				if(btnactualizar.enabled==true)
 					btnactualizar.enabled=false;
-				
-				
-				
-			
 			
 			}
 			protected function guardarEmpleado(evt:CloseEvent):void{
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
-				
-				
-				
-				
-				
-					
-				
-				
 				if(rbempleadofull.selected==true){
 					if(msksalario.text.length==0)
 						msksalario.text="0";	
@@ -459,11 +447,6 @@
 				enabledisableradiobutton();
 			}
 			
-			
-			
-			
-			
-
 			protected function btndeshabilitar_clickHandler(event:MouseEvent):void
 			{
 				if(dgemployee.selectedItem.estado==false){
@@ -506,11 +489,13 @@
 				if(btnactualizar.enabled==false){
 					btnactualizar.enabled=true;
 					btnguardar.enabled=false;
-				}
+				}				
 				
 				txtnombre.text=listEmployee[dgemployee.selectedIndex].nombre;
 				txtapellido.text=listEmployee[dgemployee.selectedIndex].apellido;
 				txtdocumento.text=listEmployee[dgemployee.selectedIndex].documento;
+				
+				empType=listEmployee[dgemployee.selectedIndex].emptype;
 			
 				
 				if(String(listEmployee[dgemployee.selectedIndex].email).toString().indexOf("null")!=0)
@@ -530,18 +515,15 @@
 				cmbGeneros.selectedItemId=listEmployee[dgemployee.selectedIndex].genero;
 				cmbTiposdocu.selectedItemId=listEmployee[dgemployee.selectedIndex].tipodocu;
 				
-				if(String(listEmployee[dgemployee.selectedIndex].emptype)=="FULLTIME"){
+				if(empType=="FULLTIME"){
 				
 							labelsalariofull.visible=true;
 							msksalario.visible=true;
 							labelsalariopart.visible=false;
 							msksalarioxhora.visible=false;
 							rbempleadopart.selected=false;
-							msksalario.text=listEmployee[dgemployee.selectedIndex].salario;
-							
-							rbempleadofull.selected=true;
-					
-					
+							msksalario.text=listEmployee[dgemployee.selectedIndex].salario;							
+							rbempleadofull.selected=true;				
 				
 				}else{
 				
@@ -630,10 +612,18 @@
 				
 			}
 			protected function actualizarEmpleado(evt:CloseEvent):void{
-				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
-				
+				var salario:Number=0;
+				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;				
+				if(empType=="FULLTIME"){
+					if(msksalario.text.length>0)
+						salario =Number(msksalario.text);
+				}else{
+					if(msksalarioxhora.text.length>0)
+						salario=Number(msksalarioxhora.text);
+				}
+					
 						wsempleado.actualizarEmpleado(listEmployee[dgemployee.selectedIndex].id,txtapellido.text,txtnameuser.text,txtnombre.text,
-							txtpassword.text,txtrepassword.text,txtemail.text,cmbTiposdocu.selectedItem.id,int(txtdocumento.text),0,cmbGeneros.selectedItem.id,txtobservaciones.text,listEmployee[dgemployee.selectedIndex].emptype);
+							txtpassword.text,txtrepassword.text,txtemail.text,cmbTiposdocu.selectedItem.id,int(txtdocumento.text),0,cmbGeneros.selectedItem.id,txtobservaciones.text,empType,salario);
 			}
 			protected function operation1_resultHandler_actualizar(event:ResultEvent):void
 			{
@@ -652,33 +642,13 @@
 					{
 						Alert.show("ERROR EN MÉTODO ACTUALIZAR EMPLEADO");
 						break;
-					}
-					case -7:
-					{
-						Alert.show("ERROR EN MÉTODO CHEQUEAR EMAIL");
-						break;
 					}						
-					case -8:
-					{
-						Alert.show("EMAIL ENCONTRADO EN LA BASE DE DATOS");
-						break;
-					}
-					case -14:
-					{
-						Alert.show("ERROR EN MÉTODO CHEQUEAR NAMEUSER");
-						break;
-					}	
-					case -8:
-					{
-						Alert.show("EMAIL ENCONTRADO EN LA BASE DE DATOS");
-						break;
-					}	
 						
 					default:
 					{
 						Alert.show("DATOS DE EMPLEADO ACTUALIZADOS");
 						wsempleado.selectAllEmpleados();
-						limpiarcontroles();
+						limpiarcontroles();			
 						break;
 					}
 				}
@@ -702,7 +672,7 @@
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wsempleado" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wsempleado" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
 			<s:operation name="addEmpleadoFullTime"
 						 result="operationAddEmpleadosFulltime1_resultHandler(event)"
 						 fault="operation1AddEmpladosFullTime_faultHandler(event)"
@@ -791,7 +761,7 @@
 	</fx:Declarations>
 
 	
-	<s:DataGrid id="dgemployee" x="48" y="25" width="634" height="148" click="dgemployee_clickHandler(event)"
+	<s:DataGrid id="dgemployee" x="27" y="25" width="655" height="148" click="dgemployee_clickHandler(event)"
 				alternatingRowColors="[#95efdf, #d9e1dd]" dataProvider="{listEmployee}"
 				fontFamily="Verdana" fontSize="12" requestedRowCount="4" selectionMode="singleRow">
 
@@ -901,7 +871,7 @@
 			  click="btnhabilitar_clickHandler(event)" enabled="false" fontSize="16"
 			  toolTip="Habilita un empleado para poder operar el Sistema"/>
 	<s:Button id="btnactualizar" x="386" y="481" width="99" height="30" label="Actualizar"
-			  click="btnactualizar_clickHandler(event)" enabled="false"/>
+			  click="btnactualizar_clickHandler(event)" enabled="false" toolTip="Para actulizar datos debe seleccionar un Empleado del Listado"/>
 	<s:Button id="btnCloseClientComponent" x="692" y="5" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
 	
 </s:Group>
