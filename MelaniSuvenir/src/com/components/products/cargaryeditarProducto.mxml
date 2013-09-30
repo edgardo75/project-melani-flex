@@ -315,6 +315,7 @@
 				
 				arr.push(new FileFilter("Images", "*.jpg;*.gif;*.png"));
 				cargarImagen.browse(arr);
+				
 				cargarImagen.addEventListener(Event.SELECT,imagenSeleccion);
 				cargarImagen.addEventListener(Event.COMPLETE,imagenCargaCompleta);
 			}
@@ -322,6 +323,7 @@
 			protected function imagenCargaCompleta(event:Event):void{
 				
 				imgProducto.source=cargarImagen.data;
+				
 				
 				
 			}
@@ -336,7 +338,7 @@
 				
 				if(idproducto>0){
 					
-					servicesProducto.grabarImagen(idproducto,cargarImagen.data);
+					servicesProducto.grabarImagen(idproducto,cargarImagen.data,cargarImagen.name,cargarImagen.size);
 				}else
 					Alert.show("Debe Seleccionar un producto\n, antes de subir la imagen.");
 			}
