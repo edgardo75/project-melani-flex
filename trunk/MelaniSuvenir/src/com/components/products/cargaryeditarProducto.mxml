@@ -208,13 +208,9 @@
 						
 						
 					default:
-					{
-						Alert.show("OPERACIÓN EXITOSA PRODUCTO Nº "+indice);
+					{						
 						servicesProducto.searchAllProductos();
-						limpiarFormulario();
-						
-						
-						
+						limpiarFormulario();						
 						break;
 					}
 				}
@@ -338,7 +334,7 @@
 				
 				if(idproducto>0){
 					
-					servicesProducto.grabarImagen(idproducto,cargarImagen.data,cargarImagen.name,cargarImagen.size);
+					servicesProducto.grabarImagen(idproducto,cargarImagen.data,cargarImagen.name,String(cargarImagen.size));
 				}else
 					Alert.show("Debe Seleccionar un producto\n, antes de subir la imagen.");
 			}
@@ -446,9 +442,10 @@
 	<controls:MaskedTextInput id="txtprecio" x="9" y="309" fontSize="16" restrict="0-9."/>
 	<controls:MaskedTextInput id="txtcantidadinicial" x="269" y="310" fontSize="16" restrict="0-9."/>
 	<controls:MaskedTextInput id="txtcantidaddisponible" x="9" y="351" fontSize="16" restrict="0-9."/>
-	<s:Button id="btnnuevo" x="233" y="384" width="81" height="29" label="Nuevo"
-			  click="btnnuevo_clickHandler(event)" fontSize="16" toolTip="Cargar Nuevo Producto"/>
-	<s:Button id="btnguardar" x="322" y="384" width="89" height="29" label="Guardar"
+	<s:Button id="btnnuevo" x="460" y="381" width="81" height="29" label="Nuevo"
+			  click="btnnuevo_clickHandler(event)" cornerRadius="3" fontSize="16"
+			  toolTip="Cargar Nuevo Producto"/>
+	<s:Button id="btnguardar" x="580" y="381" width="89" height="29" label="Guardar"
 			  click="btnguardar_clickHandler(event)" fontSize="16" toolTip="Guardar Datos de Producto"/>
 	<s:Button id="btnCloseClientComponent" x="1104" y="10" width="16" height="19"
 			  click="btnClose_clickHandler(event)" icon="assets/icon_close.png"/>
