@@ -1381,7 +1381,7 @@
 				mskanticipo.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				btnactualizar.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				adglistpedprod.addEventListener(AdvancedDataGridEvent.ITEM_EDIT_END,itemEditEndHandler);
-				//cmbproduct.selectedItemId=1;
+				adgNotas.selectedIndex=0;
 				totGral=0;
 				totGralDesc=0;
 				precio_desc=0;
@@ -2204,7 +2204,9 @@
 							btnRegargarlistado.enabled=true;
 							limpiarGrids();
 							limpiarControlesVarios();
-							
+							adgNotas.selectedIndex=0;
+							adgNotas.validateNow();
+							addinfo();
 							
 							
 							
@@ -2562,7 +2564,9 @@
 				anticipo=0;
 				totRecargo=0;
 				txtpassword.text="";
-				cmbTarjetasCreditoDebito.selectedItemId=0;				
+				cmbTarjetasCreditoDebito.selectedItemId=0;
+				cmbVendedores.text="";
+				txtpassword.text="";
 				
 			}
 			protected function limpiarControles():void{
@@ -2753,8 +2757,12 @@
 	<s:Button id="last_btn" x="919" y="127" width="89" height="28" label="&gt;&gt;"
 			  click="last_clickHandler(event)" enabled="false" fontSize="16" fontWeight="bold"/>
 	
-	<s:DataGrid id="adgNotas" click="adgNotas_clickHandler(event)" x="2" y="0" width="1006" height="127"  variableRowHeight="true" doubleClick="adgNotas_doubleClickHandler(event)"
-				selectionMode="singleRow" doubleClickEnabled="true" toolTip="Haga doble click para seleccionar la Nota correspondiente" alternatingRowColors="[#ffffff,#fcff4f7]">
+	<s:DataGrid id="adgNotas" x="2" y="0" width="1006" height="127"
+				alternatingRowColors="[#ffffff,#fcff4f7]" click="adgNotas_clickHandler(event)"
+				doubleClick="adgNotas_doubleClickHandler(event)" doubleClickEnabled="true"
+				selectedIndex="0" selectionMode="singleRow"
+				toolTip="Haga doble click para seleccionar la Nota correspondiente"
+				variableRowHeight="true">
 		<s:columns>
 			<s:ArrayList>
 				<s:GridColumn headerText="N° Nota" dataField="id"/>
@@ -2940,7 +2948,7 @@
 	<s:Button id="btnImprimir" x="7" y="539" width="153" height="35" label="Imprimir"
 			  click="btnImprimir_clickHandler(event)" enabled="false" fontSize="16"
 			  toolTip="Imprimie una nota de pedido seleccionada del listado"/>
-	<s:Button id="btnactualizar" x="8" y="577" width="152" height="39" label="Actualizar"
+	<s:Button id="btnactualizar" x="8" y="577" width="152" height="39" label="Actualizar" toolTip="Actualiza el estado de la nota de pedido"
 			  click="btnactualizar_clickHandler(event)" fontSize="16"/>
 	<s:Button id="btnCloseClientComponent" x="1203" y="1" width="27" height="19" icon="assets/icon_close.png" click="btnCloseClientComponent_clickHandler(event)"/>
 	<s:RadioButton id="rdanuladasi" x="1025" y="157" label="Si" groupName="anulada"/>
