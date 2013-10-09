@@ -736,10 +736,10 @@
 	<s:Label id="lblnocli" x="115" y="62" width="187" fontFamily="Verdana" fontSize="18"
 			 fontWeight="bold" verticalAlign="bottom"/>
 	<s:TextInput id="txtnombrecliente" x="114" y="85" width="188" fontSize="18" maxChars="40"
-				 prompt="Ingrese Nombre..." restrict="A-ÑZa-ñz áéíóú-ÁÉÍÓÚ" />
+				 prompt="Ingrese Nombre..." restrict="A-ÑZa-ñz " />
 	<s:Label id="lblapellido" x="43" y="128" fontSize="16" fontWeight="bold" text="Apellido:"/>
 	<s:TextInput id="txtapellidocliente" x="113" y="118" width="189" fontSize="18" maxChars="40"
-				 prompt="Ingrese Apellido..." restrict="A-ÑZa-ñz áéíóú-ÁÉÍÓÚ"/>
+				 prompt="Ingrese Apellido..." restrict="A-ÑZa-ñz "/>
 	<s:Button id="btninserclient" x="29" y="468" width="134" height="30" label="DatosCliente"
 			  click="btninserclient_clickHandler(event)" fontSize="16"
 			  toolTip="Muestra una Ventana para Ingresar Datos Personales de un Cliente"/>
