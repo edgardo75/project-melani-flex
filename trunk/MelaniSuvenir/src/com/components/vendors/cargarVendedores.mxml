@@ -797,11 +797,11 @@
 	<s:Label x="208" y="8" color="#2BCC68" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="CARGA Y EDICIÓN DE EMPLEADOS" textAlign="center"/>
 	<s:Label x="27" y="190" fontSize="20" fontWeight="bold" text="Nombre:"/>
-	<s:TextInput id="txtnombre" maxChars="30" x="109" restrict="A-ÑZa-ñz áéíóú-ÁÉÍÓÚ" y="183" width="237" fontSize="16"
+	<s:TextInput id="txtnombre" maxChars="30" x="109" restrict="A-ÑZa-ñz " y="183" width="237" fontSize="16"
 				 prompt="Ingrese su nombre...."/>
 	<s:Label x="354" y="191" fontSize="20" fontWeight="bold" text="Apellido:"/>
 	<s:TextInput id="txtapellido" maxChars="30" x="445" y="183" width="216" fontSize="16"
-				 prompt="Ingrese su apellido..." restrict="A-ÑZa-ñz áéíóú-ÁÉÍÓÚ"/>
+				 prompt="Ingrese su apellido..." restrict="A-ÑZa-ñz "/>
 	<s:Label x="28" y="216" fontSize="20" fontWeight="bold" text="Email:"/>
 	<s:TextInput id="txtemail" x="108" y="212" width="239" fontSize="16"
 				 prompt="Ingrese email..." maxChars="50"/>
@@ -851,7 +851,7 @@
 	
 	<s:Label x="28" y="285" fontSize="20" fontWeight="bold" text="Usuario:"/>
 	<s:TextInput id="txtnameuser" x="111" y="282" width="237" fontSize="16" maxChars="10"
-				 prompt="Ingrese un nombre de usuario..." restrict="A-ÑZa-ñz áéíóú-ÁÉÍÓÚ 0-9"/>
+				 prompt="Ingrese un nombre de usuario..." restrict="A-ÑZa-ñz 0-9"/>
 	<s:Label x="356" y="285" fontSize="20" fontWeight="bold" text="Password:"/>
 	<s:Label x="355" y="308" fontSize="20" fontWeight="bold" text="Repassword:"/>
 	<s:TextInput id="txtpassword" x="483" y="277" displayAsPassword="true" fontSize="16"

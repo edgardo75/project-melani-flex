@@ -429,7 +429,7 @@
 	<s:Label x="8" y="249" fontSize="16" fontWeight="bold" text="Descripción:"
 			 verticalAlign="bottom"/>
 	<s:TextInput id="txtdescripcion" x="9" y="263" width="244" fontSize="16"
-				 prompt="Ingrese la Descripcion del Producto..." restrict="a-z A-Z ñ-Ñ 0-9_ áéíóú-ÁÉÍÓÚ"/>
+				 prompt="Ingrese la Descripcion del Producto..." restrict="a-z A-Z ñ-Ñ 0-9_ "/>
 	<s:Label x="267" y="248" fontSize="16" fontWeight="bold" text="Código Producto:"
 			 verticalAlign="bottom"/>
 	<s:Label x="8" y="294" fontSize="16" fontWeight="bold" text="Precio:" verticalAlign="bottom"/>

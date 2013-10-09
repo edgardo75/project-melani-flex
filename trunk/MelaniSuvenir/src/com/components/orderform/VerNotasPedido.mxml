@@ -64,7 +64,7 @@
 			[Bindable]
 			private var indexPage:int=0;
 			[Bindable]
-			private static var SIZEPAGE:int=100;
+			private static var SIZEPAGE:int=50;
 			[Bindable]
 			private var userexpidio:int=0;
 			[Bindable]
@@ -109,14 +109,17 @@
 				totalReg = int(event.result.toString());
 				
 				if(totalReg==0){
-					Alert.show("   NO HAY NOTAS CARGADAS AÚN!!!   ");
+					Alert.show("   NO HAY NOTAS DE PEDIDO CARGADAS AÚN!!!   ");
 				}else{
 					
-					if(totalReg<100){
+					if(totalReg<50){
+				
 						wsnotas.selectAllNotas();
 						if(totGral>0)
 							limpiarControles();
 					}else{
+						
+				
 						last_btn.enabled=true;
 						next_btn.enabled=true;
 						first_btn.enabled=true;
@@ -143,6 +146,9 @@
 				xmlNotas=new XMLList(event.result);
 				
 				addgrid();
+				adgNotas.selectedIndex=0;
+				adgNotas.validateNow();
+				addinfo();
 			}
 			
 			//----------------------------------------------------------------------------------------------
@@ -278,6 +284,9 @@
 				xmlNotas=new XMLList(event.result);
 				
 				addgrid();
+				adgNotas.selectedIndex=0;
+				adgNotas.validateNow();
+				addinfo();
 				
 			}
 			

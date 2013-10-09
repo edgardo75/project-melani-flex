@@ -234,9 +234,9 @@
 		<s:Label x="25" y="32" fontSize="16" text="Nombre:"/>
 		<s:Label x="25" y="69" fontSize="16" text="Apellido:"/>
 		<s:TextInput id="txtnombre" x="87" y="23" width="318" fontSize="16" maxChars="40"
-					 restrict="A-ÑZa-ñz áéíóú-ÁÉÍÓÚ" tabEnabled="false" prompt="Ingrese el Nombre de la Persona..."/>
+					 restrict="A-ÑZa-ñz " tabEnabled="false" prompt="Ingrese el Nombre de Cliente..."/>
 		<s:TextInput id="txtapellido" x="88" y="62" width="317" fontSize="16" maxChars="20"
-					 restrict="A-ÑZa-ñz áéíóú-ÁÉÍÓÚ" tabEnabled="false" prompt="Ingrese el Apellido de la Persona..."/>
+					 restrict="A-ÑZa-ñz " tabEnabled="false" prompt="Ingrese el Apellido..."/>
 	</s:BorderContainer>
 	<products:productosPedidos id="productordered" x="40" y="138" height="349" fontSize="16">
 	</products:productosPedidos>
