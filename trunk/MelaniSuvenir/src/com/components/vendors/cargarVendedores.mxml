@@ -176,6 +176,11 @@
 					btnhabilitar.enabled=true;
 				}
 				
+				adgemployee.selectedIndex=0;
+				adgemployee.validateNow();
+				addInfo();
+				
+				
 			}
 			
 			protected function operationselectAllEmpleados_faultHandler(event:FaultEvent):void
@@ -449,16 +454,16 @@
 			
 			protected function btndeshabilitar_clickHandler(event:MouseEvent):void
 			{
-				if(dgemployee.selectedItem.estado==false){
+				if(adgemployee.selectedItem.estado==false){
 				
 						var popup:popupUsuario=popupUsuario(PopUpManager.createPopUp(this,popupUsuario,true));
 						
 						popup.title="Usuario y Clave";
 						popup.arrayEmployee=listEmployee;
-						popup.userSelected=dgemployee.selectedItem.nameuser;
-						popup.userPassSelected=dgemployee.selectedItem.clave;
-						popup.userIdSelected=dgemployee.selectedItem.id;
-						popup.userEstadoSelected=xmllistEmpleados[dgemployee.selectedIndex].estado;
+						popup.userSelected=adgemployee.selectedItem.nameuser;
+						popup.userPassSelected=adgemployee.selectedItem.clave;
+						popup.userIdSelected=adgemployee.selectedItem.id;
+						popup.userEstadoSelected=xmllistEmpleados[adgemployee.selectedIndex].estado;
 						
 						
 						PopUpManager.centerPopUp(popup);
@@ -469,79 +474,80 @@
 			
 			protected function btnhabilitar_clickHandler(event:MouseEvent):void
 			{
-				if(dgemployee.selectedItem.estado==true){
+				if(adgemployee.selectedItem.estado==true){
 					var popup:PopupUsuarioHabilitado=PopupUsuarioHabilitado(PopUpManager.createPopUp(this,PopupUsuarioHabilitado,true));
 					popup.title="Usuario y Clave";
 					popup.arrayEmployee=listEmployee;
-					popup.userSelected=dgemployee.selectedItem.nameuser;
-					popup.userPassSelected=dgemployee.selectedItem.clave;
-					popup.userIdSelected=dgemployee.selectedItem.id;
-					popup.userEstadoSelected=xmllistEmpleados[dgemployee.selectedIndex].estado;
+					popup.userSelected=adgemployee.selectedItem.nameuser;
+					popup.userPassSelected=adgemployee.selectedItem.clave;
+					popup.userIdSelected=adgemployee.selectedItem.id;
+					popup.userEstadoSelected=xmllistEmpleados[adgemployee.selectedIndex].estado;
 					
 					
 					PopUpManager.centerPopUp(popup);
 				}else
 					Alert.show("DEBE SELECCIONAR UN EMPLEADO DE LA GRILLA O LISTADO CON EL ESTADO CHEQUEADO");
-			}
-			
+			}			
 			protected function dgemployee_clickHandler(event:MouseEvent):void
 			{
+				addInfo();				
+			}
+			protected function addInfo():void{
 				if(btnactualizar.enabled==false){
 					btnactualizar.enabled=true;
 					btnguardar.enabled=false;
 				}				
 				
-				txtnombre.text=listEmployee[dgemployee.selectedIndex].nombre;
-				txtapellido.text=listEmployee[dgemployee.selectedIndex].apellido;
-				txtdocumento.text=listEmployee[dgemployee.selectedIndex].documento;
+				txtnombre.text=listEmployee[adgemployee.selectedIndex].nombre;
+				txtapellido.text=listEmployee[adgemployee.selectedIndex].apellido;
+				txtdocumento.text=listEmployee[adgemployee.selectedIndex].documento;
 				
-				empType=listEmployee[dgemployee.selectedIndex].emptype;
-			
+				empType=listEmployee[adgemployee.selectedIndex].emptype;
 				
-				if(String(listEmployee[dgemployee.selectedIndex].email).toString().indexOf("null")!=0)
-					txtemail.text=listEmployee[dgemployee.selectedIndex].email;
+				
+				if(String(listEmployee[adgemployee.selectedIndex].email).toString().indexOf("null")!=0)
+					txtemail.text=listEmployee[adgemployee.selectedIndex].email;
 				else
 					txtemail.text="";
 				
-				txtnameuser.text=listEmployee[dgemployee.selectedIndex].nameuser;
+				txtnameuser.text=listEmployee[adgemployee.selectedIndex].nameuser;
 				
-				if(String(listEmployee[dgemployee.selectedIndex].observaciones).toString().indexOf("null")!=0)
-					txtobservaciones.text=listEmployee[dgemployee.selectedIndex].observaciones;
+				if(String(listEmployee[adgemployee.selectedIndex].observaciones).toString().indexOf("null")!=0)
+					txtobservaciones.text=listEmployee[adgemployee.selectedIndex].observaciones;
 				else
 					txtobservaciones.text="";
 				
-				txtpassword.text=listEmployee[dgemployee.selectedIndex].clave;
-				txtrepassword.text=listEmployee[dgemployee.selectedIndex].clave;
-				cmbGeneros.selectedItemId=listEmployee[dgemployee.selectedIndex].genero;
-				cmbTiposdocu.selectedItemId=listEmployee[dgemployee.selectedIndex].tipodocu;
+				txtpassword.text=listEmployee[adgemployee.selectedIndex].clave;
+				txtrepassword.text=listEmployee[adgemployee.selectedIndex].clave;
+				cmbGeneros.selectedItemId=listEmployee[adgemployee.selectedIndex].genero;
+				cmbTiposdocu.selectedItemId=listEmployee[adgemployee.selectedIndex].tipodocu;
 				
 				if(empType=="FULLTIME"){
-				
-							labelsalariofull.visible=true;
-							msksalario.visible=true;
-							labelsalariopart.visible=false;
-							msksalarioxhora.visible=false;
-							rbempleadopart.selected=false;
-							msksalario.text=listEmployee[dgemployee.selectedIndex].salario;							
-							rbempleadofull.selected=true;				
-				
+					
+					labelsalariofull.visible=true;
+					msksalario.visible=true;
+					labelsalariopart.visible=false;
+					msksalarioxhora.visible=false;
+					rbempleadopart.selected=false;
+					msksalario.text=listEmployee[adgemployee.selectedIndex].salario;							
+					rbempleadofull.selected=true;				
+					
 				}else{
-				
 					
-				
-						labelsalariofull.visible=false;
-						msksalario.visible=false;
-						labelsalariopart.visible=true;
-						msksalarioxhora.visible=true;
-						msksalarioxhora.text=listEmployee[dgemployee.selectedIndex].salarioporhora;
-						rbempleadopart.selected=true;
-						rbempleadofull.selected=false;
 					
-				
-				}
-				
-			}
+					
+					labelsalariofull.visible=false;
+					msksalario.visible=false;
+					labelsalariopart.visible=true;
+					msksalarioxhora.visible=true;
+					msksalarioxhora.text=listEmployee[adgemployee.selectedIndex].salarioporhora;
+					rbempleadopart.selected=true;
+					rbempleadofull.selected=false;
+					
+					
+				}			
 			
+			}
 			protected function btnactualizar_clickHandler(event:MouseEvent):void
 			{
 				vResult=nomV.validate();
@@ -622,7 +628,7 @@
 						salario=Number(msksalarioxhora.text);
 				}
 					
-						wsempleado.actualizarEmpleado(listEmployee[dgemployee.selectedIndex].id,txtapellido.text,txtnameuser.text,txtnombre.text,
+						wsempleado.actualizarEmpleado(listEmployee[adgemployee.selectedIndex].id,txtapellido.text,txtnameuser.text,txtnombre.text,
 							txtpassword.text,txtrepassword.text,txtemail.text,cmbTiposdocu.selectedItem.id,int(txtdocumento.text),0,cmbGeneros.selectedItem.id,txtobservaciones.text,empType,salario);
 			}
 			protected function operation1_resultHandler_actualizar(event:ResultEvent):void
@@ -761,9 +767,10 @@
 	</fx:Declarations>
 
 	
-	<s:DataGrid id="dgemployee" x="27" y="25" width="655" height="148" click="dgemployee_clickHandler(event)"
-				alternatingRowColors="[#95efdf, #d9e1dd]" dataProvider="{listEmployee}"
-				fontFamily="Verdana" fontSize="12" requestedRowCount="4" selectionMode="singleRow">
+	<s:DataGrid id="adgemployee" x="27" y="25" width="655" height="148"
+				alternatingRowColors="[#95efdf, #d9e1dd]" click="dgemployee_clickHandler(event)"
+				dataProvider="{listEmployee}" fontFamily="Verdana" fontSize="12"
+				requestedRowCount="4" selectedIndex="0" selectionMode="singleRow">
 
 		<s:columns>
 			<s:ArrayList>
