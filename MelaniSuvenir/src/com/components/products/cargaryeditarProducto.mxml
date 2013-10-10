@@ -160,6 +160,9 @@
 						adgproductos.dataProvider=product;		
 						cmbbuscarproducto.dataProvider=product;
 						lbltotalproductos.text=String(product.length);
+						adgproductos.selectedIndex=0;
+						adgproductos.validateNow();						
+						addInfo();
 					}
 				}
 				
@@ -255,10 +258,9 @@
 			//---------------------------------------------------------------------------
 			protected function operation1_faultHandler(event:FaultEvent):void
 			{
-				Alert.show("ERROR AL BUSCAR LISTA DE PRODUCTOS");
-				
+				Alert.show("ERROR AL BUSCAR LISTA DE PRODUCTOS");				
 			}
-			//---------------------------------------------------------------------------
+			//----------------------------------------------------------------------
 			//-----------------------------------------------------------
 			protected function btnClose_clickHandler(event:MouseEvent):void
 			{
@@ -268,6 +270,10 @@
 			
 			protected function adgproductos_doubleClickHandler(event:MouseEvent):void
 			{
+				addInfo();
+			}
+			
+			protected function addInfo():void{
 				var bytessImages:int=adgproductos.selectedItem.img;
 				
 				idproducto=adgproductos.selectedItem.id;
@@ -277,17 +283,12 @@
 				txtcodigoproducto.text=adgproductos.selectedItem.idproduct;
 				txtdescripcion.text=adgproductos.selectedItem.descripcion;
 				
-				if(bytessImages>0)
-					
+				if(bytessImages>0)					
 					servicesProducto.obtenerImagenProducto(idproducto);
 				else
-					
-					
-						imgProducto.source="assets/android-logo-400x300.jpg";
-				
-				
-				
+					imgProducto.source="assets/android-logo-400x300.jpg";
 			}
+			
 			protected function producto_imagen_seleccion(event:ResultEvent):void{
 				
 				

@@ -7,17 +7,24 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:WebService id="wspresupuestos" wsdl="http://localhost:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="true" >
-			<s:operation name="getRecordCount" result="operation1_resultHandler(event)"
+			<s:operation name="getRecordCount" 
+						 result="operation1_resultHandler(event)"
 						 fault="operation1_faultHandler(event)">
 				
 			</s:operation>
-			<s:operation name="selectAllPresupuestosJPA" result="operation2_resultHandler(event)" fault="operation2_faultHandler(event)">
+			<s:operation name="selectAllPresupuestosJPA" 
+						 result="operation2_resultHandler(event)" 
+						 fault="operation2_faultHandler(event)">
 				
 			</s:operation>
-			<s:operation name="verPresupuestosPaginados" result="operation3_resultHandler(event)" fault="operation3_faultHandler(event)">
+			<s:operation name="verPresupuestosPaginados" 
+						 result="operation3_resultHandler(event)" 
+						 fault="operation3_faultHandler(event)">
 				
 			</s:operation>
-			<s:operation name="searchOneBudget" result="operation4_resultHandler(event)" fault="operation4_faultHandler(event)">
+			<s:operation name="searchOneBudget" 
+						 result="operation4_resultHandler(event)" 
+						 fault="operation4_faultHandler(event)">
 				
 				
 			</s:operation>
@@ -48,7 +55,7 @@
 			[Bindable]
 			private var indexPage:int=0;
 			[Bindable]
-			private static var SIZEPAGE:int=100;
+			private static var SIZEPAGE:int=50;
 			[Bindable]
 			private var totalReg:int=0;
 			[Bindable]
@@ -162,7 +169,7 @@
 					Alert.show("NO HAY PRESUPUESTOS CARGADOS!!!");
 				else{
 					
-					if(totalReg<100)
+					if(totalReg<50)
 						wspresupuestos.selectAllPresupuestosJPA();
 					else{
 						last_btn.enabled=true;
@@ -194,6 +201,10 @@
 				xmlPresupuesto=new XMLList(event.result);
 				
 				addgrid();
+				adgPresupuestos.selectedIndex=0;
+				adgPresupuestos.validateNow();
+				addinfopresupuesto();
+			
 				
 				
 			}
@@ -232,6 +243,9 @@
 			{
 				xmlPresupuesto=new XMLList(event.result);
 				addgrid();
+				adgPresupuestos.selectedIndex=0;
+				adgPresupuestos.validateNow();
+				addinfopresupuesto();
 				
 			}
 			//---------------------------------------------------------------------------------------------------
@@ -344,19 +358,7 @@
 					insertRecordInSheet(r+1,sheet,record);  
 				}  
 					
-				/*sheet.setCell(0,0,"N°");
-				sheet.setCell(0,1,"NOMBRE");
-				sheet.setCell(0,2,"APELLIDO");
-				sheet.setCell(0,3,"TOTAL A PAGAR");
-				sheet.setCell(0,4,"OBSERVACIONES");
-				sheet.setCell(0,5,"USUARIO");
-				sheet.setCell(0,6,"IVA");
-				sheet.setCell(0,7,"FECHA PRESUPUESTO");
-				sheet.setCell(0,8,"FECHA VALIDEZ");
-				sheet.setCell(0,9,"DESCUENTO");
-				sheet.setCell(0,10,"PORCENTAJE DESCUENTO TOTAL");
-				sheet.setCell(0,11,"RECARGO");
-				sheet.setCell(0,12,"PORCENTAJE RECARGO");*/
+				
 				
 				var xls:ExcelFile = new ExcelFile();
 				xls.sheets.addItem(sheet);
