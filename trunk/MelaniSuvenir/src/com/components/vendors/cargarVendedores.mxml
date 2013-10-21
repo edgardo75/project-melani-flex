@@ -4,7 +4,7 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
 		 xmlns:components="com.hillelcoren.components.*"
-		 width="722" height="534" creationComplete="group1_creationCompleteHandler(event)">
+		 width="722" height="534" creationComplete="group1_creationCompleteHandler(event)" xmlns:local="*">
 	<fx:Script>
 		<![CDATA[
 			import com.actions.Employee;
@@ -804,14 +804,15 @@
 	<s:Label x="208" y="8" color="#2BCC68" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="CARGA Y EDICIÓN DE EMPLEADOS" textAlign="center"/>
 	<s:Label x="27" y="190" fontSize="20" fontWeight="bold" text="Nombre:"/>
-	<s:TextInput id="txtnombre" maxChars="30" x="109" restrict="A-ÑZa-ñz " y="183" width="237" fontSize="16"
-				 prompt="Ingrese su nombre...."/>
+	<s:TextInput id="txtnombre" x="109" y="183" width="237" fontSize="16" maxChars="30"
+					   prompt="Ingrese su nombre...." restrict="A-ÑZa-ñz "
+					   skinClass="spark.skins.spark.TextInputSkin"/>
 	<s:Label x="354" y="191" fontSize="20" fontWeight="bold" text="Apellido:"/>
-	<s:TextInput id="txtapellido" maxChars="30" x="445" y="183" width="216" fontSize="16"
-				 prompt="Ingrese su apellido..." restrict="A-ÑZa-ñz "/>
+	<s:TextInput id="txtapellido" x="445" y="183" width="216" fontSize="16" maxChars="30"
+				 prompt="Ingrese su apellido..." restrict="A-ÑZa-ñz " skinClass="spark.skins.spark.TextInputSkin"/>
 	<s:Label x="28" y="216" fontSize="20" fontWeight="bold" text="Email:"/>
-	<s:TextInput id="txtemail" x="108" y="212" width="239" fontSize="16"
-				 prompt="Ingrese email..." maxChars="50"/>
+	<s:TextInput id="txtemail" x="108" y="212" width="239" fontSize="16" maxChars="50"
+					   prompt="Ingrese email..." skinClass="spark.skins.spark.TextInputSkin"/>
 	<s:Label x="355" y="219" color="#033339" fontSize="20" text="Tipo:"/>
 	<s:Label x="28" y="246" width="112" height="22" color="#033339" fontSize="20" text="Documento:"/>
 	<controls:MaskedTextInput id="txtdocumento" x="137" y="245" width="87"
@@ -841,8 +842,10 @@
 									 verticalScrollPolicy="on">
 	</components:AdvancedAutoComplete>
 	<s:Label x="29" y="353" color="#033339" fontSize="20" text="Observaciones:"/>
-	<s:TextArea id="txtobservaciones" x="28" y="377" width="504" height="96" fontFamily="Verdana"
-				fontSize="16" fontWeight="bold" maxChars="32000" tabIndex="6" prompt="Ingrese las Observaciones..."/>
+	<s:TextArea id="txtobservaciones" x="28" y="377" width="504" height="96"
+					   fontFamily="Verdana" fontSize="16" fontWeight="bold" maxChars="32000"
+					   prompt="Ingrese las Observaciones..." 
+					   tabIndex="6"/>
 	<s:Button id="btnnuevo" x="28" y="481" height="31" label="Nuevo"
 			  click="btnnuevo_clickHandler(event)" fontSize="16"/>
 	<s:Button id="btnguardar" x="106" y="481" height="30" label="Guardar"
@@ -858,13 +861,16 @@
 	
 	<s:Label x="28" y="285" fontSize="20" fontWeight="bold" text="Usuario:"/>
 	<s:TextInput id="txtnameuser" x="111" y="282" width="237" fontSize="16" maxChars="10"
-				 prompt="Ingrese un nombre de usuario..." restrict="A-ÑZa-ñz 0-9"/>
+					   prompt="Ingrese un nombre de usuario..." restrict="A-ÑZa-ñz 0-9"
+					   skinClass="spark.skins.spark.TextInputSkin"/>
 	<s:Label x="356" y="285" fontSize="20" fontWeight="bold" text="Password:"/>
 	<s:Label x="355" y="308" fontSize="20" fontWeight="bold" text="Repassword:"/>
-	<s:TextInput id="txtpassword" x="483" y="277" displayAsPassword="true" fontSize="16"
-				 prompt="Ingrese password...." maxChars="8"/>
-	<s:TextInput id="txtrepassword" x="483" y="303" displayAsPassword="true" fontSize="16"
-				 prompt="Reingreso password..." maxChars="8"/>
+	<s:TextInput id="txtpassword" x="483" y="277" width="168" displayAsPassword="true"
+					   fontSize="16" maxChars="8" prompt="Ingrese password...."
+					   skinClass="spark.skins.spark.TextInputSkin"/>
+	<s:TextInput id="txtrepassword" x="483" y="303" width="168" displayAsPassword="true"
+					   fontSize="16" maxChars="8" prompt="Reingreso password..."
+					   skinClass="spark.skins.spark.TextInputSkin"/>
 	<s:VGroup x="252" y="327" >
 	<s:RadioButton id="rbempleadofull" x="250" y="339" label="Empleado FullTime"
 				   groupName="rdgroupEmpleados" selected="true" click="rbempleadofull_clickHandler(event)"/>
