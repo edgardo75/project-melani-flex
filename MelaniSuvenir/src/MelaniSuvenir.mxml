@@ -52,6 +52,11 @@
 				<menuitem label="Notas Entre Fechas"/>
 				<menuitem type="separator"/>
 			</menuitem>
+			<menuitem label="Estadisticas">
+				<menuitem type="separator"/>
+				<menuitem label="Ventas Mensuales"/>
+				<menuitem type="separator"/>
+			</menuitem>
 			<menuitem label="Extras">
 				<menuitem type="separator"/>
 				<menuitem label="Acerca de...."/>
@@ -70,6 +75,7 @@
 			import com.components.budgets.GuardarPresupuesto;
 			import com.components.budgets.Verpresupuestos;
 			import com.components.guardarDatosPersonalCliente;
+			import com.components.orderform.EstadisticaVentas;
 			import com.components.orderform.VerNotasPedido;
 			import com.components.orderform.busquedaNotasEntreFechas;
 			import com.components.orderform.noteTheOrder;
@@ -126,13 +132,13 @@
 					panelCentral.addChild(new VerNotasPedido());
 				
 				}
+				if(event.item.@label=="Ventas Mensuales"){
+					panelCentral.removeAllChildren();
+					panelCentral.addChild(new EstadisticaVentas());
 					
-				if(event.item.@label=="Productos")
-				    	verInformeProductos();				
+					
+				}				
 				
-				if(event.item.@label=="Barrios"){
-					verInformeBarrios();
-				}
 				if(event.item.@label =="Acerca de...."){
 					Alert.show("           MELANIE SOUVENIR © 2013  \n TODOS LOS DERECHOS RESERVADOS ");						
 				}

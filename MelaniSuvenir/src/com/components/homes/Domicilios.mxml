@@ -4,7 +4,11 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:components="com.hillelcoren.components.*"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
-		 width="814" height="300" creationComplete="group1_creationCompleteHandler(event)">
+		 width="814" height="300" creationComplete="group1_creationCompleteHandler(event)" xmlns:local="*">
+	<fx:Style>
+		
+		
+	</fx:Style>
 	<fx:Script>
 		<![CDATA[
 			import mx.controls.Alert;
@@ -670,16 +674,19 @@
 			  click="btnaddcalles_clickHandler(event)" enabled="false"/>
 	<s:Button id="btnaddbarrios" x="775" y="71" width="29" label="+"
 			  click="btnaddbarrios_clickHandler(event)" enabled="false"/>
-	<s:TextInput id="txtentrecalle" x="12" y="157" width="214" fontSize="16" maxChars="255" restrict="A-ÑZa-ñz "/>
+	<s:TextInput id="txtentrecalle" x="12" y="157" width="214" fontSize="16" maxChars="255"
+					   restrict="A-ÑZa-ñz " skinClass="spark.skins.spark.TextInputSkin"
+					   styleName="textInput" prompt="Ingrese Ubicacion Entre calles..."/>
 	<s:Label x="13" y="143" fontSize="16" text="Entre Calle y Calle"/>
 	<controls:MaskedTextInput id="txtnumero" x="37" y="116" width="98" fontSize="16" maxChars="10"
-							  required="true" restrict="0-9"/>
+							  required="true" restrict="0-9" styleName="textInput"/>
 	<s:Label x="38" y="100" fontSize="16" text="Numero"/>
 	<controls:MaskedTextInput id="txtnumdepto" x="147" y="116" width="68" fontSize="16" maxChars="10"
 							  restrict="0-9 a-z A-Z -_"/>
 	<s:Label x="142" y="102" fontSize="16" text="Num Depto"/>
 	<s:TextArea id="txtobservaciones" x="236" y="157" width="568" height="128" fontSize="16"
-				maxChars="5000" restrict="A-ÑZa-ñz "/>
+				maxChars="5000" restrict="A-ÑZa-ñz 0-9()/?"
+				skinClass="spark.skins.spark.TextAreaSkin" styleName="textInput" prompt="Ingrese Observaciones..."/>
 	<s:Label x="236" y="143" fontSize="16" text="Observaciones"/>
 	<controls:MaskedTextInput id="txtarea" x="576" y="117" width="67" fontSize="16" maxChars="10"/>
 	<s:Label x="577" y="104" fontSize="16" text="Area"/>

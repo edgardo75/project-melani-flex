@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="618" height="452" creationComplete="group1_creationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			[Bindable]
+			public var xmlVentasMensuales:XMLList;
+			
+			protected function operation1_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				xmlVentasMensuales=new XMLList(event.result);
+				
+			}
+			
+			protected function operation1_faultHandler(event:FaultEvent):void
+			{
+				
+				Alert.show("Error al crear grafico");
+			}
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				wsNotasGraficos.calcularVentasMensualesHastaFechaYAnoActual();
+				
+			}
+			//-----------------------------------------------------------
+			protected function btnClose_clickHandler(event:MouseEvent):void
+			{
+				this.removeAllElements();
+			}
+			//-----------------------------------------------------------
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:WebService wsdl="http://localhost:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true" id="wsNotasGraficos">
+			<s:operation name="calcularVentasMensualesHastaFechaYAnoActual" concurrency="last"
+						 result="operation1_resultHandler(event)"
+						 fault="operation1_faultHandler(event)">
+				
+			</s:operation>
+		</s:WebService>
+		<s:XMLListCollection id="ventasMensuales" source="{xmlVentasMensuales.Item}"/>
+	</fx:Declarations>
+	<s:Panel x="9" y="0" width="609" height="424" title="Ventas Mensuales">
+		<mx:ColumnChart id="myChart" x="98" y="10" height="371" dataProvider="{ventasMensuales}" showDataTips="true">
+			<mx:horizontalAxis>
+				<mx:CategoryAxis categoryField="mes">
+					
+				</mx:CategoryAxis>
+			</mx:horizontalAxis>
+			<mx:series>
+				<mx:ColumnSeries displayName="Ventas" yField="venta"/>
+			</mx:series>
+		</mx:ColumnChart>
+		<mx:Legend dataProvider="{myChart}"/>
+	</s:Panel>
+	<s:Button id="btnCloseClientComponent" x="596" y="7" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
+</s:Group>
