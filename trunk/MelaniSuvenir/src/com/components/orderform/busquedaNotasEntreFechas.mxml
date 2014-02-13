@@ -107,11 +107,11 @@
 				if(cmbVendedores.text.length>0&&dtfechaini.text.length>0&&dtffechafin.text.length>0){
 				
 					if(rdbfechaentrega.selected==true){
-						 source="http://localhost:8080/WebMelanie2/ShowReportEntreFechasEntrega?fstart="+dtfechaini.text+"&fend="+dtffechafin.text+"&vendor="+cmbVendedores.selectedItem.id;
+						 source="http://192.168.1.100:8080/WebMelanie2/ShowReportEntreFechasEntrega?fstart="+dtfechaini.text+"&fend="+dtffechafin.text+"&vendor="+cmbVendedores.selectedItem.id;
 						urlReq= new URLRequest(source);	
 					
 					}else{
-						source="http://localhost:8080/WebMelanie2/ShowReportEntreFechas?fstart="+dtfechaini.text+"&fend="+dtffechafin.text+"&vendor="+cmbVendedores.selectedItem.id;
+						source="http://192.168.1.100:8080/WebMelanie2/ShowReportEntreFechas?fstart="+dtfechaini.text+"&fend="+dtffechafin.text+"&vendor="+cmbVendedores.selectedItem.id;
 						urlReq= new URLRequest(source);
 					
 					}
@@ -163,7 +163,7 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:XMLListCollection id="empleadoslist" source="{xmlListEmpleados.item}"/>
-		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wsempleados" wsdl="http://192.168.1.100:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
 			<s:operation name="selectAllEmpleados"
 						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
 						 result="operation2_resultHandlerSelectAllEmpleados(event)">

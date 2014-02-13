@@ -15,8 +15,8 @@
 		
 		
 			<s:WebService id="cliservices" 
-						  wsdl="http://localhost:8080/ServiceClientes/ClientesWs?wsdl" 						  
-						  showBusyCursor="false" 
+						  wsdl="http://192.168.1.100:8080/ServiceClientes/ClientesWs?wsdl" 						  
+						  showBusyCursor="false" requestTimeout="0" 
 						  >
 				<s:operation name="obtenerClienteXTipoAndNumeroDocu"							
 							 result="operation1_resultHandlerObtenerCliente(event)"
@@ -97,9 +97,9 @@
 	<s:Label x="128" y="108" color="#033339" fontSize="20" text="Apellido:"/>
 	<s:Label x="51" y="44" color="#033339" fontSize="20" text="Tipo:"/>
 	
-	<s:Label x="205" y="45" width="112" height="22" color="#033339" fontSize="20" text="Documento:"/>
+	<s:Label x="199" y="44" width="112" height="22" color="#033339" fontSize="20" text="Documento:"/>
 	
-	<controls:MaskedTextInput id="txtdocumento" x="315" y="40" width="70"
+	<controls:MaskedTextInput id="txtdocumento" x="312" y="36" width="70"
 							  enter="txtdocumento_enterHandler(event)" fontFamily="Verdana"
 							  fontSize="20" fontWeight="bold" inputMask="########" maxChars="8"
 							  restrict="0-9" 
@@ -114,7 +114,7 @@
 	<s:Label x="19" y="206" color="#033339" fontSize="20" text="Observaciones:"/>
 	<s:TextArea id="txtobservaciones" x="18" y="230" width="504" height="96" fontFamily="Verdana"
 				fontSize="16" fontWeight="bold" maxChars="255" tabIndex="6" prompt="Ingrese las Observaciones..."/>
-	<components:AdvancedAutoComplete id="cmbTiposdocu" x="97" y="36" width="99"
+	<components:AdvancedAutoComplete id="cmbTiposdocu" x="95" y="35" width="99"
 									 allowDuplicates="false" allowEditingNewValues="false"
 									 allowEditingSelectedValues="false"
 									 allowMultipleSelection="false" allowNewValues="false"
@@ -254,19 +254,23 @@
 				xmlinfotelcli=new XMLList(xmlInfoClient.item.personatelefono.telefono);
 				
 				PopUpManager.removePopUp(popup);
+				
 				if(respuesta.indexOf("NO ENCONTRADO")!=-1){
 					clearComponenteCliente();
-					txtnombre.setFocus();
-				
-					
-				
-			
-				}
-					
-				
-				if(respuesta.indexOf("<observaciones>")!=-1){					
-					
-					addCliente();
+					txtnombre.setFocus();				
+				}else{
+					if(respuesta.indexOf("NO ES UN CLIENTE")!=-1){
+						Alert.show("ATENCIÓN \nEL DOCUMENTO INGRESADO NO ES UN CLIENTE");
+						if(txtnombre.text.length>0){
+							clearComponenteCliente();
+							txtnombre.setFocus();		
+						}
+					}else{
+						if(respuesta.indexOf("<observaciones>")!=-1){					
+							
+							addCliente();
+						}					
+					}
 				}
 				
 			}

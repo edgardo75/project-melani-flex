@@ -173,7 +173,7 @@
 		]]>
 	</fx:Script>
 	<fx:Declarations>
-		<s:WebService id="wsempleado" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wsempleado" wsdl="http://192.168.1.100:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
 			<s:operation name="selectAllEmpleados" result="operation1_resultHandler(event)"
 						 fault="operation1_faultHandler(event)">
 				
