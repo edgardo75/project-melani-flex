@@ -15,8 +15,8 @@
 		<s:XMLListCollection id="infotelcli" source="{xmlinfotelcli}"/>
 		
 			<s:WebService id="cliservices" 
-						  wsdl="http://localhost:8080/ServiceClientes/ClientesWs?wsdl" 						  
-						  showBusyCursor="false" 
+						  wsdl="http://192.168.1.100:8080/ServiceClientes/ClientesWs?wsdl" 						  
+						  showBusyCursor="false" requestTimeout="10" 
 						  >
 				<s:operation name="obtenerClienteXTipoAndNumeroDocu"							
 							 result="operation1_resultHandlerObtenerCliente(event)"
@@ -157,8 +157,12 @@
 			public var xmlinfoclidomi:XMLList;
 			[Bindable]
 			public var xmlinfotelcli:XMLList;
+			[Bindable]
+			public var urlWs:String = "http://192.168.1.100:8080/ServiceClientes/ClientesWs?wsdl";
 			
 			private var popup:BarraProgreso;
+			
+			
 			
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			public function validateForm():Boolean{
@@ -225,6 +229,8 @@
 				cmbGeneros.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);				
 				cmbTiposdocu.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				
+				
+				var urlReq:URLRequest=new URLRequest("");
 				//----------------------------------------
 			}
 			
@@ -250,7 +256,7 @@
 				respuesta = event.result.toString();
 				
 				
-				
+				Alert.show("hola");
 				
 				xmlInfoClient=new XMLList(event.result);
 				xmlinfoclidomi=new XMLList(xmlInfoClient.item.personadomicilio.domicilio);
@@ -264,13 +270,24 @@
 					
 				
 			
+				}else{
+					if(respuesta.indexOf("NO ES UN CLIENTE")!=-1){
+						Alert.show("EL DOCUMENTO INGRESADO NO PERTENECE A UN CLIENTE");
+						if(txtnombre.text.length>0){
+							clearComponenteCliente();
+							compTelefono.clearTodo();
+						}
+						
+					}else{
+						if(respuesta.indexOf("<observaciones>")!=-1){					
+							
+							addCliente();
+						}					
+					}
 				}
 					
 				
-				if(respuesta.indexOf("<observaciones>")!=-1){					
-					
-					addCliente();
-				}
+				
 				
 			}
 			private function addCliente():void{
@@ -350,8 +367,7 @@
 						
 						///SendData to Server
 						popup = BarraProgreso(PopUpManager.createPopUp(this, BarraProgreso, true));				
-						PopUpManager.centerPopUp(popup);
-						
+						PopUpManager.centerPopUp(popup);						
 						cliservices.obtenerClienteXTipoAndNumeroDocu(cmbTiposdocu.selectedItemId,int(txtdocumento.text));
 					
 					}

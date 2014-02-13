@@ -14,12 +14,12 @@
 		<s:XMLListCollection id="infodomicli" source="{tabDatosPersonales.xmlinfoclidomi}" />
 		<s:XMLListCollection id="infotelcli" source="{tabDatosPersonales.xmlinfotelcli}"/>
 		
-		<s:WebService id="serviceCli" wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL" showBusyCursor="false">
+		<s:WebService id="serviceCli" wsdl="http://192.168.1.100:8080/ServiceClientes/ClientesWs?WSDL" showBusyCursor="false">
 			<s:operation name="addCliente" result="operation1_resultHandler(event)" fault="operation1_faultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
-		<s:WebService id="wslocaliades" wsdl="http://localhost:8080/ServicesLocalidades/LocalidadesWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wslocaliades" wsdl="http://192.168.1.100:8080/ServicesLocalidades/LocalidadesWs?WSDL" showBusyCursor="true">
 			<s:operation name="searchAllLocalidadesbyidprov" result="operation2_resultHandler(event)" fault="operation2_faultHandler(event)">
 				
 			</s:operation>
@@ -334,6 +334,9 @@
 						
 					case -7:{Alert.show("No pasó nada al buscar un email, verifique!!!");
 						break;
+					}
+					case -9:{Alert.show("El documento encontrado no pertenece a un cliente!!!");
+						break;
 					}	
 					
 					default:{
@@ -411,9 +414,9 @@
 		</s:NavigatorContent>
 	</mx:ViewStack>
 	</mx:VBox>
-	<s:Button id="btnGuardar" x="24" y="485" width="106" height="32" label="Guardar"
+	<s:Button id="btnGuardar" x="342" y="482" width="106" height="32" label="Guardar"
 			  click="btnGuardar_clickHandler(event)" enabled="false" fontSize="16"
 			  />
-	<s:Button id="btnlimpiartodo" x="171" y="487" width="99" height="29" label="Limpiar"
+	<s:Button id="btnlimpiartodo" x="489" y="484" width="99" height="29" label="Limpiar"
 			  click="btnlimpiartodo_clickHandler(event)" enabled="false" fontSize="16"/>
 </s:Group>

@@ -6,7 +6,7 @@
 		 width="1090" height="438" creationComplete="group1_creationCompleteHandler(event)" xmlns:clients="com.components.clients.*" close="titlewindow1_closeHandler()">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="servicesCliente" wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"					  
+		<s:WebService id="servicesCliente" wsdl="http://192.168.1.100:8080/ServiceClientes/ClientesWs?WSDL"					  
 					  showBusyCursor="true"
 					  useProxy="false">
 			
@@ -64,6 +64,7 @@
 				
 				xmlClienteDatosPersonales=new XMLList(event.result);
 				PopUpManager.removePopUp(popupWait);
+				
 				if(xmlClienteDatosPersonales.toString().indexOf("<id>")!=-1){
 						idcliente.text=String(datoscliente[0].id);
 						nrodocu.text=String(datoscliente[0].nrodocu);

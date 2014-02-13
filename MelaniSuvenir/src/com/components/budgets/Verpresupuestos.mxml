@@ -6,7 +6,7 @@
 		 width="1168" height="576" creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wspresupuestos" wsdl="http://localhost:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="true" >
+		<s:WebService id="wspresupuestos" wsdl="http://192.168.1.100:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="true" >
 			<s:operation name="getRecordCount" 
 						 result="operation1_resultHandler(event)"
 						 fault="operation1_faultHandler(event)">
@@ -55,7 +55,7 @@
 			[Bindable]
 			private var indexPage:int=0;
 			[Bindable]
-			private static var SIZEPAGE:int=50;
+			private static var SIZEPAGE:int=10;
 			[Bindable]
 			private var totalReg:int=0;
 			[Bindable]
@@ -169,7 +169,7 @@
 					Alert.show("NO HAY PRESUPUESTOS CARGADOS!!!");
 				else{
 					
-					if(totalReg<50)
+					if(totalReg<10)
 						wspresupuestos.selectAllPresupuestosJPA();
 					else{
 						last_btn.enabled=true;
@@ -416,7 +416,7 @@
 					last=listpresupuestos[0].id;
 					first=listpresupuestos[listpresupuestos.length-1].id;
 					
-					var source:String="http://localhost:8080/WebMelanie2/ShowReportView?first="+first+"&last="+last;
+					var source:String="http://192.168.1.100:8080/WebMelanie2/ShowReportView?first="+first+"&last="+last;
 					
 					var urlReq:URLRequest= new URLRequest(source);
 					navigateToURL(urlReq,"_blank");
@@ -465,7 +465,7 @@
 				if(adgPresupuestos.selectedIndex>-1){
 					var idpresupuesto:int=adgPresupuestos.selectedItem.id;
 					
-					var source:String="http://localhost:8080/WebMelanie2/ShowReportPresupuesto?presnro="+idpresupuesto;
+					var source:String="http://192.168.1.100:8080/WebMelanie2/ShowReportPresupuesto?presnro="+idpresupuesto;
 					
 					var urlReq:URLRequest= new URLRequest(source);
 					navigateToURL(urlReq,"_blank");
