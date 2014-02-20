@@ -29,7 +29,7 @@
 				
 			</s:operation>
 		</s:WebService>
-		<s:XMLListCollection id="listpresupuestos" source="{xmlPresupuesto.presupuesto}"/>
+		<s:XMLListCollection id="listpresupuestos" source="{xmlPresupuesto.Item}"/>
 		
 		<s:XMLListCollection id="detallepresupuestos"/> 
 	</fx:Declarations>
@@ -305,7 +305,7 @@
 			}
 			//----------------------------------------------------------------------------------------------
 			protected function addinfopresupuesto():void{
-				detallepresupuestos.source=new XMLList(adgPresupuestos.selectedItem.detallepresupuesto.itemdetallepresupuesto);
+				detallepresupuestos.source=new XMLList(adgPresupuestos.selectedItem.Detallepresupuesto.itemdetallepresupuesto);
 				
 				adgdetallespresupuesto.dataProvider=detallepresupuestos;
 				
