@@ -39,10 +39,11 @@
 			protected function operationAddEmpleadosFulltime1_resultHandler(event:ResultEvent):void
 			{
 				var iresult:int=int(event.result);
+				
 				switch(iresult)
 				{
 					case 0:
-					{
+					{		
 						Alert.show("NO PASÓ NADA!!!");
 						break;
 					}
@@ -119,6 +120,14 @@
 						Alert.show("EL NOMBRE DE USUARIO YA EXISTE EN LA BASE DE DATOS");
 						break;
 					}	
+					case -10:{
+						Alert.show("ERROR AL ASEGURAR LA CLAVE DE EMPLEADO");
+						break;
+					}	
+					case -11:{
+						Alert.show("EL PASSWORD NO ES VÁLIDO, INGRESE AL MENOS UNA LETRA MAYÚSCULA\n ALGUN CARACTER ESPECIAL O NUMERO.");
+						break;
+					}		
 						
 					default:
 					{
@@ -580,12 +589,10 @@
 										if(vResult.type==ValidationResultEvent.INVALID)
 											return;
 										else{
-											if(txtpassword.text.length==0||txtrepassword.text.length==0)
-												Alert.show("FALTA INGRESAR O \nREINGRESAR EL PASSWORD, CORRIJA!!!");
-											else{
-												if(txtpassword.text!=txtrepassword.text)
-													Alert.show("LOS PASSWORD NO COINCIDEN, CORRIJA!!!");
-												else{
+											vResult=passV.validate();
+											if(vResult.type==ValidationResultEvent.INVALID)
+												return;
+											else{									
 													Alert.show("Desea Actualizar los Datos de Empleado?","Confirmar Operación", Alert.YES | Alert.NO, this, actualizarEmpleado, null, Alert.NO);
 													
 												}
@@ -604,17 +611,6 @@
 						}
 					}
 					
-				}	
-			
-				
-				
-				
-					
-				
-					
-					
-				
-				
 				
 			}
 			protected function actualizarEmpleado(evt:CloseEvent):void{
@@ -648,7 +644,12 @@
 					{
 						Alert.show("ERROR EN MÉTODO ACTUALIZAR EMPLEADO");
 						break;
-					}						
+					}
+					case -11:{
+						Alert.show("Clave no valida, debe contener una letra mayuscula y minuscula, un numero!!!");
+						break;
+					}
+					
 						
 					default:
 					{
@@ -712,6 +713,7 @@
 						   />
 		
 		
+		
 		<mx:StringValidator id="apeV" source="{txtapellido}"
 							property="text" minLength="2" maxLength="30"
 							required="true" requiredFieldError="Debe Ingresar el Apellido"/>	
@@ -720,10 +722,10 @@
 							property="text" minLength="2" maxLength="30"
 							required="true" requiredFieldError="Debe Ingresar el Nombre"/>
 		<mx:StringValidator id="passV" source="{txtpassword}" 
-							property="text" minLength="4" maxLength="8"
+							property="text" minLength="4" maxLength="20"
 							required="true" requiredFieldError="Debe Ingresar Password"/>
 		<mx:StringValidator id="passreV" source="{txtrepassword}" 
-							property="text" minLength="4" maxLength="8"
+							property="text" minLength="4" maxLength="20"
 							required="true" requiredFieldError="Debe Reingresar el Password"/>
 		<mx:StringValidator id="nomuserV" source="{txtnameuser}" 
 							property="text" minLength="2" maxLength="10"
@@ -866,11 +868,11 @@
 	<s:Label x="356" y="285" fontSize="20" fontWeight="bold" text="Password:"/>
 	<s:Label x="355" y="308" fontSize="20" fontWeight="bold" text="Repassword:"/>
 	<s:TextInput id="txtpassword" x="483" y="277" width="168" displayAsPassword="true"
-					   fontSize="16" maxChars="8" prompt="Ingrese password...."
-					   skinClass="spark.skins.spark.TextInputSkin"/>
+					   fontSize="16" prompt="Ingrese password...." 
+					   skinClass="spark.skins.spark.TextInputSkin" maxChars="20"/>
 	<s:TextInput id="txtrepassword" x="483" y="303" width="168" displayAsPassword="true"
-					   fontSize="16" maxChars="8" prompt="Reingreso password..."
-					   skinClass="spark.skins.spark.TextInputSkin"/>
+					   fontSize="16" prompt="Reingreso password..." 
+					   skinClass="spark.skins.spark.TextInputSkin" maxChars="20"/>
 	<s:VGroup x="252" y="327" >
 	<s:RadioButton id="rbempleadofull" x="250" y="339" label="Empleado FullTime"
 				   groupName="rdgroupEmpleados" selected="true" click="rbempleadofull_clickHandler(event)"/>
