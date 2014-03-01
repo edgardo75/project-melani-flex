@@ -438,7 +438,7 @@
 			
 			protected function btnaddcalles_clickHandler(event:MouseEvent):void
 			{
-				if(cmbcalles.text!=""&&cmbcalles.text.length>0){
+				if(cmbcalles.text!=""&&cmbcalles.text.length>0&&cmbcalles.text.length<=100){
 					Alert.show("Desea agregar la Calle "+cmbcalles.text.toUpperCase()+" ?","Confirmar Operación", Alert.YES | Alert.NO, this, agregarCalle, null, Alert.YES);
 					
 					
@@ -449,9 +449,9 @@
 			
 			protected function btnaddbarrios_clickHandler(event:MouseEvent):void
 			{
-				if(cmbbarrios.text.length>0){
+				if(cmbbarrios.text!=""&&cmbbarrios.text.length>0&&cmbbarrios.text.length<=100){
 					Alert.show("Desea la agregar el Barrio "+cmbbarrios.text.toUpperCase()+" ?","Confirmar Operación", Alert.YES | Alert.NO, this, agregarBarrio, null, Alert.YES);
-					//Alert.show(cmbLocalidades.text+"++"+cmbprovincias.selectedItem.id+"++"+txtcodpostal.text);
+					
 					
 					
 				}
@@ -490,6 +490,10 @@
 					
 						Alert.show("SE PRODUJO UN ERROR EN EL SERVIDOR!!!");
 							
+						break;
+					}	
+					case -4:{
+						Alert.show("LA DESCRIPCION LLEGA VACÍA O HAY CARACTERES NO PERMITIDOS, VERIFIQUE!!!");
 						break;
 					}	
 						
@@ -665,7 +669,7 @@
 	<s:Label x="426" y="103" fontSize="16" text="Torre"/>
 	<s:Label x="496" y="104" fontSize="16" text="Monoblock"/>
 	<components:AdvancedAutoComplete id="cmbcalles" x="231" y="68" width="260" allowNewValues="true"
-									 fontSize="16" labelField="nombre" matchType="beginning">
+									 fontSize="16"  labelField="nombre" matchType="beginning">
 	</components:AdvancedAutoComplete>
 	<components:AdvancedAutoComplete id="cmbbarrios" x="540" y="68" width="231" allowNewValues="true"
 									 fontSize="16" labelField="nombre" matchType="beginning">
