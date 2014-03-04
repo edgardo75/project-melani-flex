@@ -33,6 +33,9 @@
 				public var listEmployee:ArrayCollection;
 			[Bindable]
 				private var empType:String;
+			[Bindable]
+			private var empId:int=0;
+			
 			
 			private var so:SharedObject=SharedObject.getLocal("userData");
 			
@@ -40,53 +43,7 @@
 			{
 				var iresult:int=int(event.result);
 				
-				switch(iresult)
-				{
-					case 0:
-					{		
-						Alert.show("NO PASÓ NADA!!!");
-						break;
-					}
-					case -1:{
-						Alert.show("SE PRODUJO UN ERROR AL ALMACENAR UN EMPLEADO REVISE!!!");
-						break;
-					}	
-					case -2:{
-						Alert.show("YA EXISTE UNA PERSONA CON ESE DOCUMENTO!!!");
-						break;
-					}	
-					case -4:{
-						Alert.show("YA EXISTE ESE EMAIL EN LA BASE DE DATOS!!!");
-						break;
-					}	
-					case -3:{
-						Alert.show("SE PRODUJO UN ERROR EN EL SERVIDOR REVISE!!!");
-						break;
-					}
-					case -6:{
-						Alert.show("EL NOMBRE DE USUARIO YA EXISTE EN LA BASE DE DATOS");
-						break;
-					}	
-					case -5:{
-						Alert.show("SE PRODUJO UN ERROR EN EL METODO \n BUSCAR NOMBRE DE USUARIO E EMAIL");
-						break;
-					}
-					case -11:{
-						Alert.show("EL PASSWORD INGRESADO NO CUMPLE CON LOS REQUISITOS,\n DEBE CONTENER ALMENOS UNA LETRA MAYÚSCULA, MINÚSCULA, NÚMERO\n, CARACTER ESPECIAL.");
-						break;
-					}
-					case -12:{
-						Alert.show("EL NOMBRE DE USUARIO NO PERMITIDO");
-						break;
-					}	
-						
-					default:
-					{
-						limpiarcontroles();
-						wsempleado.selectAllEmpleados();
-						break;
-					}
-				}
+				resultado(iresult);
 				
 			}
 			
@@ -95,14 +52,10 @@
 				Alert.show("SE PRODUJO UN ERROR AL ALMACENAR EMPLEADO PARTIME");
 				
 			}
-			
-			protected function operationAddEmpleadosPartime1_resultHandler(event:ResultEvent):void
-			{
+			protected function resultado(numeroRetornado:int):void{
 				
-				var iresult:int=int(event.result);
 				
-				switch(iresult)
-				{
+				switch(numeroRetornado){
 					case 0:
 					{
 						Alert.show("NO PASÓ NADA!!!");
@@ -120,6 +73,10 @@
 						Alert.show("YA EXISTE ESE EMAIL EN LA BASE DE DATOS!!!");
 						break;
 					}	
+					case -5:{
+						Alert.show("SE PRODUJO UN ERROR EN EL METODO \n BUSCAR NOMBRE DE USUARIO E EMAIL");
+						break;
+					}
 					case -3:{
 						Alert.show("SE PRODUJO UN ERROR EN EL SERVIDOR REVISE!!!");
 						break;
@@ -132,7 +89,7 @@
 						Alert.show("ERROR AL ASEGURAR LA CLAVE DE EMPLEADO");
 						break;
 					}	
-					
+						
 					case -11:{
 						Alert.show("EL PASSWORD INGRESADO NO CUMPLE CON LOS REQUISITOS,\n DEBE CONTENER ALMENOS UNA LETRA MAYÚSCULA, MINÚSCULA, NÚMERO\n, CARACTER ESPECIAL.");
 						break;
@@ -148,6 +105,15 @@
 						break;
 					}
 				}
+				
+			
+			}
+			protected function operationAddEmpleadosPartime1_resultHandler(event:ResultEvent):void
+			{
+				
+				var iresult:int=int(event.result);
+				
+				resultado(iresult);
 				
 			}
 			
@@ -216,8 +182,10 @@
 			
 			protected function btnnuevo_clickHandler(event:MouseEvent):void
 			{			
-					botonesEnabledDisables();
-					txtnombre.setFocus();			
+					//botonesEnabledDisables();
+					limpiarcontroles();
+					txtnombre.setFocus();	
+					empId=0;
 				
 			}
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -369,6 +337,7 @@
 				msksalarioxhora.text="";
 				cmbGeneros.selectedItemId=2;
 				cmbTiposdocu.selectedItemId=3;	
+				
 				botonesEnabledDisables();
 			
 			}
@@ -381,21 +350,48 @@
 			
 			}
 			protected function guardarEmpleado(evt:CloseEvent):void{
+				
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 				if(rbempleadofull.selected==true){
 					if(msksalario.text.length==0)
 						msksalario.text="0";	
-						wsempleado.addEmpleadoFullTime(txtapellido.text,txtnameuser.text,txtnombre.text,txtpassword.text,txtrepassword.text,txtemail.text,int(cmbTiposdocu.selectedItem.id),int(txtdocumento.text),Number(msksalario.text).toFixed(2),int(cmbGeneros.selectedItem.id),txtobservaciones.text);
+						//wsempleado.addEmpleadoFullTime(txtapellido.text,txtnameuser.text,txtnombre.text,txtpassword.text,txtrepassword.text,txtemail.text,int(cmbTiposdocu.selectedItem.id),int(txtdocumento.text),Number(msksalario.text).toFixed(2),int(cmbGeneros.selectedItem.id),txtobservaciones.text);
+					//Alert.show(getDatosEmpleado());
+					wsempleado.addEmpleadoFullTime(getDatosEmpleado());
 					
 				}else{
 					if(rbempleadopart.selected==true){
 						if(msksalarioxhora.text.length==0)
 							msksalarioxhora.text="0";
-						wsempleado.addEmpleadoParttime(txtapellido.text,txtnameuser.text,txtnombre.text,txtpassword.text,txtrepassword.text,txtemail.text,int(cmbTiposdocu.selectedItem.id),int(txtdocumento.text),Number(msksalarioxhora.text),int(cmbGeneros.selectedItem.id),txtobservaciones.text);
+						
+						//wsempleado.addEmpleadoParttime(txtapellido.text,txtnameuser.text,txtnombre.text,txtpassword.text,txtrepassword.text,txtemail.text,int(cmbTiposdocu.selectedItem.id),int(txtdocumento.text),Number(msksalarioxhora.text),int(cmbGeneros.selectedItem.id),txtobservaciones.text);
+						wsempleado.addEmpleadoParttime(getDatosEmpleado());
 					}
 				}
 				
 				
+			
+			}
+			private function getDatosEmpleado():String{
+			var empleado:String="<Empleado>" +
+				
+				"<apellido>" +txtapellido.text+"</apellido>" +
+				"<id>" +empId+"</id>"+
+				"<nombre>"+txtnombre.text+"</nombre>" +
+				"<nombreUsuario>"+txtnameuser.text+"</nombreUsuario>" +
+				"<email>"+txtemail.text+"</email>" +
+				"<password>"+txtpassword.text+"</password>" +
+				"<passwordre>"+txtrepassword.text+"</passwordre>" +				
+				"<idTipoDocumento>"+int(cmbTiposdocu.selectedItem.id)+"</idTipoDocumento>" +				
+				"<salario>"+Number(msksalario.text)+"</salario>" +
+				"<salarioxhora>"+Number(msksalarioxhora.text)+"</salarioxhora>" +
+				"<numeroDocumento>"+int(txtdocumento.text)+"</numeroDocumento>" +
+				"<idGenero>"+int(cmbGeneros.selectedItem.id)+"</idGenero>" +
+				"<observaciones>"+txtobservaciones.text+"</observaciones>" +
+				"<tipoEmpleado>" +empType+"</tipoEmpleado>"+				
+				
+				"</Empleado>";
+			return empleado;
 			
 			}
 			protected function btnguardar_clickHandler(event:MouseEvent):void
@@ -532,6 +528,7 @@
 					txtemail.text="";
 				
 				txtnameuser.text=listEmployee[adgemployee.selectedIndex].nameuser;
+				empId=int(listEmployee[adgemployee.selectedIndex].id);
 				
 				if(String(listEmployee[adgemployee.selectedIndex].observaciones).toString().indexOf("null")!=0)
 					txtobservaciones.text=listEmployee[adgemployee.selectedIndex].observaciones;
@@ -604,9 +601,15 @@
 											vResult=passV.validate();
 											if(vResult.type==ValidationResultEvent.INVALID)
 												return;
-											else{									
+											else{
+												if(txtpassword.text.length==0||txtrepassword.text.length==0)
+													Alert.show("FALTA INGRESAR O \nREINGRESAR EL PASSWORD, CORRIJA!!!");
+												else{
+													if(txtpassword.text!=txtrepassword.text)
+														Alert.show("LOS PASSWORD NO COINCIDEN, CORRIJA!!!");
+													else{
 													Alert.show("Desea Actualizar los Datos de Empleado?","Confirmar Operación", Alert.YES | Alert.NO, this, actualizarEmpleado, null, Alert.NO);
-													
+													}
 												}
 												
 											}
@@ -622,22 +625,15 @@
 							
 						}
 					}
+				}
 					
 				
 			}
 			protected function actualizarEmpleado(evt:CloseEvent):void{
 				var salario:Number=0;
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;				
-				if(empType=="FULLTIME"){
-					if(msksalario.text.length>0)
-						salario =Number(msksalario.text);
-				}else{
-					if(msksalarioxhora.text.length>0)
-						salario=Number(msksalarioxhora.text);
-				}
-					
-						wsempleado.actualizarEmpleado(listEmployee[adgemployee.selectedIndex].id,txtapellido.text,txtnameuser.text,txtnombre.text,
-							txtpassword.text,txtrepassword.text,txtemail.text,cmbTiposdocu.selectedItem.id,int(txtdocumento.text),0,cmbGeneros.selectedItem.id,txtobservaciones.text,empType,salario);
+			
+				wsempleado.actualizarEmpleado(getDatosEmpleado());
 			}
 			protected function operation1_resultHandler_actualizar(event:ResultEvent):void
 			{
@@ -665,7 +661,10 @@
 						Alert.show("EL NOMBRE DE USUARIO NO ES PERMITIDO, INGRESE EL MISMO SIN CARACTERES ESPECIALES.");
 						break;
 					}
-					
+					case -13:{
+						Alert.show("Los Password no coinciden!!!");
+						break;
+					}
 						
 					default:
 					{
@@ -738,10 +737,10 @@
 							property="text" minLength="2" maxLength="30"
 							required="true" requiredFieldError="Debe Ingresar el Nombre"/>
 		<mx:StringValidator id="passV" source="{txtpassword}" 
-							property="text" minLength="4" maxLength="20"
+							property="text" minLength="4" maxLength="15"
 							required="true" requiredFieldError="Debe Ingresar Password"/>
 		<mx:StringValidator id="passreV" source="{txtrepassword}" 
-							property="text" minLength="4" maxLength="20"
+							property="text" minLength="4" maxLength="15"
 							required="true" requiredFieldError="Debe Reingresar el Password"/>
 		<mx:StringValidator id="nomuserV" source="{txtnameuser}" 
 							property="text" minLength="2" maxLength="10"
@@ -883,12 +882,12 @@
 					   skinClass="spark.skins.spark.TextInputSkin"/>
 	<s:Label x="356" y="285" fontSize="20" fontWeight="bold" text="Password:"/>
 	<s:Label x="355" y="308" fontSize="20" fontWeight="bold" text="Repassword:"/>
-	<s:TextInput id="txtpassword" x="483" y="277" width="168" displayAsPassword="true"
+	<s:TextInput id="txtpassword" x="483" y="277" width="168" displayAsPassword="true" restrict="[a-zA-Z0-9_-]"
 					   fontSize="16" prompt="Ingrese password...." 
-					   skinClass="spark.skins.spark.TextInputSkin" maxChars="20"/>
-	<s:TextInput id="txtrepassword" x="483" y="303" width="168" displayAsPassword="true"
+					   skinClass="spark.skins.spark.TextInputSkin" maxChars="15"/>
+	<s:TextInput id="txtrepassword" x="483" y="303" width="168" displayAsPassword="true" restrict="[a-zA-Z0-9_-]"
 					   fontSize="16" prompt="Reingreso password..." 
-					   skinClass="spark.skins.spark.TextInputSkin" maxChars="20"/>
+					   skinClass="spark.skins.spark.TextInputSkin" maxChars="15"/>
 	<s:VGroup x="252" y="327" >
 	<s:RadioButton id="rbempleadofull" x="250" y="339" label="Empleado FullTime"
 				   groupName="rdgroupEmpleados" selected="true" click="rbempleadofull_clickHandler(event)"/>

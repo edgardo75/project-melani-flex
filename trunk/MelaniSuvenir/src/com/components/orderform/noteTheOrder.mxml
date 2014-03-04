@@ -775,6 +775,6 @@
 	</components:AutoComplete>
 	<s:Label x="863" y="352" fontFamily="Arial" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
 	<s:TextInput id="txtpassword" x="864" y="373" width="246" fontSize="16" fontStyle="normal"
-				 prompt="Ingresar password de vendedor..." displayAsPassword="true"/>
+				 prompt="Ingresar password de vendedor..." displayAsPassword="true" maxChars="15"/>
 	
 </s:Group>
