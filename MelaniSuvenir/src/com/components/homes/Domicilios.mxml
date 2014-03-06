@@ -314,7 +314,7 @@
 				
 				if(txtcodpostal.text!=""&&cmbLocalidades.text.length>0){
 					Alert.show("Desea la agregar Localidad "+cmbLocalidades.text.toUpperCase()+" ?","Confirmar Operación", Alert.YES | Alert.NO, this, agregarLocalidad, null, Alert.YES);
-					//Alert.show(cmbLocalidades.text+"++"+cmbprovincias.selectedItem.id+"++"+txtcodpostal.text);
+					
 					
 				
 				}
@@ -347,6 +347,11 @@
 						cmbLocalidades.selectedItemId=15758;
 						break;
 					}
+					case -7:{Alert.show("EL NOMBRE DE LA LOCALIDAD CONTIENE CARACTERES NO PERMITIDOS, CORRIJA E INGRESE SOLO LETRAS PERMITIDAS");
+						localidadeslist=localidadeslistclone;
+						cmbLocalidades.selectedItemId=15758;
+						break;
+					}	
 					default:{
 						
 						idlocalidad=retorno;
@@ -495,7 +500,12 @@
 					case -4:{
 						Alert.show("LA DESCRIPCION LLEGA VACÍA O HAY CARACTERES NO PERMITIDOS, VERIFIQUE!!!");
 						break;
-					}	
+					}
+					case -0:
+					{
+						Alert.show("NO PASÓ NADA");
+						break;
+					}
 						
 					default:
 					{
@@ -531,6 +541,16 @@
 					case -1:
 					{
 						Alert.show("SE PRODUJO UN ERROR EN EL SERVIDOR, VERIFIQUE!!!");
+						break;
+					}
+					case 0:
+					{
+						Alert.show("NO PASÓ NADA");
+						break;
+					}
+					case -2:
+					{
+						Alert.show("NO SE VALIDÓ CORRECTAMENTE EL NOMBRE DE BARRIO, VERIFIQUE LOS CARACTERES INGRESADOS, SOLO LETRAS Y NUMEROS PERMITIDOS");
 						break;
 					}	
 						
