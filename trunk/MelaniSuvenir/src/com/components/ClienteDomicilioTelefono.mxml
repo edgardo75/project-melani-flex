@@ -338,6 +338,18 @@
 					case -9:{Alert.show("El documento encontrado no pertenece a un cliente!!!");
 						break;
 					}	
+					case -11:{Alert.show("Email no válido!!!");
+						break;
+					}
+					case -14:{Alert.show("Numero de documento no válido!!!");
+						break;
+					}
+					case -13:{Alert.show("Apellído no válido!!!");
+						break;
+					}
+					case -12:{Alert.show("Nombre no válido!!!");
+						break;
+					}
 					
 					default:{
 						Alert.show("Datos Almacenados Correctamente");

@@ -75,7 +75,8 @@
 				
 				}else{
 						if(xmlClienteDatosPersonales.toString().indexOf("<error>")!=-1)
-							Alert.show("Error en la operación, Verifique!!!");
+							Alert.show("Error en la operación, Verifique!!! "+xmlClienteDatosPersonales.toString());
+						
 				}
 					
 				
@@ -165,48 +166,48 @@
 			protected function validateAndSubmit(event:MouseEvent):void
 			{
 				// Validate the required fields. 
-			
-				vResult = clienteComp.nomV.validate();
-				//-----------------------------------------------------------
-				if(vResult.type==ValidationResultEvent.INVALID)
-					return;
-				else{
-					
-					vResult=clienteComp.apeV.validate();
-					if(vResult.type==ValidationResultEvent.INVALID)
-						return;
-					
-					
-				}
-				//-----------------------------------------------------------
-				if(clienteComp.cmbTiposdocu.selectedItem==null){
-					Alert.show("   Seleccione un Tipo de Documento DNI, LE, LC, PASAPORTE   ");
-					return;
-				}
-				//-----------------------------------------------------------
-				if(clienteComp.txtdocumento.text.length==0){
-					Alert.show("   Ingrese un número de Documento!!!    ");
-					return;
-				}else{
-					if(clienteComp.txtdocumento.text.length<7){
-						Alert.show("   Ingrese un número de Documento de manera correcta   ");
-						return;
 						
-					}
-				}
-				//------------------------------------------------------------
-				if(clienteComp.cmbGeneros.selectedItem==null){
-					Alert.show("  Debe Seleccionar el Genero F o M   ");
-					return;
-				}
-				//-------------------------------------------------------------					
-				
-				
-				
-				///SendData to Server
-				popupWait = BarraProgreso(PopUpManager.createPopUp(this, BarraProgreso, true));				
-				PopUpManager.centerPopUp(popupWait);
-				//-------------------------------------------------------------
+							vResult = clienteComp.nomV.validate();
+							//-----------------------------------------------------------
+							if(vResult.type==ValidationResultEvent.INVALID)
+								return;
+							else{
+								
+								vResult=clienteComp.apeV.validate();
+								if(vResult.type==ValidationResultEvent.INVALID)
+									return;
+								
+								
+							}
+							//-----------------------------------------------------------
+							if(clienteComp.cmbTiposdocu.selectedItem==null){
+								Alert.show("   Seleccione un Tipo de Documento DNI, LE, LC, PASAPORTE   ");
+								return;
+							}
+							//-----------------------------------------------------------
+							if(clienteComp.txtdocumento.text.length==0){
+								Alert.show("   Ingrese un número de Documento!!!    ");
+								return;
+							}else{
+								if(clienteComp.txtdocumento.text.length<7){
+									Alert.show("   Ingrese un número de Documento de manera correcta   ");
+									return;
+									
+								}
+							}
+							//------------------------------------------------------------
+							if(clienteComp.cmbGeneros.selectedItem==null){
+								Alert.show("  Debe Seleccionar el Genero F o M   ");
+								return;
+							}
+							//-------------------------------------------------------------					
+							
+							
+							
+							///SendData to Server
+							popupWait = BarraProgreso(PopUpManager.createPopUp(this, BarraProgreso, true));				
+							PopUpManager.centerPopUp(popupWait);
+							//-------------------------------------------------------------
 				
 				//-------------------------------------------------------------
 				servicesCliente.addClienteDatosPersonales(getDatosCliente());

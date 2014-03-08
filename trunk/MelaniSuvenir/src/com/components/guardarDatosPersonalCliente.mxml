@@ -73,27 +73,43 @@
 				
 				switch(indice)
 				{
-					case 0:
-					{
-						Alert.show(" NO PASÓ NADA!!! ");	
+					case 0:{Alert.show("Ocurrió un Error en el Servidor con los Datos, verifique!!!");
 						break;
 					}
-					case -1:{
-						Alert.show(" ERROR EN EL SERVIDOR!!! ");	
-						break;
-					}	
-					case -2:{
-						Alert.show(" ERROR CLIENTE NO ENCOTRADO!!! ");	
-						break;
-					}	
-					case -3:{
-						Alert.show(" NO SE PUDO AGREGAR DOMICILIO!!! ");
+					case -1:{Alert.show("Error en el Server, verifique!!!");
 						break;
 					}
-					case -8:{
-						Alert.show(" EMAIL ENCONTRADO EN LA BASE DE DATOS!!! ");
+					case -2:{Alert.show("Error en el Server, verifique!!!");
 						break;
 					}	
+					case -3:{Alert.show("Error en el Server, verifique!!!");
+						break;
+					}
+					case -6:{Alert.show("Error en el Server, verifique!!!");
+						break;
+					}
+					case -8:{Alert.show("Email encontrado ya registrado en la base de datos");
+						break;
+					}
+						
+					case -7:{Alert.show("No pasó nada al buscar un email, verifique!!!");
+						break;
+					}
+					case -9:{Alert.show("El documento encontrado no pertenece a un cliente!!!");
+						break;
+					}	
+					case -11:{Alert.show("Email no válido!!!");
+						break;
+					}
+					case -14:{Alert.show("Numero de documento no válido!!!");
+						break;
+					}
+					case -13:{Alert.show("Apellído no válido!!!");
+						break;
+					}
+					case -12:{Alert.show("Nombre no válido!!!");
+						break;
+					}
 						
 					default:
 					{
@@ -123,40 +139,40 @@
 			{
 				// Validate the required fields. 
 			
-				vResult = clienteComp.nomV.validate();
-				//-----------------------------------------------------------
-				if(vResult.type==ValidationResultEvent.INVALID)
-					return;
-				else{
-					
-					vResult=clienteComp.apeV.validate();
-					if(vResult.type==ValidationResultEvent.INVALID)
-						return;
-					
-					
-				}
-				//-----------------------------------------------------------
-				if(clienteComp.cmbTiposdocu.selectedItem==null){
-					Alert.show("Seleccione un Tipo de Documento DNI, LE, LC, PASAPORTE");
-					return;
-				}
-				//-----------------------------------------------------------
-				if(clienteComp.txtdocumento.text.length==0){
-					Alert.show("Ingrese un número de Documento!!!");
-					return;
-				}else{
-					if(clienteComp.txtdocumento.text.length<7){
-						Alert.show("Ingrese un número de Documento de manera correcta");
-						return;
-						
-					}
-				}
-				//------------------------------------------------------------
-				if(clienteComp.cmbGeneros.selectedItem==null){
-					Alert.show("Debe Seleccionar el Genero F o M");
-					return;
-				}
-				//-------------------------------------------------------------					
+								vResult = clienteComp.nomV.validate();
+								//-----------------------------------------------------------
+								if(vResult.type==ValidationResultEvent.INVALID)
+									return;
+								else{
+									
+									vResult=clienteComp.apeV.validate();
+									if(vResult.type==ValidationResultEvent.INVALID)
+										return;
+									
+									
+								}
+								//-----------------------------------------------------------
+								if(clienteComp.cmbTiposdocu.selectedItem==null){
+									Alert.show("Seleccione un Tipo de Documento DNI, LE, LC, PASAPORTE");
+									return;
+								}
+								//-----------------------------------------------------------
+								if(clienteComp.txtdocumento.text.length==0){
+									Alert.show("Ingrese un número de Documento!!!");
+									return;
+								}else{
+									if(clienteComp.txtdocumento.text.length<7){
+										Alert.show("Ingrese un número de Documento de manera correcta");
+										return;
+										
+									}
+								}
+								//------------------------------------------------------------
+								if(clienteComp.cmbGeneros.selectedItem==null){
+									Alert.show("Debe Seleccionar el Genero F o M");
+									return;
+								}
+								//-------------------------------------------------------------					
 				
 				
 				
