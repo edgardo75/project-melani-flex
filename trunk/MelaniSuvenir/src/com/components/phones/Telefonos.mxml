@@ -217,11 +217,11 @@
 		<fx:XML xmlns="" id="tipostelefonos">
 			<Lista>
 				<Tipo>
-					<id>1</id>
+					<id>2</id>
 					<descripcion>CELULAR</descripcion>
 				</Tipo>
 				<Tipo>
-					<id>2</id>
+					<id>1</id>
 					<descripcion>PARTICULAR</descripcion>
 				</Tipo>
 				<Tipo>

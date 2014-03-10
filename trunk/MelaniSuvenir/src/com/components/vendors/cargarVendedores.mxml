@@ -97,7 +97,19 @@
 					case -12:{
 						Alert.show("EL NOMBRE DE USUARIO NO ES PERMITIDO, INGRESE EL MISMO SIN CARACTERES ESPECIALES.");
 						break;
-					}							
+					}				
+					case -14:{
+						Alert.show("El NOMBRE DEL EMPLEADO NO ES VÁLIDO!!!");
+						break;
+					}		
+					case -15:{
+						Alert.show("EL APELLIDO DEL EMPLEADO NO ES VÁLIDO!!!");
+						break;
+					}		
+					case -15:{
+						Alert.show("NÚMERO DE DOCUMENTO NO ES VÁLIDO!!!");
+						break;
+					}				
 					default:
 					{
 						limpiarcontroles();
@@ -641,7 +653,8 @@
 				
 				var retorno:int=int(event.result.toString());
 				
-				switch(retorno)
+				resultado(retorno);
+			/*	switch(retorno)
 				{
 					case 0:
 					{
@@ -673,7 +686,7 @@
 						limpiarcontroles();			
 						break;
 					}
-				}
+				}*/
 				
 			}
 			
@@ -743,7 +756,7 @@
 							property="text" minLength="4" maxLength="15"
 							required="true" requiredFieldError="Debe Reingresar el Password"/>
 		<mx:StringValidator id="nomuserV" source="{txtnameuser}" 
-							property="text" minLength="2" maxLength="10"
+							property="text" minLength="2" maxLength="20"
 							required="true" requiredFieldError="Debe Ingresar el Nombre de Usuario"/>
 		
 		
@@ -877,7 +890,7 @@
 	
 	
 	<s:Label x="28" y="285" fontSize="20" fontWeight="bold" text="Usuario:"/>
-	<s:TextInput id="txtnameuser" x="111" y="282" width="237" fontSize="16" maxChars="10"
+	<s:TextInput id="txtnameuser" x="111" y="282" width="237" fontSize="16" maxChars="20"
 					   prompt="Ingrese un nombre de usuario..." restrict="A-ÑZa-ñz 0-9 "
 					   skinClass="spark.skins.spark.TextInputSkin"/>
 	<s:Label x="356" y="285" fontSize="20" fontWeight="bold" text="Password:"/>
