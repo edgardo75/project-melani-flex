@@ -170,17 +170,14 @@
 				
 				
 			}
-			protected function producto_resultHandler(event:ResultEvent):void{
-				var indice:Number;
+			protected function resultado(indice:int):void{
 				
-				xmllistproducto=new XMLList(event.result);
-				indice = new Number(product[0].id);
 				switch(indice)
 				{
 					case 0:
 					{
 						Alert.show("NO PASÓ NADA");
-						limpiarFormulario();
+						limpiarFormulario();						
 						break;
 					}
 					case -1:
@@ -193,6 +190,7 @@
 					{
 						Alert.show("ERROR EN EL SERVIDOR!!!");
 						limpiarFormulario();
+						
 						break;
 					}
 					case -5:
@@ -207,6 +205,18 @@
 						servicesProducto.searchAllProductos();
 						break;
 					}	
+					case -7:
+					{
+						Alert.show("   FALTA LA DESCRIPCION DEL PRODUCTO O NO ES VÁLIDA    ");
+						servicesProducto.searchAllProductos();
+						break;
+					}	
+					case -8:
+					{
+						Alert.show("   FALTA EL CODIGO DE PRODUCTO O NO ES VÁLIDO    ");
+						servicesProducto.searchAllProductos();
+						break;
+					}	
 						
 						
 						
@@ -217,6 +227,16 @@
 						break;
 					}
 				}
+			
+			
+			}
+			protected function producto_resultHandler(event:ResultEvent):void{
+				var indice:Number;
+				
+				xmllistproducto=new XMLList(event.result);
+				indice = new Number(product[0].id);
+				resultado(indice);
+			
 			
 			
 			
@@ -236,11 +256,12 @@
 				lbltotalproductos.text="0";
 			
 			}
-			protected function producto_faultHandler(event:FaultEvent):void{
+		
+			protected function producto_faultHandler1(event:FaultEvent):void{
 				
 				Alert.show("   SE PRODUJO UN ERROR AL ACTUALIZAR\n UN PRODUCTO, REVISE!!!   ");		
-			
-			
+				
+				
 			}
 			protected function group1_creationCompleteHandler(event:FlexEvent):void
 			{
@@ -359,6 +380,11 @@
 				
 			}
 			
+			protected function operation3_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("ERROR AL QUERER AGREGAR UN PRODUCTO, REVISE");
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -374,7 +400,7 @@
 			<s:operation name="actualizarProducto"
 						  resultFormat="object"
 						  result="producto_resultHandler(event)"
-						  fault="producto_faultHandler(event)">				
+						  fault="producto_faultHandler1(event)">				
 			</s:operation>
 			<s:operation name="searchAllProductos"
 						  fault="operation1_faultHandler(event)"
@@ -382,7 +408,7 @@
 			</s:operation>
 			<s:operation name="addProducto"
 						 result="producto_resultHandler(event)"
-						 fault="producto_faultHandler(event)">
+						 fault="operation3_faultHandler(event)">
 				
 				
 			</s:operation>

@@ -465,10 +465,12 @@
 				if(adgPresupuestos.selectedIndex>-1){
 					var idpresupuesto:int=adgPresupuestos.selectedItem.id;
 					
-					var source:String="http://192.168.1.100:8080/WebMelanie2/ShowReportPresupuesto?presnro="+idpresupuesto;
-					
-					var urlReq:URLRequest= new URLRequest(source);
-					navigateToURL(urlReq,"_blank");
+					if(idpresupuesto>0){
+							var source:String="http://192.168.1.100:8080/WebMelanie2/ShowReportPresupuesto?presnro="+idpresupuesto;
+							
+							var urlReq:URLRequest= new URLRequest(source);
+							navigateToURL(urlReq,"_blank");
+					}
 				}
 			}
 			
