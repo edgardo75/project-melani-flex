@@ -86,14 +86,16 @@
 			}
 			//----------------------------------------------------------------------------------
 			
-			
+			private function agregar_telefono_a_grid():void{
+				if(txtnumerotel.text.length>=7&&(txtnumerotel.text.substring(0,1).indexOf("4")!=-1||txtnumerotel.text.substring(0,2).indexOf("15")!=-1||txtnumerotel.text.substring(0,1).indexOf("6")!=-1||txtnumerotel.text.substring(0,1).indexOf("5")!=-1))
+					addGrid();
+				else
+					Alert.show("Número mal ingresado, mínimo 7 digitos y debe empezar en 4, 5, 6 o 15");
+			}
 			protected function btnAgregarTel_clickHandler(event:MouseEvent):void
 			{
-				
-					if(txtnumerotel.text.length>=7&&(txtnumerotel.text.substring(0,1).indexOf("4")!=-1||txtnumerotel.text.substring(0,2).indexOf("15")!=-1||txtnumerotel.text.substring(0,1).indexOf("6")!=-1||txtnumerotel.text.substring(0,1).indexOf("5")!=-1))
-									addGrid();
-							else
-								Alert.show("Número mal ingresado, mínimo 7 digitos y debe empezar en 4, 5, 6 o 15");
+				agregar_telefono_a_grid();
+					
 				
 			}
 			public function addGrid():void{
@@ -174,6 +176,12 @@
 				listtel.refresh();
 			}
 			
+			protected function txtnumerotel_enterHandler(event:FlexEvent):void
+			{
+				
+				agregar_telefono_a_grid();
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -246,7 +254,7 @@
 							  inputMask="(#########)" maxChars="10" restrict="0-9"/>
 	<s:Label x="58" y="131" fontSize="16" text="Prefijo"/>
 	<s:Label x="279" y="130" fontSize="16" text="Número"/>
-	<controls:MaskedTextInput id="txtnumerotel" x="279" y="144" fontSize="16" inputMask="#########"
+	<controls:MaskedTextInput id="txtnumerotel" x="279" y="144" fontSize="16" inputMask="#########" enter="txtnumerotel_enterHandler(event)"
 							  maxChars="20" restrict="0-9"/>
 	<s:Button id="btnAgregarTel" x="379" y="144" label="Agregar"
 			  click="btnAgregarTel_clickHandler(event)" fontSize="16" toolTip="Agregar numero de telefono al listado"/>

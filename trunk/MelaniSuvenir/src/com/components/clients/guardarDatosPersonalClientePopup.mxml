@@ -8,14 +8,7 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:WebService id="servicesCliente" wsdl="http://192.168.1.100:8080/ServiceClientes/ClientesWs?WSDL"					  
 					  showBusyCursor="true"
-					  useProxy="false">
-			
-			<s:operation name="addCliente"
-						 resultFormat="object"
-						 result="operation1_resultHandler(event)"
-						 fault="operation1_faultHandler(event)">				
-			</s:operation>		
-			
+					  useProxy="false">		
 			<s:operation name="addClienteDatosPersonales"
 						  resultFormat="object"
 						  result="operationDatosPersonalesREstHandler(event)"
@@ -27,7 +20,10 @@
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import com.components.ClienteDomicilioTelefono;
+			import com.components.products.productosPedidosNota;
 			import com.components.utils.BarraProgreso;
+			import com.hillelcoren.components.AutoComplete;
 			
 			import mx.controls.Alert;
 			import mx.controls.ProgressBar;
@@ -59,24 +55,23 @@
 			
 			
 			
+			
+			
 			//*******************************************************************************************
 			protected function operationDatosPersonalesREstHandler(event:ResultEvent):void{
+				PopUpManager.removePopUp(popupWait);				
 				
-				xmlClienteDatosPersonales=new XMLList(event.result);
-				PopUpManager.removePopUp(popupWait);
-				
-				if(xmlClienteDatosPersonales.toString().indexOf("<id>")!=-1){
+				if(event.result.toString().indexOf("<id>")!=-1){
+					xmlClienteDatosPersonales=new XMLList(event.result);
 						idcliente.text=String(datoscliente[0].id);
 						nrodocu.text=String(datoscliente[0].nrodocu);
 						nombre.text=String(datoscliente[0].nombre);
-						apellido.text=String(datoscliente[0].apellido);
+						apellido.text=String(datoscliente[0].apellido);						
+						titlewindow1_closeHandler();				
 						
-						titlewindow1_closeHandler();
-				
 				}else{
-						if(xmlClienteDatosPersonales.toString().indexOf("<error>")!=-1)
-							Alert.show("Error en la operación, Verifique!!! "+xmlClienteDatosPersonales.toString());
-						
+						if(event.result.toString().indexOf("<error>")!=-1)
+							Alert.show("Error en la operación, Verifique!!! \n"+String(event.result.toString().substring(15,event.result.toString().length-16)));						
 				}
 					
 				
@@ -84,6 +79,7 @@
 			}
 			//*********************************************************************************************
 			protected function operationDatosPersonalesFaultHandelr(event:FaultEvent):void{
+				PopUpManager.removePopUp(popupWait);
 				Alert.show("   Se produjo un error al almacenar datos personales de clientes!!!   ");
 			}
 			//************************************************************************************************
@@ -110,57 +106,14 @@
 						"</ClienteDomicilioTelefono>\n";
 					return datosCliente;
 		 }
-			protected function group1_creationCompleteHandler(event:FlexEvent):void
-			{
+      protected function group1_creationCompleteHandler(event:FlexEvent):void
+	  {
 			
 				focusManager.setFocus(clienteComp.txtdocumento);
 				
-			}
+	   }
 			
-			protected function operation1_resultHandler(event:ResultEvent):void
-			{
-				PopUpManager.removePopUp(popupWait);
-				
-				var indice:Number;
-				indice=new Number(event.result.toString());
-				
-				switch(indice)
-				{
-					case 0:
-					{
-						Alert.show("   NO PASÓ NADA!!!   "+indice);	
-						break;
-					}
-					case -1:{
-						Alert.show("   ERROR EN EL SERVIDOR!!!   "+indice);	
-						break;
-					}	
-					case -2:{
-						Alert.show("   ERROR CLIENTE NO ENCOTRADO!!!   "+indice);	
-						break;
-					}	
-					case -3:{
-						Alert.show("   NO SE PUDO AGREGAR DOMICILIO!!!   ");
-						break;
-					}	
-					default:
-					{
-						Alert.show("   Cliente Almacenado Nº "+indice);
-						
-						clienteComp.clearComponenteCliente();
-						
-						break;
-					}
-				}
-				
-				
-			}
-			//-----------------------------------------------------------
-			protected function operation1_faultHandler(event:FaultEvent):void
-			{
-				Alert.show("   Error en el Servidor al querer almacenar datos personales de cliente, verifique por favor!!!   ");
-				
-			}
+			
 			
 			//-----------------------------------------------------------			
 			protected function validateAndSubmit(event:MouseEvent):void

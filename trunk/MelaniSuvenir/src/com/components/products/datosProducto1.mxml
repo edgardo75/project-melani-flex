@@ -22,20 +22,20 @@
 		<mx:StringValidator id="descV" source="{cmbproduct}"
 							property="text" minLength="2" maxLength="80"
 							required="true" requiredFieldError="Debe Ingresar la descripción y/o nombre del producto"/>
-		<mx:WebService id="servicesProducto" wsdl="http://192.168.1.100:8080/ServiceProductos/ProductosWs?WSDL"
+		<s:WebService id="servicesProducto" wsdl="http://192.168.1.100:8080/ServiceProductos/ProductosWs?WSDL"
 					   
 					   showBusyCursor="true"
 					   useProxy="false">
-			<mx:operation name="actualizarProducto"
+			<s:operation name="actualizarProducto"
 						  resultFormat="object"
 						  result="producto_resultHandler(event)"
 						  fault="producto_faultHandler(event)">				
-			</mx:operation>
-			<mx:operation name="searchAllProductos"
+			</s:operation>
+			<s:operation name="searchAllProductos"
 						 fault="operation1_faultHandler(event)"
 						 result="operation1_resultHandler(event)">
-			</mx:operation>
-		</mx:WebService>	             
+			</s:operation>
+		</s:WebService>	             
 		
 		
 	</fx:Declarations>
