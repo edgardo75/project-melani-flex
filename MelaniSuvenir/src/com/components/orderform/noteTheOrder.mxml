@@ -198,7 +198,7 @@
 				popup2.idcliente=lblnocli;
 				popup2.nombre=txtnombrecliente;
 				popup2.apellido=txtapellidocliente;
-				popup2.nrodocu=mskdocu;
+				popup2.nrodocu=mskdocu;				
 				PopUpManager.centerPopUp(popup2);
 			}
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

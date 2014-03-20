@@ -256,7 +256,7 @@
 				respuesta = event.result.toString();
 				
 				
-				Alert.show("hola");
+				
 				
 				xmlInfoClient=new XMLList(event.result);
 				xmlinfoclidomi=new XMLList(xmlInfoClient.item.personadomicilio.domicilio);

@@ -89,6 +89,7 @@
 			import mx.events.FlexEvent;
 			import mx.events.MenuEvent;
 			import mx.managers.PopUpManager;
+			import mx.netmon.NetworkMonitor;
 			
 			
 			protected function myMenuBar_itemClickHandler(event:MenuEvent):void
@@ -159,7 +160,7 @@
 			}
 			protected function application1_creationCompleteHandler(event:FlexEvent):void
 			{
-			
+				//
 			}
 			protected function verInformeProductos():void{
 				var source:String="http://192.168.1.100:8080/WebMelanie2/ShowReportProductos"

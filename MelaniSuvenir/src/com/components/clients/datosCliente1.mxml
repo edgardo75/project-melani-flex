@@ -255,7 +255,7 @@
 				
 				PopUpManager.removePopUp(popup);
 				
-				if(respuesta.indexOf("NO ENCONTRADO")!=-1){
+				if(respuesta.indexOf("NO ENCONTRADO")!=-1||respuesta.indexOf("NO PASO NADA")!=-1||respuesta.indexOf("ERROR EN METODO EXISTE")!=-1){
 					clearComponenteCliente();
 					txtnombre.setFocus();				
 				}else{

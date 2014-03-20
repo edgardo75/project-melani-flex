@@ -6,16 +6,16 @@
 		 width="1088" height="396" creationComplete="group1_creationCompleteHandler(event)" xmlns:clients="com.components.clients.*">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<mx:WebService id="servicesCliente" wsdl="http://192.168.1.100:8080/ServiceClientes/ClientesWs?WSDL"
+		<s:WebService id="servicesCliente" wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL"
 					  
 					  showBusyCursor="false"
 					  useProxy="false">
-			<mx:operation name="addCliente"
+			<s:operation name="addCliente"
 						 resultFormat="object"
 						 result="operation1_resultHandler(event)"
 						 fault="operation1_faultHandler(event)">				
-			</mx:operation>			
-		</mx:WebService>
+			</s:operation>			
+		</s:WebService>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
@@ -70,55 +70,12 @@
 				
 				var indice:Number;
 				indice=new Number(event.result.toString());
-				
-				switch(indice)
-				{
-					case 0:{Alert.show("Ocurrió un Error en el Servidor con los Datos, verifique!!!");
-						break;
-					}
-					case -1:{Alert.show("Error en el Server, verifique!!!");
-						break;
-					}
-					case -2:{Alert.show("Error en el Server, verifique!!!");
-						break;
-					}	
-					case -3:{Alert.show("Error en el Server, verifique!!!");
-						break;
-					}
-					case -6:{Alert.show("Error en el Server, verifique!!!");
-						break;
-					}
-					case -8:{Alert.show("Email encontrado ya registrado en la base de datos");
-						break;
-					}
-						
-					case -7:{Alert.show("No pasó nada al buscar un email, verifique!!!");
-						break;
-					}
-					case -9:{Alert.show("El documento encontrado no pertenece a un cliente!!!");
-						break;
-					}	
-					case -11:{Alert.show("Email no válido!!!");
-						break;
-					}
-					case -14:{Alert.show("Numero de documento no válido!!!");
-						break;
-					}
-					case -13:{Alert.show("Apellído no válido!!!");
-						break;
-					}
-					case -12:{Alert.show("Nombre no válido!!!");
-						break;
-					}
-						
-					default:
-					{
-						Alert.show(" Cliente Almacenado Nº "+indice);
-						clienteComp.clearComponenteCliente();
-						
-						break;
-					}
+				if(ClienteDomicilioTelefono.retornoSwitch(indice)>0){
+					Alert.show("Datos Almacenados Correctamente");
+					clienteComp.clearComponenteCliente();
 				}
+					
+		
 				
 				
 			}

@@ -128,19 +128,20 @@
 			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			protected function getDatosDomiciliosXML():String{
-				if(tabDomicilios.txtarea.length==0)
+				if(tabDomicilios.txtarea.length==0||tabDomicilios.txtarea.text.indexOf("NULL")!=-1)
 					tabDomicilios.txtarea.text="NO INGRES";
-				if(tabDomicilios.txtentrecalle.text.length==0)
+				if(tabDomicilios.txtentrecalle.text.length==0||tabDomicilios.txtentrecalle.text.indexOf("NULL")!=-1)
 					tabDomicilios.txtentrecalle.text="NO INGRES";
-				if(tabDomicilios.txtmanzana.text.length==0)
+				if(tabDomicilios.txtmanzana.text.length==0||tabDomicilios.txtmanzana.text.indexOf("NULL")!=-1)
 					tabDomicilios.txtmanzana.text="NO INGRES";
-				if(tabDomicilios.txtmonoblock.text.length==0)
+				
+				if(tabDomicilios.txtmonoblock.text.length==0||tabDomicilios.txtmonoblock.text=="NULL")
 					tabDomicilios.txtmonoblock.text="NO INGRES";
-				if(tabDomicilios.txtpiso.text.length==0)
+				if(tabDomicilios.txtpiso.text.length==0||tabDomicilios.txtpiso.text.indexOf("NULL")!=-1)
 					tabDomicilios.txtpiso.text="NO INGRES";
-				if(tabDomicilios.txtsector.text.length==0)
+				if(tabDomicilios.txtsector.text.length==0||tabDomicilios.txtsector.text.indexOf("NULL")!=-1)
 					tabDomicilios.txtsector.text="NO INGRES";
-				if(tabDomicilios.txttorre.text.length==0)
+				if(tabDomicilios.txttorre.text.length==0||tabDomicilios.txttorre.text.indexOf("NULL")!=-1)
 					tabDomicilios.txttorre.text="NO INGRES";
 				if(tabDomicilios.txtnumdepto.text.length==0)
 					tabDomicilios.txtnumdepto.text="0";
@@ -308,14 +309,11 @@
 				tabDatosPersonales.clearComponenteCliente();
 			
 			}
-			
-			protected function operation1_resultHandler(event:ResultEvent):void
+			public static function retornoSwitch(retorno:int):int
 			{
-				var retorno:int=int(event.result.toString());
-				PopUpManager.removePopUp(popup);
 				switch(retorno){
 					case 0:{Alert.show("Ocurrió un Error en el Servidor con los Datos, verifique!!!");
-					break;
+						break;
 					}
 					case -1:{Alert.show("Error en el Server, verifique!!!");
 						break;
@@ -331,8 +329,7 @@
 					}
 					case -8:{Alert.show("Email encontrado ya registrado en la base de datos");
 						break;
-					}
-						
+					}						
 					case -7:{Alert.show("No pasó nada al buscar un email, verifique!!!");
 						break;
 					}
@@ -350,16 +347,18 @@
 					}
 					case -12:{Alert.show("Nombre no válido!!!");
 						break;
-					}
+					}					
 					
-					default:{
-						Alert.show("Datos Almacenados Correctamente");
+				}	
+				return retorno;
+			
+			}
+			protected function operation1_resultHandler(event:ResultEvent):void
+			{
+				var retorno:int=int(event.result.toString());
+				PopUpManager.removePopUp(popup);
+					if(retornoSwitch(retorno)>0)
 						resetearControles();
-					
-					}
-				
-				}
-				
 			}
 			
 			protected function operation1_faultHandler(event:FaultEvent):void

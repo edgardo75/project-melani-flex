@@ -22,19 +22,19 @@
 		<mx:StringValidator id="descV" source="{txtdescripcion}"
 							property="text" minLength="2" maxLength="80"
 							required="true" requiredFieldError="Debe Ingresar la descripción y/o nombre del producto"/>
-		<mx:WebService id="servicesProducto" wsdl="http://192.168.1.100:8080/ServiceProductos/ProductosWs?WSDL"
+		<s:WebService id="servicesProducto" wsdl="http://192.168.1.100:8080/ServiceProductos/ProductosWs?WSDL"
 					   
 					   showBusyCursor="false"
 					   useProxy="false">
-			<mx:operation name="addProducto"
+			<s:operation name="addProducto"
 						  resultFormat="object"
 						  result="producto_resultHandler(event)"
 						  fault="producto_faultHandler(event)">				
-			</mx:operation>
+			</s:operation>
 			
 			
 			
-		</mx:WebService>
+		</s:WebService>
 	</fx:Declarations>
 	
 	
