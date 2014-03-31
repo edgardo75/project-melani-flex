@@ -347,7 +347,10 @@
 					}
 					case -12:{Alert.show("Nombre no válido!!!");
 						break;
-					}					
+					}
+					case -15:{Alert.show("Número de teléfono no válido!!!");
+						break;
+					}
 					
 				}	
 				return retorno;

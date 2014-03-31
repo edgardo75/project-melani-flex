@@ -91,7 +91,7 @@
 					}	
 						
 					case -11:{
-						Alert.show("EL PASSWORD INGRESADO NO CUMPLE CON LOS REQUISITOS,\n DEBE CONTENER ALMENOS UNA LETRA MAYÚSCULA, MINÚSCULA, NÚMERO\n, CARACTER ESPECIAL.");
+						Alert.show("EL PASSWORD INGRESADO NO CUMPLE CON LOS REQUISITOS,\n DEBE CONTENER ALMENOS UNA LETRA MAYÚSCULA, MINÚSCULA, NÚMERO\n, Y MÍNIMO 4 CARACTERES DE INGRESO.");
 						break;
 					}
 					case -12:{
@@ -139,45 +139,47 @@
 			protected function operationSelectAllEmpleados_resultHandler(event:ResultEvent):void
 			{
 				
-				listEmpleados=new XMLList(event.result);
-				var employee:Employee;
-				
-				
-					listEmployee=new ArrayCollection();
-				
-				for(var i:int=0;i<xmllistEmpleados.length;i++){	
-					employee=new Employee();
-					employee.id=xmllistEmpleados[i].id;
-					employee.apellido=String(xmllistEmpleados[i].apellido).toUpperCase();
-					employee.nombre=String(xmllistEmpleados[i].nombre).toUpperCase();
-					employee.documento=String(xmllistEmpleados[i].documento);
-					employee.nameuser=xmllistEmpleados[i].nameuser;
-					employee.clave=xmllistEmpleados[i].clave;
-					employee.email=xmllistEmpleados[i].email;
-					employee.observaciones=xmllistEmpleados[i].observaciones;
-					employee.genero=xmllistEmpleados[i].genero;
-					employee.tipodocu=xmllistEmpleados[i].tipodocu;
-					employee.emptype=xmllistEmpleados[i].emptype;
-					employee.salario=xmllistEmpleados[i].salario;
-					employee.salarioporhora=xmllistEmpleados[i].salarioporhora;
-					
-					if(String(xmllistEmpleados[i].estado)=="1")
-						employee.estado=true;						
-					
-					listEmployee.addItem(employee);			
-				
+				if(event.result.toString().indexOf("item")!=-1){
+								listEmpleados=new XMLList(event.result);
+								var employee:Employee;
+								
+								
+									listEmployee=new ArrayCollection();
+								
+								for(var i:int=0;i<xmllistEmpleados.length;i++){	
+									employee=new Employee();
+									employee.id=xmllistEmpleados[i].id;
+									employee.apellido=String(xmllistEmpleados[i].apellido).toUpperCase();
+									employee.nombre=String(xmllistEmpleados[i].nombre).toUpperCase();
+									employee.documento=String(xmllistEmpleados[i].documento);
+									employee.nameuser=xmllistEmpleados[i].nameuser;
+									employee.clave=xmllistEmpleados[i].clave;
+									employee.email=xmllistEmpleados[i].email;
+									employee.observaciones=xmllistEmpleados[i].observaciones;
+									employee.genero=xmllistEmpleados[i].genero;
+									employee.tipodocu=xmllistEmpleados[i].tipodocu;
+									employee.emptype=xmllistEmpleados[i].emptype;
+									employee.salario=xmllistEmpleados[i].salario;
+									employee.salarioporhora=xmllistEmpleados[i].salarioporhora;
+									
+									if(String(xmllistEmpleados[i].estado)=="1")
+										employee.estado=true;						
+									
+									listEmployee.addItem(employee);			
+								
+								}
+								
+								listEmployee.refresh();
+								
+								if(listEmployee.length>0 && btndeshabilitar.enabled==false||btnhabilitar.enabled==false){
+									btndeshabilitar.enabled=true;
+									btnhabilitar.enabled=true;
+								}
+								
+								adgemployee.selectedIndex=0;
+								adgemployee.validateNow();
+								addInfo();
 				}
-				
-				listEmployee.refresh();
-				
-				if(listEmployee.length>0 && btndeshabilitar.enabled==false||btnhabilitar.enabled==false){
-					btndeshabilitar.enabled=true;
-					btnhabilitar.enabled=true;
-				}
-				
-				adgemployee.selectedIndex=0;
-				adgemployee.validateNow();
-				addInfo();
 				
 				
 			}
@@ -654,39 +656,7 @@
 				var retorno:int=int(event.result.toString());
 				
 				resultado(retorno);
-			/*	switch(retorno)
-				{
-					case 0:
-					{
-						Alert.show("NO PASÓ NADA");
-						break;
-					}
-					case -1:
-					{
-						Alert.show("ERROR EN MÉTODO ACTUALIZAR EMPLEADO");
-						break;
-					}
-					case -11:{
-						Alert.show("EL PASSWORD INGRESADO NO CUMPLE CON LOS REQUISITOS,\n DEBE CONTENER ALMENOS UNA LETRA MAYÚSCULA, MINÚSCULA, NÚMERO\n, CARACTER ESPECIAL.");
-						break;
-					}
-					case -12:{
-						Alert.show("EL NOMBRE DE USUARIO NO ES PERMITIDO, INGRESE EL MISMO SIN CARACTERES ESPECIALES.");
-						break;
-					}
-					case -13:{
-						Alert.show("Los Password no coinciden!!!");
-						break;
-					}
-						
-					default:
-					{
-						Alert.show("DATOS DE EMPLEADO ACTUALIZADOS");
-						wsempleado.selectAllEmpleados();
-						limpiarcontroles();			
-						break;
-					}
-				}*/
+		
 				
 			}
 			
