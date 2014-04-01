@@ -137,9 +137,7 @@
 				}
 				if(event.item.@label=="Ventas Mensuales"){
 					panelCentral.removeAllChildren();
-					var popup1:accessoEstadisticasPopup=accessoEstadisticasPopup(PopUpManager.createPopUp(this,accessoEstadisticasPopup,true));
-					popup1.title = "Acceso Estadísticas";
-					PopUpManager.centerPopUp(popup1);
+					
 					panelCentral.addChild(new EstadisticaVentas());
 					
 					

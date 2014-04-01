@@ -488,12 +488,14 @@
 	</components:AutoComplete>
 	<mx:VRule x="720" y="10" width="1" height="398"/>
 	<s:BorderContainer x="729" y="39" width="391" height="308">
-		<s:Button id="btnExamniar" x="10" y="22" label="Examinar....."
-				  click="btnExamniar_clickHandler(event)" toolTip="Elegir imagen a almacenar"/>
+		<s:Button id="btnExamniar" x="10" y="19" width="116" height="28" label="Examinar....."
+				  click="btnExamniar_clickHandler(event)" fontFamily="Arial" fontWeight="bold"
+				  toolTip="Elegir imagen a almacenar"/>
 		<s:Label x="10" y="5" width="369" color="#3FF182" fontFamily="Verdana" fontSize="16"
 				 fontWeight="bold" text="CARGAR Y VER IMAGEN DE PRODUCTO" textAlign="center"/>
 		<s:Image id="imgProducto" x="10" y="48" width="363" height="219"/>
-		<s:Button id="btnSubirImagen" x="10" y="275" label="Almacenar..."
-				  click="btnSubirImagen_clickHandler(event)" toolTip="Hacer click para almacenar la imagen en la base de datos"/>
+		<s:Button id="btnSubirImagen" x="10" y="272" width="116" height="31" label="Almacenar..."
+				  click="btnSubirImagen_clickHandler(event)" fontWeight="bold"
+				  toolTip="Hacer click para almacenar la imagen en la base de datos"/>
 	</s:BorderContainer>
 </s:Group>
