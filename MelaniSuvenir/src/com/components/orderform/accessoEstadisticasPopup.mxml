@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="350" height="184">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Label x="77" y="63" text="Usuario:"/>
+	<s:Label x="77" y="111" text="Password:"/>
+	<s:TextInput x="145" y="53"/>
+	<s:TextInput x="145" y="101"/>
+</s:TitleWindow>

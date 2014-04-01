@@ -125,10 +125,8 @@
 				btnaddbarrios.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				btnaddcalles.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				
-				cmbLocalidades.setFocus();
-			
-				
 				txtcodpostal.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				cmbLocalidades.setFocus();
 				
 			
 				
@@ -244,7 +242,7 @@
 								
 								}else{
 									if(btnaddbarrios.enabled==true)
-										btnaddbarrios.enabled=false;
+										btnaddbarrios.setFocus();
 									else
 										txtnumero.setFocus();
 								}
