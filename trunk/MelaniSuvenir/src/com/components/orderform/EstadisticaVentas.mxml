@@ -13,7 +13,7 @@
 			
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
-				// TODO Auto-generated method stub
+				// TODO Auto-generated method stub				
 				xmlVentasMensuales=new XMLList(event.result);
 				
 			}
@@ -53,12 +53,12 @@
 	<s:Panel x="9" y="0" width="609" height="424" title="Ventas Mensuales">
 		<mx:ColumnChart id="myChart" x="98" y="10" height="371" dataProvider="{ventasMensuales}" showDataTips="true">
 			<mx:horizontalAxis>
-				<mx:CategoryAxis categoryField="mes">
+				<mx:CategoryAxis categoryField="month">
 					
 				</mx:CategoryAxis>
 			</mx:horizontalAxis>
 			<mx:series>
-				<mx:ColumnSeries displayName="Ventas" yField="venta"/>
+				<mx:ColumnSeries displayName="Ventas" yField="totalMonthlySales"/>
 			</mx:series>
 		</mx:ColumnChart>
 		<mx:Legend dataProvider="{myChart}"/>

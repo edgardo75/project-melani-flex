@@ -77,6 +77,7 @@
 			import com.components.guardarDatosPersonalCliente;
 			import com.components.orderform.EstadisticaVentas;
 			import com.components.orderform.VerNotasPedido;
+			import com.components.orderform.accessoEstadisticasPopup;
 			import com.components.orderform.busquedaNotasEntreFechas;
 			import com.components.orderform.noteTheOrder;
 			import com.components.products.cargaryeditarProducto;
@@ -85,6 +86,7 @@
 			
 			import flash.net.navigateToURL;
 			
+			import mx.containers.Tile;
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			import mx.events.MenuEvent;
@@ -135,6 +137,9 @@
 				}
 				if(event.item.@label=="Ventas Mensuales"){
 					panelCentral.removeAllChildren();
+					var popup1:accessoEstadisticasPopup=accessoEstadisticasPopup(PopUpManager.createPopUp(this,accessoEstadisticasPopup,true));
+					popup1.title = "Acceso Estadísticas";
+					PopUpManager.centerPopUp(popup1);
 					panelCentral.addChild(new EstadisticaVentas());
 					
 					
