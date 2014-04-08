@@ -11,7 +11,7 @@
 					  showBusyCursor="false"
 					  useProxy="false">
 			<s:operation name="addCliente"
-						 resultFormat="object"
+						 resultFormat = "object"
 						 result="operation1_resultHandler(event)"
 						 fault="operation1_faultHandler(event)">				
 			</s:operation>			
