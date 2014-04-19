@@ -15,16 +15,12 @@
 		<s:XMLListCollection id="infotelcli" source="{tabDatosPersonales.xmlinfotelcli}"/>
 		
 		<s:WebService id="serviceCli" wsdl="http://192.168.1.100:8080/ServiceClientes/ClientesWs?WSDL" showBusyCursor="false">
-			<s:operation name="addCliente" result="operation1_resultHandler(event)" fault="operation1_faultHandler(event)">
-				
+			<s:operation name="addCliente" result="operation1_resultHandler(event)" fault="operation1_faultHandler(event)">				
 			</s:operation>
 		</s:WebService>
 		<s:WebService id="wslocaliades" wsdl="http://192.168.1.100:8080/ServicesLocalidades/LocalidadesWs?WSDL" showBusyCursor="true">
-			<s:operation name="searchAllLocalidadesbyidprov" result="operation2_resultHandler(event)" fault="operation2_faultHandler(event)">
-				
+			<s:operation name="searchAllLocalidadesByIdProvincia" result="operation2_resultHandler(event)" fault="operation2_faultHandler(event)">				
 			</s:operation>
-			
-			
 		</s:WebService>
 		<s:XMLListCollection id="localidadeslist" source="{xmllistlocalidades.localidades}"/>
 		
@@ -273,7 +269,7 @@
 	}
 			private function recargarCombolocalidades():void{
 				
-					wslocaliades.searchAllLocalidadesbyidprov(infodomicli[0].Localidad.idprovincia);
+					wslocaliades.searchAllLocalidadesByIdProvincia(infodomicli[0].Localidad.idprovincia);
 				
 					tabDomicilios.cmbLocalidades.selectedItemId=infodomicli[0].Localidad.idlocalidad;
 					tabDomicilios.txtcodpostal.text=infodomicli[0].Localidad.codigopostal;
@@ -295,7 +291,8 @@
 				indicelocalidad=0;
 				
 				if(tabDomicilios.cmbprovincias.selectedItemId!=18)
-					wslocaliades.searchAllLocalidadesbyidprov(18);
+					wslocaliades.searchAllLocalidadesByIdProvincia(18);
+				
 			if(infodomicli.length>0){
 				infodomicli.removeAll();
 				infodomicli.refresh();

@@ -81,7 +81,7 @@
 				
 				if(cmbprovincias.selectedItemId!=18){
 					cmbprovincias.selectedItemId=18;
-					wslocaliades.searchAllLocalidadesbyidprov(18);
+					wslocaliades.searchAllLocalidadesByIdProvincia(18);
 					cmbLocalidades.selectedItemId=30002;
 				}else{
 					cmbprovincias.selectedItemId=18;
@@ -97,7 +97,7 @@
 				// TODO Auto-generated method stub
 				
 				serviceProvincias.searchAllProvincias();
-				wslocaliades.searchAllLocalidadesbyidprov(18);
+				wslocaliades.searchAllLocalidadesByIdProvincia(18);
 				wsbarrios.searchAllBarrios();
 				wscalles.searchAllCalles();
 				cmborientacion.dataProvider=orientlist;
@@ -145,7 +145,7 @@
 				if(idlocalidad>0)
 					idlocalidad=0;
 				idprovincia=cmbprovincias.selectedItem.id;
-				wslocaliades.searchAllLocalidadesbyidprov(int(cmbprovincias.selectedItem.id));
+				wslocaliades.searchAllLocalidadesByIdProvincia(int(cmbprovincias.selectedItem.id));
 			
 			}
 			///--------------------------------------------------------------------------------
@@ -353,7 +353,7 @@
 					default:{
 						
 						idlocalidad=retorno;
-						wslocaliades.searchAllLocalidadesbyidprov(int(cmbprovincias.selectedItem.id));
+						wslocaliades.searchAllLocalidadesByIdProvincia(int(cmbprovincias.selectedItem.id));
 						if(btnAddLocalidades.enabled==true)
 							btnAddLocalidades.enabled=false;
 					}
@@ -762,8 +762,9 @@
 			</s:operation>
 		
 		</s:WebService>
+		
 		<s:WebService id="wslocaliades" wsdl="http://192.168.1.100:8080/ServicesLocalidades/LocalidadesWs?WSDL" showBusyCursor="true">
-			<s:operation name="searchAllLocalidadesbyidprov" result="operation2_resultHandler(event)" fault="operation2_faultHandler(event)">
+			<s:operation name="searchAllLocalidadesByIdProvincia" result="operation2_resultHandler(event)" fault="operation2_faultHandler(event)">
 				
 			</s:operation>
 			<s:operation name="addLocalidadCompleto" result="operationResultAddLocalidad(event)" fault="operationResultFaultAddLocalidad(event)">
