@@ -100,7 +100,11 @@
 			
 			
 			
-			
+			/**
+			 * metodo que se invoca como resultado de obtener desde la base de datos
+			 * la cantidad de registros nota de pedido
+			 * invocamos a seleccionar todas o al metodo que trae solo un puñado de las mismas
+			 * */
 			
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
@@ -1638,18 +1642,19 @@
 					"<idnota>"+adgNotas.selectedItem.id+"</idnota>\n" +
 					"<vendedor>" +cmbVendedores.selectedItem.id+"</vendedor>\n"+
 					"<personas>\n" +
-					"<id>"+idcliente+"</id>\n" +
-					"<numerodocu>"+nrodocucli+"</numerodocu>\n" +
+						"<id>"+idcliente+"</id>\n" +
+						"<numerodocu>"+nrodocucli+"</numerodocu>\n" +
 					"</personas>\n" +
 					"<tarjetacredito>\n" +
-					"<id_tarjeta>"+cmbTarjetasCreditoDebito.selectedItem.id+"</id_tarjeta>\n" +
+						"<id_tarjeta>"+cmbTarjetasCreditoDebito.selectedItem.id+"</id_tarjeta>\n" +
 					"</tarjetacredito>\n" +
 					"<porcentaje>\n" +
-					"<id_porcentaje>1</id_porcentaje>\n" +
+						"<id_porcentaje>1</id_porcentaje>\n" +
 					"</porcentaje>\n" +
 					"<montototal>"+lblTotGral.text+"</montototal>\n" +
 					"<anticipo>"+mskanticipo.text+"</anticipo>\n" +
 					"<anticipoacum>"+anticipo.toFixed(3)+"</anticipoacum>\n" +
+					
 					"<saldo>"+lblsaldo.text+"</saldo>\n" ;
 				if(entregado==1){
 					xmlnota+="<entregado>"+entregado+"</entregado>\n" +
@@ -1693,37 +1698,39 @@
 					"<recargo>"+lbltotalconrecargo.text+"</recargo>\n" +
 					"<fechacompra>"+notas[adgNotas.selectedIndex].fechacompra+"</fechacompra>\n"+					
 					"<fechaentrega>"+notas[adgNotas.selectedIndex].fechaentrega+"</fechaentrega>\n"+
+					"<fecancel>"+notas[adgNotas.selectedIndex].fecancel+"</fecancel>\n"+					
+					"<horacompra>"+notas[adgNotas.selectedIndex].horacompra+"<horacompra>" +
+					"<fechaanulada>"+notas[adgNotas.selectedIndex].fechaanulado+"</fechaanulada>\n"+
 					"<numerodecupon>"+txtnumerocuponpago.text+"</numerodecupon>\n" +
 					"<enefectivo>"+enfectivo+"</enefectivo>\n"+
 					"<detallesnotapedido>\n" ;
 				
-				for(var ii:int=0;ii<arrayDg.length;){
-					
-					if(arrayDg[ii].price==0||arrayDg[ii].countt==0||arrayDg[ii].subtotal==0)
-						ii++;
-					else{
-						porcdescAcum+=Number(Number(arrayDg[ii].porc_desc).toFixed(2));
-						xmlnota+="<itemdetallesnota>\n" +
-							"<cantidad>"+arrayDg[ii].countt+"</cantidad>\n" +
-							"<preciocondescuento>"+arrayDg[ii].prec_descuento+"</preciocondescuento>\n" +
-							"<precio>"+arrayDg[ii].price+"</precio>\n" +
-							"<subtotal>"+Number(arrayDg[ii].subtotal).toFixed(3)+"</subtotal>\n" +									
-							"<entregado>"+entregado+"</entregado>\n" +
-							"<cancelado>"+canceladanota+"</cancelado>\n" +
-							"<anulado>"+anulada+"</anulado>\n" +
-							"<pendiente>"+pendiente+"</pendiente>\n" ;
-						if(desc_resto>0&&Number(arrayDg[ii].porc_desc)>0)
-							xmlnota+="<descuento>0.00</descuento>\n" ;
-						else
-							xmlnota+="<descuento>"+Number(arrayDg[ii].porc_desc).toFixed(2)+"</descuento>\n" ;
-							xmlnota+="<iva>0</iva>\n" +
-							"<id_nota>"+arrayDg[ii].idnota+"</id_nota>\n" +
-							"<id_producto>"+arrayDg[ii].id+"</id_producto>\n" +
-							"</itemdetallesnota>\n" ;
-						ii++
-					}
-					
-				}
+							for(var ii:int=0;ii<arrayDg.length;){
+								
+								if(arrayDg[ii].price==0||arrayDg[ii].countt==0||arrayDg[ii].subtotal==0)
+									ii++;
+									else{
+											porcdescAcum+=Number(Number(arrayDg[ii].porc_desc).toFixed(2));
+											xmlnota+="<itemdetallesnota>\n" +
+												"<cantidad>"+arrayDg[ii].countt+"</cantidad>\n" +
+													"<preciocondescuento>"+arrayDg[ii].prec_descuento+"</preciocondescuento>\n" +
+													"<precio>"+arrayDg[ii].price+"</precio>\n" +
+													"<subtotal>"+Number(arrayDg[ii].subtotal).toFixed(3)+"</subtotal>\n" +									
+													"<entregado>"+entregado+"</entregado>\n" +
+													"<cancelado>"+canceladanota+"</cancelado>\n" +
+													"<anulado>"+anulada+"</anulado>\n" +
+													"<pendiente>"+pendiente+"</pendiente>\n" ;
+											if(desc_resto>0&&Number(arrayDg[ii].porc_desc)>0)
+													xmlnota+="<descuento>0.00</descuento>\n" ;
+											else
+													xmlnota+="<descuento>"+Number(arrayDg[ii].porc_desc).toFixed(2)+"</descuento>\n" ;
+													xmlnota+="<iva>0</iva>\n" +
+													"<id_nota>"+arrayDg[ii].idnota+"</id_nota>\n" +
+													"<id_producto>"+arrayDg[ii].id+"</id_producto>\n" +
+													"</itemdetallesnota>\n" ;
+												ii++
+										}								
+							}
 				
 				
 				
@@ -2809,6 +2816,10 @@
 				<s:GridColumn headerText="Total a Pagar" dataField="montototalapagar" formatter="{formaternumbergrid}"/>
 				<s:GridColumn headerText="Recargo Total" dataField="recargototal" formatter="{formaternumbergrid}"/>
 				<s:GridColumn headerText="Saldo" dataField="saldo" formatter="{formaternumbergrid}"/>
+				<s:GridColumn  dataField="horacompra" visible="false"/>
+				<s:GridColumn  dataField="fechaanulado" visible="false"/>
+				<s:GridColumn  dataField="fecancel" visible="false"/>
+				
 			</s:ArrayList>
 		</s:columns>		
 	</s:DataGrid>
