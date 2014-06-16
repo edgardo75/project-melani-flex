@@ -91,7 +91,7 @@
 					}	
 						
 					case -11:{
-						Alert.show("EL PASSWORD INGRESADO NO CUMPLE CON LOS REQUISITOS,\n DEBE CONTENER ALMENOS UNA LETRA MAYÚSCULA, MINÚSCULA, NÚMERO\n, Y MÍNIMO 4 CARACTERES DE INGRESO.");
+						Alert.show("EL PASSWORD INGRESADO NO CUMPLE CON LOS REQUISITOS,\n DEBE CONTENER ALMENOS UNA LETRA MAYÚSCULA, MINÚSCULA, NÚMERO\n, NO SE PERMITEN ESPACIOS EN BLANCO\n Y MÍNIMO 4 CARACTERES DE INGRESO.");
 						break;
 					}
 					case -12:{
@@ -108,6 +108,10 @@
 					}		
 					case -15:{
 						Alert.show("NÚMERO DE DOCUMENTO NO ES VÁLIDO!!!");
+						break;
+					}			
+					case -17:{
+						Alert.show("ELIJA OTRO PASSWORD, NO PASÓ LA FASE DE SEGURIDAD");
 						break;
 					}				
 					default:
@@ -369,8 +373,7 @@
 				if(rbempleadofull.selected==true){
 					if(msksalario.text.length==0)
 						msksalario.text="0";	
-						//wsempleado.addEmpleadoFullTime(txtapellido.text,txtnameuser.text,txtnombre.text,txtpassword.text,txtrepassword.text,txtemail.text,int(cmbTiposdocu.selectedItem.id),int(txtdocumento.text),Number(msksalario.text).toFixed(2),int(cmbGeneros.selectedItem.id),txtobservaciones.text);
-					//Alert.show(getDatosEmpleado());
+					
 					wsempleado.addEmpleadoFullTime(getDatosEmpleado());
 					
 				}else{
@@ -378,7 +381,7 @@
 						if(msksalarioxhora.text.length==0)
 							msksalarioxhora.text="0";
 						
-						//wsempleado.addEmpleadoParttime(txtapellido.text,txtnameuser.text,txtnombre.text,txtpassword.text,txtrepassword.text,txtemail.text,int(cmbTiposdocu.selectedItem.id),int(txtdocumento.text),Number(msksalarioxhora.text),int(cmbGeneros.selectedItem.id),txtobservaciones.text);
+					
 						wsempleado.addEmpleadoParttime(getDatosEmpleado());
 					}
 				}
