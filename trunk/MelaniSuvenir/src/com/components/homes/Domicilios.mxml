@@ -38,7 +38,7 @@
 			[Bindable]
 			private var idCalle:int=0;
 			
-			protected function operation1_resultHandler(event:ResultEvent):void
+			protected function operation_resultSearchAllProvincias(event:ResultEvent):void
 			{
 				xmlProvincias=new XMLList(event.result);	
 				
@@ -48,7 +48,7 @@
 				
 			}
 			
-			protected function operation1_faultHandler(event:FaultEvent):void
+			protected function operation_faultSearchAllProvincias(event:FaultEvent):void
 			{
 				// TODO Auto-generated method stub
 				
@@ -271,7 +271,7 @@
 			
 			//---------------------------------------------------------------------------------
 			
-			public function operation2_resultHandler(event:ResultEvent):void
+			public function operation_resultSearchAllLocalidadesByIdProvincia(event:ResultEvent):void
 			{
 				// TODO Auto-generated method stub
 				
@@ -300,9 +300,9 @@
 				
 			}
 			
-			public function operation2_faultHandler(event:FaultEvent):void
+			public function operation_faultSearchAllLocalidadesByIdProvincia(event:FaultEvent):void
 			{
-				Alert.show("Error al Conectar al Servidor!!!");
+				Alert.show("Error al Conectar al Servidor Localidades!!!");
 				
 			}
 			
@@ -366,11 +366,11 @@
 			
 			protected function operationResultFaultAddLocalidad(event:FaultEvent):void
 			{
-				Alert.show("Error al Conectar al Servidor!!!");
+				Alert.show("Error al Conectar al Servidor Add Localidades!!!");
 				
 			}
 			
-			protected function operation3_resultHandler(event:ResultEvent):void
+			protected function operation_resultSearchAllBarrios(event:ResultEvent):void
 			{
 				// TODO Auto-generated method stub
 				xmlBarrios=new XMLList(event.result);
@@ -401,12 +401,12 @@
 				
 			}
 			
-			protected function operation3_faultHandler(event:FaultEvent):void
+			protected function operation_faultHandler(event:FaultEvent):void
 			{
-				Alert.show("Error al Conectar al Servidor!!!");
+				Alert.show("Error al Conectar al Servidor search all barrios!!!");
 			}
 			
-			protected function operation4_resultHandler(event:ResultEvent):void
+			protected function operation_resultSearchAllCalles(event:ResultEvent):void
 			{
 				// TODO Auto-generated method stub
 			
@@ -478,7 +478,7 @@
 			}
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			
-			protected function operation5_resultHandler(event:ResultEvent):void
+			protected function operation_resultAddCalles(event:ResultEvent):void
 			{
 				var idCalles:int=int(event.result.toString());
 				
@@ -518,7 +518,7 @@
 				
 			}
 			
-			protected function operation5_faultHandler(event:FaultEvent):void
+			protected function operation_faultAddCalles(event:FaultEvent):void
 			{
 				Alert.show("FALLO LA OPERACION DE AGREGADO DE UN NOMBRE DE CALLE!!!");
 				
@@ -757,14 +757,14 @@
 		<s:XMLListCollection id="calleslist" source="{xmlCalles.item}"/>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:WebService id="serviceProvincias" wsdl="http://192.168.1.100:8080/ServiceProvincias/ProvinciasWs?WSDL" showBusyCursor="true">
-			<s:operation name="searchAllProvincias" result="operation1_resultHandler(event)" fault="operation1_faultHandler(event)">
+			<s:operation name="searchAllProvincias" result="operation_resultSearchAllProvincias(event)" fault="operation_faultSearchAllProvincias(event)">
 				
 			</s:operation>
 		
 		</s:WebService>
 		
 		<s:WebService id="wslocaliades" wsdl="http://192.168.1.100:8080/ServicesLocalidades/LocalidadesWs?WSDL" showBusyCursor="true">
-			<s:operation name="searchAllLocalidadesByIdProvincia" result="operation2_resultHandler(event)" fault="operation2_faultHandler(event)">
+			<s:operation name="searchAllLocalidadesByIdProvincia" result="operation_resultSearchAllLocalidadesByIdProvincia(event)" fault="operation_faultSearchAllLocalidadesByIdProvincia(event)">
 				
 			</s:operation>
 			<s:operation name="addLocalidadCompleto" result="operationResultAddLocalidad(event)" fault="operationResultFaultAddLocalidad(event)">
@@ -773,7 +773,7 @@
 			
 		</s:WebService>
 		<s:WebService id="wsbarrios" wsdl="http://192.168.1.100:8080/ServiceBarrios/BarriosWs?WSDL" showBusyCursor="true">
-			<s:operation name="searchAllBarrios" result="operation3_resultHandler(event)" fault="operation3_faultHandler(event)">
+			<s:operation name="searchAllBarrios" result="operation_resultSearchAllBarrios(event)" fault="operation_faultHandler(event)">
 				
 			</s:operation>
 			<s:operation name="addBarrio" result="operation6_resultHandler(event)" fault="operation6_faultHandler(event)">
@@ -781,10 +781,10 @@
 			</s:operation>
 		</s:WebService>
 		<s:WebService wsdl="http://192.168.1.100:8080/ServicesCalles/CallesWs?wsdl" id="wscalles" showBusyCursor="true">
-			<s:operation name="searchAllCalles" result="operation4_resultHandler(event)" fault="operation4_faultHandler(event)">
+			<s:operation name="searchAllCalles" result="operation_resultSearchAllCalles(event)" fault="operation4_faultHandler(event)">
 				
 			</s:operation>
-			<s:operation name="addCalles" result="operation5_resultHandler(event)" fault="operation5_faultHandler(event)">
+			<s:operation name="addCalles" result="operation_resultAddCalles(event)" fault="operation_faultAddCalles(event)">
 				
 			</s:operation>
 		</s:WebService>

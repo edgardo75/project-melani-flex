@@ -1699,7 +1699,7 @@
 					"<fechacompra>"+notas[adgNotas.selectedIndex].fechacompra+"</fechacompra>\n"+					
 					"<fechaentrega>"+notas[adgNotas.selectedIndex].fechaentrega+"</fechaentrega>\n"+
 					"<fecancel>"+notas[adgNotas.selectedIndex].fecancel+"</fecancel>\n"+					
-					"<horacompra>"+notas[adgNotas.selectedIndex].horacompra+"<horacompra>" +
+					"<horacompra>"+notas[adgNotas.selectedIndex].horacompra+"</horacompra>" +
 					"<fechaanulada>"+notas[adgNotas.selectedIndex].fechaanulado+"</fechaanulada>\n"+
 					"<numerodecupon>"+txtnumerocuponpago.text+"</numerodecupon>\n" +
 					"<enefectivo>"+enfectivo+"</enefectivo>\n"+

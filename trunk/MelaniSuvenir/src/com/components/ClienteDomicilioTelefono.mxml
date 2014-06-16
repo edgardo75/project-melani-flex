@@ -395,6 +395,7 @@
 			protected function operation2_resultHandler(event:ResultEvent):void
 			{
 				
+				
 				xmllistlocalidades=new XMLList(event.result);
 				tabDomicilios.cmbLocalidades.dataProvider=localidadeslist;
 				
