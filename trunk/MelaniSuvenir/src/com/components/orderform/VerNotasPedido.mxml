@@ -2277,9 +2277,9 @@
 					if(b)
 						return true;
 					else
-						Alert.show("   Usuario y Password no coinciden ingrese nuevamente   ");
+						Alert.show("   Datos Incorrectos!   ");
 				}else
-					Alert.show("   Debe ingresar un Vendedor con su password correspondiente   ");
+					Alert.show("   Debe ingresar un Vendedor con su clave personal   ");
 				
 			return b;
 			}
@@ -2663,9 +2663,9 @@
 								else
 									Alert.show("Debe seleccionar una nota de pedido\n para realizar la operación")
 							}else
-								Alert.show("El password del empleado no es correcto");
+								Alert.show("Dato Incorrecto!");
 					}else
-						Alert.show("Debe ingresar el password del vendedor");
+						Alert.show("Dato Incorrecto!");
 				}else
 					Alert.show("Debe seleccionar un Empleado");
 			}
