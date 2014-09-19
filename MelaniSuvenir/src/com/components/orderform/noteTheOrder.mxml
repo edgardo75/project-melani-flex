@@ -318,7 +318,7 @@
 															Alert.show("Faltan Datos del Cliente!!!");
 													//********************************************************************************************
 											}else
-												Alert.show("No coinciden la clave del vendedor seleccionado");
+												Alert.show("Dato Incorrecto!");
 								}
 							
 							}
