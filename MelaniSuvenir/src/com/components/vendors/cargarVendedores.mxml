@@ -58,60 +58,60 @@
 				switch(numeroRetornado){
 					case 0:
 					{
-						Alert.show("NO PASÓ NADA!!!");
+						Alert.show("No pasó nada!!!");
 						break;
 					}
 					case -1:{
-						Alert.show("SE PRODUJO UN ERROR AL ALMACENAR UN EMPLEADO REVISE!!!");
+						Alert.show("Se produjo un error al almacenar el empleado!!!");
 						break;
 					}	
 					case -2:{
-						Alert.show("YA EXISTE UNA CON ESE DOCUMENTO!!!");
+						Alert.show("Ya se encuentra almacenado el DNI!!!");
 						break;
 					}
 					case -4:{
-						Alert.show("YA EXISTE ESE EMAIL EN LA BASE DE DATOS!!!");
+						Alert.show("Ya se encuentra almacenado el EMAIL!!!");
 						break;
 					}	
 					case -5:{
-						Alert.show("SE PRODUJO UN ERROR EN EL METODO \n BUSCAR NOMBRE DE USUARIO E EMAIL");
+						Alert.show("Se produjo un error en el método \n buscar nombre de usuario y email.");
 						break;
 					}
 					case -3:{
-						Alert.show("SE PRODUJO UN ERROR EN EL SERVIDOR REVISE!!!");
+						Alert.show("Se produjo un error en el servidor!!!");
 						break;
 					}
 					case -6:{
-						Alert.show("EL NOMBRE DE USUARIO YA EXISTE EN LA BASE DE DATOS");
+						Alert.show("El nombre de usuario ya existe en la base de datos.");
 						break;
 					}	
 					case -10:{
-						Alert.show("ERROR AL ASEGURAR LA CLAVE DE EMPLEADO");
+						Alert.show("Error al asegurar la clave de empleado.");
 						break;
 					}	
 						
 					case -11:{
-						Alert.show("EL PASSWORD INGRESADO NO CUMPLE CON LOS REQUISITOS,\n DEBE CONTENER ALMENOS UNA LETRA MAYÚSCULA, MINÚSCULA, NÚMERO\n, NO SE PERMITEN ESPACIOS EN BLANCO\n Y MÍNIMO 4 CARACTERES DE INGRESO.");
+						Alert.show("La Clave Ingresada,\n debe contener almenos una letra mayúscula, minúscula, númer\n, no se permiten espacion en blanco\n y mínimo 4 caracteres.");
 						break;
 					}
 					case -12:{
-						Alert.show("EL NOMBRE DE USUARIO NO ES PERMITIDO, INGRESE EL MISMO SIN CARACTERES ESPECIALES.");
+						Alert.show("El nombre de usuario no es permitido, no ingrese caracteres especiales.");
 						break;
 					}				
 					case -14:{
-						Alert.show("El NOMBRE DEL EMPLEADO NO ES VÁLIDO!!!");
+						Alert.show("El nombre del empleado no es válido!!!");
 						break;
 					}		
 					case -15:{
-						Alert.show("EL APELLIDO DEL EMPLEADO NO ES VÁLIDO!!!");
+						Alert.show("El apellido no es válido!!!");
 						break;
 					}		
 					case -15:{
-						Alert.show("NÚMERO DE DOCUMENTO NO ES VÁLIDO!!!");
+						Alert.show("El DNI no es válido!!!");
 						break;
 					}			
 					case -17:{
-						Alert.show("ELIJA OTRO PASSWORD, NO PASÓ LA FASE DE SEGURIDAD");
+						Alert.show("Elija otra clave, no pasó la fase de seguridad");
 						break;
 					}				
 					default:

@@ -196,7 +196,7 @@
 					btnGuardar.enabled=true;
 					btnlimpiartodo.enabled=true;
 				}
-			
+				
 			
 			
 				
@@ -206,6 +206,7 @@
 				
 			if(TabBar(event.target).selectedIndex==1){
 					tabDomicilios.cmbLocalidades.setFocus();
+				
 					if(infodomicli.length>0){
 						
 						tabDomicilios.cmbbarrios.selectedItemId=infodomicli[0].Barrio.idbarrio;
