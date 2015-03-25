@@ -15,7 +15,7 @@
 		
 		
 			<s:WebService id="cliservices" 
-						  wsdl="http://192.168.1.100:8080/ServiceClientes/ClientesWs?wsdl" 						  
+						  wsdl="http://localhost:8080/ServiceClientes/ClientesWs?wsdl" 						  
 						  showBusyCursor="false" requestTimeout="0" 
 						  >
 				<s:operation name="obtenerClienteXTipoAndNumeroDocu"							
