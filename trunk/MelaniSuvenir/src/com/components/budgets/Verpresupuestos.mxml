@@ -3,10 +3,10 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
-		 width="1168" height="576" creationComplete="group1_creationCompleteHandler(event)">
+		 width="1168" height="466" creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wspresupuestos" wsdl="http://192.168.1.100:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="true" >
+		<s:WebService id="wspresupuestos" wsdl="http://localhost:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="true" >
 			<s:operation name="getRecordCount" 
 						 result="operation1_resultHandler(event)"
 						 fault="operation1_faultHandler(event)">
@@ -416,7 +416,7 @@
 					last=listpresupuestos[0].id;
 					first=listpresupuestos[listpresupuestos.length-1].id;
 					
-					var source:String="http://192.168.1.100:8080/WebMelanie2/ShowReportView?first="+first+"&last="+last;
+					var source:String="http://localhost:8080/WebMelanie2/ShowReportView?first="+first+"&last="+last;
 					
 					var urlReq:URLRequest= new URLRequest(source);
 					navigateToURL(urlReq,"_blank");
@@ -466,7 +466,7 @@
 					var idpresupuesto:int=adgPresupuestos.selectedItem.id;
 					
 					if(idpresupuesto>0){
-							var source:String="http://192.168.1.100:8080/WebMelanie2/ShowReportPresupuesto?presnro="+idpresupuesto;
+							var source:String="http://localhost:8080/WebMelanie2/ShowReportPresupuesto?presnro="+idpresupuesto;
 							
 							var urlReq:URLRequest= new URLRequest(source);
 							navigateToURL(urlReq,"_blank");
@@ -485,7 +485,7 @@
 	<mx:HRule x="28" y="30" width="337" height="0"/>
 	<s:Label x="443" y="14" color="#009A6D" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="VER PRESUPUESTOS MELANIE" textDecoration="underline"/>
-	<mx:AdvancedDataGrid id="adgPresupuestos" x="13" y="34" width="973" height="271"
+	<mx:AdvancedDataGrid id="adgPresupuestos" x="13" y="34" width="973" height="200"
 						 designViewDataType="flat" doubleClickEnabled="true" fontFamily="Verdana"
 						 fontSize="12" click="adgPresupuestos_clickHandler(event)" selectionMode="singleRow"
 						 itemDoubleClick="adgPresupuestos_itemDoubleClickHandler(event)" alternatingItemColors="[#ffffff,#fcff4f7]" 
@@ -507,19 +507,19 @@
 			<mx:AdvancedDataGridColumn dataField="total" headerText="Total Gral"/>			
 		</mx:columns>
 	</mx:AdvancedDataGrid>
-	<s:Button id="first_btn" x="13" y="313" width="85" height="35" label="&lt;&lt;"
+	<s:Button id="first_btn" x="14" y="237" width="85" height="35" label="&lt;&lt;"
 			  click="first_clickHandler(event)" enabled="false" fontSize="16" fontWeight="bold"/>
-	<s:Button id="prev_btn" x="319" y="313" width="88" height="35" label="&lt;"
+	<s:Button id="prev_btn" x="319" y="236" width="88" height="35" label="&lt;"
 			  click="prev_btn_clickHandler(event)" enabled="false" fontSize="16" fontWeight="bold"/>
-	<s:Button id="next_btn" x="630" y="313" width="84" height="36" label="&gt;&gt;"
+	<s:Button id="next_btn" x="629" y="236" width="84" height="36" label="&gt;"
 			  click="next_btn_clickHandler(event)" enabled="false" fontSize="16" fontWeight="bold"/>
-	<s:Button id="last_btn" x="897" y="313" width="89" height="34" label="&gt;&gt;"
+	<s:Button id="last_btn" x="897" y="237" width="89" height="34" label="&gt;&gt;"
 			  click="last_clickHandler(event)" enabled="false" fontSize="16" fontWeight="bold"/>
 	<s:BorderContainer x="1016" y="49" width="103" height="95" fontSize="16">
 		<controls:MaskedTextInput id="mskidpresupuesto" x="10" y="40" width="81" restrict="0-9" toolTip="Ingrese Número de Presupuesto"/>
 		<s:Label x="10" y="26" text="Buscar"/>
 	</s:BorderContainer>
-	<mx:AdvancedDataGrid id="adgdetallespresupuesto" x="12" y="356" width="702" height="212"
+	<mx:AdvancedDataGrid id="adgdetallespresupuesto" x="12" y="323" width="701" height="120"
 						 alternatingItemColors="[#ffffff,#fcff4f7]" designViewDataType="flat"
 						 fontFamily="Verdana" fontSize="12">
 		<mx:columns>
@@ -533,9 +533,9 @@
 			
 		</mx:columns>
 	</mx:AdvancedDataGrid>
-	<s:Button id="btnImprimir" x="994" y="202" width="152" height="32" label="Ver Presupuestos"
+	<s:Button id="btnImprimir" x="994" y="196" width="152" height="32" label="Ver Presupuestos"
 			  click="btnImprimir_clickHandler(event)" enabled="false" fontSize="16" toolTip="Imprime el rango de reporte listado en la grilla"/>
-	<s:Button id="btnExportar" x="994" y="242" height="33" label="Copiar Grilla (TAB)"
+	<s:Button id="btnExportar" x="994" y="230" height="33" label="Copiar Grilla (TAB)"
 			  click="DataGridUtil.exportADGToClipboard(adgPresupuestos, false, false)"
 			  enabled="false" fontSize="16"
 			  toolTip="Copiar y Pegar listado al portapapeles y visualizar en Excel"/>
@@ -543,9 +543,9 @@
 	<s:Button id="btnRegargarlistado" x="993" y="161" width="153" height="33"
 			  label="Regargar Listado" click="btnRegargarlistado_clickHandler(event)"
 			  enabled="false" fontSize="16"/>
-	<s:TextArea id="txtobservaciones" x="722" y="366" width="424" height="200" maxChars="5000"/>
-	<s:Label x="724" y="349" fontSize="16" text="Observaciones"/>
-	<s:Button id="btnimprimirpresupuesto" x="994" y="284" width="152" height="38" label="Imprimir"
+	<s:TextArea id="txtobservaciones" x="721" y="323" width="424" height="120" maxChars="5000"/>
+	<s:Label x="723" y="308" fontSize="16" text="Observaciones"/>
+	<s:Button id="btnimprimirpresupuesto" x="994" y="265" width="152" height="38" label="Imprimir"
 			  click="btnimprimirpresupuesto_clickHandler(event)" enabled="false" fontSize="16" toolTip="Imprime el presupuesto seleccionado"/>
 	
 	

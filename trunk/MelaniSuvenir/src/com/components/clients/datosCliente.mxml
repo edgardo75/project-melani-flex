@@ -15,7 +15,7 @@
 		<s:XMLListCollection id="infotelcli" source="{xmlinfotelcli}"/>
 		
 			<s:WebService id="cliservices" 
-						  wsdl="http://192.168.1.100:8080/ServiceClientes/ClientesWs?wsdl" 						  
+						  wsdl="http://localhost:8080/ServiceClientes/ClientesWs?wsdl" 						  
 						  showBusyCursor="false" requestTimeout="10" 
 						  >
 				<s:operation name="obtenerClienteXTipoAndNumeroDocu"							
@@ -158,7 +158,7 @@
 			[Bindable]
 			public var xmlinfotelcli:XMLList;
 			[Bindable]
-			public var urlWs:String = "http://192.168.1.100:8080/ServiceClientes/ClientesWs?wsdl";
+			public var urlWs:String = "http://localhost:8080/ServiceClientes/ClientesWs?wsdl";
 			
 			private var popup:BarraProgreso;
 			

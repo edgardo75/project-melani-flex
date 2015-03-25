@@ -756,14 +756,14 @@
 		<s:XMLListCollection id="barrioslist" source="{xmlBarrios.item}"/>
 		<s:XMLListCollection id="calleslist" source="{xmlCalles.item}"/>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="serviceProvincias" wsdl="http://192.168.1.100:8080/ServiceProvincias/ProvinciasWs?WSDL" showBusyCursor="true">
+		<s:WebService id="serviceProvincias" wsdl="http://localhost:8080/ServiceProvincias/ProvinciasWs?WSDL" showBusyCursor="true">
 			<s:operation name="searchAllProvincias" result="operation_resultSearchAllProvincias(event)" fault="operation_faultSearchAllProvincias(event)">
 				
 			</s:operation>
 		
 		</s:WebService>
 		
-		<s:WebService id="wslocaliades" wsdl="http://192.168.1.100:8080/ServicesLocalidades/LocalidadesWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wslocaliades" wsdl="http://localhost:8080/ServicesLocalidades/LocalidadesWs?WSDL" showBusyCursor="true">
 			<s:operation name="searchAllLocalidadesByIdProvincia" result="operation_resultSearchAllLocalidadesByIdProvincia(event)" fault="operation_faultSearchAllLocalidadesByIdProvincia(event)">
 				
 			</s:operation>
@@ -772,7 +772,7 @@
 			</s:operation>
 			
 		</s:WebService>
-		<s:WebService id="wsbarrios" wsdl="http://192.168.1.100:8080/ServiceBarrios/BarriosWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wsbarrios" wsdl="http://localhost:8080/ServiceBarrios/BarriosWs?WSDL" showBusyCursor="true">
 			<s:operation name="searchAllBarrios" result="operation_resultSearchAllBarrios(event)" fault="operation_faultHandler(event)">
 				
 			</s:operation>
@@ -780,7 +780,7 @@
 				
 			</s:operation>
 		</s:WebService>
-		<s:WebService wsdl="http://192.168.1.100:8080/ServicesCalles/CallesWs?wsdl" id="wscalles" showBusyCursor="true">
+		<s:WebService wsdl="http://localhost:8080/ServicesCalles/CallesWs?wsdl" id="wscalles" showBusyCursor="true">
 			<s:operation name="searchAllCalles" result="operation_resultSearchAllCalles(event)" fault="operation4_faultHandler(event)">
 				
 			</s:operation>
