@@ -3,7 +3,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
-		 width="1168" height="466" creationComplete="group1_creationCompleteHandler(event)">
+		 width="1168" height="504" creationComplete="group1_creationCompleteHandler(event)">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:WebService id="wspresupuestos" wsdl="http://localhost:8080/ServicesPresupuestos/PresupuestoWs?wsdl" showBusyCursor="true" >
@@ -55,7 +55,7 @@
 			[Bindable]
 			private var indexPage:int=0;
 			[Bindable]
-			private static var SIZEPAGE:int=10;
+			private static var SIZEPAGE:int=7;
 			[Bindable]
 			private var totalReg:int=0;
 			[Bindable]
@@ -169,7 +169,7 @@
 					Alert.show("NO HAY PRESUPUESTOS CARGADOS!!!");
 				else{
 					
-					if(totalReg<10)
+					if(totalReg<SIZEPAGE)
 						wspresupuestos.selectAllPresupuestosJPA();
 					else{
 						last_btn.enabled=true;
@@ -200,13 +200,17 @@
 				
 				xmlPresupuesto=new XMLList(event.result);
 				
+				addGridMainDetail();
+			
+				
+				
+			}
+			protected function addGridMainDetail():void{
+			
 				addgrid();
 				adgPresupuestos.selectedIndex=0;
 				adgPresupuestos.validateNow();
 				addinfopresupuesto();
-			
-				
-				
 			}
 			//----------------------------------------------------------------------------------------------
 			private function addgrid():void{
@@ -269,9 +273,9 @@
 				if(KeyPress.keyCode==Keyboard.ENTER){
 					if(KeyPress.target.toString().indexOf("mskidpresupuesto")!=-1){
 						
-							//searchIdPresupuesto();
+						
 						indexPage=0;
-						//SIZEPAGE:int=100;
+						
 						totalReg=0;
 						
 						last_btn.enabled=false;
@@ -331,9 +335,9 @@
 			
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 				
-				//Alert.show(" exportando..............");
+				
 				var sheet:Sheet = new Sheet();
-				//Alert.show(" exportando.............."+adgPresupuestos.columns.toString());
+				
 				var dataProviderCollection:ArrayCollection = listpresupuestos as ArrayCollection;
 				
 				var rowCount:int = dataProviderCollection.length;
@@ -440,8 +444,7 @@
 							listpresupuestos.refresh();
 						
 						
-							addgrid();
-						
+							addGridMainDetail();
 							btnRegargarlistado.enabled=true;
 				}
 				
@@ -515,11 +518,11 @@
 			  click="next_btn_clickHandler(event)" enabled="false" fontSize="16" fontWeight="bold"/>
 	<s:Button id="last_btn" x="897" y="237" width="89" height="34" label="&gt;&gt;"
 			  click="last_clickHandler(event)" enabled="false" fontSize="16" fontWeight="bold"/>
-	<s:BorderContainer x="1016" y="49" width="103" height="95" fontSize="16">
-		<controls:MaskedTextInput id="mskidpresupuesto" x="10" y="40" width="81" restrict="0-9" toolTip="Ingrese Número de Presupuesto"/>
-		<s:Label x="10" y="26" text="Buscar"/>
+	<s:BorderContainer x="994" y="49" width="152" height="95" fontSize="16">
+		<controls:MaskedTextInput id="mskidpresupuesto" x="10" y="40" width="134" restrict="0-9" toolTip="Ingrese un número de presupuesto y presione enter para obtenerlo"/>
+		<s:Label x="4" y="22" width="150" text="Buscar Presupuesto"/>
 	</s:BorderContainer>
-	<mx:AdvancedDataGrid id="adgdetallespresupuesto" x="12" y="323" width="701" height="120"
+	<mx:AdvancedDataGrid id="adgdetallespresupuesto" x="12" y="323" width="701" height="171"
 						 alternatingItemColors="[#ffffff,#fcff4f7]" designViewDataType="flat"
 						 fontFamily="Verdana" fontSize="12">
 		<mx:columns>
@@ -543,7 +546,7 @@
 	<s:Button id="btnRegargarlistado" x="993" y="161" width="153" height="33"
 			  label="Regargar Listado" click="btnRegargarlistado_clickHandler(event)"
 			  enabled="false" fontSize="16"/>
-	<s:TextArea id="txtobservaciones" x="721" y="323" width="424" height="120" maxChars="5000"/>
+	<s:TextArea id="txtobservaciones" x="721" y="323" width="424" height="171" maxChars="5000"/>
 	<s:Label x="723" y="308" fontSize="16" text="Observaciones"/>
 	<s:Button id="btnimprimirpresupuesto" x="994" y="265" width="152" height="38" label="Imprimir"
 			  click="btnimprimirpresupuesto_clickHandler(event)" enabled="false" fontSize="16" toolTip="Imprime el presupuesto seleccionado"/>
