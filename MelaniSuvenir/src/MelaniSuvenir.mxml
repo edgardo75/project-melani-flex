@@ -144,10 +144,10 @@
 				}				
 				
 				if(event.item.@label =="Acerca de...."){
-					Alert.show("           MELANIE SOUVENIR © 2013  \n TODOS LOS DERECHOS RESERVADOS ");						
+					Alert.show("        Melanie Souvenir © 2013  \n Todos los derechos reservados ");						
 				}
 				if(event.item.@label =="Contactenos..."){
-					Alert.show("     EDGARDO DAMIÁN ALVAREZ  \n PROGRAMADOR JAVA BACKEND \n CEL: 0264 154562700 \n EMAIL: edgardo75@gmail.com");						
+					Alert.show(" Edgardo Damián Alvarez  \n Programador \n Móvil: 2644562700 \n Email: edgardo75@gmail.com \n Twitter: @edaprog");						
 				}
 				if(event.item.@label=="Notas Entre Fechas"){
 					panelCentral.removeAllChildren();
