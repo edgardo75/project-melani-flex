@@ -147,7 +147,7 @@
 					Alert.show("        Melanie Souvenir © 2013  \n Todos los derechos reservados ");						
 				}
 				if(event.item.@label =="Contactenos..."){
-					Alert.show(" Edgardo Damián Alvarez  \n Programador \n Móvil: 2644562700 \n Email: edgardo75@gmail.com \n Twitter: @edaprog");						
+					Alert.show("      Edgardo Damián Alvarez  \n               Programador \n Móvil: 2644562700 \n Email: edgardo75@gmail.com \n Twitter: @edaprog");						
 				}
 				if(event.item.@label=="Notas Entre Fechas"){
 					panelCentral.removeAllChildren();

@@ -2930,7 +2930,7 @@
 	<s:Label x="824" y="446" fontFamily="Arial" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
 	<s:TextInput id="txtpassword" x="825" y="467" width="260" displayAsPassword="true"
 				 fontFamily="Verdana" fontSize="16" fontStyle="italic"
-				 prompt="Ingresar password del Empleado..."/>
+				 prompt="Ingresar password de vendedor..." maxChars="15" skinClass="spark.skins.spark.TextInputSkin" restrict="[a-zA-Z0-9_-]"/>
 	<s:Button id="btnguardarentregada" x="1065" y="43" width="91" height="33" label="Entregar"
 			  click="btnguardarentregada_clickHandler(event)" fontSize="16"
 			  toolTip="Almacena el estado de Entregado de la Nota de Pedido Seleccionada"/>
