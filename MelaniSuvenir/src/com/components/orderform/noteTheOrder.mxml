@@ -289,6 +289,9 @@
 			//***************************************************************************************************
 			protected function btnGuardarNota_clickHandler(event:MouseEvent):void
 			{
+				
+				
+				
 				if(int(productscomp.lblTotApagar.text)<=-1)
 					Alert.show("IMPOSIBLE ALMACENAR NOTA DE PEDIDO \nCORRIJA POR FAVOR!!!");
 				else{
@@ -304,7 +307,8 @@
 									return;
 								}else{
 								//chequear el vendendor seleccionado con su clave correspondiente
-											if(String(cmbVendedores.selectedItem.clave)==txtpassword.text){
+									
+											if(chkpassEmployee()){
 										
 													//*************************Chequeamos que haya un cliente ya seleccionado********************++
 													
@@ -314,11 +318,9 @@
 																else
 																	verificarProductosCargados();
 																
-														}else
-															Alert.show("Faltan Datos del Cliente!!!");
+														}
 													//********************************************************************************************
-											}else
-												Alert.show("Dato Incorrecto!");
+											}
 								}
 							
 							}
@@ -652,6 +654,39 @@
 				
 			}
 			
+			public function txtpassword_enterHandler(event:FlexEvent):void
+			{
+				
+				if(txtpassword.text.length>0){
+					
+					chkpassEmployee();
+							
+				}
+				
+			}
+			public function chkpassEmployee():Boolean{
+				return wsempleados.checkPassEmployee(cmbVendedores.selectedItem.id,txtpassword.text);
+			
+			}
+			
+			protected function operation2_resultHandler(event:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				var chkpasswordEmployee:Boolean = new Boolean(event.result);
+				if(!chkpasswordEmployee){
+					Alert.show("Clave de vendedor incorrecta.");
+				}
+				
+				
+			}
+			
+			protected function operation2_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+				Alert.show("Error al chequear las claves del Empleado.");
+				
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -691,6 +726,11 @@
 			<s:operation name="selectAllEmpleados"
 						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
 						 result="operation2_resultHandlerSelectAllEmpleados(event)">
+				
+			</s:operation>
+			<s:operation name="checkPassEmployee"
+						 result="operation2_resultHandler(event)"
+						 fault="operation2_faultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
@@ -774,7 +814,7 @@
 							 fontSize="16" fontWeight="bold" matchType="beginning">
 	</components:AutoComplete>
 	<s:Label x="863" y="352" fontFamily="Arial" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
-	<s:TextInput id="txtpassword" x="864" y="373" width="246" fontSize="16" fontStyle="normal"
-				 prompt="Ingresar password de vendedor..." displayAsPassword="true" maxChars="15"/>
+	<s:TextInput id="txtpassword" x="864" y="373" width="246" fontSize="16" fontStyle="normal" maxChars="15" restrict="[a-zA-Z0-9_-]"
+				 prompt="Ingresar password de vendedor..." displayAsPassword="true" skinClass="spark.skins.spark.TextInputSkin" enter="txtpassword_enterHandler(event)"/>
 	
 </s:Group>
