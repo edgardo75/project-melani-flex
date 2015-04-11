@@ -13,7 +13,7 @@
 			import com.actions.CabeceraNota;
 			import com.actions.Historico;
 			import com.actions.detallesVerNotas;
-			import com.components.products.datosProducto;
+			import com.components.products.DatosProducto;
 			
 			import flashx.textLayout.formats.WhiteSpaceCollapse;
 			
@@ -29,6 +29,8 @@
 			import org.osmf.net.SwitchingRuleBase;
 			
 			import popus.Progress;
+			
+			
 			
 			
 			private var popup:Progress;
@@ -1379,6 +1381,7 @@
 			
 			protected function group1_initializeHandler(event:FlexEvent):void
 			{
+
 				wsnotas.getRecorCountNotas();
 				productosWs.searchAllProductos();
 				wsempleados.selectAllEmpleados();
@@ -1962,7 +1965,7 @@
 			protected function brncargarunproducto_clickHandler(event:MouseEvent):void
 			{
 				var indice:Number=0;
-				var popup:datosProducto=datosProducto(PopUpManager.createPopUp(this,datosProducto,true));
+				var popup:DatosProducto=DatosProducto(PopUpManager.createPopUp(this,DatosProducto,true));
 				
 				popup.product=productlist;
 				
@@ -2677,6 +2680,34 @@
 			
 			}
 			
+			protected function txtpassword_enterHandler(event:FlexEvent):void
+			{
+				if(txtpassword.text.length>0){
+					chkpassEmployee();
+					
+				}
+			}
+			public function chkpassEmployee():Boolean{
+				return wsempleados.checkPassEmployee(cmbVendedores.selectedItem.id,txtpassword.text);
+				
+			}
+			
+			
+			protected function operation10_resultHandler(event:ResultEvent):void
+			{
+				var chkpasswordEmployee:Boolean = new Boolean(event.result);
+				if(!chkpasswordEmployee){
+					Alert.show("Clave de vendedor incorrecta.");
+				}
+				
+			}
+			
+			protected function operation10_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+				Alert.show("Error al chequear las claves del Empleado.");
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -2738,6 +2769,11 @@
 			<s:operation name="selectAllEmpleados"
 						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
 						 result="operation2_resultHandlerSelectAllEmpleados(event)">
+				
+			</s:operation>
+			<s:operation name="checkPassEmployee"
+						 result="operation10_resultHandler(event)"
+						 fault="operation10_faultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
@@ -2930,7 +2966,7 @@
 	<s:Label x="824" y="446" fontFamily="Arial" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
 	<s:TextInput id="txtpassword" x="825" y="467" width="260" displayAsPassword="true"
 				 fontFamily="Verdana" fontSize="16" fontStyle="italic"
-				 prompt="Ingresar password de vendedor..." maxChars="15" skinClass="spark.skins.spark.TextInputSkin" restrict="[a-zA-Z0-9_-]"/>
+				 prompt="Ingresar password de vendedor..." maxChars="15" skinClass="spark.skins.spark.TextInputSkin" restrict="[a-zA-Z0-9_-]" enter="txtpassword_enterHandler(event)"/>
 	<s:Button id="btnguardarentregada" x="1065" y="43" width="91" height="33" label="Entregar"
 			  click="btnguardarentregada_clickHandler(event)" fontSize="16"
 			  toolTip="Almacena el estado de Entregado de la Nota de Pedido Seleccionada"/>

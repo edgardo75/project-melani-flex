@@ -74,15 +74,15 @@
 			import com.components.ClienteDomicilioTelefono;
 			import com.components.budgets.GuardarPresupuesto;
 			import com.components.budgets.Verpresupuestos;
-			import com.components.guardarDatosPersonalCliente;
+			import com.components.StorePersonalDataCustomers;
 			import com.components.orderform.EstadisticaVentas;
 			import com.components.orderform.VerNotasPedido;
-			import com.components.orderform.accessoEstadisticasPopup;
-			import com.components.orderform.busquedaNotasEntreFechas;
-			import com.components.orderform.noteTheOrder;
-			import com.components.products.cargaryeditarProducto;
-			import com.components.products.datosProducto1;
-			import com.components.vendors.cargarVendedores;
+			import com.components.orderform.AccessoEstadisticasPopup;
+			import com.components.orderform.SearchNotesBetweenDates;
+			import com.components.orderform.NoteTheOrder;
+			import com.components.products.CargaryEditarProducto;
+			import com.components.products.DatosProducto1;
+			import com.components.vendors.CargarVendedores;
 			
 			import flash.net.navigateToURL;
 			
@@ -98,12 +98,12 @@
 			{
 				if(event.item.@label =="Cargar Datos Personales"){
 					panelCentral.removeAllChildren();
-					panelCentral.addChild(new guardarDatosPersonalCliente());						
+					panelCentral.addChild(new StorePersonalDataCustomers());						
 				}
 				
 				if(event.item.@label =="Cargar y Editar Empleados"){
 					panelCentral.removeAllChildren();
-					panelCentral.addChild(new cargarVendedores());						
+					panelCentral.addChild(new CargarVendedores());						
 				}
 				
 				if(event.item.@label =="Cargar y Editar Datos Completo"){
@@ -112,7 +112,7 @@
 				}
 				if(event.item.@label=="Cargar Productos y Editar"){
 					panelCentral.removeAllChildren();
-					panelCentral.addChild(new cargaryeditarProducto());
+					panelCentral.addChild(new CargaryEditarProducto());
 				}
 				if(event.item.@label=="Cargar Presupuesto"){
 					panelCentral.removeAllChildren();
@@ -127,7 +127,7 @@
 				
 				if(event.item.@label=="Nota de Pedido"){
 					panelCentral.removeAllChildren();
-					panelCentral.addChild(new noteTheOrder());
+					panelCentral.addChild(new NoteTheOrder());
 							
 				}
 				if(event.item.@label=="Ver Notas"){
@@ -151,7 +151,7 @@
 				}
 				if(event.item.@label=="Notas Entre Fechas"){
 					panelCentral.removeAllChildren();
-					panelCentral.addChild(new busquedaNotasEntreFechas());
+					panelCentral.addChild(new SearchNotesBetweenDates());
 				}
 				
 			}
