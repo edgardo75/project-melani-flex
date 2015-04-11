@@ -23,7 +23,7 @@
 			import mx.validators.Validator;
 			
 			import popus.PopupUsuarioHabilitado;
-			import popus.popupUsuario;
+			import popus.PopupUsuario;
 			
 			private var vResult:ValidationResultEvent;
 			
@@ -490,7 +490,7 @@
 			{
 				if(adgemployee.selectedItem.estado==false){
 				
-						var popup:popupUsuario=popupUsuario(PopUpManager.createPopUp(this,popupUsuario,true));
+						var popup:PopupUsuario=PopupUsuario(PopUpManager.createPopUp(this,PopupUsuario,true));
 						
 						popup.title="Usuario y Clave";
 						popup.arrayEmployee=listEmployee;

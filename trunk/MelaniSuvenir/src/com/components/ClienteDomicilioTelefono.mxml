@@ -418,7 +418,7 @@
 			  dataProvider="{ViewStack}" direction="ltr" fontSize="16"/>
 	<mx:ViewStack id="ViewStack" x="278" y="32" width="823" height="355">
 		<s:NavigatorContent id="cliente" width="100%" height="100%" label="Cliente">
-			<clients:datosCliente1 id="tabDatosPersonales" x="35" y="4"/>
+			<clients:DatosCliente1 id="tabDatosPersonales" x="35" y="4"/>
 		</s:NavigatorContent>
 		<s:NavigatorContent id="domicilio" width="100%" height="100%" label="Domicilio">
 			<homes:Domicilios id="tabDomicilios" x="10" y="22" width="813" height="325" fontSize="16"/>

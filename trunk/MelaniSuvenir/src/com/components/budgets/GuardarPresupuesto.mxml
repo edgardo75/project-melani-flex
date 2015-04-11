@@ -238,8 +238,8 @@
 		<s:TextInput id="txtapellido" x="88" y="62" width="317" fontSize="16" maxChars="20"
 					 restrict="A-ÑZa-ñz " tabEnabled="false" prompt="Ingrese el Apellido..."/>
 	</s:BorderContainer>
-	<products:productosPedidos id="productordered" x="40" y="138" height="349" fontSize="16">
-	</products:productosPedidos>
+	<products:ProductosPedidos id="productordered" x="40" y="138" height="349" fontSize="16">
+	</products:ProductosPedidos>
 	<s:TextArea id="txtobservaciones"  x="504" y="45" width="520" height="159"  maxChars="5000"/>
 	<s:Button id="btnguardar" x="490" y="511" width="91" height="33" label="Guardar"
 			  click="btnguardar_clickHandler(event)" enabled="true" fontSize="16"/>

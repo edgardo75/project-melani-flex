@@ -150,8 +150,8 @@
 	
 	
 	
-	<clients:datosCliente id="clienteComp" x="5" y="20" width="1063" fontSize="16">
-	</clients:datosCliente>
+	<clients:DatosCliente id="clienteComp" x="5" y="20" width="1063" fontSize="16">
+	</clients:DatosCliente>
 	<s:Button id="btnGuardarCli" x="501" y="357" width="94" height="29" label="Guardar"
 			  click="validateAndSubmit(event)" fontSize="16"/>
 	<s:Button id="btnCloseClientComponent" x="1063" y="10" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>

@@ -21,7 +21,7 @@
 	<fx:Script>
 		<![CDATA[
 			import com.components.ClienteDomicilioTelefono;
-			import com.components.products.productosPedidosNota;
+			import com.components.products.ProductosPedidosNota;
 			import com.components.utils.BarraProgreso;
 			import com.hillelcoren.components.AutoComplete;
 			
@@ -183,8 +183,8 @@
 	<fx:Declarations>
 		<s:XMLListCollection id="datoscliente" source="{xmlClienteDatosPersonales.item}"/>
 	</fx:Declarations>
-	<clients:datosCliente id="clienteComp" x="14" y="10" width="1064">
-	</clients:datosCliente>
+	<clients:DatosCliente id="clienteComp" x="14" y="10" width="1064">
+	</clients:DatosCliente>
 	<s:Button id="btnGuardarCli" x="474" y="362" width="108" height="33" label="Guardar"
 			  click="validateAndSubmit(event)" fontFamily="Verdana" fontSize="16"/>
 </s:TitleWindow>

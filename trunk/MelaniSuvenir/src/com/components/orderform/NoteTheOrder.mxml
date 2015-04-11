@@ -11,8 +11,8 @@
 	<fx:Script>
 		<![CDATA[
 			
-			import com.components.clients.guardarDatosPersonalClientePopup;
-			import com.components.clients.popupClienteNameSecondName;
+			import com.components.clients.GuardarDatosPersonalClientePopup;
+			import com.components.clients.PopupClienteNameSecondName;
 			
 			import mx.controls.Alert;
 			import mx.core.IFlexDisplayObject;
@@ -43,7 +43,7 @@
 			
 			
 			
-			public var secondName:popupClienteNameSecondName;
+			public var secondName:PopupClienteNameSecondName;
 			
 			protected function mskdocu_enterHandler(event:FlexEvent):void
 			{
@@ -162,7 +162,7 @@
 			}
 			//***********************************************************************
 			public function displayPopup():void{
-				var pop1:popupClienteNameSecondName=popupClienteNameSecondName(PopUpManager.createPopUp(this,popupClienteNameSecondName,true));
+				var pop1:PopupClienteNameSecondName=PopupClienteNameSecondName(PopUpManager.createPopUp(this,PopupClienteNameSecondName,true));
 				
 				/*+Set TitleWindows properties+*/
 				pop1.title="Seleccione un Registro";
@@ -191,7 +191,7 @@
 				displayPopupCustomerPersonalData();
 			}
 			public function displayPopupCustomerPersonalData():void{
-				var popup2:guardarDatosPersonalClientePopup=guardarDatosPersonalClientePopup(PopUpManager.createPopUp(this,guardarDatosPersonalClientePopup,true));
+				var popup2:GuardarDatosPersonalClientePopup=GuardarDatosPersonalClientePopup(PopUpManager.createPopUp(this,GuardarDatosPersonalClientePopup,true));
 				
 				popup2.title="  Ingrese Datos Personales de Cliente  ";
 				
@@ -654,7 +654,7 @@
 				
 			}
 			
-			public function txtpassword_enterHandler(event:FlexEvent):void
+			protected function txtpassword_enterHandler(event:FlexEvent):void
 			{
 				
 				if(txtpassword.text.length>0){
@@ -664,7 +664,7 @@
 				}
 				
 			}
-			public function chkpassEmployee():Boolean{
+			protected function chkpassEmployee():Boolean{
 				return wsempleados.checkPassEmployee(cmbVendedores.selectedItem.id,txtpassword.text);
 			
 			}
@@ -787,7 +787,7 @@
 	<s:Button id="btnGuardarNota" x="29" y="501" width="134" height="30" label="Guardar Nota"
 			  click="btnGuardarNota_clickHandler(event)" enabled="true" fontSize="16"
 			  toolTip="Guarda la Nota de Pedido con todos Sus Datos"/>
-	<products:productosPedidosNota id="productscomp" x="4" y="166" height="434"/>
+	<products:ProductosPedidosNota id="productscomp" x="4" y="166" height="434"/>
 	<s:RadioButton id="rdbentregadosi" x="331" y="74" label="Si" groupName="GrupoEntregado"/>
 	<s:RadioButton id="rdbentregadono" x="331" y="92" label="No" groupName="GrupoEntregado"
 				   selected="true"/>
