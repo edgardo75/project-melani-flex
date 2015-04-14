@@ -319,7 +319,7 @@
 				
 				lblnombreyapecli.text=String(notas[adgNotas.selectedIndex].cliente.apellidoynombre);
 				
-				if(ultimaActualizacion.toString().indexOf("01-01-1900")==-1){
+				if(ultimaActualizacion.toString().indexOf("01/01/1900")==-1){
 					
 					lblUltimaActualizacion.text = "Última Actualización: " +ultimaActualizacion;
 				}else{
