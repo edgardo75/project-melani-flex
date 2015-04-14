@@ -83,9 +83,6 @@
 				
 				focusManager.setFocus(productscomp.cmbproduct);
 				
-				
-				
-				
 			}
 			
 			
@@ -131,6 +128,11 @@
 				}
 				
 				
+					
+					
+				if(keypress.currentTarget.toString().indexOf("btnGuardarNota")!=-1&&txtpassword.text.length>0&&btnGuardarNota.enabled==true){
+					btnGuardarNotaEvent();
+				}
 			  }
 			}
 			protected function avisoCartelVendedorDeshabilitado():void{
@@ -216,6 +218,7 @@
 				txtnombrecliente.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				cmbTarjetasCreditoDebito.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				cmbVendedores.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				btnGuardarNota.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txtnumerocuponpago.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txtpassword.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				cmbTarjetasCreditoDebito.selectedItemId=0;
@@ -287,45 +290,52 @@
 			
 			}
 			//***************************************************************************************************
-			protected function btnGuardarNota_clickHandler(event:MouseEvent):void
-			{
+			protected function btnGuardarNotaEvent():void{
+						
 				
 				
 				
 				if(int(productscomp.lblTotApagar.text)<=-1)
 					Alert.show("IMPOSIBLE ALMACENAR NOTA DE PEDIDO \nCORRIJA POR FAVOR!!!");
 				else{
-							//********************************Chequeamos que haya un Vendedor Seleccionado en el ComboBox++++++++++++++++++++++++
+					//********************************Chequeamos que haya un Vendedor Seleccionado en el ComboBox++++++++++++++++++++++++
+					
+					if(cmbVendedores.text.length==0){
+						Alert.show("DEBE SELECCIONAR UN VENDEDOR");
+						return;
+					}else{
+						//chequeo si el vendedor está habilitado por sistema para realizar esta operación
+						if(cmbVendedores.selectedItem.estado==0){
+							avisoCartelVendedorDeshabilitado();
+							return;
+						}else{
+							//chequear el vendendor seleccionado con su clave correspondiente
 							
-							if(cmbVendedores.text.length==0){
-								Alert.show("DEBE SELECCIONAR UN VENDEDOR");
-								return;
-							}else{
-								//chequeo si el vendedor está habilitado por sistema para realizar esta operación
-								if(cmbVendedores.selectedItem.estado==0){
-									avisoCartelVendedorDeshabilitado();
-									return;
-								}else{
-								//chequear el vendendor seleccionado con su clave correspondiente
+							if(chkpassEmployee()){
+								
+								//*************************Chequeamos que haya un cliente ya seleccionado********************++
+								
+								if(txtnombrecliente.text.length>0&&txtapellidocliente.text.length>0){
+									if(chequearNumeroCupon())
+										Alert.show("Falta Ingresar un Número de Cupón");
+									else
+										verificarProductosCargados();
 									
-											if(chkpassEmployee()){
-										
-													//*************************Chequeamos que haya un cliente ya seleccionado********************++
-													
-														if(txtnombrecliente.text.length>0&&txtapellidocliente.text.length>0){
-																if(chequearNumeroCupon())
-																	Alert.show("Falta Ingresar un Número de Cupón");
-																else
-																	verificarProductosCargados();
-																
-														}
-													//********************************************************************************************
-											}
 								}
-							
+								//********************************************************************************************
 							}
+						}
+						
+					}
 				}
-				
+			
+			
+			}
+			//***************************************************************************************************
+			protected function btnGuardarNota_clickHandler(event:MouseEvent):void
+			{
+			
+				btnGuardarNotaEvent();
 			}
 		protected function guardarNotaPedido(evt:CloseEvent):void{
 			if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
@@ -591,7 +601,10 @@
 						Alert.show("   No pasó nada, verifique!!!   ");	
 						break;
 					}	
-					
+					case -5:{
+						Alert.show("  DATOS NO ENVIADOS  ");
+						break;
+					}	
 					default:
 					{
 						
@@ -628,7 +641,7 @@
 				dtfentrega.text="";
 				productscomp.limpiarDetalleProductos();
 				productscomp.cmbproduct.selectedItemId=1;
-				mskdocu.setFocus();
+				focusManager.setFocus(mskdocu);
 				
 				
 				
@@ -671,10 +684,35 @@
 			
 			protected function operation2_resultHandler(event:ResultEvent):void
 			{
-				// TODO Auto-generated method stub
-				var chkpasswordEmployee:Boolean = new Boolean(event.result);
-				if(!chkpasswordEmployee){
-					Alert.show("Clave de vendedor incorrecta.");
+				var chkpasswordEmployeee:String = event.result.toString();
+				
+				switch(chkpasswordEmployeee)
+				{
+					case "false":
+					{
+						Alert.show("Clave de vendedor incorrecta.");
+						if(btnGuardarNota.enabled==true){
+							btnGuardarNota.enabled=false;
+						}
+						break;
+					}
+					case "Empleado no encontrado":
+					{
+						Alert.show("Empleado no encotrado.");
+						if(btnGuardarNota.enabled==true){
+							btnGuardarNota.enabled=false;
+						}
+						break;
+					}
+						
+					default:
+					{
+						if(btnGuardarNota.enabled==false){
+							btnGuardarNota.enabled=true;
+						}
+						
+						break;
+					}
 				}
 				
 				
@@ -815,6 +853,6 @@
 	</components:AutoComplete>
 	<s:Label x="863" y="352" fontFamily="Arial" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
 	<s:TextInput id="txtpassword" x="864" y="373" width="246" fontSize="16" fontStyle="normal" maxChars="15" restrict="[a-zA-Z0-9_-]"
-				 prompt="Ingresar password de vendedor..." displayAsPassword="true" skinClass="spark.skins.spark.TextInputSkin" enter="txtpassword_enterHandler(event)"/>
+				 prompt="Ingresar clave de vendedor..." displayAsPassword="true" skinClass="spark.skins.spark.TextInputSkin" enter="txtpassword_enterHandler(event)"/>
 	
 </s:Group>

@@ -312,11 +312,20 @@
 			protected function addinfo():void{
 			
 				var historico:Historico;
+				var ultimaActualizacion:String = String(notas[adgNotas.selectedIndex].ultimaActualizacion);
 				
 				if(btnEliminarNota.enabled==false)
 					btnEliminarNota.enabled=true;
 				
 				lblnombreyapecli.text=String(notas[adgNotas.selectedIndex].cliente.apellidoynombre);
+				
+				if(ultimaActualizacion.toString().indexOf("01-01-1900")==-1){
+					
+					lblUltimaActualizacion.text = "Última Actualización: " +ultimaActualizacion;
+				}else{
+					lblUltimaActualizacion.text = "";
+				}
+				
 				nrodocucli=int(notas[adgNotas.selectedIndex].cliente.nrodocumento);
 				idcliente=int(notas[adgNotas.selectedIndex].cliente.id);
 				idnota=notas[adgNotas.selectedIndex].id;
@@ -1396,7 +1405,7 @@
 				mskdescuentopesos.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				mskrecargo.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				mskanticipo.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
-				btnactualizar.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				btnactualizarNota.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				adglistpedprod.addEventListener(AdvancedDataGridEvent.ITEM_EDIT_END,itemEditEndHandler);
 				adgNotas.selectedIndex=0;
 				totGral=0;
@@ -1482,14 +1491,17 @@
 					if(KeyPress.currentTarget.toString().indexOf("cmbVendedores")!=-1&&cmbVendedores.selectedItemId>=0)
 						txtpassword.setFocus();
 					
-					if(KeyPress.currentTarget.toString().indexOf("txtpassword")!=-1&&txtpassword.text.length>0)
-						btnactualizar.setFocus();
+					if(KeyPress.currentTarget.toString().indexOf("txtpassword")!=-1&&txtpassword.text.length>0&&btnactualizarNota.enabled==true)
+						btnactualizarNota.setFocus();
 					
 					if(KeyPress.currentTarget.toString().indexOf("mskdescuentopesos")!=-1)
 						Alert.show("   Desea Agregar el Descuento en $ "+mskdescuentopesos.text+" \nal descuento existente $ "+totGralDesc+" ?","Confirmar Operación   ", Alert.YES | Alert.NO, this, calculardescuentopesos, null, Alert.NO);
 						
 					
-					
+					if(KeyPress.currentTarget.toString().indexOf("btnactualizarNota")!=-1&&txtpassword.text.length>0&&btnactualizarNota.enabled ==true){
+						
+						btnactualizarNotaEvent();
+					}
 				}
 			}
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -2018,14 +2030,6 @@
 				
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;			
 				
-				
-				
-				
-				
-				
-				
-				
-				
 				//---------------------------------------------------------------------------------	
 				
 				
@@ -2164,15 +2168,6 @@
 				}
 				
 				
-				
-				
-							
-					
-					
-				
-				
-				
-				
 				notas[adgNotas.selectedIndex].montototalapagar=Number(Number(totGral-Number(totGralDesc.toFixed(3)))+Number(recargo.toFixed(3))).toFixed(3);
 				notas[adgNotas.selectedIndex].total=totGral.toFixed(3);	
 				notas[adgNotas.selectedIndex].descuentonota=Number(-totGralDesc).toFixed(3);
@@ -2208,7 +2203,7 @@
 			protected function operation5_resultHandler(event:ResultEvent):void
 			{
 				
-				if(event.result.toString().indexOf("Error no paso nada ")!=-1)
+				if(event.result.toString().indexOf("Error no paso nada")!=-1)
 					Alert.show("LA CONSULTA NO ARROJÓ RESULTADOS!!!");
 					
 				else{
@@ -2282,7 +2277,7 @@
 					else
 						Alert.show("   Datos Incorrectos!   ");
 				}else
-					Alert.show("   Debe ingresar un Vendedor con su clave personal   ");
+					Alert.show(" Debe ingresar un Vendedor con su clave personal ");
 				
 			return b;
 			}
@@ -2302,7 +2297,7 @@
 								}
 						}
 				}else
-					Alert.show("   Debe seleccionar una nota en la grilla   ");
+					Alert.show(" Debe seleccionar una nota en la grilla ");
 				
 				
 				
@@ -2452,7 +2447,7 @@
 					}
 					case -1:
 					{
-						Alert.show("  ERROR EN EL SERVIDOR AL ACTUALIZAR NOTA DE PEDIDO  ");
+						Alert.show("  ERROR EN EL SERVIDOR AL actualizarNota NOTA DE PEDIDO  ");
 						break;
 					}
 					case -2:
@@ -2468,6 +2463,10 @@
 					case -4:
 					{
 						Alert.show("  ERROR EN EL SERVIDOR AL PROCESAR NOTA DE PEDIDO  ");
+						break;
+					}	
+					case -5:{
+						Alert.show("  ERROR DATOS NO ENVIADOS PARA ACTUALIZAR   ");
 						break;
 					}	
 						
@@ -2487,31 +2486,35 @@
 			protected function operation9_faultHandler(event:FaultEvent):void
 			{
 				PopUpManager.removePopUp(popup);
-				Alert.show("Error al actualizar nota de pedido");
+				Alert.show("Error al actualizarNota "+event.fault.toString());
 			}
-			protected function btnactualizar_clickHandler(evt:MouseEvent):void
+			protected function btnactualizarNotaEvent():void{
+				if(String(notas[adgNotas.selectedIndex].fechaentrega).length>0){
+					if(String(notas[adgNotas.selectedIndex].fechacompra).length>0){
+						
+						if(adgNotas.selectedIndex>-1&&idnota==int(notas[adgNotas.selectedIndex].id)){
+							if(txtpassword.text.length>0){
+								
+								Alert.show("   Desea Guardar Nota De Pedido Actual?","Confirmar Operación  ", Alert.YES | Alert.NO, this, actualizarNota, null, Alert.NO);
+								
+								
+							}else
+								Alert.show("El password del empleado no es correcto");
+						}else
+							Alert.show("SELECCIONE LA NOTA CORRESPONDIENTE");
+					}else
+						Alert.show("Falta la fecha de compra");
+				}else
+					Alert.show("Falta la fecha de entrega");
+			
+			}
+			protected function btnactualizarNota_clickHandler(evt:MouseEvent):void
 			{
 				
-							if(String(notas[adgNotas.selectedIndex].fechaentrega).length>0){
-									if(String(notas[adgNotas.selectedIndex].fechacompra).length>0){
-										
-											if(adgNotas.selectedIndex>-1&&idnota==int(notas[adgNotas.selectedIndex].id)){
-															if(String(cmbVendedores.selectedItem.clave)==txtpassword.text){
-																	
-																		Alert.show("   Desea Guardar Nota De Pedido Actual?","Confirmar Operación  ", Alert.YES | Alert.NO, this, actualizar, null, Alert.NO);
-																	
-																	
-															}else
-																Alert.show("El password del empleado no es correcto");
-											}else
-												Alert.show("SELECCIONE LA NOTA CORRESPONDIENTE");
-									}else
-										Alert.show("Falta la fecha de compra");
-							}else
-								Alert.show("Falta la fecha de entrega");
+							btnactualizarNotaEvent();
 				
 			}
-			protected function actualizar(evt:CloseEvent):void
+			protected function actualizarNota(evt:CloseEvent):void
 			{
 				
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
@@ -2520,7 +2523,7 @@
 					popup=Progress(PopUpManager.createPopUp(this,Progress,true));
 					PopUpManager.centerPopUp(popup);
 					
-				
+					
 					wsnotas.actualizarNotaPedido(getDatosXML());
 				
 					
@@ -2589,7 +2592,9 @@
 				cmbTarjetasCreditoDebito.selectedItemId=0;
 				cmbVendedores.text="";
 				txtpassword.text="";
-				
+				if(btnactualizarNota.enabled == true){
+					btnactualizarNota.enabled = false;
+				}
 			}
 			protected function limpiarControles():void{
 				limpiarGrids();
@@ -2666,9 +2671,9 @@
 								else
 									Alert.show("Debe seleccionar una nota de pedido\n para realizar la operación")
 							}else
-								Alert.show("Dato Incorrecto!");
+								Alert.show("Clave incorrecta!");
 					}else
-						Alert.show("Dato Incorrecto!");
+						Alert.show("Debe ingresar clave del vendedor!");
 				}else
 					Alert.show("Debe seleccionar un Empleado");
 			}
@@ -2695,11 +2700,36 @@
 			
 			protected function operation10_resultHandler(event:ResultEvent):void
 			{
-				var chkpasswordEmployee:Boolean = new Boolean(event.result);
-				if(!chkpasswordEmployee){
-					Alert.show("Clave de vendedor incorrecta.");
-				}
+				var chkpasswordEmployeee:String = event.result.toString();
 				
+				switch(chkpasswordEmployeee)
+				{
+					case "false":
+					{
+						Alert.show("Clave de vendedor incorrecta.");
+						if(btnactualizarNota.enabled==true){
+							btnactualizarNota.enabled=false;
+						}
+						break;
+					}
+					case "Empleado no encontrado":
+					{
+						Alert.show("Empleado no encotrado.");
+						if(btnactualizarNota.enabled==true){
+							btnactualizarNota.enabled=false;
+						}
+						break;
+					}
+					
+					default:
+					{
+						if(btnactualizarNota.enabled==false){
+							btnactualizarNota.enabled=true;
+						}
+							
+						break;
+					}
+				}
 			}
 			
 			protected function operation10_faultHandler(event:FaultEvent):void
@@ -2859,7 +2889,7 @@
 			</s:ArrayList>
 		</s:columns>		
 	</s:DataGrid>
-	<s:Label x="595" y="155" fontFamily="Verdana" fontSize="10" text="Vendedor Expidio:"/>
+	<s:Label x="591" y="154" fontFamily="Verdana" fontSize="10" text="Vendedor Expidio:"/>
 	<s:Label x="21" y="167" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="Cliente:"/>
 	<s:Label id="lblnombreyapecli" x="87" y="157" width="288" height="25" fontSize="16"
 			 verticalAlign="bottom"/>
@@ -2966,7 +2996,7 @@
 	<s:Label x="824" y="446" fontFamily="Arial" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
 	<s:TextInput id="txtpassword" x="825" y="467" width="260" displayAsPassword="true"
 				 fontFamily="Verdana" fontSize="16" fontStyle="italic"
-				 prompt="Ingresar password de vendedor..." maxChars="15" skinClass="spark.skins.spark.TextInputSkin" restrict="[a-zA-Z0-9_-]" enter="txtpassword_enterHandler(event)"/>
+				 prompt="Ingresar clave de vendedor..." maxChars="15" skinClass="spark.skins.spark.TextInputSkin" restrict="[a-zA-Z0-9_-]" enter="txtpassword_enterHandler(event)"/>
 	<s:Button id="btnguardarentregada" x="1065" y="43" width="91" height="33" label="Entregar"
 			  click="btnguardarentregada_clickHandler(event)" fontSize="16"
 			  toolTip="Almacena el estado de Entregado de la Nota de Pedido Seleccionada"/>
@@ -3007,8 +3037,9 @@
 	<s:Button id="btnImprimir" x="7" y="539" width="153" height="35" label="Imprimir"
 			  click="btnImprimir_clickHandler(event)" enabled="false" fontSize="16"
 			  toolTip="Imprimie una nota de pedido seleccionada del listado"/>
-	<s:Button id="btnactualizar" x="8" y="577" width="152" height="39" label="Actualizar" toolTip="Actualiza el estado de la nota de pedido"
-			  click="btnactualizar_clickHandler(event)" fontSize="16"/>
+	<s:Button id="btnactualizarNota" x="8" y="577" width="152" height="39" label="actualizarNota"
+			  click="btnactualizarNota_clickHandler(event)" enabled="false" fontSize="16"
+			  toolTip="Actualiza el estado de la nota de pedido"/>
 	<s:Button id="btnCloseClientComponent" x="1203" y="1" width="27" height="19" icon="assets/icon_close.png" click="btnCloseClientComponent_clickHandler(event)"/>
 	<s:RadioButton id="rdanuladasi" x="1025" y="157" label="Si" groupName="anulada"/>
 	<s:RadioButton id="rdanuladano" x="1025" y="181" label="No" groupName="anulada" selected="true"/>
@@ -3018,11 +3049,11 @@
 	<s:Label x="382" y="188" fontSize="16" fontWeight="normal" text="Observaciones:"/>
 	<s:Label id="lblvendedoranulo" x="699" y="173" width="200" height="15" fontFamily="Verdana"
 			 fontSize="10" verticalAlign="bottom"/>
-	<s:Label id="lblvendedorentrego" x="700" y="187" width="200" height="11" fontFamily="Verdana"
+	<s:Label id="lblvendedorentrego" x="699" y="187" width="200" height="11" fontFamily="Verdana"
 			 fontSize="10" verticalAlign="bottom"/>
-	<s:Label x="591" y="167" fontFamily="Verdana" fontSize="10" text="Vendedor Canceló:"/>
-	<s:Label x="604" y="179" fontFamily="Verdana" fontSize="10" text="Vendedor Anuló:"/>
-	<s:Label x="594" y="189" fontFamily="Verdana" fontSize="10" text="Vendedor Entregó:"/>
+	<s:Label x="591" y="166" fontFamily="Verdana" fontSize="10" text="Vendedor Canceló:"/>
+	<s:Label x="590" y="177" fontFamily="Verdana" fontSize="10" text="Vendedor Anuló:"/>
+	<s:Label x="590" y="188" fontFamily="Verdana" fontSize="10" text="Vendedor Entregó:"/>
 	<s:Label id="lblexpidiovendedor" x="699" y="148" width="201" height="16" fontFamily="Verdana"
 			 fontSize="10" verticalAlign="bottom"/>
 	<s:Label id="lblvendedocancelo" x="699" y="160" width="197" height="16" fontFamily="Verdana"
@@ -3036,6 +3067,8 @@
 	<s:Button id="btnEliminarNota" x="215" y="459" width="139" height="38" label="Eliminar"
 			  click="button3_clickHandler(event)" enabled="false" fontFamily="Verdana" fontSize="16"
 			  toolTip="Elimina una Nota de Pedido, seleccionada previamente"/>
+	<s:Label id="lblUltimaActualizacion" x="184" y="597" width="319" color="#F10909"
+			 fontFamily="Arial" fontSize="11" fontWeight="bold"/>
 </s:Group>
 
 
