@@ -1463,10 +1463,10 @@
 	<s:Label x="27" y="14" fontFamily="Verdana" fontSize="16" text="Producto:"/>
 	<s:Label x="32" y="39" fontFamily="Verdana" fontSize="16" text="Precio $:"/>
 	<s:TextInput id="txtpreciop" x="108" y="31" width="228" fontSize="16" fontWeight="bold"
-				 maxChars="6" restrict="0-9." tabEnabled="false" prompt="Ingrese precio de producto..."/>
+				 maxChars="6" restrict="0-9." tabEnabled="false" prompt="Ingrese precio de producto..." tabIndex="1"/>
 	<s:Label x="23" y="67" fontFamily="Verdana" fontSize="16" text="Cantidad:"/>
 	<controls:MaskedTextInput id="mskcantidad" x="108" y="58" width="55" fontFamily="Verdana"
-							  tabEnabled="false" fontSize="16" fontWeight="bold" maxChars="3" restrict="0-9"/>
+							  tabEnabled="false" fontSize="16" fontWeight="bold" maxChars="3" restrict="0-9" tabIndex="2"/>
 	<mx:AdvancedDataGrid id="adglistpedprod" x="25" y="86" width="809" height="149"
 						 alternatingItemColors="[#adf1f5, white]"
 						 dataChange="adglistpedprod_dataChangeHandler(event)"
@@ -1506,14 +1506,14 @@
 	</mx:AdvancedDataGrid>
 	<components:AutoComplete id="cmbproduct" prompt="Seleccione un Producto..." x="108" y="1" width="228" allowDuplicates="false"
 							 dropDownRowCount="10" fontSize="16" fontWeight="bold"
-							 labelField="descripcion" matchType="beginning" tabEnabled="false">
+							 labelField="descripcion" matchType="beginning" tabEnabled="false" tabIndex="0">
 	</components:AutoComplete>
 	<s:Label x="574" y="245" color="#053260" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL GRAL $:" verticalAlign="top"/>
 	<s:Label id="lblTotGral" x="708" y="243" width="124" color="#053260" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
 	<s:Label x="224" y="69" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
-	<controls:MaskedTextInput text="0.00" maxChars="5" x="340" y="58" width="60" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingresa un porcentaje de descuento, aplicable a todos los productos de la planilla"/>
+	<controls:MaskedTextInput text="0.00" maxChars="5" x="340" y="58" width="60" fontFamily="Verdana" fontSize="16" tabIndex="3" id="txtdescuento" restrict="0-9." toolTip="Ingresa un porcentaje de descuento, aplicable a todos los productos de la planilla"/>
 	<s:Label x="543" y="281" color="#0A8412" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL A PAGAR $:"/>
 	<s:Label id="lblTotApagar" x="705" y="280" width="127" color="#0A8412" fontFamily="Verdana"
