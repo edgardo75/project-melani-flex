@@ -190,7 +190,7 @@
 			
 			protected function operationselectAllEmpleados_faultHandler(event:FaultEvent):void
 			{
-				Alert.show("Se PRODUJO UN ERROR AL TRAER LA LISTA DE EMPLEADOS");
+				Alert.show("Se produjo un error al tratar de conseguir datos de los empleados");
 				
 			}
 			
@@ -200,7 +200,7 @@
 			
 			protected function btnnuevo_clickHandler(event:MouseEvent):void
 			{			
-					//botonesEnabledDisables();
+					
 					limpiarcontroles();
 					txtnombre.setFocus();	
 					empId=0;
@@ -250,12 +250,64 @@
 				btnguardar.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				
 				wsempleado.selectAllEmpleados();
-				
+				deshabilitarComponentes();
 				so.clear();
 				
 				
 			}
+			protected function deshabilitarComponentes():void{
+				
+				txtapellido.enabled = false;
+				txtdocumento.enabled = false;
+				txtemail.enabled = false;
+				txtnameuser.enabled = false;
+				txtnombre.enabled = false;
+				txtobservaciones.enabled = false;
+				txtpassword.enabled = false;
+				txtrepassword.enabled = false;
+				msksalario.enabled = false;
+				msksalarioxhora.enabled = false;
+				cmbTiposdocu.enabled = false;
+				cmbGeneros.enabled = false;
+				rbempleadofull.enabled = false;
+				rbempleadopart.enabled = false;
+				
+				if(btnCancelar.enabled == true){
+					btnCancelar.enabled = false;
+				}
+				if(btnActualizar.enabled == true)
+					btnActualizar.enabled = false;
+				
+				if(btnguardar.enabled==true)
+					btnguardar.enabled = false;
 			
+			
+			}
+			protected function habilitarComponentes():void{
+				txtapellido.enabled = true;
+				txtdocumento.enabled = true;
+				txtemail.enabled = true;
+				txtnameuser.enabled = true;
+				txtnombre.enabled = true;
+				txtobservaciones.enabled = true;
+				txtpassword.enabled = true;
+				txtrepassword.enabled = true;
+				msksalario.enabled = true;
+				msksalarioxhora.enabled = true;
+				cmbTiposdocu.enabled = true;
+				cmbGeneros.enabled = true;
+				rbempleadofull.enabled = true;
+				rbempleadopart.enabled = true;
+				
+				
+				if(btnCancelar.enabled==false){
+					btnCancelar.enabled = true;
+				}
+				if(btnActualizar.enabled == false){
+					btnActualizar.enabled = true;
+				}
+				
+			}
 			private function tranferirFocus(keyPress:KeyboardEvent):void{
 				if (keyPress.keyCode==Keyboard.ENTER){
 					
@@ -360,11 +412,16 @@
 			
 			}
 			protected function botonesEnabledDisables():void{
+				
 				if(btnguardar.enabled==false)
 					btnguardar.enabled=true;
 				
-				if(btnactualizar.enabled==true)
-					btnactualizar.enabled=false;
+				if(btnActualizar.enabled==true)
+					btnActualizar.enabled=false;
+				
+				if(btnCancelar.enabled == false){
+					btnCancelar.enabled = true;
+				}
 			
 			}
 			protected function guardarEmpleado(evt:CloseEvent):void{
@@ -527,10 +584,7 @@
 				addInfo();				
 			}
 			protected function addInfo():void{
-				if(btnactualizar.enabled==false){
-					btnactualizar.enabled=true;
-					btnguardar.enabled=false;
-				}				
+							
 				
 				txtnombre.text=listEmployee[adgemployee.selectedIndex].nombre;
 				txtapellido.text=listEmployee[adgemployee.selectedIndex].apellido;
@@ -557,33 +611,38 @@
 				cmbGeneros.selectedItemId=listEmployee[adgemployee.selectedIndex].genero;
 				cmbTiposdocu.selectedItemId=listEmployee[adgemployee.selectedIndex].tipodocu;
 				
-				if(empType=="FULLTIME"){
-					
-					labelsalariofull.visible=true;
-					msksalario.visible=true;
-					labelsalariopart.visible=false;
-					msksalarioxhora.visible=false;
-					rbempleadopart.selected=false;
-					msksalario.text=listEmployee[adgemployee.selectedIndex].salario;							
-					rbempleadofull.selected=true;				
-					
-				}else{
-					
-					
-					
-					labelsalariofull.visible=false;
-					msksalario.visible=false;
-					labelsalariopart.visible=true;
-					msksalarioxhora.visible=true;
-					msksalarioxhora.text=listEmployee[adgemployee.selectedIndex].salarioporhora;
-					rbempleadopart.selected=true;
-					rbempleadofull.selected=false;
-					
-					
-				}			
+							if(empType=="FULLTIME"){
+								
+											labelsalariofull.visible=true;
+											msksalario.visible=true;
+											labelsalariopart.visible=false;
+											msksalarioxhora.visible=false;
+											rbempleadopart.selected=false;
+											msksalario.text=listEmployee[adgemployee.selectedIndex].salario;							
+											rbempleadofull.selected=true;				
+											
+										}else{
+											
+											
+											
+											labelsalariofull.visible=false;
+											msksalario.visible=false;
+											labelsalariopart.visible=true;
+											msksalarioxhora.visible=true;
+											msksalarioxhora.text=listEmployee[adgemployee.selectedIndex].salarioporhora;
+											rbempleadopart.selected=true;
+											rbempleadofull.selected=false;
+											
+											
+							}	
+							
+					if(btnCancelar.enabled==true){
+						deshabilitarComponentes();
+						
+					}		
 			
 			}
-			protected function btnactualizar_clickHandler(event:MouseEvent):void
+			protected function btnActualizar_clickHandler(event:MouseEvent):void
 			{
 				vResult=nomV.validate();
 				
@@ -675,6 +734,24 @@
 			}
 			//-----------------------------------------------------------		
 			
+			
+			protected function btnEditar_clickHandler(event:MouseEvent):void
+			{
+				habilitarComponentes();
+			}
+			
+			protected function btnCancelar_clickHandler(event:MouseEvent):void
+			{
+				if(btnActualizar.enabled==true){
+					btnActualizar.enabled = false;
+					
+				}
+				if(btnguardar.enabled==true){
+					btnguardar.enabled = false;
+				}
+				deshabilitarComponentes();
+				addInfo();
+			}
 			
 		]]>
 	</fx:Script>
@@ -780,9 +857,9 @@
 
 				<s:GridColumn dataField="id" headerText="ID" visible="false"></s:GridColumn>
 				<s:GridColumn dataField="nombre" headerText="Nombre"></s:GridColumn>
-				<s:GridColumn dataField="emptype" headerText="Emptyte" visible="false"></s:GridColumn>
-				<s:GridColumn dataField="apellido" headerText="Apellido" visible="false"></s:GridColumn>
-				<s:GridColumn dataField="nameuser" headerText="Usuario"></s:GridColumn>
+				<s:GridColumn dataField="apellido" headerText="Apellido" ></s:GridColumn>
+				<s:GridColumn dataField="emptype" headerText="Emptyte" ></s:GridColumn>				
+				<s:GridColumn dataField="nameuser" headerText="Usuario" visible="false"></s:GridColumn>				
 				<s:GridColumn dataField="clave" headerText="Clave" visible="false"></s:GridColumn>
 				<s:GridColumn dataField="estado" headerText="Estado" rendererIsEditable="true">
 
@@ -845,14 +922,14 @@
 									 verticalScrollPolicy="on">
 	</components:AdvancedAutoComplete>
 	<s:Label x="29" y="353" color="#033339" fontSize="20" text="Observaciones:"/>
-	<s:TextArea id="txtobservaciones" x="28" y="377" width="504" height="96"
+	<s:TextArea id="txtobservaciones" x="28" y="377" width="670" height="96"
 					   fontFamily="Verdana" fontSize="16" fontWeight="bold" maxChars="32000"
 					   prompt="Ingrese las Observaciones..." 
 					   tabIndex="6"/>
 	<s:Button id="btnnuevo" x="28" y="481" height="31" label="Nuevo"
 			  click="btnnuevo_clickHandler(event)" fontSize="16"/>
 	<s:Button id="btnguardar" x="106" y="481" height="30" label="Guardar"
-			  click="btnguardar_clickHandler(event)" fontSize="16"/>
+			  click="btnguardar_clickHandler(event)" enabled="false" fontSize="16"/>
 	
 	<s:Label id="labelsalariofull" x="403" y="344" width="129" fontSize="16" text="Salario Mensual $:"/>
 	<s:Label id="labelsalariopart" x="403" y="344" width="139" fontSize="16" text="Salario por Hora $:" visible="false"/>
@@ -886,9 +963,16 @@
 	<s:Button id="btnhabilitar" x="300" y="481" height="30" label="Habilitar"
 			  click="btnhabilitar_clickHandler(event)" enabled="false" fontSize="16"
 			  toolTip="Habilita un empleado para poder operar el Sistema"/>
-	<s:Button id="btnactualizar" x="386" y="481" width="99" height="30" label="Actualizar"
-			  click="btnactualizar_clickHandler(event)" enabled="false" toolTip="Para actulizar datos debe seleccionar un Empleado del Listado"/>
+	<s:Button id="btnActualizar" x="386" y="481" width="99" height="30" label="Actualizar"
+			  click="btnActualizar_clickHandler(event)" enabled="false" fontSize="16"
+			  toolTip="Para actulizar datos debe seleccionar un Empleado del Listado"/>
 	<s:Button id="btnCloseClientComponent" x="692" y="5" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
+	<s:Button id="btnEditar" x="493" y="481" width="102" height="30" label="Editar"
+			  click="btnEditar_clickHandler(event)" enabled="true" fontSize="16"
+			  toolTip="Habilita la edición de datos del Empleado a Actualizar"/>
+	<s:Button id="btnCancelar" x="603" y="481" width="95" height="31" label="Cancelar"
+			  click="btnCancelar_clickHandler(event)" enabled="false" fontSize="16"
+			  toolTip="Cancelar Operación"/>
 	
 </s:Group>
 
