@@ -91,7 +91,7 @@
 					}	
 						
 					case -11:{
-						Alert.show("La Clave Ingresada,\n debe contener almenos una letra mayúscula, minúscula, númer\n, no se permiten espacion en blanco\n y mínimo 4 caracteres.");
+						Alert.show("La Clave Ingresada, debe contener almenos\n una letra mayúscula, minúscula y un número,\n no se permiten espacion en blanco y mínimo 4 caracteres.");
 						break;
 					}
 					case -12:{
@@ -198,10 +198,15 @@
 			
 			
 			
-			protected function btnnuevo_clickHandler(event:MouseEvent):void
+			protected function btnNuevo_clickHandler(event:MouseEvent):void
 			{			
 					
 					limpiarcontroles();
+					habilitarComponentes();	
+					btnGuardar.enabled = true;
+					btnActualizar.enabled = false;
+					btnEditar.enabled = false;
+					btnCancelar.enabled = true;
 					txtnombre.setFocus();	
 					empId=0;
 				
@@ -247,7 +252,7 @@
 				msksalarioxhora.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				cmbTiposdocu.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				cmbGeneros.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
-				btnguardar.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				btnGuardar.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				
 				wsempleado.selectAllEmpleados();
 				deshabilitarComponentes();
@@ -272,15 +277,7 @@
 				rbempleadofull.enabled = false;
 				rbempleadopart.enabled = false;
 				
-				if(btnCancelar.enabled == true){
-					btnCancelar.enabled = false;
-				}
-				if(btnActualizar.enabled == true)
-					btnActualizar.enabled = false;
 				
-				if(btnguardar.enabled==true)
-					btnguardar.enabled = false;
-			
 			
 			}
 			protected function habilitarComponentes():void{
@@ -300,12 +297,8 @@
 				rbempleadopart.enabled = true;
 				
 				
-				if(btnCancelar.enabled==false){
-					btnCancelar.enabled = true;
-				}
-				if(btnActualizar.enabled == false){
-					btnActualizar.enabled = true;
-				}
+				
+				
 				
 			}
 			private function tranferirFocus(keyPress:KeyboardEvent):void{
@@ -355,12 +348,12 @@
 						}
 						
 						if(keyPress.currentTarget.toString().indexOf("msksalario")!=-1&&msksalario.visible==true){
-								btnguardar.setFocus();
+								btnGuardar.setFocus();
 								return;
 						
 						}
 						if(keyPress.currentTarget.toString().indexOf("msksalarioxhora")!=-1&&msksalarioxhora.visible==true){
-							btnguardar.setFocus();
+							btnGuardar.setFocus();
 							return;
 							
 						}
@@ -408,22 +401,10 @@
 				cmbGeneros.selectedItemId=2;
 				cmbTiposdocu.selectedItemId=3;	
 				
-				botonesEnabledDisables();
+				
 			
 			}
-			protected function botonesEnabledDisables():void{
-				
-				if(btnguardar.enabled==false)
-					btnguardar.enabled=true;
-				
-				if(btnActualizar.enabled==true)
-					btnActualizar.enabled=false;
-				
-				if(btnCancelar.enabled == false){
-					btnCancelar.enabled = true;
-				}
 			
-			}
 			protected function guardarEmpleado(evt:CloseEvent):void{
 				
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
@@ -468,7 +449,7 @@
 			return empleado;
 			
 			}
-			protected function btnguardar_clickHandler(event:MouseEvent):void
+			protected function btnGuardar_clickHandler(event:MouseEvent):void
 			{
 				
 				
@@ -639,7 +620,14 @@
 					if(btnCancelar.enabled==true){
 						deshabilitarComponentes();
 						
-					}		
+					}	
+					btnNuevo.enabled  = true;
+					btnGuardar.enabled = false;
+					btndeshabilitar.enabled = true;
+					btnhabilitar.enabled = true;
+					btnActualizar.enabled = false;
+					btnEditar.enabled = true;
+					btnCancelar.enabled = false;
 			
 			}
 			protected function btnActualizar_clickHandler(event:MouseEvent):void
@@ -738,6 +726,10 @@
 			protected function btnEditar_clickHandler(event:MouseEvent):void
 			{
 				habilitarComponentes();
+				btnActualizar.enabled = true;
+				btnNuevo.enabled = false;
+				btnGuardar.enabled = false;
+				btnCancelar.enabled = true;
 			}
 			
 			protected function btnCancelar_clickHandler(event:MouseEvent):void
@@ -746,8 +738,8 @@
 					btnActualizar.enabled = false;
 					
 				}
-				if(btnguardar.enabled==true){
-					btnguardar.enabled = false;
+				if(btnGuardar.enabled==true){
+					btnGuardar.enabled = false;
 				}
 				deshabilitarComponentes();
 				addInfo();
@@ -926,10 +918,10 @@
 					   fontFamily="Verdana" fontSize="16" fontWeight="bold" maxChars="32000"
 					   prompt="Ingrese las Observaciones..." 
 					   tabIndex="6"/>
-	<s:Button id="btnnuevo" x="28" y="481" height="31" label="Nuevo"
-			  click="btnnuevo_clickHandler(event)" fontSize="16"/>
-	<s:Button id="btnguardar" x="106" y="481" height="30" label="Guardar"
-			  click="btnguardar_clickHandler(event)" enabled="false" fontSize="16"/>
+	<s:Button id="btnNuevo" x="28" y="481" height="31" label="Nuevo"
+			  click="btnNuevo_clickHandler(event)" fontSize="16"/>
+	<s:Button id="btnGuardar" x="106" y="481" height="30" label="Guardar"
+			  click="btnGuardar_clickHandler(event)" enabled="false" fontSize="16"/>
 	
 	<s:Label id="labelsalariofull" x="403" y="344" width="129" fontSize="16" text="Salario Mensual $:"/>
 	<s:Label id="labelsalariopart" x="403" y="344" width="139" fontSize="16" text="Salario por Hora $:" visible="false"/>
