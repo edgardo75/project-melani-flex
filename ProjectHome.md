@@ -1,0 +1,2 @@
+Proyecto de un Sistema Web de Pedidos de productos, para su posterior entrega a clientes, La parte Cliente FrontEnd , fue realizada en Flex 4.6, con Webservices para el envio y la recepcion de datos desde el Servidor.-
+JAVA y FLEX 4.6
