@@ -14,19 +14,14 @@
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
-			import org.flexunit.runner.Result;
-			
-			
+			import org.flexunit.runner.Result;		
 			[Bindable]
 			private var xmllistproducto:XMLList;
 			[Bindable]
-			private var idproducto:int=0;
-			
+			private var idproducto:int=0;			
 			[Bindable]
-			private var cargarImagen:FileReference=new FileReference();
-			
-			
-			protected function btnnuevo_clickHandler(event:MouseEvent):void
+			private var cargarImagen:FileReference=new FileReference();			
+			protected function btnNuevo_clickHandler(event:MouseEvent):void
 			{
 				if(txtcodigoproducto.editable==false)
 					txtcodigoproducto.editable=true;
@@ -38,26 +33,26 @@
 				txtdescripcion.text="";
 				txtprecio.text="";
 				idproducto=0;
+				imgProducto.source="assets/android-logo-400x300.jpg";
+				
+				
 				
 				
 			}
 			protected function getDatos():String{
 				
-				
-				
-				var producto:String="<producto>\n"+
-					
-					
-					"<idproducto>"+idproducto+"</idproducto>\n" +					
+				var producto:String="<producto>\n";					
+					producto+="<idproducto>"+idproducto+"</idproducto>\n" +					
 					"<descripcion>"+txtdescripcion.text.toUpperCase()+"</descripcion>\n" +					
 					"<preciounitario>"+txtprecio.text+"</preciounitario>\n"+
 					"<codproducto>"+txtcodigoproducto.text.toUpperCase()+"</codproducto>\n"+
 					"<cantidadinicial>"+txtcantidadinicial.text+"</cantidadinicial>\n"+
-					"<cantidaddisponible>"+txtcantidaddisponible.text+"</cantidaddisponible>\n"+
-					"<fechaCarga></fechaCarga>\n"+
-					"<img>0</img>\n" +
-					"<idusuario>12</idusuario>\n"+
-					"</producto>\n";
+					"<cantidaddisponible>"+txtcantidaddisponible.text+"</cantidaddisponible>\n" +					
+					
+					"<fechaCarga></fechaCarga>"+
+					"<img>0</img>" +
+					"<idusuario>12</idusuario>"+
+					"</producto>";
 				
 				return producto;	
 				
@@ -87,13 +82,7 @@
 				if(txtcantidaddisponible.text.length==0){
 					Alert.show("falta la cantidad disponible");
 					return;
-				}
-				
-				
-				
-				
-				
-				
+				}			
 				
 				if(idproducto==0)
 					servicesProducto.addProducto(getDatos());
@@ -136,20 +125,19 @@
 						return;
 						
 					}
-					if(keyPress.currentTarget.toString().indexOf("cmbbuscarproducto")!=-1){
-						addrowgrid();
+					if(keyPress.currentTarget.toString().indexOf("cmbBuscarProducto")!=-1){
+						addRowGrid();
 					}
 				
 				}
 			
 			
 			}
-			protected function addrowgrid():void{
-				adgproductos.setSelectedIndex(cmbbuscarproducto.selectedItemId);
+			protected function addRowGrid():void{
+				adgProductos.setSelectedIndex(cmbBuscarProducto.selectedItemId);
 			}
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
-				
 				if(String(event.result.toString())=="LA CONSULTA NO ARROJÓ RESULTADOS")
 					Alert.show("LA CONSULTA NO ARROJÓ RESULTADOS");
 				else{
@@ -157,11 +145,11 @@
 						Alert.show("FALLÓ LA CONEXION CON LA BASE DE DATOS, REVISE LOS SERVICIOS SI SE HAN INICIADO CORRECTAMENTE.");
 					}else{
 						xmllistproducto=new XMLList(event.result);							
-						adgproductos.dataProvider=product;		
-						cmbbuscarproducto.dataProvider=product;
+						adgProductos.dataProvider=product;		
+						cmbBuscarProducto.dataProvider=product;
 						lbltotalproductos.text=String(product.length);
-						adgproductos.selectedIndex=0;
-						adgproductos.validateNow();						
+						adgProductos.selectedIndex=0;
+						adgProductos.validateNow();						
 						addInfo();
 					}
 				}
@@ -254,6 +242,7 @@
 				txtprecio.text="";
 				idproducto=0;
 				lbltotalproductos.text="0";
+				
 			
 			}
 		
@@ -272,7 +261,7 @@
 				txtcodigoproducto.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				txtdescripcion.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				txtprecio.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
-				cmbbuscarproducto.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
+				cmbBuscarProducto.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				imgProducto.source="assets/android-logo-400x300.jpg";
 				
 			}
@@ -289,36 +278,29 @@
 			}
 			//-----------------------------------------------------------	
 			
-			protected function adgproductos_doubleClickHandler(event:MouseEvent):void
+			protected function adgProductos_doubleClickHandler(event:MouseEvent):void
 			{
 				addInfo();
 			}
 			
 			protected function addInfo():void{
-				var bytessImages:int=adgproductos.selectedItem.img;
-				
-				idproducto=adgproductos.selectedItem.id;
-				txtprecio.text=adgproductos.selectedItem.precio;
-				txtcantidaddisponible.text=adgproductos.selectedItem.cantidadDisponible;
-				txtcantidadinicial.text=adgproductos.selectedItem.cantidadInicial;
-				txtcodigoproducto.text=adgproductos.selectedItem.idproduct;
-				txtdescripcion.text=adgproductos.selectedItem.descripcion;
-				
+				var bytessImages:int=adgProductos.selectedItem.img;				
+				idproducto=adgProductos.selectedItem.id;
+				txtprecio.text=adgProductos.selectedItem.precio;
+				txtcantidaddisponible.text=adgProductos.selectedItem.cantidadDisponible;
+				txtcantidadinicial.text=adgProductos.selectedItem.cantidadInicial;
+				txtcodigoproducto.text=adgProductos.selectedItem.idproduct;
+				txtdescripcion.text=adgProductos.selectedItem.descripcion;				
 				if(bytessImages>0)					
 					servicesProducto.obtenerImagenProducto(idproducto);
 				else
 					imgProducto.source="assets/android-logo-400x300.jpg";
 			}
 			
-			protected function producto_imagen_seleccion(event:ResultEvent):void{
-				
-				
-				
+			protected function producto_imagen_seleccion(event:ResultEvent):void{			
 				var imgBytes:ByteArray=new ByteArray();	
 				imgBytes=event.result as ByteArray;
-				imgProducto.source=imgBytes;
-				
-				
+				imgProducto.source=imgBytes;				
 			}
 			protected function producto_imagen_error(event:FaultEvent):void{
 				
@@ -336,6 +318,7 @@
 				
 				cargarImagen.addEventListener(Event.SELECT,imagenSeleccion);
 				cargarImagen.addEventListener(Event.COMPLETE,imagenCargaCompleta);
+				
 			}
 			
 			protected function imagenCargaCompleta(event:Event):void{
@@ -346,8 +329,7 @@
 				
 			}
 			protected function imagenSeleccion(event:Event):void{
-				cargarImagen.load();
-				
+				cargarImagen.load();			
 			}
 			
 			
@@ -361,25 +343,14 @@
 					Alert.show("Debe Seleccionar un producto\n, antes de subir la imagen.");
 			}
 			
-			protected function operation2_resultHandler(event:ResultEvent):void
-			{
-				
+			protected function operation2_resultHandler(event:ResultEvent):void{
 				Alert.show("Imagen 'Almacenada'");
-				
-				
-				servicesProducto.searchAllProductos();
-				
+				servicesProducto.searchAllProductos();	
 			}
-			
 			protected function operation2_faultHandler(event:FaultEvent):void
-			{
-				
-				imgProducto.source="assets/android-logo-400x300.jpg";
-				
+			{	imgProducto.source="assets/android-logo-400x300.jpg";
 				Alert.show("Fallo al 'Almacenar' Imagen");
-				
 			}
-			
 			protected function operation3_faultHandler(event:FaultEvent):void
 			{
 				Alert.show("ERROR AL QUERER AGREGAR UN PRODUCTO, REVISE");
@@ -391,7 +362,7 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:XMLListCollection id="product" source="{xmllistproducto.producto}"/>
-		<s:WebService id="servicesProducto" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?WSDL"
+		<s:WebService id="servicesProducto" wsdl="http://192.168.1.100:8080/ServiceProductos/ProductosWs?WSDL"
 					   
 					   showBusyCursor="true"
 					   useProxy="false">
@@ -428,10 +399,10 @@
 							 decimalSeparator="." groupingSeparator="," currencyISOCode="locale and OS dependent" useCurrencySymbol="false"/>
 	</fx:Declarations>
 	
-	<s:DataGrid id="adgproductos" x="14" y="67" width="698" height="174"
+	<s:DataGrid id="adgProductos" x="14" y="67" width="698" height="174"
 				alternatingRowColors="[#ffffff,#fcff4f7]"
-				click="adgproductos_doubleClickHandler(event)"
-				doubleClick="adgproductos_doubleClickHandler(event)" doubleClickEnabled="true"
+				click="adgProductos_doubleClickHandler(event)"
+				doubleClick="adgProductos_doubleClickHandler(event)" doubleClickEnabled="true"
 				fontFamily="Verdana" fontSize="12" requestedRowCount="4">
 		<s:columns>
 			<s:ArrayList>
@@ -471,7 +442,7 @@
 	<controls:MaskedTextInput id="txtcantidadinicial" x="269" y="310" fontSize="16" restrict="0-9."/>
 	<controls:MaskedTextInput id="txtcantidaddisponible" x="9" y="351" fontSize="16" restrict="0-9."/>
 	<s:Button id="btnnuevo" x="460" y="381" width="81" height="29" label="Nuevo"
-			  click="btnnuevo_clickHandler(event)" cornerRadius="3" fontSize="16"
+			  click="btnNuevo_clickHandler(event)" cornerRadius="3" fontSize="16"
 			  toolTip="Cargar Nuevo Producto"/>
 	<s:Button id="btnguardar" x="580" y="381" width="89" height="29" label="Guardar"
 			  click="btnguardar_clickHandler(event)" fontSize="16" toolTip="Guardar Datos de Producto"/>
@@ -484,7 +455,7 @@
 	<s:Label id="lbltotalproductos" x="538" y="264" width="164" fontFamily="Verdana" fontSize="16"
 			 verticalAlign="middle"/>
 	<s:Label x="270" y="337" fontFamily="Arial" fontSize="16" fontWeight="bold" text="Buscar:"/>
-	<components:AutoComplete x="271" y="351" width="197" id="cmbbuscarproducto" matchType="beginning" labelField="descripcion">
+	<components:AutoComplete x="271" y="351" width="197" id="cmbBuscarProducto" matchType="beginning" labelField="descripcion">
 	</components:AutoComplete>
 	<mx:VRule x="720" y="10" width="1" height="398"/>
 	<s:BorderContainer x="729" y="39" width="391" height="308">

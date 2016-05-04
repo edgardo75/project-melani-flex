@@ -749,7 +749,7 @@
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wsempleado" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wsempleado" wsdl="http://192.168.1.100:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
 			<s:operation name="addEmpleadoFullTime"
 						 result="operationAddEmpleadosFulltime1_resultHandler(event)"
 						 fault="operation1AddEmpladosFullTime_faultHandler(event)"
@@ -937,12 +937,12 @@
 					   skinClass="spark.skins.spark.TextInputSkin"/>
 	<s:Label x="356" y="285" fontSize="20" fontWeight="bold" text="Password:"/>
 	<s:Label x="355" y="308" fontSize="20" fontWeight="bold" text="Repassword:"/>
-	<s:TextInput id="txtpassword" x="483" y="277" width="168" displayAsPassword="true" restrict="[a-zA-Z0-9_-]"
+	<s:TextInput id="txtpassword" x="483" y="277" width="168" displayAsPassword="true" restrict="[a-zA-Z0-9_-*!#$%/()=?]"
 					   fontSize="16" prompt="Ingrese password...." 
-					   skinClass="spark.skins.spark.TextInputSkin" maxChars="15"/>
-	<s:TextInput id="txtrepassword" x="483" y="303" width="168" displayAsPassword="true" restrict="[a-zA-Z0-9_-]"
+					   skinClass="spark.skins.spark.TextInputSkin" maxChars="8"/>
+	<s:TextInput id="txtrepassword" x="483" y="303" width="168" displayAsPassword="true" restrict="[a-zA-Z0-9_-*!#$%/()=?]"
 					   fontSize="16" prompt="Reingreso password..." 
-					   skinClass="spark.skins.spark.TextInputSkin" maxChars="15"/>
+					   skinClass="spark.skins.spark.TextInputSkin" maxChars="8"/>
 	<s:VGroup x="252" y="327" >
 	<s:RadioButton id="rbempleadofull" x="250" y="339" label="Empleado FullTime"
 				   groupName="rdgroupEmpleados" selected="true" click="rbempleadofull_clickHandler(event)"/>

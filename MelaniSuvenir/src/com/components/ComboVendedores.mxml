@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:components="com.hillelcoren.components.*"
+		 width="296" height="60" initialize="group1_initializeHandler(event)">
+	<fx:Script>
+		
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+		
+		[Bindable]
+				private var xmlListEmpleados:XMLList;
+		
+			protected function operation2_resultHandlerSelectAllEmpleados(event:ResultEvent):void
+			{
+				
+				xmlListEmpleados = new XMLList(event.result);
+				cmbVendedores.dataProvider=empleadoslist;
+				
+			}
+			protected function operation2_faultHandlerSelectAllEmpleados(event:FaultEvent):void
+			{
+				Alert.show("   ERROR AL OBTENER LISTADO DE EMPLEADOS   ");
+				
+			}
+			
+			protected function group1_initializeHandler(event:FlexEvent):void
+			{
+				wsempleados.selectAllEmpleados();
+			}
+			
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:WebService id="wsempleados" wsdl="http://192.168.1.100:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
+			<s:operation name="selectAllEmpleados"
+						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
+						 result="operation2_resultHandlerSelectAllEmpleados(event)">				
+			</s:operation>			
+		</s:WebService>
+		<s:XMLListCollection id="empleadoslist" source="{xmlListEmpleados.item}"/>
+	</fx:Declarations>
+	<components:AutoComplete id="cmbVendedores" labelField="nameuser" allowDuplicates="false" x="42" y="22" width="244" fontSize="16" prompt="Empleado..."
+							 toolTip="Seleccione un empleado..." fontWeight="bold" matchType="beginning">
+	</components:AutoComplete>
+	<s:Label x="41" y="8" fontSize="16" fontStyle="italic" text="Empleados"/>
+	
+</s:Group>

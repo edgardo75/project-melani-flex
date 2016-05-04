@@ -3,8 +3,7 @@
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
 			   xmlns:components="com.components.*"
-			   width="1263" height="692" minWidth="955" minHeight="600"
-			   creationComplete="application1_creationCompleteHandler(event)">
+			   width="1263" height="692" minWidth="955" minHeight="600">
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
@@ -32,6 +31,11 @@
 				<menuitem type="separator"/>
 				<menuitem label="Cargar Productos y Editar"/>
 				<menuitem type="separator"/>			
+			</menuitem>
+			<menuitem label="Caja">
+				<menuitem type="separator"/>
+				<menuitem label="Cargar Entradas y Salidas"/>
+				<menuitem type="separator"/>					
 			</menuitem>
 			<menuitem label="Presupuestos">
 				<menuitem type="separator"/>
@@ -72,14 +76,15 @@
 	<fx:Script>
 		<![CDATA[			
 			import com.components.ClienteDomicilioTelefono;
+			import com.components.EntradasySalidasDiarias;
+			import com.components.StorePersonalDataCustomers;
 			import com.components.budgets.GuardarPresupuesto;
 			import com.components.budgets.Verpresupuestos;
-			import com.components.StorePersonalDataCustomers;
-			import com.components.orderform.EstadisticaVentas;
-			import com.components.orderform.VerNotasPedido;
 			import com.components.orderform.AccessoEstadisticasPopup;
-			import com.components.orderform.SearchNotesBetweenDates;
+			import com.components.orderform.EstadisticaVentas;
 			import com.components.orderform.NoteTheOrder;
+			import com.components.orderform.SearchNotesBetweenDates;
+			import com.components.orderform.VerNotasPedido;
 			import com.components.products.CargaryEditarProducto;
 			import com.components.products.DatosProducto1;
 			import com.components.vendors.CargarVendedores;
@@ -110,6 +115,10 @@
 					panelCentral.removeAllChildren();
 					panelCentral.addChild(new ClienteDomicilioTelefono());						
 				}
+				if(event.item.@label =="Cargar Entradas y Salidas"){
+					panelCentral.removeAllChildren();
+					panelCentral.addChild(new EntradasySalidasDiarias());						
+				}				
 				if(event.item.@label=="Cargar Productos y Editar"){
 					panelCentral.removeAllChildren();
 					panelCentral.addChild(new CargaryEditarProducto());
@@ -122,9 +131,7 @@
 					panelCentral.removeAllChildren();
 					panelCentral.addChild(new Verpresupuestos());
 				}
-				if(event.item.@label=="Clientes")
-					 verInformeCliente()
-				
+								
 				if(event.item.@label=="Nota de Pedido"){
 					panelCentral.removeAllChildren();
 					panelCentral.addChild(new NoteTheOrder());
@@ -154,28 +161,7 @@
 					panelCentral.addChild(new SearchNotesBetweenDates());
 				}
 				
-			}
-			protected function verInformeCliente():void{
-				var source:String="http://localhost:8080/WebMelanie2/ShowReportClient";
-				var urlReq:URLRequest=new URLRequest(source);
-				navigateToURL(urlReq,"_blank");
-			
-			}
-			protected function application1_creationCompleteHandler(event:FlexEvent):void
-			{
-				//
-			}
-			protected function verInformeProductos():void{
-				var source:String="http://localhost:8080/WebMelanie2/ShowReportProductos"
-				var urlReq:URLRequest=new URLRequest(source);
-				navigateToURL(urlReq,"_blank");
-			}
-			protected function verInformeBarrios():void{
-				var source:String="http://localhost:8080/WebMelanie2/ShowReportBarrios"
-				var urlReq:URLRequest=new URLRequest(source);
-				navigateToURL(urlReq,"_blank");
-			
-			}
+			}		
 			
 		]]>
 	</fx:Script>

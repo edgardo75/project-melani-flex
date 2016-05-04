@@ -29,20 +29,13 @@
 			import org.osmf.net.SwitchingRuleBase;
 			
 			import popus.Progress;
-			
-			
-			
-			
 			private var popup:Progress;
 			[Bindable]
 			private var xmltarjetas:XMLList;
-			
 			[Bindable]
 			private var xmlListEmpleados:XMLList;
 			[Bindable]
 			private var anticipo:Number=0;
-			
-			
 			[Bindable]
 			public var dp:Array=[];
 			[Bindable]
@@ -72,7 +65,7 @@
 			[Bindable]
 			private var usercancelo:int=0;
 			[Bindable]
-			private var userentrego:int=0;
+			private var userEntrego:int=0;
 			[Bindable]
 			private var useranulo:int=0;
 			[Bindable]
@@ -98,17 +91,12 @@
 			private var efectivo:String;
 			[Bindable]
 			private var idnota:int=0;
-			
-			
-			
-			
 			/**
 			 * metodo que se invoca como resultado de obtener desde la base de datos
 			 * la cantidad de registros nota de pedido
 			 * invocamos a seleccionar todas o al metodo que trae solo un puñado de las mismas
 			 * */
-			
-			protected function operation1_resultHandler(event:ResultEvent):void
+			protected function getRecordCountNotasHandler(event:ResultEvent):void
 			{
 				
 				
@@ -119,20 +107,22 @@
 				}else{
 					
 					if(totalReg<SIZEPAGE){
-				
+						Alert.show("select alll");
 						wsnotas.selectAllNotas();
 						if(totGral>0)
 							limpiarControles();
 					}else{
 						
-				
+						
 						last_btn.enabled=true;
 						next_btn.enabled=true;
 						first_btn.enabled=true;
 						prev_btn.enabled=true;
+						
 						TOTALPAGES=int(totalReg/SIZEPAGE);		
 						
 						wsnotas.verNotasPedidoPaginadas(indexPage,SIZEPAGE);
+						
 						if(totGral>0)
 							limpiarControles();
 					}
@@ -141,7 +131,7 @@
 				
 			}
 			
-			protected function operation1_faultHandler(event:FaultEvent):void
+			protected function getFaultRecordCountHandler(event:FaultEvent):void
 			{
 				Alert.show("   ERROR AL BUSCAR CANTIDAD TOTAL DE\n NOTAS DE PEDIDO EN BASE DE DATOS   ");
 			}
@@ -177,8 +167,8 @@
 				if(btnRegargarlistado.enabled==false)
 					btnRegargarlistado.enabled=true;
 				
-				if(btnremover.enabled==false)
-					btnremover.enabled=true;
+				if(btnRemover.enabled==false)
+					btnRemover.enabled=true;
 				
 				
 				
@@ -286,10 +276,9 @@
 			}
 			//-------------------------------------------------------------------------------------------------------------
 			
-			protected function operation3_resultHandler(event:ResultEvent):void
+			protected function resultPaginadoHandler(event:ResultEvent):void
 			{
-				xmlNotas=new XMLList(event.result);
-				
+				xmlNotas=new XMLList(event.result);				
 				addgrid();
 				adgNotas.selectedIndex=0;
 				adgNotas.validateNow();
@@ -297,7 +286,7 @@
 				
 			}
 			
-			protected function operation3_faultHandler(event:FaultEvent):void
+			protected function faultPaginadoHandler(event:FaultEvent):void
 			{
 				Alert.show("ERROR AL OBTENER LAS NOTAS ");
 				
@@ -319,12 +308,12 @@
 				
 				lblnombreyapecli.text=String(notas[adgNotas.selectedIndex].cliente.apellidoynombre);
 				
-				if(ultimaActualizacion.toString().indexOf("01/01/1900")==-1){
-					
-					lblUltimaActualizacion.text = "Última Actualización: " +ultimaActualizacion;
-				}else{
-					lblUltimaActualizacion.text = "";
-				}
+								if(ultimaActualizacion.toString().indexOf("01/01/1900")==-1){
+									
+									lblUltimaActualizacion.text = "Última Actualización: " +ultimaActualizacion;
+								}else{
+									lblUltimaActualizacion.text = "";
+								}
 				
 				nrodocucli=int(notas[adgNotas.selectedIndex].cliente.nrodocumento);
 				idcliente=int(notas[adgNotas.selectedIndex].cliente.id);
@@ -334,7 +323,7 @@
 				efectivo=String(notas[adgNotas.selectedIndex].efectivo);
 				txtobservaciones.text=String(notas[adgNotas.selectedIndex].observaciones);
 				cmbTarjetasCreditoDebito.selectedItemId=notas[adgNotas.selectedIndex].idtarjeta;
-				txtnumerocuponpago.text=notas[adgNotas.selectedIndex].numerocupon;
+				txtNumerodeCuponPagoTarjeta.text=notas[adgNotas.selectedIndex].numerocupon;
 				detallenotas.source=notas[adgNotas.selectedIndex].detallenota.itemdetalle;		
 				
 				mskdocumento.text=String(nrodocucli);
@@ -343,30 +332,30 @@
 				
 				desc_resto=Number(notas[adgNotas.selectedIndex].descuentopesos);
 				
-				if(Number(notas[adgNotas.selectedIndex].usuarioexpidionota)==Number(0))
-					lblexpidiovendedor.text="-";
-				else 
-					lblexpidiovendedor.text=notas[adgNotas.selectedIndex].usuarioexpidionota;
-				
-				if(Number(notas[adgNotas.selectedIndex].usuariocancelonota)==Number(0))
-					lblvendedocancelo.text="-";
-				else
-					lblvendedocancelo.text=notas[adgNotas.selectedIndex].usuariocancelonota;
-				
-				if(notas[adgNotas.selectedIndex].usuarioanulonota==0)
-					lblvendedoranulo.text="-";
-				else
-					lblvendedoranulo.text=notas[adgNotas.selectedIndex].usuarioanulonota;
-				
-				if(Number(notas[adgNotas.selectedIndex].usuarioentregonota)==Number(0))
-					lblvendedorentrego.text="-";
-				else
-					lblvendedorentrego.text=notas[adgNotas.selectedIndex].usuarioentregonota;
+									if(Number(notas[adgNotas.selectedIndex].usuarioexpidionota)==Number(0))
+										lblexpidiovendedor.text="-";
+									else 
+										lblexpidiovendedor.text=notas[adgNotas.selectedIndex].usuarioexpidionota;
+									
+									if(Number(notas[adgNotas.selectedIndex].usuariocancelonota)==Number(0))
+										lblvendedocancelo.text="-";
+									else
+										lblvendedocancelo.text=notas[adgNotas.selectedIndex].usuariocancelonota;
+									
+									if(notas[adgNotas.selectedIndex].usuarioanulonota==0)
+										lblvendedoranulo.text="-";
+									else
+										lblvendedoranulo.text=notas[adgNotas.selectedIndex].usuarioanulonota;
+									
+									if(Number(notas[adgNotas.selectedIndex].usuarioentregonota)==Number(0))
+										lblvendedorentrego.text="-";
+									else
+										lblvendedorentrego.text=notas[adgNotas.selectedIndex].usuarioentregonota;
 				
 				mskrecargo.text=notas[adgNotas.selectedIndex].porcrecargo;
 				
 				userexpidio=notas[adgNotas.selectedIndex].idusuarioexpidionota;
-				userentrego=notas[adgNotas.selectedIndex].idusuarioentregonota;
+				userEntrego=notas[adgNotas.selectedIndex].idusuarioentregonota;
 				usercancelo=notas[adgNotas.selectedIndex].idusuariocancelonota;
 				useranulo=notas[adgNotas.selectedIndex].idusuarioanulonota;
 				
@@ -374,27 +363,27 @@
 				
 				
 				
-							if(int(notas[adgNotas.selectedIndex].anulado)==0){
-								rdanuladano.selected=true;
-								
-							}else{
-								rdanuladasi.selected=true;
-							}
-							
-							
-							if(int(notas[adgNotas.selectedIndex].cancelado)==0)
+								if(int(notas[adgNotas.selectedIndex].anulado)==0){
+									rdbAnuladano.selected=true;
+									}else{
+										rdbAnuladasi.selected=true;
+									}
+														
+							if(int(notas[adgNotas.selectedIndex].cancelado)==0){
 									rdbcanceladanotano.selected=true;
-							
-							else
+									btnCancelarNota.enabled=true;
+							}else{
 									rdbcanceladanotasi.selected=true;
-							
+									btnCancelarNota.enabled=false;
+							}
 				
-							if(int(notas[adgNotas.selectedIndex].entregado)==0)
+							if(int(notas[adgNotas.selectedIndex].entregado)==0){
 								rdbentregadono.selected=true;
-							
-							else
-							
+								btnEntregarNota.enabled=true;
+							}else{							
 								rdbentregadosi.selected=true;
+								btnEntregarNota.enabled=false;
+							}
 				
 							if(listhistorico.length>0)								
 								listhistorico.removeAll();
@@ -612,15 +601,15 @@
 								precio_desc=0;
 								txtdescuento.text="0.0";
 								useranulo=0;
-								userentrego=0;
+								userEntrego=0;
 								usercancelo=0;
 								userexpidio=0;
 								txtpreciop.text="";
 								mskcantidad.text="";		
 								mskrecargo.text="0.0";
 								mskdescuentopesos.text="0.0";
-								mskanticipo.text="0.0";
-								btnremover.enabled=false;
+								mskAnticipo.text="0.0";
+								btnRemover.enabled=false;
 								lblTotApagar.text="0.000";
 								lblTotGral.text="0.000";
 								
@@ -791,16 +780,16 @@
 									precio_desc=0;
 									txtdescuento.text="0.0";
 									useranulo=0;
-									userentrego=0;
+									userEntrego=0;
 									usercancelo=0;
 									userexpidio=0;
 									txtpreciop.text="";
 									mskcantidad.text="";	
 									mskrecargo.text="0.0";
-									btnremover.enabled=false;
+									btnRemover.enabled=false;
 									lblTotApagar.text="0.000";
 									mskdescuentopesos.text="0.0";
-									mskanticipo.text="0.0";
+									mskAnticipo.text="0.0";
 									lblTotGral.text="0.000";
 									porc_d=0;
 									porc_desc_total=0;	
@@ -1227,17 +1216,17 @@
 					
 }//end function edit grid
 			
-			private function calculeanticipo():void{
+			private function calculeAnticipo():void{
 				
 					
 				
-					var calcularsaldo:Number=(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskanticipo.text))-anticipo;
+					var calcularsaldo:Number=(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskAnticipo.text))-anticipo;
 							if(calcularsaldo<0){
 								Alert.show("El calculo del saldo da un número negativo \nverifique o vuelva a calcular");
 								return;
 							}else{
 									
-								anticipo=anticipo+Number(Number(mskanticipo.text).toFixed(3));
+								anticipo=anticipo+Number(Number(mskAnticipo.text).toFixed(3));
 								lblsaldo.text=calcularsaldo.toFixed(3);// calculo del saldo
 								notas[adgNotas.selectedIndex].saldo=lblsaldo.text;//celda en el grid cabecera del saldo
 							}
@@ -1247,23 +1236,13 @@
 			
 			}
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-			public function anticipocalculoreuso():void{
-				
+			public function anticipoCalculoReuso():void{				
 				if(anticipo==0){
-					calculeanticipo();
+					calculeAnticipo();
 					return;
-				
-				}else{
-							
-								calculeanticipo();
-								
-							
-					
-					}
-				
-				
-				
-					
+				}else{						
+					calculeAnticipo();
+					}			
 			}
 			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1271,40 +1250,23 @@
 				
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 				
-				if(int(mskanticipo.text)==0||mskanticipo.text.length==0){
-					
-					
-					
+				if(int(mskAnticipo.text)==0||mskAnticipo.text.length==0){			
 					anticipo=0;
 					for (var j:int=0;j<listhistoricoselected.length;j++){
 						//recorro la coleccion historico para mostrar los anticipo de la nota
-						if(Number(listhistoricoselected[j].anticipo)>0){
-							
-						
-						
+						if(Number(listhistoricoselected[j].anticipo)>0){			
 							anticipo=anticipo+Number(Number(listhistoricoselected[j].anticipo).toFixed(3));
-						
-							
-							
-							
 						}
 					}
 					lblsaldo.text=Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(lbldescuento.text)-(anticipo)).toFixed(3);
-					
 				}else {
-					if(int(mskanticipo.text)>int(lblTotApagar.text))
-					{
-						Alert.show("IMPOSIBLE HACER EL CALCULO DE SALDO");
-						return;
-					}else{
-						anticipocalculoreuso();
-					
-					}
-					
-					
+								if(int(mskAnticipo.text)>int(lblTotApagar.text)){
+											Alert.show("IMPOSIBLE HACER EL CALCULO DE SALDO");
+											return;
+								}else{
+									anticipoCalculoReuso();									
+									}
 				}
-				
-				
 			}
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1374,13 +1336,13 @@
 			//}
 			//----------------------------------------------------------------------------------------------------------
 
-			protected function operation2_faultHandlerSelectAllEmpleados(event:FaultEvent):void
+			protected function selectHandlerAllEmploye(event:FaultEvent):void
 			{
 				Alert.show("   ERROR AL OBTENER LISTADO DE EMPLEADOS   ");
 				
 			}
 			
-			protected function operation2_resultHandlerSelectAllEmpleados(event:ResultEvent):void
+			protected function faultAllEmploye(event:ResultEvent):void
 			{
 				
 				xmlListEmpleados = new XMLList(event.result);
@@ -1395,18 +1357,24 @@
 				productosWs.searchAllProductos();
 				wsempleados.selectAllEmpleados();
 				wstarjetascreditodebito.searchAllTarjetasCreditoDebito();
-				cmbproduct.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
-				txtpassword.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
-				mskisearchidnota.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
-				txtpreciop.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
-				cmbVendedores.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
-				txtdescuento.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
-				mskcantidad.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
-				mskdescuentopesos.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
-				mskrecargo.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
-				mskanticipo.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
-				btnactualizarNota.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
-				adglistpedprod.addEventListener(AdvancedDataGridEvent.ITEM_EDIT_END,itemEditEndHandler);
+								cmbproduct.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+								txtpassword.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+								mskisearchidnota.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+								txtpreciop.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+								cmbVendedores.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+								txtdescuento.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+								mskcantidad.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+								mskdescuentopesos.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+								mskrecargo.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+								mskAnticipo.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+								btnactualizarNota.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+								cmbTarjetasCreditoDebito.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+								txtNumerodeCuponPagoTarjeta.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);								
+								adglistpedprod.addEventListener(AdvancedDataGridEvent.ITEM_EDIT_END,itemEditEndHandler);
+				initialiceVariables();				
+				
+			}
+			protected function initialiceVariables():void{
 				adgNotas.selectedIndex=0;
 				totGral=0;
 				totGralDesc=0;
@@ -1414,12 +1382,12 @@
 				porc_d=0;
 				porc_desc_total=0;
 				useranulo=0;
-				userentrego=0;
+				userEntrego=0;
 				usercancelo=0;
 				userexpidio=0;
 				nrodocucli=0;
 			}
-			protected function btnremover_clickHandler(event:MouseEvent):void
+			protected function btnRemover_clickHandler(event:MouseEvent):void
 			{
 				if(arrayDg.length>0&&adgNotas.selectedIndex>-1)
 					Alert.show("   Esta seguro de remover los productos Listados?","Confirmar Eliminación   ", Alert.YES | Alert.NO, this, removerListadoPedidos, null, Alert.NO);
@@ -1431,78 +1399,94 @@
 				
 				var b:Boolean=false;
 				if(KeyPress.keyCode==Keyboard.ENTER){
-					if(cmbproduct.text!=""&&KeyPress.currentTarget.toString().indexOf("cmbproduct")!=-1){
-						focusManager.setFocus(txtpreciop);
-						txtpreciop.text=cmbproduct.selectedItem.precio;
-						
-					}
-					if(KeyPress.currentTarget.toString().indexOf("mskcantidad")!=-1&&Number(mskcantidad.text)>0){
-						for (var i:int=0;i<arrayDg.length && !b;i++){
-							
-							if((String(arrayDg[i].name).toUpperCase()==String(cmbproduct.text).toUpperCase()) && Number(arrayDg[i].price) != Number(txtpreciop.text)){
-								Alert.show("Imposible Cargar, este Producto se encuentra cargado con un Precio diferente, corrija!!!");
-								b=true;
-								
-							}
-							
-						}
-						if(b.valueOf()){
-							
-							return;
-						}else{		
-							if(notas.length>0&&adgNotas.selectedIndex>-1)
-								addadglistpedprod(cmbproduct.selectedItem.idproduct,adgNotas.selectedItem.id,cmbproduct.selectedItem.id,txtpreciop.text,mskcantidad.text,cmbproduct.selectedItem.descripcion,txtdescuento.text);
-							else
-								Alert.show("Imposible procesar, para agregar un Producto, \nantes deberá seleccionar una Nota de Pedido!!!");
-						}
-					}
-					if(KeyPress.currentTarget.toString().indexOf("txtpreciop")!=-1&& int(txtpreciop.text)>0)
-						focusManager.setFocus(mskcantidad);
-					
-					if(KeyPress.currentTarget.toString().indexOf("txtdescuento")!=-1 && Number(Number(txtdescuento.text).toFixed(3))>0&&arrayDg.length>0)
-						Alert.show("   Desea Agregar el Descuento "+txtdescuento.text+" al Listado de Productos?","Confirmar Operación   ", Alert.YES | Alert.NO, this, calcularDescuentoTotal, null, Alert.NO);
-						
-						
-
-					if(KeyPress.currentTarget.toString().indexOf("mskrecargo")!=-1)
-						Alert.show("   Desea Agregar el Recargo % "+mskrecargo.text+" \nal porcentaje existente % "+tot_recargo_porc+" ?","Confirmar Operación   ", Alert.YES | Alert.NO, this, calcularRecargo, null, Alert.NO);
-					
-					if(KeyPress.currentTarget.toString().indexOf("mskanticipo")!=-1)
-						Alert.show("   Desea Agregar el Anticipo $ "+mskanticipo.text+" \nal anticipo existente $ "+anticipo+" ?","Confirmar Operación   ", Alert.YES | Alert.NO, this, calcularAnticipo, null, Alert.NO);
-						
-					
-								if(KeyPress.target.toString().indexOf("mskisearchidnota")!=-1){
+									if(cmbproduct.text!=""&&KeyPress.currentTarget.toString().indexOf("cmbproduct")!=-1){
+										focusManager.setFocus(txtpreciop);
+										txtpreciop.text=cmbproduct.selectedItem.precio;
+										
+									}
 									
+									if(KeyPress.currentTarget.toString().indexOf("cmbTarjetasCreditoDebito")!=-1&&cmbTarjetasCreditoDebito.text.length>0){
+										txtNumerodeCuponPagoTarjeta.setFocus();
+									}
 									
-									indexPage=0;
+									if(KeyPress.currentTarget.toString().indexOf("txtNumerodeCuponPagoTarjeta")!=-1&&txtNumerodeCuponPagoTarjeta.text.length>0){
+										cmbVendedores.setFocus();
+										if(chkEfectivo.selected){
+											chkEfectivo.selected=false;
+										}
+									}
+									if(KeyPress.currentTarget.toString().indexOf("cmbVendedores")!=-1&&cmbVendedores.text.length>0){
+										
+										txtpassword.setFocus();
+									}
+									if(KeyPress.currentTarget.toString().indexOf("mskcantidad")!=-1&&Number(mskcantidad.text)>0){
+										for (var i:int=0;i<arrayDg.length && !b;i++){
+											
+											if((String(arrayDg[i].name).toUpperCase()==String(cmbproduct.text).toUpperCase()) && Number(arrayDg[i].price) != Number(txtpreciop.text)){
+												Alert.show("Imposible Cargar, este Producto se encuentra cargado con un Precio diferente, corrija!!!");
+												b=true;
+												
+											}
+											
+										}
+										if(b.valueOf()){
+											
+											return;
+										}else{		
+											if(notas.length>0&&adgNotas.selectedIndex>-1)
+												addadglistpedprod(cmbproduct.selectedItem.idproduct,adgNotas.selectedItem.id,cmbproduct.selectedItem.id,txtpreciop.text,mskcantidad.text,cmbproduct.selectedItem.descripcion,txtdescuento.text);
+											else
+												Alert.show("Imposible procesar, para agregar un Producto, \nantes deberá seleccionar una Nota de Pedido!!!");
+										}
+									}
+									if(KeyPress.currentTarget.toString().indexOf("txtpreciop")!=-1&& int(txtpreciop.text)>0)
+										focusManager.setFocus(mskcantidad);
 									
-									totalReg=0;
+									if(KeyPress.currentTarget.toString().indexOf("txtdescuento")!=-1 && Number(Number(txtdescuento.text).toFixed(3))>0&&arrayDg.length>0)
+										Alert.show("   Desea Agregar el Descuento "+txtdescuento.text+" al Listado de Productos?","Confirmar Operación   ", Alert.YES | Alert.NO, this, calcularDescuentoTotal, null, Alert.NO);
+										
+										
+				
+									if(KeyPress.currentTarget.toString().indexOf("mskrecargo")!=-1)
+										Alert.show("   Desea Agregar el Recargo % "+mskrecargo.text+" \nal porcentaje existente % "+tot_recargo_porc+" ?","Confirmar Operación   ", Alert.YES | Alert.NO, this, calcularRecargo, null, Alert.NO);
 									
-									last_btn.enabled=false;
-									next_btn.enabled=false;
-									first_btn.enabled=false;
-									prev_btn.enabled=false;
+									if(KeyPress.currentTarget.toString().indexOf("mskAnticipo")!=-1)
+										Alert.show("   Desea Agregar el Anticipo $ "+mskAnticipo.text+" \nal anticipo existente $ "+anticipo+" ?","Confirmar Operación   ", Alert.YES | Alert.NO, this, calcularAnticipo, null, Alert.NO);
+										
 									
-									//metodo de webservices que busca una nota de pedido en la base de datos
-									wsnotas.selectUnaNota(int(mskisearchidnota.text));
+												if(KeyPress.target.toString().indexOf("mskisearchidnota")!=-1){
+													
+													
+													indexPage=0;
+													
+													totalReg=0;
+													
+													last_btn.enabled=false;
+													next_btn.enabled=false;
+													first_btn.enabled=false;
+													prev_btn.enabled=false;
+													
+													//metodo de webservices que busca una nota de pedido en la base de datos
+													wsnotas.selectUnaNota(int(mskisearchidnota.text));
+													
+												}
 									
+									if(KeyPress.currentTarget.toString().indexOf("cmbVendedores")!=-1&&cmbVendedores.selectedItemId>=0)
+										txtpassword.setFocus();
+									
+									if(KeyPress.currentTarget.toString().indexOf("txtpassword")!=-1&&txtpassword.text.length>0&&btnactualizarNota.enabled==true)
+										btnactualizarNota.setFocus();
+									
+									if(KeyPress.currentTarget.toString().indexOf("mskdescuentopesos")!=-1)
+										Alert.show("   Desea Agregar el Descuento en $ "+mskdescuentopesos.text+" \nal descuento existente $ "+totGralDesc+" ?","Confirmar Operación   ", Alert.YES | Alert.NO, this, calculardescuentopesos, null, Alert.NO);
+										
+									
+									if(KeyPress.currentTarget.toString().indexOf("btnactualizarNota")!=-1&&txtpassword.text.length>0&&btnactualizarNota.enabled ==true){
+										
+										btnactualizarNotaEvent();
+									}
 								}
-					
-					if(KeyPress.currentTarget.toString().indexOf("cmbVendedores")!=-1&&cmbVendedores.selectedItemId>=0)
-						txtpassword.setFocus();
-					
-					if(KeyPress.currentTarget.toString().indexOf("txtpassword")!=-1&&txtpassword.text.length>0&&btnactualizarNota.enabled==true)
-						btnactualizarNota.setFocus();
-					
-					if(KeyPress.currentTarget.toString().indexOf("mskdescuentopesos")!=-1)
-						Alert.show("   Desea Agregar el Descuento en $ "+mskdescuentopesos.text+" \nal descuento existente $ "+totGralDesc+" ?","Confirmar Operación   ", Alert.YES | Alert.NO, this, calculardescuentopesos, null, Alert.NO);
-						
-					
-					if(KeyPress.currentTarget.toString().indexOf("btnactualizarNota")!=-1&&txtpassword.text.length>0&&btnactualizarNota.enabled ==true){
-						
-						btnactualizarNotaEvent();
-					}
-				}
+				
 			}
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			private function calculardescuentopesos(evt:CloseEvent):void{
@@ -1575,15 +1559,8 @@
 							
 						}
 						
-					}
-					
-					
-					
-					
-					
-				}
-				
-				
+					}				
+				}				
 			}
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			//****************************************************************************************************
@@ -1591,40 +1568,41 @@
 				var entregado:int=0;
 				var canceladanota:int=0;
 				var stockfuturo:int=0;
-				var anulada:int=0;
 				var enfectivo:int=0;
-				var porcdescAcum:Number=0;
-				
-				
-				
+				var anulada:int=0;				
+				var porcdescAcum:Number=0;				
 				if(txtdescuento.text.length==0)
 					txtdescuento.text="0.0";
 				
 				if(mskrecargo.text.length==0)
 					mskrecargo.text="0.0";
 				
-				if(mskanticipo.text.length==0)
-					mskanticipo.text="0.0";
+				if(mskAnticipo.text.length==0)
+					mskAnticipo.text="0.0";
 				
 				if(mskdescuentopesos.text.length==0)
 					mskdescuentopesos.text="0.0";
 				
 				var pendiente:int=1;
+				
 				if(rdbentregadosi.selected){
 					entregado=1;
 					pendiente=0;
 				}
 				
-				if(rdbcanceladanotasi.selected)
-					canceladanota=1;
+				if(rdbcanceladanotasi.selected){
+					canceladanota=1;			
+				}
 				
 				
-				
-				
-				
-				
-				if(rdanuladasi.selected)
+				if(rdbAnuladasi.selected){
 					anulada=1;
+				}
+				
+				if(chkEfectivo.selected){
+					enfectivo=1;
+				}
+					
 				
 				/*recorro historico para recalcular efectivamente el anticipo
 				asi de esa manera nos aseguramos que no hayan problemas con los datos*/
@@ -1632,134 +1610,130 @@
 				anticipo=0;
 				for (var j:int=0;j<listhistoricoselected.length;j++){
 					//recorro la coleccion historico para mostrar los anticipo de la nota
-					if(Number(listhistoricoselected[j].anticipo)>0){
-						
-						
-						
+					if(Number(listhistoricoselected[j].anticipo)>0){					
 						anticipo=anticipo+Number(Number(listhistoricoselected[j].anticipo).toFixed(3));
-						
-						
-						
-						
 					}
-					
-					
 				}
-				anticipo=anticipo+Number(Number(mskanticipo.text).toFixed(3));
+				anticipo=anticipo+Number(Number(mskAnticipo.text).toFixed(3));
 				
 				
+				/*if(anticipo>0&&Number(Number(mskAnticipo.text)==0)){
+					Alert.show("Falta el valor en del anticipo!!!");
+					return"";
+				}else{*/
 				
-				
-				
-				
-				
-				var xmlnota:String="<notapedido>\n" +
-					"<idnota>"+adgNotas.selectedItem.id+"</idnota>\n" +
-					"<vendedor>" +cmbVendedores.selectedItem.id+"</vendedor>\n"+
-					"<personas>\n" +
-						"<id>"+idcliente+"</id>\n" +
-						"<numerodocu>"+nrodocucli+"</numerodocu>\n" +
-					"</personas>\n" +
-					"<tarjetacredito>\n" +
-						"<id_tarjeta>"+cmbTarjetasCreditoDebito.selectedItem.id+"</id_tarjeta>\n" +
-					"</tarjetacredito>\n" +
-					"<porcentaje>\n" +
-						"<id_porcentaje>1</id_porcentaje>\n" +
-					"</porcentaje>\n" +
-					"<montototal>"+lblTotGral.text+"</montototal>\n" +
-					"<anticipo>"+mskanticipo.text+"</anticipo>\n" +
-					"<anticipoacum>"+anticipo.toFixed(3)+"</anticipoacum>\n" +
-					
-					"<saldo>"+lblsaldo.text+"</saldo>\n" ;
-				if(entregado==1){
-					xmlnota+="<entregado>"+entregado+"</entregado>\n" +
-						"<usuario_entregado>"+userentrego+"</usuario_entregado>\n" ;
-				}else{
-					xmlnota+="<entregado>"+entregado+"</entregado>\n" +
-						"<usuario_entregado>0</usuario_entregado>\n" ;
-				}
-				
-				xmlnota+="<usuario_expidio_nota>"+userexpidio+"</usuario_expidio_nota>\n" +
-					"<stockfuturo>"+stockfuturo+"</stockfuturo>\n" ;
-				
-				if(anulada==1){
-					xmlnota+="<anulado>"+anulada+"</anulado>\n" +
-						"<id_usuario_anulado>"+useranulo+"</id_usuario_anulado>\n" ;
-				}else{
-					xmlnota+="<anulado>"+anulada+"</anulado>\n" +
-						"<id_usuario_anulado>0</id_usuario_anulado>\n" ;
-					
-				}
-				if(canceladanota==1){
-					xmlnota+="<cancelado>"+canceladanota+"</cancelado>\n" +
-						"<usuario_cancelo_nota>"+usercancelo+"</usuario_cancelo_nota>\n" ;
-				}else{
-					xmlnota+="<cancelado>"+canceladanota+"</cancelado>\n" +
-						"<usuario_cancelo_nota>0</usuario_cancelo_nota>\n" ;
-				}
-				
-				xmlnota+="<descuentonota>"+lbldescuento.text+"</descuentonota>\n" ;
-				
-				if(Number(Number(mskdescuentopesos.text).toFixed(3))>0)
-					xmlnota+="<descuentopesos>" +Number(mskdescuentopesos.text).toFixed(3)+"</descuentopesos>\n";
-				else
-					xmlnota+="<descuentopesos>0</descuentopesos>\n";
-				
-					xmlnota+="<porcentajerecargo>"+tot_recargo_porc+"</porcentajerecargo>\n" +
-					"<montototalapagar>"+lblTotApagar.text+"</montototalapagar>\n"+
-					"<observaciones>" +this.txtobservaciones.text+"</observaciones>\n" +
-					"<pendiente>"+pendiente+"</pendiente>\n"+
-					"<montoiva>0</montoiva>\n"+
-					"<recargo>"+lbltotalconrecargo.text+"</recargo>\n" +
-					"<fechacompra>"+notas[adgNotas.selectedIndex].fechacompra+"</fechacompra>\n"+					
-					"<fechaentrega>"+notas[adgNotas.selectedIndex].fechaentrega+"</fechaentrega>\n"+
-					"<fecancel>"+notas[adgNotas.selectedIndex].fecancel+"</fecancel>\n"+					
-					"<horacompra>"+notas[adgNotas.selectedIndex].horacompra+"</horacompra>" +
-					"<fechaanulada>"+notas[adgNotas.selectedIndex].fechaanulado+"</fechaanulada>\n"+
-					"<numerodecupon>"+txtnumerocuponpago.text+"</numerodecupon>\n" +
-					"<enefectivo>"+enfectivo+"</enefectivo>\n"+
-					"<detallesnotapedido>\n" ;
-				
-							for(var ii:int=0;ii<arrayDg.length;){
-								
-								if(arrayDg[ii].price==0||arrayDg[ii].countt==0||arrayDg[ii].subtotal==0)
-									ii++;
-									else{
-											porcdescAcum+=Number(Number(arrayDg[ii].porc_desc).toFixed(2));
-											xmlnota+="<itemdetallesnota>\n" +
-												"<cantidad>"+arrayDg[ii].countt+"</cantidad>\n" +
-													"<preciocondescuento>"+arrayDg[ii].prec_descuento+"</preciocondescuento>\n" +
-													"<precio>"+arrayDg[ii].price+"</precio>\n" +
-													"<subtotal>"+Number(arrayDg[ii].subtotal).toFixed(3)+"</subtotal>\n" +									
-													"<entregado>"+entregado+"</entregado>\n" +
-													"<cancelado>"+canceladanota+"</cancelado>\n" +
-													"<anulado>"+anulada+"</anulado>\n" +
-													"<pendiente>"+pendiente+"</pendiente>\n" ;
-											if(desc_resto>0&&Number(arrayDg[ii].porc_desc)>0)
-													xmlnota+="<descuento>0.00</descuento>\n" ;
+										
+										
+										
+										var xmlnota:String="<notapedido>\n" +
+											"<idnota>"+adgNotas.selectedItem.id+"</idnota>\n" +
+											"<vendedor>" +cmbVendedores.selectedItem.id+"</vendedor>\n"+
+											"<personas>\n" +
+												"<id>"+idcliente+"</id>\n" +
+												"<numerodocu>"+nrodocucli+"</numerodocu>\n" +
+											"</personas>\n" +
+											"<tarjetacredito>\n" +
+												"<id_tarjeta>"+cmbTarjetasCreditoDebito.selectedItem.id+"</id_tarjeta>\n" +
+											"</tarjetacredito>\n" +
+											"<porcentaje>\n" +
+												"<id_porcentaje>1</id_porcentaje>\n" +
+											"</porcentaje>\n" +
+											"<montototal>"+lblTotGral.text+"</montototal>\n" +
+											"<anticipo>"+mskAnticipo.text+"</anticipo>\n" +
+											"<anticipoacum>"+anticipo.toFixed(3)+"</anticipoacum>\n" +
+											
+											"<saldo>"+lblsaldo.text+"</saldo>\n" ;
+										if(entregado==1){
+											xmlnota+="<entregado>"+entregado+"</entregado>\n" +
+												"<usuario_entregado>"+cmbVendedores.selectedItem.id+"</usuario_entregado>\n" ;
+										}else{
+											xmlnota+="<entregado>"+entregado+"</entregado>\n" +
+												"<usuario_entregado>0</usuario_entregado>\n" ;
+										}
+										
+										xmlnota+="<usuario_expidio_nota>"+userexpidio+"</usuario_expidio_nota>\n" +
+											"<stockfuturo>"+stockfuturo+"</stockfuturo>\n" ;
+										
+										if(anulada==1){
+											xmlnota+="<anulado>"+anulada+"</anulado>\n" +
+												"<id_usuario_anulado>"+cmbVendedores.selectedItem.id+"</id_usuario_anulado>\n" ;
+										}else{
+											xmlnota+="<anulado>"+anulada+"</anulado>\n" +
+												"<id_usuario_anulado>0</id_usuario_anulado>\n" ;
+											
+										}
+										if(canceladanota==1){
+											xmlnota+="<cancelado>"+canceladanota+"</cancelado>\n" +
+												"<usuario_cancelo_nota>"+cmbVendedores.selectedItem.id+"</usuario_cancelo_nota>\n" ;
+										}else{
+											xmlnota+="<cancelado>"+canceladanota+"</cancelado>\n" +
+												"<usuario_cancelo_nota>0</usuario_cancelo_nota>\n" ;
+										}
+										
+										xmlnota+="<descuentonota>"+lbldescuento.text+"</descuentonota>\n" ;
+										
+										if(Number(Number(mskdescuentopesos.text).toFixed(3))>0)
+											xmlnota+="<descuentopesos>" +Number(mskdescuentopesos.text).toFixed(3)+"</descuentopesos>\n";
+										else
+											xmlnota+="<descuentopesos>0</descuentopesos>\n";
+										
+											xmlnota+="<porcentajerecargo>"+tot_recargo_porc+"</porcentajerecargo>\n" +
+											"<montototalapagar>"+lblTotApagar.text+"</montototalapagar>\n"+
+											"<observaciones>" +this.txtobservaciones.text+"</observaciones>\n" +
+											"<pendiente>"+pendiente+"</pendiente>\n"+
+											"<montoiva>0</montoiva>\n"+
+											"<recargo>"+lbltotalconrecargo.text+"</recargo>\n" +
+											"<fechacompra>"+notas[adgNotas.selectedIndex].fechacompra+"</fechacompra>\n"+					
+											"<fechaentrega>"+notas[adgNotas.selectedIndex].fechaentrega+"</fechaentrega>\n"+
+											"<fecancel>"+notas[adgNotas.selectedIndex].fecancel+"</fecancel>\n"+					
+											"<horacompra>"+notas[adgNotas.selectedIndex].horacompra+"</horacompra>" +
+											"<fechaanulada>"+notas[adgNotas.selectedIndex].fechaanulado+"</fechaanulada>\n"+
+											"<numerodecupon>"+txtNumerodeCuponPagoTarjeta.text+"</numerodecupon>\n" +
+											"<enefectivo>"+enfectivo+"</enefectivo>\n"+
+											"<enefectivoAnticipo>0</enefectivoAnticipo>\n"+
+											"<detallesnotapedido>\n" ;
+										
+													for(var ii:int=0;ii<arrayDg.length;){
+														
+														if(arrayDg[ii].price==0||arrayDg[ii].countt==0||arrayDg[ii].subtotal==0)
+															ii++;
+															else{
+																	porcdescAcum+=Number(Number(arrayDg[ii].porc_desc).toFixed(2));
+																	xmlnota+="<itemdetallesnota>\n" +
+																		"<cantidad>"+arrayDg[ii].countt+"</cantidad>\n" +
+																			"<preciocondescuento>"+arrayDg[ii].prec_descuento+"</preciocondescuento>\n" +
+																			"<precio>"+arrayDg[ii].price+"</precio>\n" +
+																			"<subtotal>"+Number(arrayDg[ii].subtotal).toFixed(3)+"</subtotal>\n" +									
+																			"<entregado>"+entregado+"</entregado>\n" +
+																			"<cancelado>"+canceladanota+"</cancelado>\n" +
+																			"<anulado>"+anulada+"</anulado>\n" +
+																			"<pendiente>"+pendiente+"</pendiente>\n" ;
+																	if(desc_resto>0&&Number(arrayDg[ii].porc_desc)>0)
+																			xmlnota+="<descuento>0.00</descuento>\n" ;
+																	else
+																			xmlnota+="<descuento>"+Number(arrayDg[ii].porc_desc).toFixed(2)+"</descuento>\n" ;
+																			xmlnota+="<iva>0</iva>\n" +
+																			"<id_nota>"+arrayDg[ii].idnota+"</id_nota>\n" +
+																			"<id_producto>"+arrayDg[ii].id+"</id_producto>\n" +
+																			"</itemdetallesnota>\n" ;
+																		ii++
+																}								
+													}
+										
+										
+										
+										xmlnota+= "</detallesnotapedido>\n" ;
+											if(porcdescAcum>0)
+												xmlnota+="<porc_descuento_total>"+Number(porcdescAcum).toFixed(2)+"</porc_descuento_total>\n" ;
 											else
-													xmlnota+="<descuento>"+Number(arrayDg[ii].porc_desc).toFixed(2)+"</descuento>\n" ;
-													xmlnota+="<iva>0</iva>\n" +
-													"<id_nota>"+arrayDg[ii].idnota+"</id_nota>\n" +
-													"<id_producto>"+arrayDg[ii].id+"</id_producto>\n" +
-													"</itemdetallesnota>\n" ;
-												ii++
-										}								
-							}
-				
-				
-				
-				xmlnota+= "</detallesnotapedido>\n" ;
-					if(porcdescAcum>0)
-						xmlnota+="<porc_descuento_total>"+Number(porcdescAcum).toFixed(2)+"</porc_descuento_total>\n" ;
-					else
-						xmlnota+="<porc_descuento_total>"+Number(txtdescuento.text).toFixed(2)+"</porc_descuento_total>\n" ;
-					
-				
-				return xmlnota+="</notapedido>\n";
-				
-				
-			}	
+												xmlnota+="<porc_descuento_total>"+Number(txtdescuento.text).toFixed(2)+"</porc_descuento_total>\n" ;
+											
+										
+										return xmlnota+="</notapedido>\n";
+										
+				//}				
+										
+			}
 			//****************************************************************************************************
 			private function addadglistpedprod(idprod:String,codigoId:String,idnota:String,txtprecio:String,cantidad:String,descripcion:String,desc_porc:String):void{
 				
@@ -1802,7 +1776,7 @@
 				arrayDg.source=dp;
 				arrayDg.refresh();
 				//-------------------------------------------------------------------------
-				btnremover.enabled=true;
+				btnRemover.enabled=true;
 				
 				adglistpedprod.dataProvider=arrayDg;
 				lblTotGral.text=totGral.toFixed(3);
@@ -1946,10 +1920,10 @@
 				txtpreciop.text="";
 				mskcantidad.text="";
 				mskrecargo.text="0.0";
-				mskanticipo.text="0";
+				mskAnticipo.text="0";
 				mskdescuentopesos.text="0.0";
-				mskanticipo.text="0.0";
-				btnremover.enabled=false;
+				mskAnticipo.text="0.0";
+				btnRemover.enabled=false;
 				lblTotApagar.text="0.000";
 				lblTotGral.text="0.000";
 				porc_d=0;
@@ -1962,7 +1936,7 @@
 				anticipo=0;
 				useranulo=0;
 				
-				userentrego=0;
+				userEntrego=0;
 				usercancelo=0;
 				userexpidio=0;
 				nrodocucli=0;
@@ -1986,12 +1960,12 @@
 				
 				PopUpManager.centerPopUp(popup);
 			}
-			protected function operation1_faultGetRecord(event:FaultEvent):void
+			protected function faultSearchAllProducts(event:FaultEvent):void
 			{
 				Alert.show("Error al Conectar al Servidor!!!");
 				
 			}
-			protected function operation1_resulGetRecord(event:ResultEvent):void
+			protected function operationResultSearchAllProduct(event:ResultEvent):void
 			{
 				
 				if(String(event.result.toString())=="LA CONSULTA NO ARROJÓ RESULTADOS")
@@ -2082,16 +2056,16 @@
 											precio_desc=0;
 											txtdescuento.text="0.000";
 											useranulo=0;
-											userentrego=0;
+											userEntrego=0;
 											usercancelo=0;
 											userexpidio=0;
 											txtpreciop.text="";
 											mskcantidad.text="";
 											mskrecargo.text="0.0";
-											btnremover.enabled=false;
+											btnRemover.enabled=false;
 											lblTotApagar.text="0.000";
 											lblTotGral.text="0.000";
-											mskanticipo.text="0.0";
+											mskAnticipo.text="0.0";
 											mskdescuentopesos.text="0.0";
 											
 											mskrecargo.text="0.000";
@@ -2200,45 +2174,33 @@
 				
 			}
 			
-			protected function operation5_resultHandler(event:ResultEvent):void
+			protected function operationSelectOneNota(event:ResultEvent):void
 			{
 				
-				if(event.result.toString().indexOf("Error no paso nada")!=-1)
+				if(event.result.toString().indexOf("Error no paso nada")!=-1){
 					Alert.show("LA CONSULTA NO ARROJÓ RESULTADOS!!!");
-					
-				else{
-					if(event.result.toString().indexOf("nota no encontrada")!=-1)
+				}else{
+					if(event.result.toString().indexOf("nota no encontrada")!=-1){
 						Alert.show("NOTA DE PEDIDO NO ENCONTRADA!!!");
-					else{
-						if(event.result.toString().indexOf("No se puede realizar la operacion de Actualizacion o Borrado")!=-1)
+					}else{
+						if(event.result.toString().indexOf("No se puede realizar la operacion de Actualizacion o Borrado")!=-1){
 							Alert.show("NO SE PUEDE REALIZAR\n LA OPERACION DE ACTUALIZACIÓN O BORRADO!!!");
-						else{
-							
+						}else{
 							xmlNotas=new XMLList(event.result);
-							
 							addgrid();
-							
 							btnRegargarlistado.enabled=true;
 							limpiarGrids();
 							limpiarControlesVarios();
 							adgNotas.selectedIndex=0;
 							adgNotas.validateNow();
 							addinfo();
-							
-							
-							
-						
-						
 						}
 						
-					
 					}
-					
 				}
-				
 			}
 			
-			protected function operation5_faultHandler(event:FaultEvent):void
+			protected function operationOneNotaFault(event:FaultEvent):void
 			{
 				Alert.show("Error al recargar notas de pedido");
 				
@@ -2248,7 +2210,7 @@
 				
 				if(adgNotas.selectedItem.id>0){
 					
-					var source:String="http://localhost:8080/WebMelanie2/ShowReportNotaPedido?nronota="+adgNotas.selectedItem.id;
+					var source:String="http://192.168.1.100:8080/WebMelanie2/ShowReportNotaPedido?nronota="+adgNotas.selectedItem.id;
 					
 					var urlReq:URLRequest= new URLRequest(source);
 					navigateToURL(urlReq,"_blank");
@@ -2261,7 +2223,7 @@
 			protected function verificoVendedorConSuPassword():Boolean{
 			var b:Boolean=false;
 				
-				if(cmbVendedores.text.length>0){
+				
 					
 					for(var i:int=0;i<empleadoslist.length;i++){
 						if(cmbVendedores.selectedItem.nameuser==empleadoslist[i].nameuser&&txtpassword.text==empleadoslist[i].clave){
@@ -2275,9 +2237,8 @@
 					if(b)
 						return true;
 					else
-						Alert.show("   Datos Incorrectos!   ");
-				}else
-					Alert.show(" Debe ingresar un Vendedor con su clave personal ");
+						Alert.show("Datos Incorrectos!");
+				
 				
 			return b;
 			}
@@ -2286,19 +2247,28 @@
 				var b:Boolean=false;
 				
 				
-				if(adgNotas.selectedItem.id>0){
-						if(rdbentregadosi.selected==true){
-							if(verificoVendedorConSuPassword())
-									wsnotas.entregarNotaPedido(adgNotas.selectedItem.id,cmbVendedores.selectedItem.id,1);
-						}else{						
-								if(rdbentregadono.selected==true){
-									if(verificoVendedorConSuPassword())
-										wsnotas.entregarNotaPedido(adgNotas.selectedItem.id,cmbVendedores.selectedItem.id,0);
+								if(adgNotas.selectedItem.id>0){
+										if(int(notas[adgNotas.selectedIndex].entregado)==1&&rdbentregadosi.selected==true){
+											Alert.show("LA NOTA DE PEDIDO "+notas[adgNotas.selectedIndex].id+" YA FUE ENTREGADA");
+										}else{
+											if(verificarEntregaNoCancelada()){
+											  if(cmbVendedores.text.length==0||txtpassword.text.length==0){
+													Alert.show("Debe seleccionar un vendedor con su clave!");  
+											  }else{
+														if(verificoVendedorConSuPassword()){
+																	wsnotas.entregarNotaPedido(getDatosXML(),1);
+														}else{						
+																if(rdbentregadono.selected==true){
+																	if(verificoVendedorConSuPassword())
+																		wsnotas.entregarNotaPedido(getDatosXML(),0);
+																}
+														}
+											  }
+											}
+										}
+								}else{
+									Alert.show(" Debe seleccionar una nota en la grilla ");
 								}
-						}
-				}else
-					Alert.show(" Debe seleccionar una nota en la grilla ");
-				
 				
 				
 					
@@ -2306,7 +2276,15 @@
 					
 			}
 			
-			protected function operation6_resultHandler(event:ResultEvent):void
+			protected function verificarEntregaNoCancelada():Boolean{
+				if(rdbentregadosi.selected==true&&int(notas[adgNotas.selectedIndex].cancelado)==0){
+						Alert.show("No se puede entregar una nota de pedido que no está cancelada o saldada!");	
+						return false;
+				}else{
+					return true;
+				}			
+			}
+			protected function operacionEntregarNotaHandler(event:ResultEvent):void
 			{var result:int=event.result.toString();
 				cmbVendedores.text="";
 				txtpassword.text="";
@@ -2318,6 +2296,12 @@
 						Alert.show("ERROR EN EL SERVIDOR, VERIFIQUE");
 						break;
 					}
+						case 0:{
+							Alert.show("NOTA YA ENTREGADA");
+							wsnotas.getRecorCountNotas();
+							//limpiarControles();
+							break;
+						}
 						
 					default:
 					{
@@ -2331,27 +2315,31 @@
 				
 			}
 			
-			protected function operation6_faultHandler(event:FaultEvent):void
+			protected function operacionFaultEntregaNotaHandler(event:FaultEvent):void
 			{
 				Alert.show("   ERROR AL EJECUTAR ENTREGA DE NOTA DE PEDIDO   ");
 			}
 			
-			protected function operation7_resultHandler(event:ResultEvent):void
+			protected function anularHandler(event:ResultEvent):void
 			{
-				var anulado:int=event.result.toString();
+				var numeroNotaAnulada:int=event.result.toString();
 				cmbVendedores.text="";
 				txtpassword.text="";
-				switch(anulado)
+				switch(numeroNotaAnulada)
 				{
 					case -1:
 					{
 						Alert.show("Error al anular nota de pedido, verifique");
 						break;
 					}
-						
+					case 0:
+					{
+						Alert.show("La nota ya fue anulada!");
+						break;
+					}						
 					default:
 					{
-						Alert.show("NOTA DE PEDIDO "+anulado+" CAMBIO DE ESTADO ANULADO");
+						Alert.show("NOTA DE PEDIDO "+numeroNotaAnulada+" CAMBIO DE ESTADO\n                         ANULADO");
 						wsnotas.getRecorCountNotas();
 						break;
 					}
@@ -2359,12 +2347,12 @@
 				
 			}
 			
-			protected function operation7_faultHandler(event:FaultEvent):void
+			protected function anularFaultHandler(event:FaultEvent):void
 			{
 				Alert.show("Error al anular nota de pedido");
 			}
 			
-			protected function operation8_resultHandler(event:ResultEvent):void
+			protected function cancelarHandler(event:ResultEvent):void
 			{
 				var cancelado:int=event.result.toString();
 				cmbVendedores.text="";
@@ -2373,7 +2361,17 @@
 				{
 					case -1:
 					{
-					Alert.show("Error al cancelar nota verifique");
+					Alert.show("Error al cancelar nota verifique!");
+						break;
+					}
+					case 0:
+					{
+						Alert.show("La nota ya fue cancelada!");
+						break;
+					}
+					case -3:
+					{
+						Alert.show("La nota no está saldada aún!");
 						break;
 					}
 						
@@ -2387,25 +2385,101 @@
 				
 			}
 			
-			protected function operation8_faultHandler(event:FaultEvent):void
+			protected function cancelarHandlerFault(event:FaultEvent):void
 			{
 				Alert.show("Error al cancelar nota de pedido");
 			}
 			
-			protected function button1_clickHandler(event:MouseEvent):void
+			protected function buttonCancelarHandler(event:MouseEvent):void
 			{
+				if(int(notas[adgNotas.selectedIndex].cancelado)==1&&rdbcanceladanotasi.selected==true){
+					Alert.show("LA NOTA DE PEDIDO "+notas[adgNotas.selectedIndex].id+" YA FUE CANCELADA");
+				}else{				
+					if(int(lblsaldo.text)>0){
+						Alert.show("   La nota "+notas[adgNotas.selectedIndex].id+" no está saldada!!!");
+					}else{
+						tratarCancelaNota();
+					}
+				}
+			}
 				
+			protected function tratarCancelaNota():void{
+				var b:Boolean=false;				
+				
+				if(adgNotas.selectedItem.id>0){
+					if(int(notas[adgNotas.selectedIndex].anulado)==1){
+						Alert.show("LA NOTA DE PEDIDO "+notas[adgNotas.selectedIndex].id+" ESTÁ ANULADA CAMBIE DE ESTADO PARA PODER CANCELAR Y/O ENTREGAR");
+					}else{
+						if(cmbVendedores.text.length==0||txtpassword.text.length==0){
+							Alert.show("Debe seleccionar un vendedor y poner su clave!");
+						}else{
+							if(rdbcanceladanotasi.selected==true){
+								if(verificoVendedorConSuPassword()){
+										if(verificarSeleccionComboTarjetaYNumero()()){
+										
+										}
+										wsnotas.cancelarNotaPedido(getDatosXML(),1);									
+								}else{						
+									if(rdbcanceladanotano.selected==true){
+										if(verificoVendedorConSuPassword()){
+											wsnotas.cancelarNotaPedido(getDatosXML(),0);
+										}
+									}
+								}
+							}
+						}
+					}
+				}else{
+					Alert.show("Debe seleccionar una nota en la grilla");
+				}
+			}
+		/*			if(int(notas[adgNotas.selectedIndex].anulado)==1){
+						Alert.show("LA NOTA DE PEDIDO "+notas[adgNotas.selectedIndex].id+" ESTÁ ANULADA CAMBIE DE ESTADO PARA PODER CANCELAR Y/O ENTREGAR");
+					}else{						
+							if(cmbVendedores.text.length==0||txtpassword.text.length==0){
+								Alert.show("Debe seleccionar un vendedor y poner su clave!");
+							}else{
+											if(rdbcanceladanotasi.selected==true){
+														if(verificoVendedorConSuPassword()){
+																	if(Number(mskAnticipo.text)>0||anticipo>0){
+																		calculeAnticipo();	
+																	}else{
+																		wsnotas.cancelarNotaPedido(adgNotas.selectedItem.id,cmbVendedores.selectedItem.id,1,anticipo);
+																	}
+														}else{						
+															if(rdbcanceladanotano.selected==true){
+																		if(verificoVendedorConSuPassword()){
+																			wsnotas.cancelarNotaPedido(adgNotas.selectedItem.id,cmbVendedores.selectedItem.id,0,anticipo);
+																		}
+															}
+													}
+											}
+				
+				}else{
+					  Alert.show("Debe seleccionar una nota en la grilla");
+				}
+			}*/
+			protected function buttonAnularHandler(event:MouseEvent):void
+			{
 				var b:Boolean=false;
 				
 				
 				if(adgNotas.selectedItem.id>0){
-					if(rdbcanceladanotasi.selected==true){
-						if(verificoVendedorConSuPassword())
-							wsnotas.cancelarNotaPedido(adgNotas.selectedItem.id,cmbVendedores.selectedItem.id,1);
-					}else{						
-						if(rdbcanceladanotano.selected==true){
-							if(verificoVendedorConSuPassword())
-								wsnotas.cancelarNotaPedido(adgNotas.selectedItem.id,cmbVendedores.selectedItem.id,0);
+					if(int(notas[adgNotas.selectedIndex].anulado)==1&&rdbAnuladasi.selected==true){
+						Alert.show("LA NOTA DE PEDIDO "+notas[adgNotas.selectedIndex].id+" YA FUE ANULADA!");
+					}else{
+						if(cmbVendedores.text.length==0||txtpassword.text.length==0){
+							Alert.show("Debe seleccionar un vendedor y poner su clave!"); 
+						}else{
+								if(rdbAnuladasi.selected==true){
+									if(verificoVendedorConSuPassword())
+										wsnotas.anularNotaPedido(getDatosXML(),1);
+								}else{						
+									if(rdbAnuladano.selected==true){
+										if(verificoVendedorConSuPassword())
+											wsnotas.anularNotaPedido(getDatosXML(),0);
+									}
+								}
 						}
 					}
 				}else
@@ -2413,27 +2487,7 @@
 				
 			}
 			
-			protected function button2_clickHandler(event:MouseEvent):void
-			{
-				var b:Boolean=false;
-				
-				
-				if(adgNotas.selectedItem.id>0){
-					if(rdanuladasi.selected==true){
-						if(verificoVendedorConSuPassword())
-							wsnotas.anularNotaPedido(adgNotas.selectedItem.id,cmbVendedores.selectedItem.id,1);
-					}else{						
-						if(rdanuladano.selected==true){
-							if(verificoVendedorConSuPassword())
-								wsnotas.anularNotaPedido(adgNotas.selectedItem.id,cmbVendedores.selectedItem.id,0);
-						}
-					}
-				}else
-					Alert.show("Debe seleccionar una nota en la grilla");
-				
-			}
-			
-			protected function operation9_resultHandler(event:ResultEvent):void
+			protected function actualizarHandlerNota(event:ResultEvent):void
 			{
 				var result:int=int(event.result.toString());
 				PopUpManager.removePopUp(popup);
@@ -2469,6 +2523,22 @@
 						Alert.show("  ERROR DATOS NO ENVIADOS PARA ACTUALIZAR   ");
 						break;
 					}	
+					case -10:{
+						Alert.show("  LA NOTA DE PEDIDO YA SE ENCUENTRA ANULADA   ");
+						break;
+					}	
+					case -11:{
+						Alert.show("  LA NOTA DE PEDIDO YA SE ENCUENTRA ENTREGADA   ");
+						break;
+					}
+					case -12:{
+						Alert.show("  LA NOTA DE PEDIDO YA SE ENCUENTRA CANCELADA   ");
+						break;
+					}
+					case -13:{
+						Alert.show("  LA NOTA DE PEDIDO TIENE QUE ESTAR CANCELADA O SALDADA ANTES DE SER ENTREGADA   ");
+						break;
+					}	
 						
 					default:
 					{
@@ -2483,30 +2553,75 @@
 				
 			}
 			
-			protected function operation9_faultHandler(event:FaultEvent):void
+			protected function falloActualizarHandlerNota(event:FaultEvent):void
 			{
 				PopUpManager.removePopUp(popup);
 				Alert.show("Error al actualizarNota "+event.fault.toString());
 			}
 			protected function btnactualizarNotaEvent():void{
-				if(String(notas[adgNotas.selectedIndex].fechaentrega).length>0){
-					if(String(notas[adgNotas.selectedIndex].fechacompra).length>0){
-						
-						if(adgNotas.selectedIndex>-1&&idnota==int(notas[adgNotas.selectedIndex].id)){
-							if(txtpassword.text.length>0){
-								
-								Alert.show("   Desea Guardar Nota De Pedido Actual?","Confirmar Operación  ", Alert.YES | Alert.NO, this, actualizarNota, null, Alert.NO);
-								
-								
-							}else
-								Alert.show("El password del empleado no es correcto");
-						}else
-							Alert.show("SELECCIONE LA NOTA CORRESPONDIENTE");
-					}else
-						Alert.show("Falta la fecha de compra");
-				}else
-					Alert.show("Falta la fecha de entrega");
+				
+				
+				/*if(int(notas[adgNotas.selectedIndex].anulado)==0){
+					rdbAnuladano.selected=true;								
+				}else{
+					rdbAnuladasi.selected=true;
+				}
+				
+				if(int(notas[adgNotas.selectedIndex].cancelado)==0){
+					rdbcanceladanotano.selected=true;							
+				}else{
+					rdbcanceladanotasi.selected=true;
+				}
+				
+				if(int(notas[adgNotas.selectedIndex].entregado)==0){
+					rdbentregadono.selected=true;
+				}else{							
+					rdbentregadosi.selected=true;
+				}*/
+				if(verificarSeleccionComboTarjetaYNumero()){
+								if(verificarEntregaNoCancelada()){
+												if((int(notas[adgNotas.selectedIndex].entregado)==1&&rdbentregadosi.selected==true)){
+													Alert.show("LA NOTA DE PEDIDO "+notas[adgNotas.selectedIndex].id+" YA FUE ENTREGADA!");
+												}else{									
+														if(int(notas[adgNotas.selectedIndex].anulado)==1&&rdbAnuladasi.selected==true){
+															Alert.show("LA NOTA DE PEDIDO "+notas[adgNotas.selectedIndex].id+" YA FUE ANULADA!");
+														}else{
+														if(String(notas[adgNotas.selectedIndex].fechaentrega).length>0){
+															
+															if(String(notas[adgNotas.selectedIndex].fechacompra).length>0){
+																
+																if(adgNotas.selectedIndex>-1&&idnota==int(notas[adgNotas.selectedIndex].id)){
+																	if(txtpassword.text.length>0){
+																		
+																		Alert.show("   Desea Guardar Nota De Pedido Actual?","Confirmar Operación  ", Alert.YES | Alert.NO, this, actualizarNota, null, Alert.NO);
+																		
+																		
+																	}else{
+																		Alert.show("El password del empleado no es correcto");
+																	}
+																}else{
+																	Alert.show("SELECCIONE LA NOTA CORRESPONDIENTE");
+																}
+															}else{
+																Alert.show("Falta la fecha de compra");
+															}
+														}else{
+															Alert.show("Falta la fecha de entrega");
+														}
+													}								
+												}
+								}
 			
+					}else{
+						Alert.show("Falta seleccionar Tarjeta de Crédito, numero de cupón \n o cambiar estado de anticipo en efectívo!");	
+					}
+			}
+			protected function verificarSeleccionComboTarjetaYNumero():Boolean{
+				if(String(cmbTarjetasCreditoDebito.selectedItem.descripcion).length>0&&txtNumerodeCuponPagoTarjeta.text.length>0&&chkEfectivo.enabled==false){
+					return true;
+				}else{
+					return false;
+				}
 			}
 			protected function btnactualizarNota_clickHandler(evt:MouseEvent):void
 			{
@@ -2514,6 +2629,7 @@
 							btnactualizarNotaEvent();
 				
 			}
+			
 			protected function actualizarNota(evt:CloseEvent):void
 			{
 				
@@ -2556,24 +2672,20 @@
 				lblvendedocancelo.text="";
 				lblvendedoranulo.text="";
 				lblvendedorentrego.text"";
-				mskrecargo.text="";
-				
+				mskrecargo.text="";				
 				totGralDesc=0;
 				precio_desc=0;
-				txtdescuento.text="0.0";
-				
+				txtdescuento.text="0.0";				
 				mskrecargo.text="0.0";
-				
-				
 				mskdescuentopesos.text="0.0";
-				mskanticipo.text="0.0";
+				mskAnticipo.text="0.0";
 				mskcantidad.text="";			
 				txtobservaciones.text="";
 				nrodocucli=0;
-				btnremover.enabled=false;
+				btnRemover.enabled=false;
 				btnEliminarNota.enabled=false;
 				useranulo=0;
-				userentrego=0;
+				userEntrego=0;
 				usercancelo=0;
 				userexpidio=0;
 				
@@ -2698,7 +2810,7 @@
 			}
 			
 			
-			protected function operation10_resultHandler(event:ResultEvent):void
+			protected function checkPassHandlerEmployee(event:ResultEvent):void
 			{
 				var chkpasswordEmployeee:String = event.result.toString();
 				
@@ -2732,10 +2844,15 @@
 				}
 			}
 			
-			protected function operation10_faultHandler(event:FaultEvent):void
+			protected function checkPassFaultEmployee(event:FaultEvent):void
 			{
 				// TODO Auto-generated method stub
 				Alert.show("Error al chequear las claves del Empleado.");
+			}
+			
+			protected function chkEfectivo_clickHandler(event:MouseEvent):void
+			{
+				Alert.show(String(chkEfectivo.selected));
 			}
 			
 		]]>
@@ -2748,30 +2865,30 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:ArrayCollection id="arrayDg"/>
 		<s:DateTimeFormatter id="dtf" dateTimePattern="dd/MM/yyyy"/>
-		<s:WebService id="wsnotas" wsdl="http://localhost:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wsnotas" wsdl="http://192.168.1.100:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true">
 			<s:operation name="actualizarNotaPedido"
-						 result="operation9_resultHandler(event)"
-						 fault="operation9_faultHandler(event)">
+						 result="actualizarHandlerNota(event)"
+						 fault="falloActualizarHandlerNota(event)">
 				
 			</s:operation>
 			<s:operation name="cancelarNotaPedido"
-						 result="operation8_resultHandler(event)"
-						 fault="operation8_faultHandler(event)">
+						 result="cancelarHandler(event)"
+						 fault="cancelarHandlerFault(event)">
 				
 			</s:operation>
 			<s:operation name="anularNotaPedido"
-						 result="operation7_resultHandler(event)"
-						 fault="operation7_faultHandler(event)">
+						 result="anularHandler(event)"
+						 fault="anularFaultHandler(event)">
 				
 			</s:operation>
 			<s:operation name="entregarNotaPedido"
-						 result="operation6_resultHandler(event)"
-						 fault="operation6_faultHandler(event)">
+						 result="operacionEntregarNotaHandler(event)"
+						 fault="operacionFaultEntregaNotaHandler(event)">
 				
 			</s:operation>
 			<s:operation name="getRecorCountNotas"
-						 result="operation1_resultHandler(event)"
-						 fault="operation1_faultHandler(event)">
+						 result="getRecordCountNotasHandler(event)"
+						 fault="getFaultRecordCountHandler(event)">
 				
 			</s:operation>
 			<s:operation name="selectAllNotas"
@@ -2780,13 +2897,13 @@
 				
 			</s:operation>
 			<s:operation name="verNotasPedidoPaginadas"
-						 result="operation3_resultHandler(event)"
-						 fault="operation3_faultHandler(event)">
+						 result="resultPaginadoHandler(event)"
+						 fault="faultPaginadoHandler(event)">
 				
 			</s:operation>
 			<s:operation name="selectUnaNota"
-						 result="operation5_resultHandler(event)"
-						 fault="operation5_faultHandler(event)"
+						 result="operationSelectOneNota(event)"
+						 fault="operationOneNotaFault(event)"
 				/>
 			<s:operation name="eliminarNotaDePedido"
 						 result="result_deleteNote(event)"
@@ -2795,30 +2912,30 @@
 			</s:operation>
 				
 		</s:WebService>
-		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
+		<s:WebService id="wsempleados" wsdl="http://192.168.1.100:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
 			<s:operation name="selectAllEmpleados"
-						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
-						 result="operation2_resultHandlerSelectAllEmpleados(event)">
+						 fault="selectHandlerAllEmploye(event)"
+						 result="faultAllEmploye(event)">
 				
 			</s:operation>
 			<s:operation name="checkPassEmployee"
-						 result="operation10_resultHandler(event)"
-						 fault="operation10_faultHandler(event)">
+						 result="checkPassHandlerEmployee(event)"
+						 fault="checkPassFaultEmployee(event)">
 				
 			</s:operation>
 		</s:WebService>
 		<s:WebService id="wstarjetascreditodebito" 
-					  wsdl="http://localhost:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
+					  wsdl="http://192.168.1.100:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
 					  >
 			<s:operation name="searchAllTarjetasCreditoDebito" result="operation4_resultHandler(event)" fault="operation4_faultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
-		<s:WebService id="productosWs" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?wsdl"
+		<s:WebService id="productosWs" wsdl="http://192.168.1.100:8080/ServiceProductos/ProductosWs?wsdl"
 					  showBusyCursor="true">
 			<s:operation name="searchAllProductos"
-						 fault="operation1_faultGetRecord(event)"
-						 result="operation1_resulGetRecord(event)">
+						 fault="faultSearchAllProducts(event)"
+						 result="operationResultSearchAllProduct(event)">
 				
 			</s:operation>
 		</s:WebService>
@@ -2895,7 +3012,7 @@
 			 verticalAlign="bottom"/>
 	<s:TextArea id="txtobservaciones" x="384" y="201" width="845" height="79" maxChars="32000"/>
 	
-	<mx:AdvancedDataGrid id="adglistpedprod" x="7" y="283" width="809" height="129"
+	<mx:AdvancedDataGrid id="adglistpedprod" x="7" y="283" width="886" height="129"
 						 alternatingItemColors="[#adf1f5, white]"
 						editable="item group summary"	
 						 designViewDataType="flat" doubleClickEnabled="true" 
@@ -2930,33 +3047,33 @@
 			<mx:AdvancedDataGridColumn  visible="false" dataField="idnota"/>
 		</mx:columns>
 	</mx:AdvancedDataGrid>
-	<s:Label x="509" y="442" color="#062C6C" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="583" y="432" color="#062C6C" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL GENERAL $:" verticalAlign="top"/>
-	<s:Label id="lblTotGral" x="678" y="440" width="124" color="#062C6C" fontFamily="Verdana"
+	<s:Label id="lblTotGral" x="752" y="430" width="124" color="#062C6C" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
-	<s:Label x="513" y="478" color="#06820F" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="587" y="468" color="#06820F" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL A PAGAR $:"/>
-	<s:Label id="lblTotApagar" x="675" y="477" width="127" color="#06820F" fontFamily="Verdana"
+	<s:Label id="lblTotApagar" x="749" y="467" width="127" color="#06820F" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
-	<s:Label x="482" y="459" width="200" height="14" color="#F84B07" fontFamily="Verdana"
+	<s:Label x="556" y="449" width="200" height="14" color="#F84B07" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="DESCUENTO TOTAL $:"/>
-	<s:Label id="lbldescuento" x="677" y="459" width="125" color="#F84B07" fontFamily="Verdana"
+	<s:Label id="lbldescuento" x="751" y="449" width="125" color="#F84B07" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label x="457" y="498" width="223" color="#04667F" fontFamily="Verdana" fontSize="16"
+	<s:Label x="531" y="488" width="223" color="#04667F" fontFamily="Verdana" fontSize="16"
 			 fontWeight="bold" text="TOTAL CON RECARGO $:" textAlign="right"/>
-	<s:Label x="457" y="516" width="223" color="#89908D" fontFamily="Verdana" fontSize="16"
+	<s:Label x="531" y="506" width="223" color="#89908D" fontFamily="Verdana" fontSize="16"
 			 fontWeight="bold" text="SALDO $:" textAlign="right"/>
-	<s:Label id="lbltotalconrecargo" x="678" y="496" width="124" color="#04667F" fontFamily="Verdana"
+	<s:Label id="lbltotalconrecargo" x="752" y="486" width="124" color="#04667F" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label id="lblsaldo" x="678" y="515" width="124" color="#89908D" fontFamily="Verdana"
+	<s:Label id="lblsaldo" x="752" y="505" width="124" color="#89908D" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label x="570" y="542" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="RECARGO %:"
+	<s:Label x="567" y="542" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="RECARGO %:"
 			 textAlign="right"/>
 	<controls:MaskedTextInput id="mskrecargo" x="679" y="534" width="74" fontFamily="Verdana" text="0.000" maxChars="5"
 							  fontSize="16" restrict="0-9." toolTip="Ingresa un Porcentaje de recargo total para los productos cargados, para poder realizar el calculo debe presionar la tecla Enter"/>
-	<s:Label x="574" y="571" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="ANTICIPO $:"
-			 textAlign="right"/>
-	<controls:MaskedTextInput text="0.000" maxChars="5" id="mskanticipo" x="679" y="563" width="74" fontFamily="Verdana"
+	<s:Label x="554" y="571" width="123" fontFamily="Verdana" fontSize="16" fontWeight="normal"
+			 text="ANTICIPO $:" textAlign="right"/>
+	<controls:MaskedTextInput text="0.000" maxChars="6" id="mskAnticipo" x="679" y="563" width="74" fontFamily="Verdana"
 							  fontSize="16" restrict="0-9." toolTip="Calcula el anticipo, para poder realizar el calculo debe presionar la tecla Enter"/>
 	<s:Label x="8" y="200" fontFamily="Verdana" fontSize="16" text="Producto:"/>
 	<s:Label x="14" y="230" fontFamily="Verdana" fontSize="16" text="Precio $:"/>
@@ -2969,16 +3086,16 @@
 							 dropDownRowCount="10" fontSize="16" fontWeight="bold"
 							 labelField="descripcion" matchType="beginning" tabEnabled="false">
 	</components:AutoComplete>
-	<s:Button id="btnremover" x="7" y="417" width="153" height="40" label="Remover Todo"
-			  click="btnremover_clickHandler(event)" enabled="false" fontSize="16"
+	<s:Button id="btnRemover" x="7" y="417" width="153" height="40" label="Remover Todo"
+			  click="btnRemover_clickHandler(event)" enabled="false" fontSize="16"
 			  toolTip="Elimina todos Los productos del Listado!!!"/>
 	<s:Button id="brncargarunproducto" x="7" y="459" width="153" height="38" label="Cargar Producto"
 			  click="brncargarunproducto_clickHandler(event)" fontSize="16"
 			  toolTip="Muestra una Ventana para cargar un Producto"/>
 	<s:Label x="202" y="265" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
 	<controls:MaskedTextInput text="0.00" maxChars="5" x="318" y="257" width="60" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingresa un porcentaje de descuento, aplicable a todos los productos de la planilla"/>
-	<s:Label x="824" y="392" fontSize="16" fontWeight="bold" text="EMPLEADOS:"/>
-	<components:AutoComplete id="cmbVendedores" x="824" y="407" width="261" allowDuplicates="false"
+	<s:Label x="902" y="392" fontSize="16" fontWeight="bold" text="EMPLEADOS:"/>
+	<components:AutoComplete id="cmbVendedores" x="902" y="407" width="261" allowDuplicates="false"
 							 dropDownRowCount="10" fontFamily="Verdana" fontSize="16"
 							 fontWeight="bold" labelField="nameuser" matchType="beginning"
 							 prompt="Seleccione un Empleado...">
@@ -2993,30 +3110,30 @@
 	<s:Label x="1022" y="143" fontSize="14" fontWeight="bold" text="Nota anulada"/>
 	<s:VGroup x="1021" y="155" width="39" height="44">
 	</s:VGroup>
-	<s:Label x="824" y="446" fontFamily="Arial" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
-	<s:TextInput id="txtpassword" x="825" y="467" width="260" displayAsPassword="true"
+	<s:Label x="902" y="446" fontFamily="Arial" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
+	<s:TextInput id="txtpassword" x="903" y="467" width="260" displayAsPassword="true"
 				 fontFamily="Verdana" fontSize="16" fontStyle="italic"
-				 prompt="Ingresar clave de vendedor..." maxChars="15" skinClass="spark.skins.spark.TextInputSkin" restrict="[a-zA-Z0-9_-]" enter="txtpassword_enterHandler(event)"/>
-	<s:Button id="btnguardarentregada" x="1065" y="43" width="91" height="33" label="Entregar"
+				 prompt="Ingresar clave de vendedor..." maxChars="8" skinClass="spark.skins.spark.TextInputSkin" restrict="[a-zA-Z0-9_-*!#$%/()=?]" enter="txtpassword_enterHandler(event)"/>
+	<s:Button id="btnEntregarNota" x="1065" y="43" width="91" height="33" label="Entregar"
 			  click="btnguardarentregada_clickHandler(event)" fontSize="16"
 			  toolTip="Almacena el estado de Entregado de la Nota de Pedido Seleccionada"/>
-	<s:Button x="1066" y="97" width="90" height="33" label="Cancelar"
-			  click="button1_clickHandler(event)" fontSize="16"
+	<s:Button id="btnCancelarNota" x="1066" y="97" width="90" height="33" label="Cancelar"
+			  click="buttonCancelarHandler(event)" fontSize="16"
 			  toolTip="Cambia el estado cancelada de la Nota de Pedido Seleccionada"/>
-	<s:Button x="1067" y="159" width="88" height="33" label="Anular"
-			  click="button2_clickHandler(event)" fontSize="16"
+	<s:Button id="btnAnularNota" x="1067" y="159" width="88" height="33" label="Anular"
+			  click="buttonAnularHandler(event)" fontSize="16"
 			  toolTip="Cambia el estado de anulada de la Nota de Pedido Seleccionada"/>
-	<components:AdvancedAutoComplete id="cmbTarjetasCreditoDebito" prompt="Seleccione una Tarjeta de Crédito..." x="823" y="300" width="295"
+	<components:AdvancedAutoComplete id="cmbTarjetasCreditoDebito" prompt="Seleccione una Tarjeta de Crédito..." x="901" y="300" width="295"
 									 fontSize="16" labelField="descripcion"
 									 toolTip="Seleccione una Tarjeta de Crédito o Débito si el cliente utiliza esta forma de pago!!!">
 	</components:AdvancedAutoComplete>
-	<s:Label x="823" y="288" fontSize="14" fontWeight="bold" text="Tarjetas de Crédito / Débito" toolTip="Seleccione si o no para registrar que la nota de pedido fue entregada al Cliente"/>
-	<controls:MaskedTextInput id="txtnumerocuponpago" x="825" y="357" fontFamily="Verdana"
+	<s:Label x="901" y="288" fontSize="14" fontWeight="bold" text="Tarjetas de Crédito / Débito" toolTip="Seleccione si o no para registrar que la nota de pedido fue entregada al Cliente"/>
+	<controls:MaskedTextInput id="txtNumerodeCuponPagoTarjeta" x="903" y="357" fontFamily="Verdana"
 							  fontSize="16" inputMask="####-####-####-####" maxChars="19"
 							  toolTip="Ingrese en Número de Tarjeta de Crédito o Débito del Plástico"/>
-	<s:Label x="823" y="341" fontSize="14" fontWeight="bold"
+	<s:Label x="901" y="341" fontSize="14" fontWeight="bold"
 			 text="Número de cupón tarjeta de credito/debito:"/>
-	<s:DataGrid id="adghistorico" x="826" y="514" width="203" height="102"
+	<s:DataGrid id="adghistorico" x="904" y="514" width="203" height="102"
 				alternatingRowColors="[#adf1f5, white]" fontFamily="Verdana" fontSize="10"
 				requestedRowCount="4">
 		<s:columns>
@@ -3026,13 +3143,13 @@
 			</s:ArrayList>
 		</s:columns>		
 	</s:DataGrid>
-	<s:Label x="826" y="499" fontSize="16" fontWeight="bold" text="HISTORICO DE ANTICIPOS"/>
+	<s:Label x="904" y="499" fontSize="16" fontWeight="bold" text="HISTORICO DE ANTICIPOS"/>
 	<s:Button id="btnRegargarlistado" x="7" y="499" width="153" height="37" label="Recargar Listado"
 			  click="btnRegargarlistado_clickHandler(event)" enabled="false" fontSize="16"/>
-	<controls:MaskedTextInput id="mskisearchidnota" x="215" y="432" width="232" fontSize="16"
+	<controls:MaskedTextInput id="mskisearchidnota" x="264" y="432" width="232" fontSize="16"
 							  restrict="0-9" textAlign="center"
 							  toolTip="Ingrese Número de Nota de Pedido, debe presinar la tecla Enter para realizar la Búsqueda!!!"/>
-	<s:Label x="213" y="418" fontFamily="Verdana" fontSize="16" fontWeight="normal"
+	<s:Label x="262" y="418" fontFamily="Verdana" fontSize="16" fontWeight="normal"
 			 text="BUSCAR NOTA DE PEDIDO"/>
 	<s:Button id="btnImprimir" x="7" y="539" width="153" height="35" label="Imprimir"
 			  click="btnImprimir_clickHandler(event)" enabled="false" fontSize="16"
@@ -3041,8 +3158,8 @@
 			  click="btnactualizarNota_clickHandler(event)" enabled="false" fontSize="16"
 			  toolTip="Actualiza el estado de la nota de pedido"/>
 	<s:Button id="btnCloseClientComponent" x="1203" y="1" width="27" height="19" icon="assets/icon_close.png" click="btnCloseClientComponent_clickHandler(event)"/>
-	<s:RadioButton id="rdanuladasi" x="1025" y="157" label="Si" groupName="anulada"/>
-	<s:RadioButton id="rdanuladano" x="1025" y="181" label="No" groupName="anulada" selected="true"/>
+	<s:RadioButton id="rdbAnuladasi" x="1025" y="157" label="Si" groupName="anulada"/>
+	<s:RadioButton id="rdbAnuladano" x="1025" y="181" label="No" groupName="anulada" selected="true"/>
 	<s:Label x="383" y="166" fontSize="16" fontWeight="normal" text="Documento:"/>
 	<controls:MaskedTextInput id="mskdocumento" x="469" y="158" fontFamily="Verdana" fontSize="20"
 							  inputMask="########" maxChars="8" restrict="0-9"/>
@@ -3058,17 +3175,19 @@
 			 fontSize="10" verticalAlign="bottom"/>
 	<s:Label id="lblvendedocancelo" x="699" y="160" width="197" height="16" fontFamily="Verdana"
 			 fontSize="10" verticalAlign="bottom"/>
-	<s:Label x="553" y="597" fontFamily="Verdana" fontSize="16" text="$ DESCUENTO:" />
+	<s:Label x="553" y="597" fontFamily="Verdana" fontSize="16" text="DESCUENTO $:" />
 	<controls:MaskedTextInput id="mskdescuentopesos" toolTip="Calcula el descuento en pesos, para poder realizar el calculo debe presionar la tecla Enter" x="680" y="590" width="74" fontFamily="Verdana" text="0.000" maxChars="5"  restrict="0-9."
 							  fontSize="16"/>
 	<s:RadioButton id="rdbcanceladanotasi" x="1023" y="93" label="Si" groupName="notaCancelada"/>
 	<s:RadioButton id="rdbcanceladanotano" x="1023" y="117" label="No" groupName="notaCancelada"
 				   selected="true"/>
-	<s:Button id="btnEliminarNota" x="215" y="459" width="139" height="38" label="Eliminar"
+	<s:Button id="btnEliminarNota" x="297" y="459" width="139" height="38" label="Eliminar"
 			  click="button3_clickHandler(event)" enabled="false" fontFamily="Verdana" fontSize="16"
 			  toolTip="Elimina una Nota de Pedido, seleccionada previamente"/>
 	<s:Label id="lblUltimaActualizacion" x="184" y="597" width="319" color="#F10909"
 			 fontFamily="Arial" fontSize="11" fontWeight="bold"/>
+	<s:CheckBox id="chkEfectivo" x="761" y="568" width="135" label="ANTICIPO EFECTIVO"
+				click="chkEfectivo_clickHandler(event)" selected="true" toolTip="Active si el anticipo es en efectivo, para anticipos pagados con tarjeta se debe desactivar!"/>
 </s:Group>
 
 

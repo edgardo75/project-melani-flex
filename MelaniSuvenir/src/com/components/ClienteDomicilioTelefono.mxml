@@ -3,7 +3,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:components="com.components.*" creationComplete="group1_creationCompleteHandler(event)" initialize="group1_initializeHandler(event)"
-		 width="922" height="524" xmlns:clients="com.components.clients.*" xmlns:homes="com.components.homes.*" xmlns:phones="com.components.phones.*">
+		 width="1072" height="524" xmlns:clients="com.components.clients.*" xmlns:homes="com.components.homes.*" xmlns:phones="com.components.phones.*">
 	<s:layout>
 		<s:BasicLayout/>
 	</s:layout>
@@ -14,11 +14,11 @@
 		<s:XMLListCollection id="infodomicli" source="{tabDatosPersonales.xmlinfoclidomi}" />
 		<s:XMLListCollection id="infotelcli" source="{tabDatosPersonales.xmlinfotelcli}"/>
 		
-		<s:WebService id="serviceCli" wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL" showBusyCursor="false">
+		<s:WebService id="serviceCli" wsdl="http://192.168.1.100:8080/ServiceClientes/ClientesWs?WSDL" showBusyCursor="false">
 			<s:operation name="addCliente" result="operation1_resultHandler(event)" fault="operation1_faultHandler(event)">				
 			</s:operation>
 		</s:WebService>
-		<s:WebService id="wslocaliades" wsdl="http://localhost:8080/ServicesLocalidades/LocalidadesWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wslocaliades" wsdl="http://192.168.1.100:8080/ServicesLocalidades/LocalidadesWs?WSDL" showBusyCursor="true">
 			<s:operation name="searchAllLocalidadesByIdProvincia" result="operation2_resultHandler(event)" fault="operation2_faultHandler(event)">				
 			</s:operation>
 		</s:WebService>
@@ -410,7 +410,7 @@
 			
 		]]>
 	</fx:Script>
-	<s:Button id="btnCloseClientComponent" x="862" y="7" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
+	<s:Button id="btnCloseClientComponent" x="1041" y="10" width="16" height="19" icon="assets/icon_close.png" click="btnClose_clickHandler(event)"/>
 	<mx:VBox id="box" width="838" 
 					 verticalCenter="9"  horizontalCenter="-1" height="428">		
 	

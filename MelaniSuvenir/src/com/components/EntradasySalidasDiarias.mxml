@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:components="com.hillelcoren.components.*"
+		 xmlns:components2="com.components.*"
+		 width="1186" height="454" creationComplete="group1_creationCompleteHandler(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			[Bindable]
+				private var xmlListEntradasySalidas:XMLList;
+			[Bindable]
+				private var xmlListTotales:XMLList;
+			
+			protected function btn_close(event:MouseEvent):void
+			{
+				this.removeAllElements();
+			}
+			
+			protected function btn_Save(event:MouseEvent):void
+			{
+				cartelAlmacenarValor();
+				
+				
+			}
+			protected function cartelAlmacenarValor():void{
+				
+				Alert.show("Desea almacenar el valor?","Confirmar Operación",Alert.YES|Alert.NO,this,guardarValor,null,Alert.NO);
+					
+			
+			}
+			protected function guardarValor(evt:CloseEvent):void{
+				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
+				if(entrada.selected==true){
+					wsEntradasySalidas.insertarEntradaSalidaManual(txt_monto.text,1);
+				}else{
+					wsEntradasySalidas.insertarEntradaSalidaManual(txt_monto.text,0);
+				}
+			
+			}
+			protected function txt_monto_enterHandler(event:FlexEvent):void
+			{
+				btnSave.setFocus();
+			}
+			private function transferirFocus(keypress:KeyboardEvent):void{
+				
+				if(txt_monto.text.length>0){
+					if(btnSave.enabled==false){
+						btnSave.enabled=true;
+					}
+				}else{
+					if(txt_monto.text.length==0){
+						if(btnSave.enabled==true){
+							btnSave.enabled=false;
+						}
+					}
+				}
+				
+				if(keypress.keyCode==Keyboard.ENTER){
+					
+					if(txt_monto.text.length>0){						
+							
+								btnSave.setFocus();
+							
+					}
+					
+				}
+				if(keypress.currentTarget.toString().indexOf("btnSave")!=-1&&txt_monto.text.length>0&&btnSave.enabled==true){
+					cartelAlmacenarValor();
+				}
+			}
+			
+			
+			
+			protected function selectAllEntradasySalidas(event:ResultEvent):void
+			{	
+				
+				
+				xmlListEntradasySalidas = new XMLList(event.result);
+				xmlListTotales = new XMLList(event.result);
+				limpiarInterfaz();
+				adgEntradaySalida.dataProvider = entradasSalidasList;
+				
+				
+				llenarCampos();
+				
+				
+			}
+			protected function llenarCampos():void{
+				
+					lblTurnoMananaTarde.text = String(listadoGral.source.turno); 	
+					lblfechaControlCaja.text = String(listadoGral.source.fecha);
+					lblAnticipo.text = String("$ "+Number(listadoGral.source.totalanticipo).toFixed(2));
+					lblEntrada.text = String("$ "+Number(listadoGral.source.totalentradamanual).toFixed(2));
+					lblTotal.text = String("$ "+Number(listadoGral.source.totalanticipoymanual).toFixed(2));
+					lblTotalSalidas.text = String("$ "+Number(listadoGral.source.totalsalidas).toFixed(2));
+					lblTotalenEfectivo.text = String("$ "+Number(listadoGral.source.totalenefectivo).toFixed(2));
+					lblTotalTarjetas.text = String("$ "+Number(listadoGral.source.totaltarjetas).toFixed(2));
+					lblArqueo.text = String("$ "+Number(listadoGral.source.arqueo).toFixed(2));
+					lblCaja.text = String("$ "+Number(listadoGral.source.caja).toFixed(2));
+						
+						
+				
+			}
+			protected function limpiarInterfaz():void{
+				if(btnSave.enabled==true){
+					btnSave.enabled=false;
+				}
+				txt_monto.text="";
+				txt_monto.setFocus();
+			
+			}
+			protected function errorSelectAllEntradasySalidas(event:FaultEvent):void
+			{
+				Alert.show("ERROR AL SELECCIONAR LAS ENTRADAS Y SALIDAS DIARIAS");
+				
+			}
+			
+			protected function insertarEntradasySalidas(event:ResultEvent):void
+			{
+				
+				if(event.result.toString()==1){
+					wsEntradasySalidas.selectAllEntradasYSalidasPorTurno();
+				
+				}
+				
+			}
+			
+			protected function errorInsertarEntradasySalidas(event:FaultEvent):void
+			{
+				Alert.show("ERROR AL INSERTAR LAS ENTRADAS Y SALIDAS DIARIAS");
+				
+			}
+			
+			protected function group1_creationCompleteHandler(event:FlexEvent):void
+			{
+				txt_monto.setFocus();
+				txt_monto.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				btnSave.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				wsEntradasySalidas.selectAllEntradasYSalidasPorTurno();
+			}
+			
+			
+			protected function entrada_clickHandler(event:MouseEvent):void
+			{
+				txt_monto.setFocus();
+			}
+			
+			protected function salida_clickHandler(event:MouseEvent):void
+			{
+				txt_monto.setFocus();
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<s:XMLListCollection id="entradasSalidasList" source="{xmlListEntradasySalidas.item}"/>
+		<s:XMLListCollection id="listadoGral" source="{xmlListTotales.totales}"/>
+		<s:WebService id="wsEntradasySalidas" wsdl="http://192.168.1.100:8080/ServiceEntradasySalidas/EJBEntradasSalidasDiarias?WSDL" showBusyCursor="true">
+			<s:operation name="selectAllEntradasYSalidasPorTurno"
+						 result="selectAllEntradasySalidas(event)"
+						 fault="errorSelectAllEntradasySalidas(event)">
+				
+			</s:operation>
+			<s:operation name="insertarEntradaSalidaManual"
+						 result="insertarEntradasySalidas(event)"
+						 fault="errorInsertarEntradasySalidas(event)">
+				
+			</s:operation>			
+		</s:WebService>
+		<s:RadioButtonGroup id="rbEYS"/>
+		<s:CurrencyValidator allowNegative="false" decimalSeparator="." required="true" domain="real" currencySymbol="$"/>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Label x="110" y="35" fontFamily="Arial" fontSize="17" fontWeight="bold"
+			 text="ENTRADAS Y SALIDAS DIARIAS"/>
+	<s:VGroup id="EYS" x="215" y="64" tabIndex="3">
+		<s:RadioButton id="entrada" label="Entradas" click="entrada_clickHandler(event)"
+					   groupName="ENTRADA Y SALIDA" selected="true"/>
+		<s:RadioButton id="salida" label="Salidas" click="salida_clickHandler(event)"
+					   groupName="ENTRADA Y SALIDA"/>
+	</s:VGroup>
+	<s:TextInput id="txt_monto" x="169" y="136" width="142" height="29"
+				 enter="txt_monto_enterHandler(event)" restrict="0-9." tabEnabled="true"
+				 tabIndex="1" maxChars="6"/>
+	
+	<s:Label x="110" y="149" text="MONTO:"/>
+	<s:Button id="btnClose" x="1153" y="10" width="21" label="Button" click="btn_close(event)"
+			  icon="assets/icon_close.png"/>
+	<s:Button id="btnSave" x="335" y="127" width="86" height="38" label="Enviar..."
+			  click="btn_Save(event)" enabled="false" tabIndex="2"/>
+	<mx:VRule x="757" y="10" height="434"/>
+	<s:Label x="825" y="36" fontSize="15" fontWeight="bold" text="CONTROL DE CAJAS"/>
+	<s:Label id="lblfechaControlCaja" x="789" y="90" fontSize="16"/>
+	<s:Label id="lblTurnoMananaTarde" x="997" y="89" color="#1D60E7" fontSize="16" fontStyle="italic"
+			 fontWeight="bold"/>
+	<s:Label x="789" y="155" text="Anticipo"/>
+	<s:Label id="lblAnticipo" x="952" y="149" fontSize="16"/>
+	<mx:HRule x="841" y="165"/>
+	<s:Label x="789" y="193" text="Entrada Manual"/>
+	<mx:HRule x="880" y="203" width="61" height="1"/>
+	<mx:HRule x="883" y="229" width="58"/>
+	<s:Label id="lblEntrada" x="952" y="183" fontSize="16"/>
+	<s:Label x="849" y="221" text="Total"/>
+	<mx:HRule x="952" y="204"/>
+	<s:Label id="lblTotal" x="952" y="210" fontSize="16"/>
+	<s:Label x="789" y="295" color="#FB0202" text="Ventas Tarjetas"/>
+	<s:Label id="lblTotalTarjetas" x="952" y="283" color="#FD0101" fontSize="16"/>
+	<mx:HRule x="895" y="301" width="46" height="6"/>
+	<s:Label x="789" y="337" text="Ventas Efectivo"/>
+	<mx:HRule x="895" y="347" width="46"/>
+	<s:Label id="lblTotalenEfectivo" x="952" y="327" fontSize="16"/>
+	<s:Label x="789" y="376" color="#FB0404" text="Arqueo de Caja"/>
+	<mx:HRule x="895" y="380" width="46" height="3"/>
+	<s:Label id="lblArqueo" x="953" y="363" color="#FF0000" fontSize="16"/>
+	<s:DataGrid id="adgEntradaySalida" alternatingRowColors="[#ffffff,#fcff4f7]" x="28" y="185" width="721" height="259" fontSize="10"
+				requestedRowCount="4">
+		<s:columns>
+			<s:ArrayList>
+				<s:GridColumn dataField="entradas" width="100" headerText="Entradas Manual" ></s:GridColumn>
+				<s:GridColumn dataField="anticipo" width="90" headerText="Anticipo Efectivo" ></s:GridColumn>
+				<s:GridColumn dataField="anticipoTarjeta" width="90" headerText="Anticipo Tarjeta" ></s:GridColumn>
+				<s:GridColumn dataField="salidas" width="90" headerText="Salidas"></s:GridColumn>
+				<s:GridColumn dataField="detalles" headerText="Concepto" resizable="true"></s:GridColumn>
+			</s:ArrayList>
+		</s:columns>		
+	</s:DataGrid>
+	<s:Label x="789" y="254" text="Total Salidas"/>
+	<s:Label id="lblTotalSalidas" x="952" y="245" fontSize="16"/>
+	<mx:HRule x="868" y="264" width="73"/>
+	<s:Label x="789" y="406" color="#029CFE" fontSize="16" text="CAJA:"/>
+	<mx:HRule x="843" y="416" width="98" height="4"/>
+	<s:Label id="lblCaja" x="953" y="399" height="26" color="#00A8FF" fontSize="17"/>
+</s:Group>

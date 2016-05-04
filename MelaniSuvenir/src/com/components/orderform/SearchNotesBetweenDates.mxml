@@ -3,7 +3,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:components="com.hillelcoren.components.*"
-		 width="576" height="188" initialize="group1_initializeHandler(event)" creationComplete="group1_creationCompleteHandler(event)">
+		 width="576" height="188">
 	<fx:Script>
 		<![CDATA[
 			import mx.controls.Alert;
@@ -13,30 +13,18 @@
 			[Bindable]
 			private var xmlListEmpleados:XMLList;
 			
-			protected function operation2_resultHandlerSelectAllEmpleados(event:ResultEvent):void
-			{
-				xmlListEmpleados = new XMLList(event.result);
-				cmbVendedores.dataProvider=empleadoslist;
-				
-			}
+			
 			protected function operation2_faultHandlerSelectAllEmpleados(event:FaultEvent):void
 			{
 				Alert.show("ERROR AL OBTENER LISTADO DE EMPLEADOS");
 				
 			}
 			
-			protected function group1_creationCompleteHandler(event:FlexEvent):void
-			{
-				cmbVendedores.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
-				
-			}
+			
 			private function transferirFocus(keypress:KeyboardEvent):void{
 					if(keypress.keyCode==Keyboard.ENTER){
-						if(keypress.currentTarget.toString().indexOf("cmbVendedores")!=-1&&cmbVendedores.text.length>0){
-									dtfechaini.setFocus();
-						
-						}else{
-							if(keypress.currentTarget.toString().indexOf("dtfechaini")!=-1&&dtfechaini.text.length>0){
+					
+					if(keypress.currentTarget.toString().indexOf("dtfechaini")!=-1&&dtfechaini.text.length>0){
 									dtffechafin.setFocus();
 							
 							}else{
@@ -69,8 +57,8 @@
 						
 						}
 					
-					}
 			}
+			
 			protected function compararFechas():Number{
 				
 				var fecha1:Date=dtfechaini.selectedDate;
@@ -94,24 +82,19 @@
 			
 			}
 			
-			protected function group1_initializeHandler(event:FlexEvent):void
-			{
-				wsempleados.selectAllEmpleados();
-				
-			}
-			
+						
 			protected function btnenviar_clickHandler(event:MouseEvent):void
 			{
 				var source:String;
-				var urlReq:URLRequest;
-				if(cmbVendedores.text.length>0&&dtfechaini.text.length>0&&dtffechafin.text.length>0){
+				var urlReq:URLRequest;				
+				if(dtfechaini.text.length>0&&dtffechafin.text.length>0){
 				
 					if(rdbfechaentrega.selected==true){
-						 source="http://localhost:8080/WebMelanie2/ShowReportEntreFechasEntrega?fstart="+dtfechaini.text+"&fend="+dtffechafin.text+"&vendor="+cmbVendedores.selectedItem.id;
+						 source="http://192.168.1.100:8080/WebMelanie2/ShowReportEntreFechasEntrega?fstart="+dtfechaini.text+"&fend="+dtffechafin.text;
 						urlReq= new URLRequest(source);	
 					
 					}else{
-						source="http://localhost:8080/WebMelanie2/ShowReportEntreFechas?fstart="+dtfechaini.text+"&fend="+dtffechafin.text+"&vendor="+cmbVendedores.selectedItem.id;
+						source="http://192.168.1.100:8080/WebMelanie2/ShowReportEntreFechasCompra?fstart="+dtfechaini.text+"&fend="+dtffechafin.text;
 						urlReq= new URLRequest(source);
 					
 					}
@@ -161,32 +144,22 @@
 		]]>
 	</fx:Script>
 	<fx:Declarations>
-		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:XMLListCollection id="empleadoslist" source="{xmlListEmpleados.item}"/>
-		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
-			<s:operation name="selectAllEmpleados"
-						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
-						 result="operation2_resultHandlerSelectAllEmpleados(event)">
-				
-			</s:operation>
-		</s:WebService>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->		
 		<s:RadioButtonGroup id="rdbinformesentrefechas"/>
 	</fx:Declarations>
-	<components:AutoComplete x="137" y="56" id="cmbVendedores"  width="184" labelField="nameuser" allowDuplicates="false" dropDownRowCount="10"
-							 fontSize="16" fontWeight="bold" matchType="beginning">
-	</components:AutoComplete>
-	<s:Label x="13" y="65" fontSize="16" fontWeight="normal" text="VENDEDORES:"/>
 	<s:Label x="78" y="22" color="#5C7C79" fontSize="18" fontWeight="bold"
 			 text="INFORME DE NOTAS DE PEDIDO ENTRE FECHAS"/>
 	<s:Label x="24" y="115" fontSize="16" fontWeight="normal" text="FECHA INICIO:"/>
 	<s:Label x="284" y="112" fontSize="16" fontWeight="normal" text="FECHA FINAL:"/>
 	<s:Button id="btnCloseClientComponent" x="550" y="6" width="16" height="19" icon="assets/icon_close.png" click="btnCloseClientComponent_clickHandler(event)"/>
-	<mx:DateField id="dtfechaini" x="146" y="105" width="126" fontSize="16"   />
-	<mx:DateField id="dtffechafin" x="405" y="104" width="127" fontSize="16"   />
+	<mx:DateField id="dtfechaini" x="146" y="105" width="126" fontSize="16" formatString="DD/MM/YYYY" />
+	<mx:DateField id="dtffechafin" x="405" y="104" width="127" fontSize="16"  formatString="DD/MM/YYYY" />
 	<s:Button id="btnenviar" x="239" y="145" width="90" height="32" label="Enviar"
 			  click="btnenviar_clickHandler(event)" enabled="true" fontSize="16"/>
 	<s:VGroup x="381" y="56">
-		<s:RadioButton id="rdbfechacompras" label="Informe Fechas Compras" groupName="rdbinformesentrefechas"/>
-		<s:RadioButton id="rdbfechaentrega" selected="true" label="Informe Fechas Entrega " groupName="rdbinformesentrefechas"/>
 	</s:VGroup>
+	<s:RadioButton id="rdbfechaentrega" x="208" y="73" label="Informe Fechas Entrega "
+				   groupName="rdbinformesentrefechas" selected="true"/>
+	<s:RadioButton id="rdbfechacompras" x="208" y="47" label="Informe Fechas Compras"
+				   groupName="rdbinformesentrefechas"/>
 </s:Group>

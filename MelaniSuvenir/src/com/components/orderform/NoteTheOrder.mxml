@@ -6,15 +6,15 @@
 		 xmlns:products="com.components.products.*"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
 		 xmlns:components="com.hillelcoren.components.*"
-		 width="1124" height="608" initialize="group1_initializeHandler(event)" creationComplete="group1_creationCompleteHandler(event)">
+		 width="1220" height="608" initialize="group1_initializeHandler(event)" creationComplete="group1_creationCompleteHandler(event)">
 	
 	<fx:Script>
 		<![CDATA[
-			
 			import com.components.clients.GuardarDatosPersonalClientePopup;
 			import com.components.clients.PopupClienteNameSecondName;
 			
 			import mx.controls.Alert;
+			import mx.controls.Text;
 			import mx.core.IFlexDisplayObject;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
@@ -77,34 +77,32 @@
 				
 				
 				
-				txtnombrecliente.text=String(cliente.nombre);
-				txtapellidocliente.text=String(cliente.apellido);
+				txtNombreCliente.text=String(cliente.nombre);
+				txtApellidoCliente.text=String(cliente.apellido);
 				lblnocli.text=cliente.id;
 				
-				focusManager.setFocus(productscomp.cmbproduct);
+				focusManager.setFocus(productoComponente.cmbproduct);
 				
 			}
 			
 			
 			//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			private function transferirFocus(keypress:KeyboardEvent):void{
-				if(keypress.keyCode==Keyboard.ENTER){
-					
-					if(keypress.currentTarget.toString().indexOf("txtapellidocliente")!=-1 && txtapellidocliente.text.length >= 4 && txtnombrecliente.text.length >=4){
-						
+				if(keypress.keyCode==Keyboard.ENTER){					
+					if(keypress.currentTarget.toString().indexOf("txtApellidoCliente")!=-1 && txtApellidoCliente.text.length >= 4 && txtNombreCliente.text.length >=4){						
 						popup=Progress(PopUpManager.createPopUp(this,Progress,true));
 						PopUpManager.centerPopUp(popup);
-						cli.searchClientForNameAndLastName(txtnombrecliente.text.toString(),txtapellidocliente.text.toString());
-						
+						cli.searchClientForNameAndLastName(txtNombreCliente.text.toString(),txtApellidoCliente.text.toString());						
 							}else{
-										if(keypress.currentTarget.toString().indexOf("txtnombrecliente")!=-1 && txtnombrecliente.text.length>=4)
-											txtapellidocliente.setFocus();
-									
-									
+										if(keypress.currentTarget.toString().indexOf("txtNombreCliente")!=-1 && txtNombreCliente.text.length>=4)
+											txtApellidoCliente.setFocus();			
 									    else{
 												if(keypress.currentTarget.toString().indexOf("cmbTarjetasCreditoDebito")!=-1 && cmbTarjetasCreditoDebito.text.length>0)
-													txtnumerocuponpago.setFocus();
+													txtNumeroCuponPago.setFocus();
 												else{
+													if(keypress.currentTarget.toString().indexOf("dtfentrega")!=-1 && dtfentrega.text.length>0){
+														cmbVendedores.setFocus();
+													}else{
 														if(keypress.currentTarget.toString().indexOf("cmbVendedores")!=-1 && cmbVendedores.selectedItemId>=0){
 																if(cmbVendedores.selectedItem.estado==0)
 																	avisoCartelVendedorDeshabilitado();
@@ -116,7 +114,7 @@
 														
 														    }
 												
-												
+													}
 												}
 							
 										}
@@ -130,10 +128,36 @@
 				
 					
 					
-				if(keypress.currentTarget.toString().indexOf("btnGuardarNota")!=-1&&txtpassword.text.length>0&&btnGuardarNota.enabled==true){
-					btnGuardarNotaEvent();
+							if(keypress.currentTarget.toString().indexOf("btnGuardarNota")!=-1&&txtpassword.text.length>0&&btnGuardarNota.enabled==true){
+								btnGuardarNotaEvent();
+							}
+			  }//end if Enter
+				
+				
+					if(txtNumeroCuponPago.text.length==0&&Number(cmbTarjetasCreditoDebito.selectedItem.id)==0){
+						rdbenefectivosi.selected=true;
+						
+					}else{
+							if(txtNumeroCuponPago.text.length==0&&Number(cmbTarjetasCreditoDebito.selectedItem.id)>0){
+									rdbenefectivono.selected=true;									
+									
+									cmbTarjetasCreditoDebito.removeItemAt(cmbTarjetasCreditoDebito.selectedItemId);
+									cmbTarjetasCreditoDebito.selectedItem.id=0;
+								
+							}else{
+									if(Number(cmbTarjetasCreditoDebito.selectedItem.id)!=0&&txtNumeroCuponPago.text.length<16){
+										rdbenefectivono.selected=true;
+										
+									}else{
+										if(Number(cmbTarjetasCreditoDebito.selectedItem.id)!=0&&txtNumeroCuponPago.text.length==16){
+											rdbenefectivono.selected=true;											
+											cmbTarjetasCreditoDebito.selectedItem.id=0;
+										}
+									}
+										
+							}
+					
 				}
-			  }
 			}
 			protected function avisoCartelVendedorDeshabilitado():void{
 			
@@ -149,7 +173,7 @@
 			protected function operationResultSearchClient(event:ResultEvent):void
 			{
 				PopUpManager.removePopUp(popup);
-				productscomp.cmbproduct.setFocus();
+				productoComponente.cmbproduct.setFocus();
 				
 				xmlcliente =new XMLList(event.result);
 				
@@ -172,9 +196,9 @@
 				
 				/*Set properties to custom component popup*/
 				pop1.targetCodeCustomer=lblnocli;
-				pop1.targetName=txtnombrecliente;
+				pop1.targetName=txtNombreCliente;
 				pop1.targetNumCustomer=mskdocu;
-				pop1.targetSecondName=txtapellidocliente;
+				pop1.targetSecondName=txtApellidoCliente;
 				pop1.clidata=xmlcli;
 				PopUpManager.centerPopUp(pop1);
 				
@@ -198,8 +222,8 @@
 				popup2.title="  Ingrese Datos Personales de Cliente  ";
 				
 				popup2.idcliente=lblnocli;
-				popup2.nombre=txtnombrecliente;
-				popup2.apellido=txtapellidocliente;
+				popup2.nombre=txtNombreCliente;
+				popup2.apellido=txtApellidoCliente;
 				popup2.nrodocu=mskdocu;				
 				PopUpManager.centerPopUp(popup2);
 			}
@@ -214,12 +238,12 @@
 			protected function group1_creationCompleteHandler(event:FlexEvent):void
 			{
 				mskdocu.setFocus();
-				txtapellidocliente.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
-				txtnombrecliente.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				txtApellidoCliente.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				txtNombreCliente.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				cmbTarjetasCreditoDebito.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				cmbVendedores.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				btnGuardarNota.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
-				txtnumerocuponpago.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				txtNumeroCuponPago.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				txtpassword.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				cmbTarjetasCreditoDebito.selectedItemId=0;
 			
@@ -227,8 +251,6 @@
 			
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
-				
-			
 				xmltarjetas=new XMLList(event.result);
 				cmbTarjetasCreditoDebito.dataProvider=tarjetas;
 				
@@ -251,17 +273,17 @@
 				
 								if(dtfentrega.text.length>0){
 												
-												if(productscomp.arrayDg.length>0){
+												if(productoComponente.arrayDg.length>0){
 													//*******************************************************************
 													var b:Boolean=false;
-													for(var j:int=0;j<productscomp.arrayDg.length&&!b;j++){
+													for(var j:int=0;j<productoComponente.arrayDg.length&&!b;j++){
 														//controlamos que no haya descuento por producto y total a la vez en la nota de pedido
-														if(productscomp.porc_d>0 && productscomp.arrayDg[j].porc_desc!=0 && productscomp.porc_d!=0){
+														if(productoComponente.porc_d>0 && productoComponente.arrayDg[j].porc_desc!=0 && productoComponente.porc_d!=0){
 															Alert.show("Error al procesar los datos, el descuento es Total o por Productos, corrija!!!");
 															return;
 														}
 														//controlamos que los separadores decimales no sean comas
-														if(String(productscomp.arrayDg[j].porc_desc).toString().indexOf(",")!=-1||String(productscomp.arrayDg[j].price).toString().indexOf(",")!=-1)
+														if(String(productoComponente.arrayDg[j].porc_desc).toString().indexOf(",")!=-1||String(productoComponente.arrayDg[j].price).toString().indexOf(",")!=-1)
 															b=true;
 															
 														
@@ -283,7 +305,7 @@
 			}
 			//***************************************************************************************************
 			protected function chequearNumeroCupon():Boolean{
-					if(cmbTarjetasCreditoDebito.selectedItem.id!=0&&txtnumerocuponpago.length==0)
+					if(cmbTarjetasCreditoDebito.selectedItem.id!=0&&txtNumeroCuponPago.length==0)
 						return true;
 					else
 						return false;
@@ -293,42 +315,54 @@
 			protected function btnGuardarNotaEvent():void{
 						
 				
-				
-				
-				if(int(productscomp.lblTotApagar.text)<=-1)
-					Alert.show("IMPOSIBLE ALMACENAR NOTA DE PEDIDO \nCORRIJA POR FAVOR!!!");
-				else{
-					//********************************Chequeamos que haya un Vendedor Seleccionado en el ComboBox++++++++++++++++++++++++
-					
-					if(cmbVendedores.text.length==0){
-						Alert.show("DEBE SELECCIONAR UN VENDEDOR");
-						return;
+				if(rdbentregadosi.selected&&Number(productoComponente.lblsaldo.text)>0){
+					Alert.show("IMPOSIBLE ALMACENAR NOTA DE PEDIDO \nLA NOTA FIGURA COMO ENTREGADA PERO AÚN NO HA SIDO CANCELADA O SALDADA!!!");
+				}else{
+					if(rdbcanceladaNotasi.selected&&Number(productoComponente.lblsaldo.text)>0){
+						Alert.show("IMPOSIBLE ALMACENAR NOTA DE PEDIDO \nLA NOTA FIGURA COMO CANCELADA PERO AÚN NO HA SIDO CANCELADA O SALDADA!!!");
 					}else{
-						//chequeo si el vendedor está habilitado por sistema para realizar esta operación
-						if(cmbVendedores.selectedItem.estado==0){
-							avisoCartelVendedorDeshabilitado();
-							return;
-						}else{
-							//chequear el vendendor seleccionado con su clave correspondiente
-							
-							if(chkpassEmployee()){
+				
+							if(int(productoComponente.lblTotApagar.text)<=-1)
+								Alert.show("IMPOSIBLE ALMACENAR NOTA DE PEDIDO \nCORRIJA POR FAVOR!!!");
+							else{
+								//*****************************Chequerar que haya una fecha cargada*************************************
+								if(dtfentrega.text.length==0){
+									Alert.show("DEBE SELECCIONAR UNA FECHA DE ENTREGA");
+									return;
+								}else{
+								//********************************Chequeamos que haya un Vendedor Seleccionado en el ComboBox++++++++++++++++++++++++
 								
-								//*************************Chequeamos que haya un cliente ya seleccionado********************++
-								
-								if(txtnombrecliente.text.length>0&&txtapellidocliente.text.length>0){
-									if(chequearNumeroCupon())
-										Alert.show("Falta Ingresar un Número de Cupón");
-									else
-										verificarProductosCargados();
-									
+											if(cmbVendedores.text.length==0){
+												Alert.show("DEBE SELECCIONAR UN VENDEDOR");
+												return;
+											}else{
+												//chequeo si el vendedor está habilitado por sistema para realizar esta operación
+												if(cmbVendedores.selectedItem.estado==0){
+													avisoCartelVendedorDeshabilitado();
+													return;
+												}else{
+													//chequear el vendendor seleccionado con su clave correspondiente
+													
+													if(chkpassEmployee()){
+														
+														//*************************Chequeamos que haya un cliente ya seleccionado********************++
+														
+														if(txtNombreCliente.text.length>0&&txtApellidoCliente.text.length>0){
+															if(chequearNumeroCupon())
+																Alert.show("Falta Ingresar un Número de Cupón");
+															else
+																verificarProductosCargados();
+															
+														}
+														//********************************************************************************************
+													}
+												}
+												
+											}
 								}
-								//********************************************************************************************
 							}
-						}
-						
 					}
 				}
-			
 			
 			}
 			//***************************************************************************************************
@@ -347,6 +381,7 @@
 			
 				
 			wsnotapedido.agregarNotaPedido(getDatosXML());
+				
              			
 						
 		
@@ -354,82 +389,84 @@
 		//****************************************************************************************************
 		protected function getDatosXML():String{
 			var entregado:int=0;
-			var canceladanota:int=0;
-			var stockfuturo:int=0;
-			
+			var canceladaNota:int=0;
+			var stockFuturo:int=0;			
 			var anulada:int=0;
 			var enfectivo:int=0;
 			var porcdescAcum:Number=0;
 			var temp_tot_Gral:Number=0;
 			var temp_tot_porc_desc:Number=0;
 			var temp_tot_desc:Number=0;
+			var enEfectivo:Number = 0;			
+			var calcularTotalAPagar:Number=productoComponente.totGral-temp_tot_desc;
+			var recargo:Number=productoComponente.tot_recargo*Number(calcularTotalAPagar.toFixed(3))/100;
 			
-			var calcularTotalAPagar:Number=productscomp.totGral-temp_tot_desc;
-			var recargo:Number=productscomp.tot_recargo*Number(calcularTotalAPagar.toFixed(3))/100;
-			
-					for(var i:int=0;i<productscomp.arrayDg.length;i++){
+					for(var i:int=0;i<productoComponente.arrayDg.length;i++){
 						
-						temp_tot_desc+=Number(Number(productscomp.arrayDg[i].prec_descuento).toFixed(3));
-						if(productscomp.desc_resto>0&&Number(productscomp.arrayDg[i].porc_desc)>0)
-							productscomp.arrayDg[i].porc_desc="0.00";
+						temp_tot_desc+=Number(Number(productoComponente.arrayDg[i].prec_descuento).toFixed(3));
+						if(productoComponente.desc_resto>0&&Number(productoComponente.arrayDg[i].porc_desc)>0)
+							productoComponente.arrayDg[i].porc_desc="0.00";
 						else				
-						   temp_tot_porc_desc+=Number(Number(productscomp.arrayDg[i].porc_desc).toFixed(3));		
+						   temp_tot_porc_desc+=Number(Number(productoComponente.arrayDg[i].porc_desc).toFixed(3));		
 						
-					}
-			
-				
+					}		
 			
 			
 
 			if(temp_tot_desc>0){
 				
 				//*********************************************************************************************************+++
-				productscomp.lbldescuento.text=Number(-temp_tot_desc).toFixed(3);
+				productoComponente.lbldescuento.text=Number(-temp_tot_desc).toFixed(3);
 						
-						if(productscomp.tot_recargo>0){
+						if(productoComponente.tot_recargo>0){
 							
-							productscomp.lbltotalconrecargo.text=Number(Number(calcularTotalAPagar.toFixed(3))+recargo).toFixed(3);
+							productoComponente.lbltotalconrecargo.text=Number(Number(calcularTotalAPagar.toFixed(3))+recargo).toFixed(3);
 							
-							productscomp.lblTotApagar.text=Number(Number(calcularTotalAPagar.toFixed(3))+recargo).toFixed(3);
+							productoComponente.lblTotApagar.text=Number(Number(calcularTotalAPagar.toFixed(3))+recargo).toFixed(3);
 							
 						}else
-							productscomp.lblTotApagar.text=Number(productscomp.totGral-temp_tot_desc).toFixed(3);
+							productoComponente.lblTotApagar.text=Number(productoComponente.totGral-temp_tot_desc).toFixed(3);
 						
-							if(int(productscomp.mskanticipo.text)>0)
-								productscomp.lblsaldo.text=Number(Number(productscomp.lblTotApagar.text)-Number(productscomp.mskanticipo.text)).toFixed(3);
-							else
-								productscomp.lblsaldo.text="0.000";
+							if(int(productoComponente.mskAnticipo.text)>0){
+								productoComponente.lblsaldo.text=Number(Number(productoComponente.lblTotApagar.text)-Number(productoComponente.mskAnticipo.text)).toFixed(3);
+							}else{
+								productoComponente.lblsaldo.text="0.000";
+							}
 						
-						productscomp.porc_desc_total=temp_tot_porc_desc;
+						productoComponente.porc_desc_total=temp_tot_porc_desc;
 						//******************************************************************************************************
 			}else{
 				//********************************************************************----------------------------------------------
-						if(productscomp.tot_recargo>0){
-							productscomp.lblTotApagar.text=Number(productscomp.totGral-productscomp.totGralDesc+(recargo)).toFixed(3);
-							productscomp.lbltotalconrecargo.text=Number(productscomp.totGral-productscomp.totGralDesc+(recargo)).toFixed(3);
-						}else
-							productscomp.lblTotApagar.text=Number(productscomp.totGral-productscomp.totGralDesc).toFixed(3);
-				
-						if(int(productscomp.mskanticipo.text)>0){
+						if(productoComponente.tot_recargo>0){
+							productoComponente.lblTotApagar.text=Number(productoComponente.totGral-productoComponente.totGralDesc+(recargo)).toFixed(3);
+							productoComponente.lbltotalconrecargo.text=Number(productoComponente.totGral-productoComponente.totGralDesc+(recargo)).toFixed(3);
+						}else{
+							productoComponente.lblTotApagar.text=Number(productoComponente.totGral-productoComponente.totGralDesc).toFixed(3);
+						}
+						if(int(productoComponente.mskAnticipo.text)>0){
 							
-							productscomp.lblsaldo.text=Number(Number(Number(productscomp.totGral-productscomp.totGralDesc)-(Number(productscomp.mskanticipo.text)))+recargo).toFixed(3);
+							productoComponente.lblsaldo.text=Number(Number(Number(productoComponente.totGral-productoComponente.totGralDesc)-(Number(productoComponente.mskAnticipo.text)))+recargo).toFixed(3);
 							
-						}else
-							productscomp.lblsaldo.text="0.000";
+						}else{
+							productoComponente.lblsaldo.text="0.000";
+						}
 				
-					productscomp.porc_desc_total=Number(Number(productscomp.txtdescuento.text).toFixed(2));
+					productoComponente.porc_desc_total=Number(Number(productoComponente.txtdescuento.text).toFixed(2));
 				//*****************************************************------------------------------------------------------------
 			}
+			if(cmbTarjetasCreditoDebito.selectedItem.id!=0&&txtNumeroCuponPago.text.length==16){
+				
 			
-						if(productscomp.txtdescuento.text.length==0)
-							productscomp.txtdescuento.text="0.0";
+			}
+						if(productoComponente.txtdescuento.text.length==0)
+							productoComponente.txtdescuento.text="0.0";
 						
 							
-						if(productscomp.mskrecargo.text.length==0)
-							productscomp.mskrecargo.text="0.0";
+						if(productoComponente.mskrecargo.text.length==0)
+							productoComponente.mskrecargo.text="0.0";
 						
-						if(productscomp.mskanticipo.text.length==0)
-							productscomp.mskanticipo.text="0.0";
+						if(productoComponente.mskAnticipo.text.length==0)
+							productoComponente.mskAnticipo.text="0.0";
 			
 					var pendiente:int=1;
 					
@@ -438,12 +475,12 @@
 						pendiente=0;
 					}
 			
-					if(rdbcanceladanotasi.selected)
-						 canceladanota=1;
+					if(rdbcanceladaNotasi.selected)
+						 canceladaNota=1;
 			
 			
-					if(rdbstockfuturosi.selected)
-						stockfuturo=1;
+					if(rdbstockFuturosi.selected)
+						stockFuturo=1;
 			
 				
 			
@@ -453,12 +490,15 @@
 			
 					if(rdbenefectivosi.selected)
 						enfectivo=1;
+					
+			if(productoComponente.chkAnticipoEfectivo.enabled){
+				enEfectivo = 1;
+			}
 			
 			
 			
 			
-			
-			var xmlnota:String="<notapedido>\n" +
+			var xmlNota:String="<notapedido>\n" +
 				"<idnota>0</idnota>\n" +
 				"<vendedor>" +cmbVendedores.selectedItem.id+"</vendedor>\n"+
 				"<personas>\n" +
@@ -471,78 +511,79 @@
 				"<porcentaje>\n" +
 					"<id_porcentaje>1</id_porcentaje>\n" +
 				"</porcentaje>\n" +
-				"<montototal>"+productscomp.lblTotGral.text+"</montototal>\n" +
-				"<anticipo>"+productscomp.mskanticipo.text+"</anticipo>\n" +
+				"<montototal>"+productoComponente.lblTotGral.text+"</montototal>\n" +
+				"<anticipo>"+productoComponente.mskAnticipo.text+"</anticipo>\n" +
 				"<anticipoacum>0</anticipoacum>\n" +
-				"<saldo>"+productscomp.lblsaldo.text+"</saldo>\n";
+				"<saldo>"+productoComponente.lblsaldo.text+"</saldo>\n";
 			
 				if(entregado==1){
-					xmlnota+="<entregado>"+entregado+"</entregado>\n" +
-					"<usuario_entregado>"+cmbVendedores.selectedItem.id+"</usuario_entregado>\n";
+					xmlNota+="<entregado>"+entregado+"</entregado>\n" +
+					"<id_usuario_entregado>"+cmbVendedores.selectedItem.id+"</id_usuario_entregado>\n";
 				}else{
-						xmlnota+="<entregado>"+entregado+"</entregado>\n" +
-							"<usuario_entregado>0</usuario_entregado>\n" ;
+						xmlNota+="<entregado>0</entregado>\n" +
+							"<id_usuario_entregado>0</id_usuario_entregado>\n" ;
 				}
 				
-				xmlnota+="<usuario_expidio_nota>"+cmbVendedores.selectedItem.id+"</usuario_expidio_nota>\n" +
-				"<stockfuturo>"+stockfuturo+"</stockfuturo>\n" ;
+				xmlNota+="<id_usuario_expidio_nota>"+cmbVendedores.selectedItem.id+"</id_usuario_expidio_nota>\n" +
+				"<stockFuturo>"+stockFuturo+"</stockFuturo>\n" ;
 				
 						if(anulada==1){
-							xmlnota+="<anulado>"+anulada+"</anulado>\n" +
+							xmlNota+="<anulado>"+anulada+"</anulado>\n" +
 							"<id_usuario_anulado>"+cmbVendedores.selectedItem.id+"</id_usuario_anulado>\n" ;
 						}else{
-							xmlnota+="<anulado>"+anulada+"</anulado>\n" +
+							xmlNota+="<anulado>0</anulado>\n" +
 							"<id_usuario_anulado>0</id_usuario_anulado>\n" ;								
 						}
 				
-						if(canceladanota==1){
-							xmlnota+="<cancelado>"+canceladanota+"</cancelado>\n" +
-							"<usuario_cancelo_nota>"+cmbVendedores.selectedItem.id+"</usuario_cancelo_nota>\n" ;
+						if(canceladaNota==1){
+							xmlNota+="<cancelado>"+canceladaNota+"</cancelado>\n" +
+							"<id_usuario_cancelo_nota>"+cmbVendedores.selectedItem.id+"</id_usuario_cancelo_nota>\n" ;
 						}else{
-							xmlnota+="<cancelado>"+canceladanota+"</cancelado>\n" +
-								"<usuario_cancelo_nota>0</usuario_cancelo_nota>\n" ;
+							xmlNota+="<cancelado>0</cancelado>\n" +
+								"<id_usuario_cancelo_nota>0</id_usuario_cancelo_nota>\n" ;
 						}
 				
-				xmlnota+="<descuentonota>"+Number(productscomp.lbldescuento.text).toFixed(3)+"</descuentonota>\n" ;
+				xmlNota+="<descuentonota>"+Number(productoComponente.lbldescuento.text).toFixed(3)+"</descuentonota>\n" ;
 				
-					if(Number(Number(productscomp.mskdescuentopesos.text).toFixed(3))>0)
-						xmlnota+="<descuentopesos>" +Number(productscomp.mskdescuentopesos.text).toFixed(3)+"</descuentopesos>\n";
+					if(Number(Number(productoComponente.mskdescuentopesos.text).toFixed(3))>0)
+						xmlNota+="<descuentopesos>" +Number(productoComponente.mskdescuentopesos.text).toFixed(3)+"</descuentopesos>\n";
 					else
-						xmlnota+="<descuentopesos>0</descuentopesos>\n";
+						xmlNota+="<descuentopesos>0</descuentopesos>\n";
 					
-				xmlnota+="<porcentajerecargo>"+productscomp.tot_recargo+"</porcentajerecargo>\n" +
+				xmlNota+="<porcentajerecargo>"+productoComponente.tot_recargo+"</porcentajerecargo>\n" +
 					
-				"<montototalapagar>"+productscomp.lblTotApagar.text+"</montototalapagar>\n"+
+				"<montototalapagar>"+productoComponente.lblTotApagar.text+"</montototalapagar>\n"+
 				"<observaciones>" +this.txtObservacionesNota.text+"</observaciones>\n" +
 				"<pendiente>"+pendiente+"</pendiente>\n"+
 				"<montoiva>0</montoiva>\n"+
-				"<recargo>"+productscomp.lbltotalconrecargo.text+"</recargo>\n" +
+				"<recargo>"+productoComponente.lbltotalconrecargo.text+"</recargo>\n" +
 				
 				"<fechaentrega>"+dtfentrega.text+"</fechaentrega>\n"+
 				"<fechacompra></fechacompra>\n"+
-				"<numerodecupon>"+txtnumerocuponpago.text+"</numerodecupon>\n" +
+				"<numerodecupon>"+txtNumeroCuponPago.text+"</numerodecupon>\n" +
 				"<enefectivo>"+enfectivo+"</enefectivo>\n"+
+				"<enefectivoAnticipo>"+enfectivo+"</enefectivoAnticipo>\n"+
 				"<detallesnotapedido>\n" ;
 									
-							for(var ii:int=0;ii<productscomp.arrayDg.length;){
+							for(var ii:int=0;ii<productoComponente.arrayDg.length;){
 								
-								if(productscomp.arrayDg[ii].price==0||productscomp.arrayDg[ii].countt==0||productscomp.arrayDg[ii].subtotal==0)
+								if(productoComponente.arrayDg[ii].price==0||productoComponente.arrayDg[ii].countt==0||productoComponente.arrayDg[ii].subtotal==0)
 									ii++;
 								else{
-									porcdescAcum+=Number(Number(productscomp.arrayDg[ii].porc_desc).toFixed(2));
-									xmlnota+="<itemdetallesnota>\n" +
-												"<cantidad>"+productscomp.arrayDg[ii].countt+"</cantidad>\n" +
-												"<preciocondescuento>"+productscomp.arrayDg[ii].prec_descuento+"</preciocondescuento>\n" +
-												"<precio>"+productscomp.arrayDg[ii].price+"</precio>\n" +
-												"<subtotal>"+Number(productscomp.arrayDg[ii].subtotal).toFixed(3)+"</subtotal>\n" +									
+									porcdescAcum+=Number(Number(productoComponente.arrayDg[ii].porc_desc).toFixed(2));
+									xmlNota+="<itemdetallesnota>\n" +
+												"<cantidad>"+productoComponente.arrayDg[ii].countt+"</cantidad>\n" +
+												"<preciocondescuento>"+productoComponente.arrayDg[ii].prec_descuento+"</preciocondescuento>\n" +
+												"<precio>"+productoComponente.arrayDg[ii].price+"</precio>\n" +
+												"<subtotal>"+Number(productoComponente.arrayDg[ii].subtotal).toFixed(3)+"</subtotal>\n" +									
 												"<entregado>"+entregado+"</entregado>\n" +
-												"<cancelado>"+canceladanota+"</cancelado>\n" +
+												"<cancelado>"+canceladaNota+"</cancelado>\n" +
 												"<anulado>"+anulada+"</anulado>\n" +
 												"<pendiente>"+pendiente+"</pendiente>\n" +
-												"<descuento>"+Number(productscomp.arrayDg[ii].porc_desc).toFixed(2)+"</descuento>\n" +
+												"<descuento>"+Number(productoComponente.arrayDg[ii].porc_desc).toFixed(2)+"</descuento>\n" +
 												"<iva>0</iva>\n" +
 												"<id_nota>0</id_nota>\n" +
-												"<id_producto>"+productscomp.arrayDg[ii].id+"</id_producto>\n" +
+												"<id_producto>"+productoComponente.arrayDg[ii].id+"</id_producto>\n" +
 											"</itemdetallesnota>\n" ;
 									ii++
 								}
@@ -551,11 +592,11 @@
 			
 			
 			
-				 xmlnota+= "</detallesnotapedido>\n" +
-					 "<porc_descuento_total>"+Number(productscomp.porc_desc_total).toFixed(2)+"</porc_descuento_total>\n" +
+				 xmlNota+= "</detallesnotapedido>\n" +
+					 "<porc_descuento_total>"+Number(productoComponente.porc_desc_total).toFixed(2)+"</porc_descuento_total>\n" +
 				  "</notapedido>\n";
 				 
-				 return xmlnota;
+				 return xmlNota;
 		
 		
 		}	
@@ -608,7 +649,7 @@
 					default:
 					{
 						
-						var source:String="http://localhost:8080/WebMelanie2/ShowReportNotaPedido?nronota="+nro;
+						var source:String="http://192.168.1.100:8080/WebMelanie2/ShowReportNotaPedido?nronota="+nro;
 						var urlReq:URLRequest= new URLRequest(source);
 						navigateToURL(urlReq,"_blank");
 						limpiarTodo();
@@ -624,23 +665,23 @@
 				lblapellido.text="";
 				lblnocli.text="";
 				txtpassword.text="";
-				txtapellidocliente.text="";
-				txtnombrecliente.text="";
-				txtnumerocuponpago.text="";
+				txtApellidoCliente.text="";
+				txtNombreCliente.text="";
+				txtNumeroCuponPago.text="";
 				txtObservacionesNota.text="";
-				rdbcanceladanotano.selected=true;
-				rdbcanceladanotasi.selected=false;
+				rdbcanceladaNotano.selected=true;
+				rdbcanceladaNotasi.selected=false;
 				rdbenefectivono.selected=false;
 				rdbenefectivosi.selected=true;
 				rdbentregadono.selected=true;
 				rdbentregadosi.selected=false;
-				rdbstockfuturono.selected=false;
-				rdbstockfuturosi.selected=true;
+				rdbstockFuturono.selected=false;
+				rdbstockFuturosi.selected=true;
 				cmbVendedores.selectedItemId=-1;
 				cmbTarjetasCreditoDebito.selectedItemId=0;
 				dtfentrega.text="";
-				productscomp.limpiarDetalleProductos();
-				productscomp.cmbproduct.selectedItemId=1;
+				productoComponente.limpiarDetalleProductos();
+				productoComponente.cmbproduct.selectedItemId=1;
 				focusManager.setFocus(mskdocu);
 				
 				
@@ -733,20 +774,20 @@
 		<s:RadioButtonGroup id="stockFuturo"/>
 		<s:RadioButtonGroup id="notaCancelada"/>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wsnotapedido" wsdl="http://localhost:8080/ServiceNotaPedido/NotaPedidoWs?WSDL">
+		<s:WebService id="wsnotapedido" wsdl="http://192.168.1.100:8080/ServiceNotaPedido/NotaPedidoWs?WSDL">
 			<s:operation name="agregarNotaPedido" fault="operationNota_faultHandler(event)"
 						 result="operationNota_resultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
 		<s:WebService id="wstarjetascreditodebito" 
-					  wsdl="http://localhost:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="false"
+					  wsdl="http://192.168.1.100:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="false"
 					  >
 			<s:operation name="searchAllTarjetasCreditoDebito" result="operation1_resultHandler(event)" fault="operation1_faultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
-		<s:WebService wsdl="http://localhost:8080/ServiceClientes/ClientesWs?WSDL"
+		<s:WebService wsdl="http://192.168.1.100:8080/ServiceClientes/ClientesWs?WSDL"
 					  id="cli" showBusyCursor="false">
 			<s:operation fault="operationFaultGetClient(event)"
 						 result="operationResultGetClient(event)" 
@@ -760,7 +801,7 @@
 			</s:operation>
 			
 		</s:WebService>
-		<s:WebService id="wsempleados" wsdl="http://localhost:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
+		<s:WebService id="wsempleados" wsdl="http://192.168.1.100:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
 			<s:operation name="selectAllEmpleados"
 						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
 						 result="operation2_resultHandlerSelectAllEmpleados(event)">
@@ -780,31 +821,31 @@
 	</fx:Declarations>
 	
 	
-	<s:TextArea id="txtObservacionesNota" x="410" y="137" width="495" height="98" fontSize="16"
+	<s:TextArea id="txtObservacionesNota" x="410" y="134" width="790" height="111" fontSize="16"
 				maxChars="32000"/>
-	<s:Label x="409" y="124" fontSize="14" fontWeight="bold" text="Observaciones:"/>
-	<controls:MaskedTextInput id="txtnumerocuponpago" x="665" y="32" fontFamily="Verdana"
+	<s:Label x="409" y="117" fontSize="14" fontWeight="bold" text="Observaciones:"/>
+	<controls:MaskedTextInput id="txtNumeroCuponPago" x="364" y="80" width="184" fontFamily="Verdana"
 							  fontSize="16" inputMask="####-####-####-####" maxChars="19"
 							  toolTip="Ingrese en Número de Tarjeta de Crédito o Débito del Plástico"/>
-	<s:Label x="663" y="16" fontSize="14" fontWeight="bold"
+	<s:Label x="362" y="64" fontSize="14" fontWeight="bold"
 			 text="Número de cupón tarjeta de credito/debito:"/>
-	<components:AdvancedAutoComplete id="cmbTarjetasCreditoDebito" x="363" y="28" width="292"
+	<components:AdvancedAutoComplete id="cmbTarjetasCreditoDebito" x="363" y="30" width="292"
 									 fontSize="16" labelField="descripcion"
 									 toolTip="Seleccione una Tarjeta de Crédito o Débito si el cliente utiliza esta forma de pago!!!">
 	</components:AdvancedAutoComplete>
 	<s:Label x="362" y="16" fontSize="14" fontWeight="bold" text="Tarjetas de Crédito / Débito" toolTip="Seleccione si o no para registrar que la nota de pedido fue entregada al Clliente"/>
-	<s:Label x="332" y="60" fontSize="14" fontWeight="bold" text="Nota de pedido entregada"/>
-	<s:Label x="520" y="60" fontSize="14" fontWeight="bold" text="Nota de pedido stock futuro"/>
-	<s:VGroup x="522" y="72">
-		<s:RadioButton id="rdbstockfuturosi" label="Si" groupName="stockFuturo" selected="true"/>
-		<s:RadioButton id="rdbstockfuturono" label="No" groupName="stockFuturo"/>
+	<s:Label x="905" y="15" fontSize="14" fontWeight="bold" text="Nota de pedido entregada"/>
+	<s:Label x="703" y="15" fontSize="14" fontWeight="bold" text="Nota de pedido stock futuro"/>
+	<s:VGroup x="705" y="27">
+		<s:RadioButton id="rdbstockFuturosi" label="Si" groupName="stockFuturo" selected="true"/>
+		<s:RadioButton id="rdbstockFuturono" label="No" groupName="stockFuturo"/>
 	</s:VGroup>
-	<s:Label x="724" y="59" fontSize="14" fontWeight="bold" text="Nota de pedido cancelada"/>
-	<s:VGroup x="727" y="72">
-		<s:RadioButton id="rdbcanceladanotasi" label="Si" groupName="notaCancelada"/>
-		<s:RadioButton id="rdbcanceladanotano" label="No" selected="true" groupName="notaCancelada"/>
+	<s:Label x="705" y="71" fontSize="14" fontWeight="bold" text="Nota de pedido cancelada"/>
+	<s:VGroup x="708" y="84">
+		<s:RadioButton id="rdbcanceladaNotasi" label="Si" groupName="notaCancelada"/>
+		<s:RadioButton id="rdbcanceladaNotano" label="No" selected="true" groupName="notaCancelada"/>
 	</s:VGroup>
-	<s:Button id="btnCloseClientComponent" x="1087" y="10" width="27" height="19" icon="assets/icon_close.png" click="btnCloseClientComponent_clickHandler(event)"/>
+	<s:Button id="btnCloseClientComponent" x="1173" y="10" width="27" height="19" icon="assets/icon_close.png" click="btnCloseClientComponent_clickHandler(event)"/>
 	<s:Label x="20" y="39" height="15" fontSize="16" fontWeight="bold" text="Documento:"/>
 	<controls:MaskedTextInput id="mskdocu" x="116" y="34" enter="mskdocu_enterHandler(event)"
 							  fontFamily="Verdana" fontSize="20" inputMask="########" maxChars="8"
@@ -813,10 +854,10 @@
 	<s:Label x="33" y="64" fontSize="16" fontWeight="bold" text="Cliente N°:"/>
 	<s:Label id="lblnocli" x="115" y="62" width="187" fontFamily="Verdana" fontSize="18"
 			 fontWeight="bold" verticalAlign="bottom"/>
-	<s:TextInput id="txtnombrecliente" x="114" y="85" width="188" fontSize="18" maxChars="40"
+	<s:TextInput id="txtNombreCliente" x="114" y="85" width="188" fontSize="18" maxChars="40"
 				 prompt="Ingrese Nombre..." restrict="A-ÑZa-ñz " />
 	<s:Label id="lblapellido" x="43" y="128" fontSize="16" fontWeight="bold" text="Apellido:"/>
-	<s:TextInput id="txtapellidocliente" x="113" y="118" width="189" fontSize="18" maxChars="40"
+	<s:TextInput id="txtApellidoCliente" x="113" y="118" width="189" fontSize="18" maxChars="40"
 				 prompt="Ingrese Apellido..." restrict="A-ÑZa-ñz "/>
 	<s:Button id="btninserclient" x="29" y="468" width="134" height="30" label="DatosCliente"
 			  click="btninserclient_clickHandler(event)" fontSize="16"
@@ -825,34 +866,34 @@
 	<s:Button id="btnGuardarNota" x="29" y="501" width="134" height="30" label="Guardar Nota"
 			  click="btnGuardarNota_clickHandler(event)" enabled="true" fontSize="16"
 			  toolTip="Guarda la Nota de Pedido con todos Sus Datos"/>
-	<products:ProductosPedidosNota id="productscomp" x="4" y="166" height="434"/>
-	<s:RadioButton id="rdbentregadosi" x="331" y="74" label="Si" groupName="GrupoEntregado"/>
-	<s:RadioButton id="rdbentregadono" x="331" y="92" label="No" groupName="GrupoEntregado"
+	<products:ProductosPedidosNota id="productoComponente" x="4" y="166" height="434"/>
+	<s:RadioButton id="rdbentregadosi" x="904" y="29" label="Si" groupName="GrupoEntregado"/>
+	<s:RadioButton id="rdbentregadono" x="904" y="47" label="No" groupName="GrupoEntregado"
 				   selected="true"/>
-	<s:Label x="912" y="59" fontSize="14" fontWeight="bold" text="Nota anulada"/>
+	<s:Label x="908" y="71" fontSize="14" fontWeight="bold" text="Nota anulada"/>
 		
-	<s:Label x="913" y="123" fontSize="14" fontWeight="bold" text="Pago contado"/>
+	<s:Label x="1005" y="70" fontSize="14" fontWeight="bold" text="Pago contado"/>
 	
-	<s:VGroup x="913" y="140" width="43" height="55">
+	<s:VGroup x="1005" y="87" width="43" height="55">
 		<s:RadioButton id="rdbenefectivosi" label="Si" selected="true" groupName="enfectivo"/>
 		<s:RadioButton id="rdbenefectivono" label="No" groupName="enfectivo"/>
 	</s:VGroup>
 	
-	<s:VGroup x="913" y="75" width="45" height="57">
+	<s:VGroup x="909" y="87" width="45" height="57">
 		<s:RadioButton id="rdanuladasi" label="Si" groupName="anulada"/>
 		<s:RadioButton id="rdanuladano" label="No" selected="true" groupName="anulada"/>
 	</s:VGroup>
-	<mx:DateField id="dtfentrega" x="873" y="258" width="187" disabledDays="[0]"
+	<mx:DateField id="dtfentrega" x="953" y="355" width="187" disabledDays="[0]"
 				  disabledRanges="{[{rangeEnd: new Date((new Date()).getTime() - (1000*60*60*24))}]}"
 				  fontSize="16" labelFunction="formatDateTime" parseFunction="{null}"
 				  selectableRange="{{rangeStart : new Date()}}" toolTip="Seleccione la fecha de entrega"/>
-	<s:Label x="871" y="243" fontSize="14" fontWeight="bold" text="Fecha de entrega"/>
-	<s:Label x="864" y="304" fontSize="16" fontWeight="bold" text="VENDEDORES:"/>
-	<components:AutoComplete id="cmbVendedores" x="864" toolTip="Seleccione un Vendedor" prompt="Seleccione el vendedor..." y="319" width="246" labelField="nameuser" allowDuplicates="false" dropDownRowCount="10"
+	<s:Label x="951" y="340" fontSize="14" fontWeight="bold" text="Fecha de entrega"/>
+	<s:Label x="951" y="394" fontSize="16" fontWeight="bold" text="VENDEDORES:"/>
+	<components:AutoComplete id="cmbVendedores" x="951" toolTip="Seleccione un Empleado" prompt="Seleccione el empleado..." y="409" width="246" labelField="nameuser" allowDuplicates="false" dropDownRowCount="10"
 							 fontSize="16" fontWeight="bold" matchType="beginning">
 	</components:AutoComplete>
-	<s:Label x="863" y="352" fontFamily="Arial" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
-	<s:TextInput id="txtpassword" x="864" y="373" width="246" fontSize="16" fontStyle="normal" maxChars="15" restrict="[a-zA-Z0-9_-]"
+	<s:Label x="953" y="446" fontFamily="Arial" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
+	<s:TextInput id="txtpassword" x="954" y="463" width="246" fontSize="16" fontStyle="normal" maxChars="15" restrict="[a-zA-Z0-9_-]"
 				 prompt="Ingresar clave de vendedor..." displayAsPassword="true" skinClass="spark.skins.spark.TextInputSkin" enter="txtpassword_enterHandler(event)"/>
 	
 </s:Group>

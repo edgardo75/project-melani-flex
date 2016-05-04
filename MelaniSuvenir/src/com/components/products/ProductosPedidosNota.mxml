@@ -4,7 +4,7 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:components="com.hillelcoren.components.*"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
-		 width="844" height="448" initialize="group1_initializeHandler(event)">
+		 width="918" height="448" initialize="group1_initializeHandler(event)">
 	<fx:Script>
 		<![CDATA[
 			import flashx.textLayout.formats.Float;
@@ -88,10 +88,8 @@
 				mskcantidad.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				mskrecargo.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				mskdescuentopesos.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
-				mskanticipo.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+				mskAnticipo.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 				adglistpedprod.addEventListener(AdvancedDataGridEvent.ITEM_EDIT_END,itemEditEndHandler);
-				
-
 				cmbproduct.selectedItemId=1;
 				totGral=0;
 				totGralDesc=0;
@@ -760,8 +758,8 @@
 						lblTotApagar.text=Number(Number(totGral)-Number(totGralDesc.toFixed(3))).toFixed(3);
 					
 					
-				if(int(mskanticipo.text)>0)
-						lblsaldo.text=lblTotApagar.text=Number(Number(Number(totGral-totGralDesc))+recargo-(Number(mskanticipo.text))).toFixed(3);	
+				if(int(mskAnticipo.text)>0)
+						lblsaldo.text=lblTotApagar.text=Number(Number(Number(totGral-totGralDesc))+recargo-(Number(mskAnticipo.text))).toFixed(3);	
 					
 					
 					
@@ -828,11 +826,11 @@
 					var recargo:Number=tot_recargo*Number(calcularTotalAPagar.toFixed(3))/100;
 					lbltotalconrecargo.text=Number(Number(calcularTotalAPagar.toFixed(3))+recargo).toFixed(3);
 					lblTotApagar.text=Number(Number(calcularTotalAPagar.toFixed(3))+recargo).toFixed(3);
-					lblsaldo.text=Number(Number(Number(totGral)-Number(totGralDesc))+recargo-(Number(mskanticipo.text))).toFixed(3);
+					lblsaldo.text=Number(Number(Number(totGral)-Number(totGralDesc))+recargo-(Number(mskAnticipo.text))).toFixed(3);
 					
 				}else{
 					lblTotApagar.text=Number(Number(totGral)-Number(totGralDesc)).toFixed(3);
-					lblsaldo.text=Number(Number(totGral)-Number(totGralDesc)-(Number(mskanticipo.text))).toFixed(3);
+					lblsaldo.text=Number(Number(totGral)-Number(totGralDesc)-(Number(mskAnticipo.text))).toFixed(3);
 					
 				}
 				
@@ -893,7 +891,7 @@
 					if(KeyPress.currentTarget.toString().indexOf("mskrecargo")!=-1&&arrayDg.length>0)
 						Alert.show("Desea Agregar el Recargo al Listado?","Confirmar Operación", Alert.YES | Alert.NO, this, calcularRecargo, null, Alert.NO);
 					
-					if(KeyPress.currentTarget.toString().indexOf("mskanticipo")!=-1)
+					if(KeyPress.currentTarget.toString().indexOf("mskAnticipo")!=-1)
 						calcularAnticipo();
 					
 					if(KeyPress.currentTarget.toString().indexOf("mskdescuentopesos")!=-1)
@@ -958,7 +956,7 @@
 												
 												
 												lblTotApagar.text=desc_resto.toFixed(3);
-												lblsaldo.text=Number(desc_resto-Number(mskanticipo.text)).toFixed(3);
+												lblsaldo.text=Number(desc_resto-Number(mskAnticipo.text)).toFixed(3);
 												
 											}
 								lbldescuento.text=Number(-Number(mskdescuentopesos.text)).toFixed(3);
@@ -976,7 +974,7 @@
 			}
 			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 			public function calcularAnticipo():void{
-				if(int(mskanticipo.text)==0||mskanticipo.text.length==0){
+				if(int(mskAnticipo.text)==0||mskAnticipo.text.length==0){
 					lblsaldo.text=Number(totGral-totGralDesc+tot_recargo).toFixed(3);
 					anticipo=0;
 				}else{
@@ -991,8 +989,8 @@
 			public function anticipocalculoreuso():void{
 				
 				
-				if(Number(Number(Number(lblTotApagar.text).toFixed(3))>=Number(mskanticipo.text))){
-					anticipo=Number(Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskanticipo.text)).toFixed(3));
+				if(Number(Number(Number(lblTotApagar.text).toFixed(3))>=Number(mskAnticipo.text))){
+					anticipo=Number(Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskAnticipo.text)).toFixed(3));
 					
 					lblsaldo.text=anticipo.toFixed(3);
 					
@@ -1003,15 +1001,15 @@
 				}
 				
 				if(Number(lblsaldo.text)==0){
-					anticipo=Number(Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskanticipo.text)).toFixed(3));
+					anticipo=Number(Number(Number(Number(lblTotApagar.text).toFixed(3))-Number(mskAnticipo.text)).toFixed(3));
 					lblsaldo.text=anticipo.toFixed(3);
 					
 				}else{
-					if(Number(lblsaldo.text)<Number(mskanticipo.text))
+					if(Number(lblsaldo.text)<Number(mskAnticipo.text))
 						Alert.show("Imposible Calcular el anticipo");
 					else{
 						var saldo:Number=Number(lblsaldo.text);
-						anticipo=Number(Number(mskanticipo.text).toFixed(3));
+						anticipo=Number(Number(mskAnticipo.text).toFixed(3));
 						lblsaldo.text=Number(saldo-anticipo).toFixed(3);
 					}
 				
@@ -1031,8 +1029,8 @@
 						tot_recargo=0;
 						lbltotalconrecargo.text="0.000";
 						lblTotApagar.text=Number(totgral-descTotal).toFixed(3);
-						if(Number(mskanticipo.text)>0)
-							lblsaldo.text=Number(Number(totgral-descTotal)-Number(mskanticipo.text)).toFixed(3);
+						if(Number(mskAnticipo.text)>0)
+							lblsaldo.text=Number(Number(totgral-descTotal)-Number(mskAnticipo.text)).toFixed(3);
 					
 				}else{
 						if(tot_recargo==Number(mskrecargo.text))
@@ -1053,8 +1051,8 @@
 						mskrecargo.text=tot_recargo.toFixed(2);
 						
 						
-						if(Number(mskanticipo.text)>0)
-							lblsaldo.text=Number(Number(lbltotrecargo.toFixed(3))-Number(mskanticipo.text)).toFixed(3);
+						if(Number(mskAnticipo.text)>0)
+							lblsaldo.text=Number(Number(lbltotrecargo.toFixed(3))-Number(mskAnticipo.text)).toFixed(3);
 						else
 							lblsaldo.text=Number(lbltotrecargo).toFixed(3);
 					
@@ -1148,8 +1146,8 @@
 						lblTotApagar.text=Number(Number(lblTotGral.text)-tot_desc).toFixed(3);
 					
 						
-						if(int(mskanticipo.text)>0)
-							lblsaldo.text=Number(Number(lblTotGral.text)-tot_desc+(Number(recargo.toFixed(2)))-Number(mskanticipo.text)).toFixed(3);
+						if(int(mskAnticipo.text)>0)
+							lblsaldo.text=Number(Number(lblTotGral.text)-tot_desc+(Number(recargo.toFixed(2)))-Number(mskAnticipo.text)).toFixed(3);
 						
 						
 							
@@ -1264,7 +1262,7 @@
 																lblsaldo.text="0.000";
 																mskdescuentopesos.text="0.000";
 																lbltotalconrecargo.text="0.000";
-																mskanticipo.text="0.000";
+																mskAnticipo.text="0.000";
 																mskrecargo.text="0.000";
 																desc_resto=0;
 																tot_recargo=0;
@@ -1323,8 +1321,8 @@
 						
 						
 						
-						if(int(mskanticipo.text)>0)
-							lblsaldo.text=Number(Number(totGral-totGralDesc)+calcrecagro-(Number(mskanticipo.text))).toFixed(3);
+						if(int(mskAnticipo.text)>0)
+							lblsaldo.text=Number(Number(totGral-totGralDesc)+calcrecagro-(Number(mskAnticipo.text))).toFixed(3);
 						
 						
 						
@@ -1375,7 +1373,7 @@
 				tot_recargo=0;
 				anticipo=0;
 				mskrecargo.text="";
-				mskanticipo.text="";
+				mskAnticipo.text="";
 				
 				
 				
@@ -1412,7 +1410,7 @@
 				lbldescuento.text="0.000";
 				lblsaldo.text="0.000";
 				lbltotalconrecargo.text="0.000";
-				mskanticipo.text="0.000";
+				mskAnticipo.text="0.000";
 				mskrecargo.text="0.000";
 				mskdescuentopesos.text="0.000";
 				desc_resto=0;
@@ -1442,7 +1440,7 @@
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="productosWs" wsdl="http://localhost:8080/ServiceProductos/ProductosWs?wsdl"
+		<s:WebService id="productosWs" wsdl="http://192.168.1.100:8080/ServiceProductos/ProductosWs?wsdl"
 					  showBusyCursor="true">
 			<s:operation name="searchAllProductos"
 						 fault="operation1_faultHandler(event)"
@@ -1467,7 +1465,7 @@
 	<s:Label x="23" y="67" fontFamily="Verdana" fontSize="16" text="Cantidad:"/>
 	<controls:MaskedTextInput id="mskcantidad" x="108" y="58" width="55" fontFamily="Verdana"
 							  tabEnabled="false" fontSize="16" fontWeight="bold" maxChars="3" restrict="0-9" tabIndex="2"/>
-	<mx:AdvancedDataGrid id="adglistpedprod" x="25" y="86" width="809" height="149"
+	<mx:AdvancedDataGrid id="adglistpedprod" x="25" y="86" width="852" height="149"
 						 alternatingItemColors="[#adf1f5, white]"
 						 dataChange="adglistpedprod_dataChangeHandler(event)"
 						 designViewDataType="flat" doubleClickEnabled="true" 
@@ -1508,43 +1506,44 @@
 							 dropDownRowCount="10" fontSize="16" fontWeight="bold"
 							 labelField="descripcion" matchType="beginning" tabEnabled="false" tabIndex="0">
 	</components:AutoComplete>
-	<s:Label x="574" y="245" color="#053260" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="610" y="245" color="#053260" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL GRAL $:" verticalAlign="top"/>
-	<s:Label id="lblTotGral" x="708" y="243" width="124" color="#053260" fontFamily="Verdana"
+	<s:Label id="lblTotGral" x="744" y="243" width="124" color="#053260" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
 	<s:Label x="224" y="69" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
 	<controls:MaskedTextInput text="0.00" maxChars="5" x="340" y="58" width="60" fontFamily="Verdana" fontSize="16" tabIndex="3" id="txtdescuento" restrict="0-9." toolTip="Ingresa un porcentaje de descuento, aplicable a todos los productos de la planilla"/>
-	<s:Label x="543" y="281" color="#0A8412" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="579" y="281" color="#0A8412" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL A PAGAR $:"/>
-	<s:Label id="lblTotApagar" x="705" y="280" width="127" color="#0A8412" fontFamily="Verdana"
+	<s:Label id="lblTotApagar" x="741" y="280" width="127" color="#0A8412" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
 	<s:Button id="btnremover" x="25" y="236" width="136" height="30" label="Remover Todo"
 			  click="btnremover_clickHandler(event)" enabled="false" fontSize="16"
 			  toolTip="Elimina todos Los productos del Listado!!!"/>
-	<s:Label x="577" y="262" width="135" height="14" color="#F84B07" fontFamily="Verdana"
+	<s:Label x="613" y="262" width="135" height="14" color="#F84B07" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="DESCUENTO $:"/>
-	<s:Label id="lbldescuento" x="707" y="262" width="125" color="#F84B07" fontFamily="Verdana"
+	<s:Label id="lbldescuento" x="743" y="262" width="125" color="#F84B07" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label x="487" y="301" width="223" color="#04667F" fontFamily="Verdana" fontSize="16"
+	<s:Label x="523" y="301" width="223" color="#04667F" fontFamily="Verdana" fontSize="16"
 			 fontWeight="bold" text="TOTAL CON RECARGO $:" textAlign="right"/>
-	<s:Label x="487" y="319" width="223" color="#89908D" fontFamily="Verdana" fontSize="16"
+	<s:Label x="523" y="319" width="223" color="#89908D" fontFamily="Verdana" fontSize="16"
 			 fontWeight="bold" text="SALDO $:" textAlign="right"/>
-	<s:Label id="lbltotalconrecargo" x="708" y="299" width="124" color="#04667F" fontFamily="Verdana"
+	<s:Label id="lbltotalconrecargo" x="744" y="299" width="124" color="#04667F" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label id="lblsaldo" x="708" y="318" width="124" color="#89908D" fontFamily="Verdana"
+	<s:Label id="lblsaldo" x="744" y="318" width="124" color="#89908D" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label x="592" y="357" fontFamily="Verdana" fontSize="16" fontWeight="normal" text=" RECARGO %:"
+	<s:Label x="573" y="357" fontFamily="Verdana" fontSize="16" fontWeight="normal" text=" RECARGO %:"
 			 textAlign="right"/>
-	<controls:MaskedTextInput id="mskrecargo" x="708" y="349" width="72" fontFamily="Verdana" text="0.00" maxChars="5"
+	<controls:MaskedTextInput id="mskrecargo" x="689" y="349" width="72" fontFamily="Verdana" text="0.000" maxChars="6"
 							  fontSize="16" restrict="0-9." toolTip="Ingresa un Porcentaje de recargo total para los productos cargados"/>
 	<s:Button id="btncargarProducto" x="25" y="269" height="30" label="Cargar Producto"
 			  click="btncargarProducto_clickHandler(event)" fontSize="16"
 			  toolTip="Muestra una Ventana para cargar un Producto"/>
-	<s:Label x="602" y="386" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="ANTICIPO $:"
+	<s:Label x="583" y="386" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="ANTICIPO $:"
 			 textAlign="right"/>
-	<controls:MaskedTextInput text="0.0" id="mskanticipo" maxChars="5" x="708" y="378" width="72" fontFamily="Verdana"
+	<controls:MaskedTextInput text="0.000" id="mskAnticipo" maxChars="6" x="689" y="378" width="72" fontFamily="Verdana"
 							  fontSize="16" restrict="0-9."/>
-	<s:Label x="582" y="412" fontFamily="Verdana" fontSize="16" text="$ DESCUENTO:" />
-	<controls:MaskedTextInput id="mskdescuentopesos" x="709" y="405" width="71" fontFamily="Verdana" text="0.0" maxChars="5"  restrict="0-9."
+	<s:Label x="563" y="412" fontFamily="Verdana" fontSize="16" text="$ DESCUENTO:" />
+	<controls:MaskedTextInput id="mskdescuentopesos" x="690" y="405" width="71" fontFamily="Verdana" text="0.000" maxChars="6"  restrict="0-9."
 							  fontSize="16"/>
+	<s:CheckBox id="chkAnticipoEfectivo" x="769" y="384" width="138" label="ANTICIPO EFECTIVO" selected="true" toolTip="Active si el anticipo es en efectivo, para anticipos pagados con tarjeta se debe desactivar!"/>
 </s:Group>
