@@ -14,11 +14,13 @@
 		<s:XMLListCollection id="infodomicli" source="{tabDatosPersonales.xmlinfoclidomi}" />
 		<s:XMLListCollection id="infotelcli" source="{tabDatosPersonales.xmlinfotelcli}"/>
 		
-		<s:WebService id="serviceCli" wsdl="http://192.168.1.100:8080/ServiceClientes/ClientesWs?WSDL" showBusyCursor="false">
-			<s:operation name="addCliente" result="operation1_resultHandler(event)" fault="operation1_faultHandler(event)">				
+		<s:WebService id="serviceCli" wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL" showBusyCursor="false">
+			<s:operation name="addCliente" 
+						 result="operation1_resultHandler(event)"
+						 fault="operation1_faultHandler(event)">				
 			</s:operation>
 		</s:WebService>
-		<s:WebService id="wslocaliades" wsdl="http://192.168.1.100:8080/ServicesLocalidades/LocalidadesWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wslocaliades" wsdl="http://192.168.1.101:8080/ServicesLocalidades/LocalidadesWs?WSDL" showBusyCursor="true">
 			<s:operation name="searchAllLocalidadesByIdProvincia" result="operation2_resultHandler(event)" fault="operation2_faultHandler(event)">				
 			</s:operation>
 		</s:WebService>
@@ -80,9 +82,7 @@
 			//-----------------------------------------------------------	
 			
 			protected function btnGuardar_clickHandler(event:MouseEvent):void
-			{
-			
-				var isValidForm:Boolean= tabDatosPersonales.validateForm() && tabDomicilios.txtcodpostal.text.length>0 && tabDomicilios.txtnumero.length>0 && tabDomicilios.cmbprovincias.selectedItemId>=0 && tabDomicilios.cmbLocalidades.selectedItemId>=0 && tabDomicilios.cmbcalles.selectedItemId>=0 && tabDomicilios.cmborientacion.selectedItemId>=0 && tabDomicilios.cmbbarrios.selectedItemId>=0;
+			{var isValidForm:Boolean= tabDatosPersonales.validateForm() && tabDomicilios.txtcodpostal.text.length>0 && tabDomicilios.txtnumero.length>0 && tabDomicilios.cmbprovincias.selectedItemId>=0 && tabDomicilios.cmbLocalidades.selectedItemId>=0 && tabDomicilios.cmbcalles.selectedItemId>=0 && tabDomicilios.cmborientacion.selectedItemId>=0 && tabDomicilios.cmbbarrios.selectedItemId>=0;
 				if(tabTelefonos.listtel.length==0){
 					Alert.show("Es necesario ingresar un telefono de contacto");
 					return;
@@ -99,10 +99,10 @@
 				
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 				
-				popup=Progress(PopUpManager.createPopUp(this,Progress,true));
-				PopUpManager.centerPopUp(popup);
+				//popup=Progress(PopUpManager.createPopUp(this,Progress,true));
+				//PopUpManager.centerPopUp(popup);
 				
-				
+				//Alert.show(sendInformation());
 				serviceCli.addCliente(sendInformation());
 				
 				
@@ -148,7 +148,7 @@
 				
 				var xmlDomiclio:String=
 					"<Domicilio>\n"+
-					"<domicilioId>"+iddomicilio+"</domicilioId>\n"+
+					"<domicilioId>"+tabDomicilios.idDomicilio+"</domicilioId>\n"+
 					"<piso>"+tabDomicilios.txtpiso.text+"</piso>\n"+
 					"<manzana>"+tabDomicilios.txtmanzana.text+"</manzana>\n"+
 					"<entrecalleycalle>"+tabDomicilios.txtentrecalle.text+"</entrecalleycalle>\n"+
@@ -225,7 +225,7 @@
 						tabDomicilios.txtpiso.text=infodomicli[0].piso;
 						tabDomicilios.txtsector.text=infodomicli[0].sector;
 						tabDomicilios.txttorre.text=infodomicli[0].torre;
-						
+						tabDomicilios.idDomicilio=infodomicli[0].id;
 											
 					    tabDomicilios.cmbprovincias.selectedItemId=infodomicli[0].Localidad.idprovincia;
 							
@@ -356,10 +356,18 @@
 			}
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
-				var retorno:int=int(event.result.toString());
+				
 				PopUpManager.removePopUp(popup);
-					if(retornoSwitch(retorno)>0)
+				
+				if(event.result.toString().indexOf("<Lista>")!=-1){
+					Alert.show("Datos Almacenados Correctamente");
+					resetearControles();
+				}else{
+					var retorno:int=int(event.result.toString());
+					if(retornoSwitch(retorno)>0){
 						resetearControles();
+					}
+				}
 			}
 			
 			protected function operation1_faultHandler(event:FaultEvent):void

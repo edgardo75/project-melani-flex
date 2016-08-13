@@ -41,7 +41,7 @@
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService wsdl="http://192.168.1.100:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true" id="wsNotasGraficos">
+		<s:WebService wsdl="http://192.168.1.101:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true" id="wsNotasGraficos">
 			<s:operation name="calcularVentasMensualesHastaFechaYAnoActual" concurrency="last"
 						 result="operation1_resultHandler(event)"
 						 fault="operation1_faultHandler(event)">

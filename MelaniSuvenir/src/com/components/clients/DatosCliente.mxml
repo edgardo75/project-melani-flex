@@ -15,7 +15,7 @@
 		<s:XMLListCollection id="infotelcli" source="{xmlinfotelcli}"/>
 		
 			<s:WebService id="cliservices" 
-						  wsdl="http://192.168.1.100:8080/ServiceClientes/ClientesWs?wsdl" 						  
+						  wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?wsdl" 						  
 						  showBusyCursor="false" requestTimeout="10" 
 						  >
 				<s:operation name="obtenerClienteXTipoAndNumeroDocu"							
@@ -82,7 +82,7 @@
 	</fx:Declarations>
 	
 
-	<mx:HRule x="10" y="29" width="380" height="1"/>
+	<mx:HRule x="10" y="28" width="1062" height="1"/>
 	<s:Label x="380" y="10" backgroundAlpha="0.6" color="#10897C" fontSize="16" fontWeight="bold"
 			 text="DATOS PERSONALES DE CLIENTE"/>
 	<s:TextInput id="txtnombre" x="206" y="69" width="317" fontFamily="Verdana" fontSize="16"
@@ -139,15 +139,13 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import com.components.utils.BarraProgreso;
-			
+			import com.components.utils.BarraProgreso;			
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
-			import mx.validators.Validator;
-			
+			import mx.validators.Validator;			
 			import org.flexunit.internals.namespaces.classInternal;
 			[Bindable]
 				private var respuesta:String;
@@ -158,15 +156,8 @@
 			[Bindable]
 			public var xmlinfotelcli:XMLList;
 			[Bindable]
-			public var urlWs:String = "http://192.168.1.100:8080/ServiceClientes/ClientesWs?wsdl";
-			
-			private var popup:BarraProgreso;
-			
-			
-			
-			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			public var urlWs:String = "http://192.168.1.101:8080/ServiceClientes/ClientesWs?wsdl";			
 			public function validateForm():Boolean{
-				
 			var validatorArray:Array=new Array();
 					validatorArray.push(emV);
 					validatorArray.push(apeV);
@@ -175,186 +166,110 @@
 					var validatorErrorArray:Array = Validator.validateAll(validatorArray);
 					var isValidForm:Boolean = validatorErrorArray.length == 0;                
 			return isValidForm
-			
-			
-			}
-			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-			
+			}			
 			private function tranferirFocus(keyPress:KeyboardEvent):void{
-				
-				
-			
-								if (keyPress.keyCode==Keyboard.ENTER){
-									
+				if (keyPress.keyCode==Keyboard.ENTER){
 									if (keyPress.currentTarget.toString().indexOf("cmbTiposdocu")!=-1)
 											txtdocumento.setFocus();	
-									
-									
 									if (keyPress.currentTarget.toString().indexOf("cmbGeneros")!=-1)
 										txtemail.setFocus();	
-									
-									
 									if(keyPress.currentTarget.toString().indexOf("txtapellido")!=-1&&txtapellido.text.length>2)
 										cmbGeneros.setFocus();
-									
-									
 									if(keyPress.currentTarget.toString().indexOf("txtnombre")!=-1&&txtnombre.text.length>2)
 											txtapellido.setFocus();
-									
-									
 									if(keyPress.currentTarget.toString().indexOf("txtdocumento")!=-1)
 										txtnombre.setFocus();
-									
 									if(keyPress.currentTarget.toString().indexOf("txtemail")!=-1)
 											txtobservaciones.setFocus();
-									
 								}
-					
-			
-			}
-			
+			}			
 			protected function init(event:FlexEvent):void
 			{
-				//----------------------------------------
 				cmbGeneros.selectedItemId=2;
 				cmbTiposdocu.selectedItemId=3;
-			
-				//----------------------------------------
 				txtapellido.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				txtdocumento.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				txtemail.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
 				txtnombre.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
-				txtobservaciones.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
-				//----------------------------------------
+				txtobservaciones.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);				
 				cmbGeneros.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);				
 				cmbTiposdocu.addEventListener(KeyboardEvent.KEY_UP,tranferirFocus);
-				
-				
-				var urlReq:URLRequest=new URLRequest("");
-				//----------------------------------------
-			}
-			
-			
-			public function clearComponenteCliente():void{
-					
+				var urlReq:URLRequest=new URLRequest("");				
+			}public function clearComponenteCliente():void{
 				txtapellido.text="";
-			
 				txtemail.text="";
 				txtnombre.text="";
 				txtobservaciones.text="";
 				cmbGeneros.selectedItemId=2;
 				cmbTiposdocu.selectedItemId=3;
 				compTelefono.clearTodo();
-			
-			
 			}
-			
 			protected function operation1_resultHandlerObtenerCliente(event:ResultEvent):void
-			{
-				
-				respuesta ="";
+			{	
+				respuesta ="";				
 				respuesta = event.result.toString();
-				
-				
-				
-				
 				xmlInfoClient=new XMLList(event.result);
 				xmlinfoclidomi=new XMLList(xmlInfoClient.item.personadomicilio.domicilio);
 				xmlinfotelcli=new XMLList(xmlInfoClient.item.personatelefono.telefono);
-				
-				PopUpManager.removePopUp(popup);
-				if(respuesta.indexOf("NO ENCONTRADO")!=-1){
+				if(respuesta.indexOf("NO PASO NADA")!=-1){
 					clearComponenteCliente();
 					txtnombre.setFocus();
-					compTelefono.clearTodo();
-					
-				
-			
+					compTelefono.clearTodo();			
 				}else{
 					if(respuesta.indexOf("NO ES UN CLIENTE")!=-1){
 						Alert.show("EL DOCUMENTO INGRESADO NO PERTENECE A UN CLIENTE");
 						if(txtnombre.text.length>0){
 							clearComponenteCliente();
 							compTelefono.clearTodo();
-						}
-						
+						}						
 					}else{
-						if(respuesta.indexOf("<observaciones>")!=-1){					
-							
-							addCliente();
-						}					
+						if(respuesta.indexOf("ERROR EN METODO EXISTE Persona")!=-1){
+							Alert.show("Ocurrio un Error al Buscar una Persona!");
+						}else{
+									if(respuesta.indexOf("<observaciones>")!=-1){						
+										addCliente();
+									}				
+						}
 					}
 				}
-					
-				
-				
-				
 			}
 			private function addCliente():void{
-				var longarray:int;
-				
+				var longarray:int;				
 				if(infoclient.length>0){
 						txtapellido.text=infoclient[0].apellido;
-						txtdocumento.text=infoclient[0].nrodocu;
-						
+						txtdocumento.text=infoclient[0].nrodocu;						
 						if(String(infoclient[0].email).toString().indexOf("null")!=0)
 							txtemail.text=infoclient[0].email;
 						else
-							txtemail.text="";
-						
-						txtnombre.text=infoclient[0].nombre;
-						
+							txtemail.text="";						
+						txtnombre.text=infoclient[0].nombre;						
 						if(String(infoclient[0].observaciones).toString().indexOf("null")!=0)
 							txtobservaciones.text=infoclient[0].observaciones;
 						else
-							txtobservaciones.text="";
-						
+							txtobservaciones.text="";						
 						cmbGeneros.selectedItemId=infoclient[0].Genero.generoId;
 						cmbTiposdocu.selectedItemId=infoclient[0].idtipodocu;
 						//*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 						compTelefono.clearTodo();
-						if(infotelcli.length>0){
-							
+						if(infotelcli.length>0){							
 							longarray=compTelefono.arrayTel.length;
 							for(var j:int=0;j<longarray;j++)
-								compTelefono.arrayTel.pop();
-							
-							
-							
+								compTelefono.arrayTel.pop();					
 							for(var i:int=0;i<infotelcli.length;i++){
-								compTelefono.arrayTel.push({prefijo:infotelcli[i].prefijo,nrotelefono:infotelcli[i].nrotelefono,descripcion:infotelcli[i].descripcion,tipotelefono:infotelcli[i].tipotelefono,idempresatel:infotelcli[i].idempresatelefonia,idtipotel:infotelcli[i].idtipotel});
-								
+								compTelefono.arrayTel.push({prefijo:infotelcli[i].prefijo,nrotelefono:infotelcli[i].nrotelefono,descripcion:infotelcli[i].descripcion,tipotelefono:infotelcli[i].tipotelefono,idempresatel:infotelcli[i].idempresatelefonia,idtipotel:infotelcli[i].idtipotel});								
 							}
 							compTelefono.listtel.source=compTelefono.arrayTel;
 							compTelefono.listtel.refresh();
-							
-							
-							
-							
-							
 						}
-						
-						
 						//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-						
-						
-						
-				}else{
+						}else{
 					clearComponenteCliente();
-				
-				
-				}
-			
-			
+						}
 			}
-			
 			protected function operation1_faultHandler(event:FaultEvent):void
-			{
-				PopUpManager.removePopUp(popup);
+			{			
 				Alert.show("FALLÓ EL SERVICIO, VERIFIQUE!!!");
-				
 			}
-			
 			protected function txtdocumento_enterHandler(event:FlexEvent):void
 			{
 				if(txtdocumento.text.length==0)
@@ -362,22 +277,13 @@
 				else{
 					if(txtdocumento.text.length<7){
 						Alert.show("   Ingrese un número de Documento de manera correcta   ");
-					
 					}else{
-						
-						///SendData to Server
-						popup = BarraProgreso(PopUpManager.createPopUp(this, BarraProgreso, true));				
-						PopUpManager.centerPopUp(popup);						
-						cliservices.obtenerClienteXTipoAndNumeroDocu(cmbTiposdocu.selectedItemId,int(txtdocumento.text));
-					
+						///SendData to Server			
+						cliservices.obtenerClienteXTipoAndNumeroDocu(cmbTiposdocu.selectedItemId,int(txtdocumento.text));					
 					}
-				}
-				
-			}
-			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		
-			public function getDatosPersonalesXML():String{
-				
+				}				
+			}		
+			public function getDatosPersonalesXML():String{				
 				var xmlDatosPersonales:String="<item>\n"+
 								"<apellido>"+txtapellido.text+"</apellido>\n"+
 								"<nombre>"+txtnombre.text+"</nombre>\n"+
@@ -391,15 +297,9 @@
 								"<genero>\n"+
 									"<idgenero>"+cmbGeneros.selectedItemId+"</idgenero>\n"+
 								"</genero>\n"+
-						"</item>\n";	
-						
-						return xmlDatosPersonales;
-			
+						"</item>\n";							
+						return xmlDatosPersonales;			
 			}
-			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-			
-			
-			
 		]]>
 	</fx:Script>
 </s:Group>

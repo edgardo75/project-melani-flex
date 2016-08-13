@@ -6,10 +6,10 @@
 		 width="1090" height="438" creationComplete="group1_creationCompleteHandler(event)" xmlns:clients="com.components.clients.*" close="titlewindow1_closeHandler()">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="servicesCliente" wsdl="http://192.168.1.100:8080/ServiceClientes/ClientesWs?WSDL"					  
+		<s:WebService id="servicesCliente" wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL"					  
 					  showBusyCursor="true"
 					  useProxy="false">		
-			<s:operation name="addClienteDatosPersonales"
+			<s:operation name="addCliente"
 						  resultFormat="object"
 						  result="operationDatosPersonalesREstHandler(event)"
 						  fault="operationDatosPersonalesFaultHandelr(event)">				
@@ -58,9 +58,8 @@
 			
 			
 			//*******************************************************************************************
-			protected function operationDatosPersonalesREstHandler(event:ResultEvent):void{
-				PopUpManager.removePopUp(popupWait);				
-				
+			protected function operationDatosPersonalesREstHandler(event:ResultEvent):void{				
+				PopUpManager.removePopUp(popupWait);								
 				if(event.result.toString().indexOf("<id>")!=-1){
 					xmlClienteDatosPersonales=new XMLList(event.result);
 						idcliente.text=String(datoscliente[0].id);
@@ -70,8 +69,11 @@
 						titlewindow1_closeHandler();				
 						
 				}else{
-						if(event.result.toString().indexOf("<error>")!=-1)
-							Alert.show("Error en la operación, Verifique!!! \n"+String(event.result.toString().substring(15,event.result.toString().length-16)));						
+					var retorno:int=int(event.result.toString());
+							if(ClienteDomicilioTelefono.retornoSwitch(retorno)>0){
+								clienteComp.clearComponenteCliente();
+							}
+						
 				}
 					
 				
@@ -160,18 +162,13 @@
 							///SendData to Server
 							popupWait = BarraProgreso(PopUpManager.createPopUp(this, BarraProgreso, true));				
 							PopUpManager.centerPopUp(popupWait);
-							//-------------------------------------------------------------
-				
+							//-------------------------------------------------------------				
 				//-------------------------------------------------------------
-				servicesCliente.addClienteDatosPersonales(getDatosCliente());
-				
-				
+				servicesCliente.addCliente(getDatosCliente());				
 			}
 			
 			protected function titlewindow1_closeHandler():void
-			{
-				
-				
+			{	
 				PopUpManager.removePopUp(this);
 				
 			}

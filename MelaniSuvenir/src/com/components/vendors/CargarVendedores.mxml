@@ -19,14 +19,13 @@
 			import mx.managers.PopUpManager;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			import mx.utils.Base64Encoder;
 			import mx.validators.ValidationResult;
 			import mx.validators.Validator;
 			
-			import popus.PopupUsuarioHabilitado;
 			import popus.PopupUsuario;
-			
-			private var vResult:ValidationResultEvent;
-			
+			import popus.PopupUsuarioHabilitado;			
+			private var vResult:ValidationResultEvent;			
 			[Bindable]
 				private var listEmpleados:XMLList;
 			[Bindable]
@@ -35,10 +34,7 @@
 				private var empType:String;
 			[Bindable]
 			private var empId:int=0;
-			
-			
-			private var so:SharedObject=SharedObject.getLocal("userData");
-			
+			private var so:SharedObject=SharedObject.getLocal("userData");			
 			protected function operationAddEmpleadosFulltime1_resultHandler(event:ResultEvent):void
 			{
 				var iresult:int=int(event.result);
@@ -91,7 +87,7 @@
 					}	
 						
 					case -11:{
-						Alert.show("La Clave Ingresada, debe contener almenos\n una letra mayúscula, minúscula y un número,\n no se permiten espacion en blanco y mínimo 4 caracteres.");
+						Alert.show("La Clave Ingresada, debe contener almenos\n una letra mayúscula, una minúscula y un número,\n no se permiten espacion en blanco, un mínimo de 4 y máximo de 12 caracteres.");
 						break;
 					}
 					case -12:{
@@ -113,7 +109,10 @@
 					case -17:{
 						Alert.show("Elija otra clave, no pasó la fase de seguridad");
 						break;
-					}				
+					}	
+					case -18:{
+						Alert.show("Email no válido!");
+					}	
 					default:
 					{
 						limpiarcontroles();
@@ -192,11 +191,7 @@
 			{
 				Alert.show("Se produjo un error al tratar de conseguir datos de los empleados");
 				
-			}
-			
-		
-			
-			
+			}	
 			
 			protected function btnNuevo_clickHandler(event:MouseEvent):void
 			{			
@@ -405,15 +400,12 @@
 			
 			}
 			
-			protected function guardarEmpleado(evt:CloseEvent):void{
-				
+			protected function guardarEmpleado(evt:CloseEvent):void{				
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 				if(rbempleadofull.selected==true){
 					if(msksalario.text.length==0)
-						msksalario.text="0";	
-					
-					wsempleado.addEmpleadoFullTime(getDatosEmpleado());
-					
+						msksalario.text="0";						
+					wsempleado.addEmpleadoFullTime(getDatosEmpleado());					
 				}else{
 					if(rbempleadopart.selected==true){
 						if(msksalarioxhora.text.length==0)
@@ -428,6 +420,7 @@
 			
 			}
 			private function getDatosEmpleado():String{
+			
 			var empleado:String="<Empleado>" +
 				
 				"<apellido>" +txtapellido.text+"</apellido>" +
@@ -450,11 +443,7 @@
 			
 			}
 			protected function btnGuardar_clickHandler(event:MouseEvent):void
-			{
-				
-				
-				vResult=nomV.validate();
-				
+			{	vResult=nomV.validate();
 				if(vResult.type==ValidationResultEvent.INVALID)
 					return;
 				else{
@@ -477,7 +466,6 @@
 									if(txtdocumento.text.length<7){
 										Alert.show("   Ingrese un número de Documento de manera correcta   ");
 										return;
-										
 									}else{
 										vResult=nomuserV.validate();
 										if(vResult.type==ValidationResultEvent.INVALID)
@@ -695,8 +683,7 @@
 			}
 			protected function actualizarEmpleado(evt:CloseEvent):void{
 				var salario:Number=0;
-				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;				
-			
+				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 				wsempleado.actualizarEmpleado(getDatosEmpleado());
 			}
 			protected function operation1_resultHandler_actualizar(event:ResultEvent):void
@@ -746,10 +733,10 @@
 			}
 			
 		]]>
-	</fx:Script>
+	</fx:Script> 
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wsempleado" wsdl="http://192.168.1.100:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wsempleado" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="true">
 			<s:operation name="addEmpleadoFullTime"
 						 result="operationAddEmpleadosFulltime1_resultHandler(event)"
 						 fault="operation1AddEmpladosFullTime_faultHandler(event)"
@@ -791,11 +778,11 @@
 		<mx:StringValidator id="nomV" source="{txtnombre}" 
 							property="text" minLength="2" maxLength="30"
 							required="true" requiredFieldError="Debe Ingresar el Nombre"/>
-		<mx:StringValidator id="passV" source="{txtpassword}" 
-							property="text" minLength="4" maxLength="15"
+		<mx:StringValidator id="passV" source="{txtpassword}"  
+							property="text" minLength="4" maxLength="12"
 							required="true" requiredFieldError="Debe Ingresar Password"/>
 		<mx:StringValidator id="passreV" source="{txtrepassword}" 
-							property="text" minLength="4" maxLength="15"
+							property="text" minLength="4" maxLength="8"
 							required="true" requiredFieldError="Debe Reingresar el Password"/>
 		<mx:StringValidator id="nomuserV" source="{txtnameuser}" 
 							property="text" minLength="2" maxLength="20"
@@ -939,10 +926,10 @@
 	<s:Label x="355" y="308" fontSize="20" fontWeight="bold" text="Repassword:"/>
 	<s:TextInput id="txtpassword" x="483" y="277" width="168" displayAsPassword="true" restrict="[a-zA-Z0-9_-*!#$%/()=?]"
 					   fontSize="16" prompt="Ingrese password...." 
-					   skinClass="spark.skins.spark.TextInputSkin" maxChars="8"/>
+					   skinClass="spark.skins.spark.TextInputSkin" maxChars="12"/>
 	<s:TextInput id="txtrepassword" x="483" y="303" width="168" displayAsPassword="true" restrict="[a-zA-Z0-9_-*!#$%/()=?]"
 					   fontSize="16" prompt="Reingreso password..." 
-					   skinClass="spark.skins.spark.TextInputSkin" maxChars="8"/>
+					   skinClass="spark.skins.spark.TextInputSkin" maxChars="12"/>
 	<s:VGroup x="252" y="327" >
 	<s:RadioButton id="rbempleadofull" x="250" y="339" label="Empleado FullTime"
 				   groupName="rdgroupEmpleados" selected="true" click="rbempleadofull_clickHandler(event)"/>

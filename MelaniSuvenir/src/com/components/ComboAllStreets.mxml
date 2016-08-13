@@ -102,7 +102,7 @@
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wsStreet" wsdl="http://192.168.1.100:8080/ServicesCalles/CallesWs?WSDL" showBusyCursor="true"
+		<s:WebService id="wsStreet" wsdl="http://192.168.1.101:8080/ServicesCalles/CallesWs?WSDL" showBusyCursor="true"
 					  
 					  >
 			<s:operation result="operation1_resultHandler(event)"

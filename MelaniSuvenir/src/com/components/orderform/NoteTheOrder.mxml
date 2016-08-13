@@ -212,7 +212,7 @@
 				
 			}
 			
-			protected function btninserclient_clickHandler(event:MouseEvent):void
+			protected function btnInserCliente_clickHandler(event:MouseEvent):void
 			{
 				displayPopupCustomerPersonalData();
 			}
@@ -649,7 +649,7 @@
 					default:
 					{
 						
-						var source:String="http://192.168.1.100:8080/WebMelanie2/ShowReportNotaPedido?nronota="+nro;
+						var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportNotaPedido?nronota="+nro;
 						var urlReq:URLRequest= new URLRequest(source);
 						navigateToURL(urlReq,"_blank");
 						limpiarTodo();
@@ -774,20 +774,20 @@
 		<s:RadioButtonGroup id="stockFuturo"/>
 		<s:RadioButtonGroup id="notaCancelada"/>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="wsnotapedido" wsdl="http://192.168.1.100:8080/ServiceNotaPedido/NotaPedidoWs?WSDL">
+		<s:WebService id="wsnotapedido" wsdl="http://192.168.1.101:8080/ServiceNotaPedido/NotaPedidoWs?WSDL">
 			<s:operation name="agregarNotaPedido" fault="operationNota_faultHandler(event)"
 						 result="operationNota_resultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
 		<s:WebService id="wstarjetascreditodebito" 
-					  wsdl="http://192.168.1.100:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="false"
+					  wsdl="http://192.168.1.101:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="false"
 					  >
 			<s:operation name="searchAllTarjetasCreditoDebito" result="operation1_resultHandler(event)" fault="operation1_faultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
-		<s:WebService wsdl="http://192.168.1.100:8080/ServiceClientes/ClientesWs?WSDL"
+		<s:WebService wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL"
 					  id="cli" showBusyCursor="false">
 			<s:operation fault="operationFaultGetClient(event)"
 						 result="operationResultGetClient(event)" 
@@ -801,7 +801,7 @@
 			</s:operation>
 			
 		</s:WebService>
-		<s:WebService id="wsempleados" wsdl="http://192.168.1.100:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
+		<s:WebService id="wsempleados" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
 			<s:operation name="selectAllEmpleados"
 						 fault="operation2_faultHandlerSelectAllEmpleados(event)"
 						 result="operation2_resultHandlerSelectAllEmpleados(event)">
@@ -821,8 +821,8 @@
 	</fx:Declarations>
 	
 	
-	<s:TextArea id="txtObservacionesNota" x="410" y="134" width="790" height="111" fontSize="16"
-				maxChars="32000"/>
+	<s:TextArea id="txtObservacionesNota" x="410" y="134" width="790" height="111" enabled="true"
+				fontSize="16" maxChars="32000"/>
 	<s:Label x="409" y="117" fontSize="14" fontWeight="bold" text="Observaciones:"/>
 	<controls:MaskedTextInput id="txtNumeroCuponPago" x="364" y="80" width="184" fontFamily="Verdana"
 							  fontSize="16" inputMask="####-####-####-####" maxChars="19"
@@ -859,8 +859,8 @@
 	<s:Label id="lblapellido" x="43" y="128" fontSize="16" fontWeight="bold" text="Apellido:"/>
 	<s:TextInput id="txtApellidoCliente" x="113" y="118" width="189" fontSize="18" maxChars="40"
 				 prompt="Ingrese Apellido..." restrict="A-ÑZa-ñz "/>
-	<s:Button id="btninserclient" x="29" y="468" width="134" height="30" label="DatosCliente"
-			  click="btninserclient_clickHandler(event)" fontSize="16"
+	<s:Button id="btnInserCliente" x="29" y="468" width="134" height="30" label="DatosCliente"
+			  click="btnInserCliente_clickHandler(event)" fontSize="16"
 			  toolTip="Muestra una Ventana para Ingresar Datos Personales de un Cliente"/>
 
 	<s:Button id="btnGuardarNota" x="29" y="501" width="134" height="30" label="Guardar Nota"

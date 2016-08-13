@@ -6,7 +6,7 @@
 		 width="1088" height="396" creationComplete="group1_creationCompleteHandler(event)" xmlns:clients="com.components.clients.*">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:WebService id="servicesCliente" wsdl="http://192.168.1.100:8080/ServiceClientes/ClientesWs?WSDL"
+		<s:WebService id="servicesCliente" wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL"
 					  
 					  showBusyCursor="false"
 					  useProxy="false">
@@ -64,16 +64,69 @@
 				
 				
 			}
+			public static function retornoSwitch(retorno:int):int
+			{
+				switch(retorno){
+					case 0:{Alert.show("Ocurrió un Error en el Servidor con los Datos, verifique!!!");
+						break;
+					}
+					case -1:{Alert.show("Error en el Server, verifique!!!");
+						break;
+					}
+					case -2:{Alert.show("Error en el Server, verifique!!!");
+						break;
+					}	
+					case -3:{Alert.show("Error en el Server, verifique!!!");
+						break;
+					}
+					case -6:{Alert.show("Error en el Server, verifique!!!");
+						break;
+					}
+					case -8:{Alert.show("Email encontrado ya registrado en la base de datos");
+						break;
+					}						
+					case -7:{Alert.show("No pasó nada al buscar un email, verifique!!!");
+						break;
+					}
+					case -9:{Alert.show("El documento encontrado no pertenece a un cliente!!!");
+						break;
+					}	
+					case -11:{Alert.show("Email no válido!!!");
+						break;
+					}
+					case -14:{Alert.show("Numero de documento no válido!!!");
+						break;
+					}
+					case -13:{Alert.show("Apellído no válido!!!");
+						break;
+					}
+					case -12:{Alert.show("Nombre no válido!!!");
+						break;
+					}
+					case -15:{Alert.show("Número de teléfono no válido!!!");
+						break;
+					}
+						
+				}	
+				return retorno;
+				
+			}
 			
 			protected function operation1_resultHandler(event:ResultEvent):void
 			{
 				PopUpManager.removePopUp(popupWait);
 				
 				var indice:Number;
-				indice=new Number(event.result.toString());
-				if(ClienteDomicilioTelefono.retornoSwitch(indice)>0){
+				
+				if(event.result.toString().indexOf("<Lista>")!=-1){
 					Alert.show("Datos Almacenados Correctamente");
 					clienteComp.clearComponenteCliente();
+				}else{
+						indice=new Number(event.result.toString());
+						if(retornoSwitch(indice)>0){
+							Alert.show("Datos Almacenados Correctamente");
+							clienteComp.clearComponenteCliente();
+				}
 				}
 					
 		
@@ -140,6 +193,7 @@
 				//-------------------------------------------------------------
 				
 				//-------------------------------------------------------------
+				
 				servicesCliente.addCliente(getDatosCliente());
 				
 				

@@ -5,7 +5,7 @@
 		 xmlns:products="com.components.products.*"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
 		 xmlns:components="com.hillelcoren.components.*"
-		 width="1232" height="626" initialize="group1_initializeHandler(event)">
+		 width="1232" height="674" initialize="group1_initializeHandler(event)">
 	<fx:Script>
 		<![CDATA[
 			import assets.DataGridUtil;
@@ -14,6 +14,9 @@
 			import com.actions.Historico;
 			import com.actions.detallesVerNotas;
 			import com.components.products.DatosProducto;
+			
+			import flash.desktop.Clipboard;
+			import flash.desktop.ClipboardFormats;
 			
 			import flashx.textLayout.formats.WhiteSpaceCollapse;
 			
@@ -29,6 +32,8 @@
 			import org.osmf.net.SwitchingRuleBase;
 			
 			import popus.Progress;
+			
+			import spark.events.TextOperationEvent;
 			private var popup:Progress;
 			[Bindable]
 			private var xmltarjetas:XMLList;
@@ -91,6 +96,8 @@
 			private var efectivo:String;
 			[Bindable]
 			private var idnota:int=0;
+			[Bindable]
+			private var systemClipboard:Clipboard = Clipboard.generalClipboard;
 			/**
 			 * metodo que se invoca como resultado de obtener desde la base de datos
 			 * la cantidad de registros nota de pedido
@@ -107,7 +114,7 @@
 				}else{
 					
 					if(totalReg<SIZEPAGE){
-						Alert.show("select alll");
+						
 						wsnotas.selectAllNotas();
 						if(totGral>0)
 							limpiarControles();
@@ -282,7 +289,7 @@
 				addgrid();
 				adgNotas.selectedIndex=0;
 				adgNotas.validateNow();
-				addinfo();
+				addinfo();				
 				
 			}
 			
@@ -1336,16 +1343,16 @@
 			//}
 			//----------------------------------------------------------------------------------------------------------
 
-			protected function selectHandlerAllEmploye(event:FaultEvent):void
+			protected function faultAllEmploye(event:FaultEvent):void
 			{
 				Alert.show("   ERROR AL OBTENER LISTADO DE EMPLEADOS   ");
 				
 			}
 			
-			protected function faultAllEmploye(event:ResultEvent):void
+			protected function selFullEmploye(event:ResultEvent):void
 			{
 				
-				xmlListEmpleados = new XMLList(event.result);
+				xmlListEmpleados = new XMLList(event.result);				
 				cmbVendedores.dataProvider=empleadoslist;
 				
 			}
@@ -1454,13 +1461,9 @@
 										Alert.show("   Desea Agregar el Anticipo $ "+mskAnticipo.text+" \nal anticipo existente $ "+anticipo+" ?","Confirmar Operación   ", Alert.YES | Alert.NO, this, calcularAnticipo, null, Alert.NO);
 										
 									
-												if(KeyPress.target.toString().indexOf("mskisearchidnota")!=-1){
-													
-													
-													indexPage=0;
-													
-													totalReg=0;
-													
+												if(KeyPress.target.toString().indexOf("mskisearchidnota")!=-1){							
+													indexPage=0;													
+													totalReg=0;													
 													last_btn.enabled=false;
 													next_btn.enabled=false;
 													first_btn.enabled=false;
@@ -1487,8 +1490,7 @@
 									}
 								}
 				
-			}
-			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			}			
 			private function calculardescuentopesos(evt:CloseEvent):void{
 				if ((evt.detail == Alert.NO) || (evt.detail == Alert.CANCEL)) return;
 				var b:Boolean=false;
@@ -1504,11 +1506,9 @@
 						}
 						
 						
-					}
-					
+					}					
 					if(b)
-						return;
-					
+						return;					
 					if(Number(porc_desc_total.toFixed(3))>0){
 						Alert.show("YA HAY CALCULOS CON PORCENTAJES DE DESCUENTO, CORRIJA!!!");
 						return;
@@ -1516,24 +1516,9 @@
 						if(Number(lblTotApagar.text)<Number(mskdescuentopesos.text)){
 							Alert.show("EL CALCULO NO SE PUEDE REALIZAR, VERIFIQUE!!!");
 							return;
-						}else{
-							
-							
-							
-							
-
-							
-							
-							
+						}else{						
 							desc_resto=0;
-							totGralDesc=totGralDesc+Number(mskdescuentopesos.text);
-							
-							
-							
-							
-							
-							
-							
+							totGralDesc=totGralDesc+Number(mskdescuentopesos.text);			
 									if(tot_recargo_porc>0){
 										var calcTotalaPagar:Number=Number(totGral-totGralDesc);
 										var recargoCalculo:Number=(calcTotalaPagar*tot_recargo_porc)/100;
@@ -1546,19 +1531,13 @@
 										lblTotApagar.text=desc_resto.toFixed(3);
 										
 										lblsaldo.text=Number(desc_resto-anticipo).toFixed(3);
-									}
-									
-									
-							
-							lbldescuento.text=Number(-totGralDesc).toFixed(3);
-							
+									}						
+							lbldescuento.text=Number(-totGralDesc).toFixed(3);							
 							notas[adgNotas.selectedIndex].montototalapagar=lblTotApagar.text;
 							notas[adgNotas.selectedIndex].saldo=lblsaldo.text;
 							notas[adgNotas.selectedIndex].descuentonota=lbldescuento.text;
-							notas[adgNotas.selectedIndex].recargototal=lbltotalconrecargo.text;
-							
-						}
-						
+							notas[adgNotas.selectedIndex].recargototal=lbltotalconrecargo.text;							
+						}						
 					}				
 				}				
 			}
@@ -1616,11 +1595,7 @@
 				}
 				anticipo=anticipo+Number(Number(mskAnticipo.text).toFixed(3));
 				
-				
-				/*if(anticipo>0&&Number(Number(mskAnticipo.text)==0)){
-					Alert.show("Falta el valor en del anticipo!!!");
-					return"";
-				}else{*/
+			
 				
 										
 										
@@ -1645,14 +1620,14 @@
 											"<saldo>"+lblsaldo.text+"</saldo>\n" ;
 										if(entregado==1){
 											xmlnota+="<entregado>"+entregado+"</entregado>\n" +
-												"<usuario_entregado>"+cmbVendedores.selectedItem.id+"</usuario_entregado>\n" ;
+												"<id_usuario_entregado>"+cmbVendedores.selectedItem.id+"</id_usuario_entregado>\n" ;
 										}else{
 											xmlnota+="<entregado>"+entregado+"</entregado>\n" +
-												"<usuario_entregado>0</usuario_entregado>\n" ;
+												"<id_usuario_entregado>0</id_usuario_entregado>\n" ;
 										}
 										
-										xmlnota+="<usuario_expidio_nota>"+userexpidio+"</usuario_expidio_nota>\n" +
-											"<stockfuturo>"+stockfuturo+"</stockfuturo>\n" ;
+										xmlnota+="<id_usuario_expidio_nota>"+userexpidio+"</id_usuario_expidio_nota>\n" +
+											"<stockFuturo>"+stockfuturo+"</stockFuturo>\n" ;
 										
 										if(anulada==1){
 											xmlnota+="<anulado>"+anulada+"</anulado>\n" +
@@ -1664,10 +1639,10 @@
 										}
 										if(canceladanota==1){
 											xmlnota+="<cancelado>"+canceladanota+"</cancelado>\n" +
-												"<usuario_cancelo_nota>"+cmbVendedores.selectedItem.id+"</usuario_cancelo_nota>\n" ;
+												"<id_usuario_cancelo_nota>"+cmbVendedores.selectedItem.id+"</id_usuario_cancelo_nota>\n" ;
 										}else{
 											xmlnota+="<cancelado>"+canceladanota+"</cancelado>\n" +
-												"<usuario_cancelo_nota>0</usuario_cancelo_nota>\n" ;
+												"<id_usuario_cancelo_nota>0</id_usuario_cancelo_nota>\n" ;
 										}
 										
 										xmlnota+="<descuentonota>"+lbldescuento.text+"</descuentonota>\n" ;
@@ -1690,7 +1665,7 @@
 											"<fechaanulada>"+notas[adgNotas.selectedIndex].fechaanulado+"</fechaanulada>\n"+
 											"<numerodecupon>"+txtNumerodeCuponPagoTarjeta.text+"</numerodecupon>\n" +
 											"<enefectivo>"+enfectivo+"</enefectivo>\n"+
-											"<enefectivoAnticipo>0</enefectivoAnticipo>\n"+
+											"<enefectivoAnticipo>"+enfectivo+"</enefectivoAnticipo>\n"+
 											"<detallesnotapedido>\n" ;
 										
 													for(var ii:int=0;ii<arrayDg.length;){
@@ -2210,7 +2185,7 @@
 				
 				if(adgNotas.selectedItem.id>0){
 					
-					var source:String="http://192.168.1.100:8080/WebMelanie2/ShowReportNotaPedido?nronota="+adgNotas.selectedItem.id;
+					var source:String="http://192.168.1.101:8080/WebMelanie2/ShowReportNotaPedido?nronota="+adgNotas.selectedItem.id;
 					
 					var urlReq:URLRequest= new URLRequest(source);
 					navigateToURL(urlReq,"_blank");
@@ -2299,7 +2274,7 @@
 						case 0:{
 							Alert.show("NOTA YA ENTREGADA");
 							wsnotas.getRecorCountNotas();
-							//limpiarControles();
+							
 							break;
 						}
 						
@@ -2558,27 +2533,9 @@
 				PopUpManager.removePopUp(popup);
 				Alert.show("Error al actualizarNota "+event.fault.toString());
 			}
-			protected function btnactualizarNotaEvent():void{
+			protected function btnactualizarNotaEvent():void{				
 				
-				
-				/*if(int(notas[adgNotas.selectedIndex].anulado)==0){
-					rdbAnuladano.selected=true;								
-				}else{
-					rdbAnuladasi.selected=true;
-				}
-				
-				if(int(notas[adgNotas.selectedIndex].cancelado)==0){
-					rdbcanceladanotano.selected=true;							
-				}else{
-					rdbcanceladanotasi.selected=true;
-				}
-				
-				if(int(notas[adgNotas.selectedIndex].entregado)==0){
-					rdbentregadono.selected=true;
-				}else{							
-					rdbentregadosi.selected=true;
-				}*/
-				if(verificarSeleccionComboTarjetaYNumero()){
+				if(!verificarSeleccionComboTarjetaYNumero()){
 								if(verificarEntregaNoCancelada()){
 												if((int(notas[adgNotas.selectedIndex].entregado)==1&&rdbentregadosi.selected==true)){
 													Alert.show("LA NOTA DE PEDIDO "+notas[adgNotas.selectedIndex].id+" YA FUE ENTREGADA!");
@@ -2613,13 +2570,16 @@
 								}
 			
 					}else{
-						Alert.show("Falta seleccionar Tarjeta de Crédito, numero de cupón \n o cambiar estado de anticipo en efectívo!");	
+						Alert.show("Falta seleccionar Tarjeta de Crédito, numero de cupón o cambiar estado de anticipo en efectívo!");	
 					}
 			}
 			protected function verificarSeleccionComboTarjetaYNumero():Boolean{
-				if(String(cmbTarjetasCreditoDebito.selectedItem.descripcion).length>0&&txtNumerodeCuponPagoTarjeta.text.length>0&&chkEfectivo.enabled==false){
+				
+				if(cmbTarjetasCreditoDebito.selectedItemId!=0&&txtNumerodeCuponPagoTarjeta.text.length>0&&chkEfectivo.enabled==false){
+					
 					return true;
 				}else{
+					
 					return false;
 				}
 			}
@@ -2773,7 +2733,7 @@
 			
 			}
 			
-			protected function button3_clickHandler(event:MouseEvent):void
+			protected function btn_delete_One_OrderForm(event:MouseEvent):void
 			{
 				if(cmbVendedores.selectedItemId>0){
 					if(txtpassword.text.length>0){
@@ -2800,6 +2760,7 @@
 			protected function txtpassword_enterHandler(event:FlexEvent):void
 			{
 				if(txtpassword.text.length>0){
+					event.preventDefault();
 					chkpassEmployee();
 					
 				}
@@ -2848,11 +2809,19 @@
 			{
 				// TODO Auto-generated method stub
 				Alert.show("Error al chequear las claves del Empleado.");
+			}		
+					
+			protected function btnCopyClipBoard_clickHandler(event:MouseEvent):void
+			{
+				systemClipboard.clear();
+				systemClipboard.setData(ClipboardFormats.TEXT_FORMAT,txtobservaciones.text);
 			}
 			
-			protected function chkEfectivo_clickHandler(event:MouseEvent):void
+			
+			
+			protected function mskdocumento_changeHandler(event:TextOperationEvent):void
 			{
-				Alert.show(String(chkEfectivo.selected));
+				event.preventDefault();
 			}
 			
 		]]>
@@ -2865,7 +2834,7 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<s:ArrayCollection id="arrayDg"/>
 		<s:DateTimeFormatter id="dtf" dateTimePattern="dd/MM/yyyy"/>
-		<s:WebService id="wsnotas" wsdl="http://192.168.1.100:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true">
+		<s:WebService id="wsnotas" wsdl="http://192.168.1.101:8080/ServiceNotaPedido/NotaPedidoWs?WSDL" showBusyCursor="true">
 			<s:operation name="actualizarNotaPedido"
 						 result="actualizarHandlerNota(event)"
 						 fault="falloActualizarHandlerNota(event)">
@@ -2912,10 +2881,10 @@
 			</s:operation>
 				
 		</s:WebService>
-		<s:WebService id="wsempleados" wsdl="http://192.168.1.100:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
+		<s:WebService id="wsempleados" wsdl="http://192.168.1.101:8080/ServicesEmpleados/EmpleadosWs?WSDL" showBusyCursor="false">
 			<s:operation name="selectAllEmpleados"
-						 fault="selectHandlerAllEmploye(event)"
-						 result="faultAllEmploye(event)">
+						 fault="faultAllEmploye(event)"
+						 result="selFullEmploye(event)">
 				
 			</s:operation>
 			<s:operation name="checkPassEmployee"
@@ -2925,13 +2894,13 @@
 			</s:operation>
 		</s:WebService>
 		<s:WebService id="wstarjetascreditodebito" 
-					  wsdl="http://192.168.1.100:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
+					  wsdl="http://192.168.1.101:8080/ServiceTarjetas/TartjetasWs?WSDL" showBusyCursor="true"
 					  >
 			<s:operation name="searchAllTarjetasCreditoDebito" result="operation4_resultHandler(event)" fault="operation4_faultHandler(event)">
 				
 			</s:operation>
 		</s:WebService>
-		<s:WebService id="productosWs" wsdl="http://192.168.1.100:8080/ServiceProductos/ProductosWs?wsdl"
+		<s:WebService id="productosWs" wsdl="http://192.168.1.101:8080/ServiceProductos/ProductosWs?wsdl"
 					  showBusyCursor="true">
 			<s:operation name="searchAllProductos"
 						 fault="faultSearchAllProducts(event)"
@@ -3006,13 +2975,14 @@
 			</s:ArrayList>
 		</s:columns>		
 	</s:DataGrid>
-	<s:Label x="591" y="154" fontFamily="Verdana" fontSize="10" text="Vendedor Expidio:"/>
-	<s:Label x="21" y="167" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="Cliente:"/>
-	<s:Label id="lblnombreyapecli" x="87" y="157" width="288" height="25" fontSize="16"
+	<s:Label x="413" y="134" fontFamily="Verdana" fontSize="10" text="Vendedor Expidio:"/>
+	<s:Label x="6" y="213" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="Cliente:"/>
+	<s:Label id="lblnombreyapecli" x="88" y="201" width="288" height="25" fontSize="16"
 			 verticalAlign="bottom"/>
-	<s:TextArea id="txtobservaciones" x="384" y="201" width="845" height="79" maxChars="32000"/>
+	<s:TextArea id="txtobservaciones" x="384" y="166" width="845" height="156" editable="true"
+				enabled="true" maxChars="32000" selectable="true" />
 	
-	<mx:AdvancedDataGrid id="adglistpedprod" x="7" y="283" width="886" height="129"
+	<mx:AdvancedDataGrid id="adglistpedprod" x="7" y="332" width="886" height="129"
 						 alternatingItemColors="[#adf1f5, white]"
 						editable="item group summary"	
 						 designViewDataType="flat" doubleClickEnabled="true" 
@@ -3047,93 +3017,94 @@
 			<mx:AdvancedDataGridColumn  visible="false" dataField="idnota"/>
 		</mx:columns>
 	</mx:AdvancedDataGrid>
-	<s:Label x="583" y="432" color="#062C6C" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="583" y="481" color="#062C6C" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL GENERAL $:" verticalAlign="top"/>
-	<s:Label id="lblTotGral" x="752" y="430" width="124" color="#062C6C" fontFamily="Verdana"
+	<s:Label id="lblTotGral" x="752" y="479" width="124" color="#062C6C" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
-	<s:Label x="587" y="468" color="#06820F" fontFamily="Verdana" fontSize="16" fontWeight="bold"
+	<s:Label x="587" y="517" color="#06820F" fontFamily="Verdana" fontSize="16" fontWeight="bold"
 			 text="TOTAL A PAGAR $:"/>
-	<s:Label id="lblTotApagar" x="749" y="467" width="127" color="#06820F" fontFamily="Verdana"
+	<s:Label id="lblTotApagar" x="749" y="516" width="127" color="#06820F" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right" verticalAlign="bottom"/>
-	<s:Label x="556" y="449" width="200" height="14" color="#F84B07" fontFamily="Verdana"
+	<s:Label x="556" y="498" width="200" height="14" color="#F84B07" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="DESCUENTO TOTAL $:"/>
-	<s:Label id="lbldescuento" x="751" y="449" width="125" color="#F84B07" fontFamily="Verdana"
+	<s:Label id="lbldescuento" x="751" y="498" width="125" color="#F84B07" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label x="531" y="488" width="223" color="#04667F" fontFamily="Verdana" fontSize="16"
+	<s:Label x="531" y="537" width="223" color="#04667F" fontFamily="Verdana" fontSize="16"
 			 fontWeight="bold" text="TOTAL CON RECARGO $:" textAlign="right"/>
-	<s:Label x="531" y="506" width="223" color="#89908D" fontFamily="Verdana" fontSize="16"
+	<s:Label x="531" y="555" width="223" color="#89908D" fontFamily="Verdana" fontSize="16"
 			 fontWeight="bold" text="SALDO $:" textAlign="right"/>
-	<s:Label id="lbltotalconrecargo" x="752" y="486" width="124" color="#04667F" fontFamily="Verdana"
+	<s:Label id="lbltotalconrecargo" x="752" y="535" width="124" color="#04667F" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label id="lblsaldo" x="752" y="505" width="124" color="#89908D" fontFamily="Verdana"
+	<s:Label id="lblsaldo" x="752" y="554" width="124" color="#89908D" fontFamily="Verdana"
 			 fontSize="16" fontWeight="bold" text="0.0" textAlign="right"/>
-	<s:Label x="567" y="542" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="RECARGO %:"
+	<s:Label x="567" y="591" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="RECARGO %:"
 			 textAlign="right"/>
-	<controls:MaskedTextInput id="mskrecargo" x="679" y="534" width="74" fontFamily="Verdana" text="0.000" maxChars="5"
+	<controls:MaskedTextInput id="mskrecargo" x="679" y="583" width="74" fontFamily="Verdana" text="0.000" maxChars="5"
 							  fontSize="16" restrict="0-9." toolTip="Ingresa un Porcentaje de recargo total para los productos cargados, para poder realizar el calculo debe presionar la tecla Enter"/>
-	<s:Label x="554" y="571" width="123" fontFamily="Verdana" fontSize="16" fontWeight="normal"
+	<s:Label x="554" y="620" width="123" fontFamily="Verdana" fontSize="16" fontWeight="normal"
 			 text="ANTICIPO $:" textAlign="right"/>
-	<controls:MaskedTextInput text="0.000" maxChars="6" id="mskAnticipo" x="679" y="563" width="74" fontFamily="Verdana"
+	<controls:MaskedTextInput text="0.000" maxChars="6" id="mskAnticipo" x="679" y="612" width="74" fontFamily="Verdana"
 							  fontSize="16" restrict="0-9." toolTip="Calcula el anticipo, para poder realizar el calculo debe presionar la tecla Enter"/>
-	<s:Label x="8" y="200" fontFamily="Verdana" fontSize="16" text="Producto:"/>
-	<s:Label x="14" y="230" fontFamily="Verdana" fontSize="16" text="Precio $:"/>
-	<s:TextInput id="txtpreciop" x="88" y="221" width="233" fontSize="16" fontWeight="bold"
+	<s:Label x="5" y="247" fontFamily="Verdana" fontSize="16" text="Producto:"/>
+	<s:Label x="5" y="277" fontFamily="Verdana" fontSize="16" text="Precio $:"/>
+	<s:TextInput id="txtpreciop" x="88" y="268" width="233" fontSize="16" fontWeight="bold"
 				 maxChars="6" restrict="0-9." tabEnabled="false" prompt="Ingrese precio de producto..."/>
-	<s:Label x="6" y="263" fontFamily="Verdana" fontSize="16" text="Cantidad:"/>
-	<controls:MaskedTextInput id="mskcantidad" x="88" y="253" width="55" fontFamily="Verdana"
+	<s:Label x="5" y="310" fontFamily="Verdana" fontSize="16" text="Cantidad:"/>
+	<controls:MaskedTextInput id="mskcantidad" x="88" y="301" width="55" fontFamily="Verdana"
 							  tabEnabled="false" fontSize="16" fontWeight="bold" maxChars="3" restrict="0-9"/>
-	<components:AutoComplete id="cmbproduct" prompt="Ingrese un Producto..." x="88" y="187" width="233" allowDuplicates="false"
+	<components:AutoComplete id="cmbproduct" prompt="Ingrese un Producto..." x="88" y="234" width="233" allowDuplicates="false"
 							 dropDownRowCount="10" fontSize="16" fontWeight="bold"
 							 labelField="descripcion" matchType="beginning" tabEnabled="false">
 	</components:AutoComplete>
-	<s:Button id="btnRemover" x="7" y="417" width="153" height="40" label="Remover Todo"
+	<s:Button id="btnRemover" x="7" y="466" width="153" height="40" label="Remover Todo"
 			  click="btnRemover_clickHandler(event)" enabled="false" fontSize="16"
 			  toolTip="Elimina todos Los productos del Listado!!!"/>
-	<s:Button id="brncargarunproducto" x="7" y="459" width="153" height="38" label="Cargar Producto"
+	<s:Button id="brncargarunproducto" x="7" y="508" width="153" height="38" label="Cargar Producto"
 			  click="brncargarunproducto_clickHandler(event)" fontSize="16"
 			  toolTip="Muestra una Ventana para cargar un Producto"/>
-	<s:Label x="202" y="265" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
-	<controls:MaskedTextInput text="0.00" maxChars="5" x="318" y="257" width="60" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingresa un porcentaje de descuento, aplicable a todos los productos de la planilla"/>
-	<s:Label x="902" y="392" fontSize="16" fontWeight="bold" text="EMPLEADOS:"/>
-	<components:AutoComplete id="cmbVendedores" x="902" y="407" width="261" allowDuplicates="false"
+	<s:Label x="180" y="309" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
+	<controls:MaskedTextInput text="0.00" maxChars="5" x="296" y="301" width="60" fontFamily="Verdana" fontSize="16" id="txtdescuento" restrict="0-9." toolTip="Ingresa un porcentaje de descuento, aplicable a todos los productos de la planilla"/>
+	<s:Label x="902" y="441" fontSize="16" fontWeight="bold" text="EMPLEADOS:"/>
+	<components:AutoComplete id="cmbVendedores" x="902" y="458" width="261" allowDuplicates="false"
 							 dropDownRowCount="10" fontFamily="Verdana" fontSize="16"
 							 fontWeight="bold" labelField="nameuser" matchType="beginning"
 							 prompt="Seleccione un Empleado...">
 	</components:AutoComplete>
-	<s:Label x="1021" y="28" fontSize="14" fontWeight="bold" text="Nota de pedido entregada"/>
-	<s:Label x="1022" y="80" fontSize="14" fontWeight="bold" text="Nota de pedido cancelada"/>
-	<s:VGroup x="1020" y="93" width="38" height="44">
+	<s:Label x="1015" y="4" fontSize="14" fontWeight="bold" text="Nota de pedido entregada"/>
+	<s:Label x="1014" y="54" fontSize="14" fontWeight="bold" text="Nota de pedido cancelada"/>
+	<s:VGroup x="1017" y="67" width="38" height="44">
 	</s:VGroup>
-	<s:RadioButton id="rdbentregadosi" x="1022" y="40" label="Si" groupName="GrupoEntregado"/>
-	<s:RadioButton id="rdbentregadono" x="1022" y="58" label="No" groupName="GrupoEntregado"
+	<s:RadioButton id="rdbentregadosi" x="1016" y="16" label="Si" groupName="GrupoEntregado"/>
+	<s:RadioButton id="rdbentregadono" x="1016" y="34" label="No" groupName="GrupoEntregado"
 				   selected="true"/>
-	<s:Label x="1022" y="143" fontSize="14" fontWeight="bold" text="Nota anulada"/>
-	<s:VGroup x="1021" y="155" width="39" height="44">
+	<s:Label x="1018" y="111" fontSize="14" fontWeight="bold" text="Nota anulada"/>
+	<s:VGroup x="1017" y="123" width="39" height="44">
 	</s:VGroup>
-	<s:Label x="902" y="446" fontFamily="Arial" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
-	<s:TextInput id="txtpassword" x="903" y="467" width="260" displayAsPassword="true"
-				 fontFamily="Verdana" fontSize="16" fontStyle="italic"
-				 prompt="Ingresar clave de vendedor..." maxChars="8" skinClass="spark.skins.spark.TextInputSkin" restrict="[a-zA-Z0-9_-*!#$%/()=?]" enter="txtpassword_enterHandler(event)"/>
-	<s:Button id="btnEntregarNota" x="1065" y="43" width="91" height="33" label="Entregar"
+	<s:Label x="902" y="495" fontFamily="Arial" fontSize="16" fontWeight="bold" text="PASSWORD:"/>
+	<s:TextInput id="txtpassword" x="903" y="516" width="260" displayAsPassword="true"
+				 enter="txtpassword_enterHandler(event)" fontFamily="Verdana" fontSize="16"
+				 fontStyle="italic" maxChars="12" prompt="Ingresar clave de vendedor..."
+				 restrict="[a-zA-Z0-9_-*!#$%/()=?]"/>
+	<s:Button id="btnEntregarNota" x="1059" y="19" width="91" height="33" label="Entregar"
 			  click="btnguardarentregada_clickHandler(event)" fontSize="16"
 			  toolTip="Almacena el estado de Entregado de la Nota de Pedido Seleccionada"/>
-	<s:Button id="btnCancelarNota" x="1066" y="97" width="90" height="33" label="Cancelar"
+	<s:Button id="btnCancelarNota" x="1063" y="71" width="90" height="33" label="Cancelar"
 			  click="buttonCancelarHandler(event)" fontSize="16"
 			  toolTip="Cambia el estado cancelada de la Nota de Pedido Seleccionada"/>
-	<s:Button id="btnAnularNota" x="1067" y="159" width="88" height="33" label="Anular"
+	<s:Button id="btnAnularNota" x="1063" y="127" width="88" height="33" label="Anular"
 			  click="buttonAnularHandler(event)" fontSize="16"
 			  toolTip="Cambia el estado de anulada de la Nota de Pedido Seleccionada"/>
-	<components:AdvancedAutoComplete id="cmbTarjetasCreditoDebito" prompt="Seleccione una Tarjeta de Crédito..." x="901" y="300" width="295"
+	<components:AdvancedAutoComplete id="cmbTarjetasCreditoDebito" prompt="Seleccione una Tarjeta de Crédito..." x="902" y="351" width="295"
 									 fontSize="16" labelField="descripcion"
 									 toolTip="Seleccione una Tarjeta de Crédito o Débito si el cliente utiliza esta forma de pago!!!">
 	</components:AdvancedAutoComplete>
-	<s:Label x="901" y="288" fontSize="14" fontWeight="bold" text="Tarjetas de Crédito / Débito" toolTip="Seleccione si o no para registrar que la nota de pedido fue entregada al Cliente"/>
-	<controls:MaskedTextInput id="txtNumerodeCuponPagoTarjeta" x="903" y="357" fontFamily="Verdana"
+	<s:Label x="901" y="337" fontSize="14" fontWeight="bold" text="Tarjetas de Crédito / Débito" toolTip="Seleccione si o no para registrar que la nota de pedido fue entregada al Cliente"/>
+	<controls:MaskedTextInput id="txtNumerodeCuponPagoTarjeta" x="903" y="406" fontFamily="Verdana"
 							  fontSize="16" inputMask="####-####-####-####" maxChars="19"
 							  toolTip="Ingrese en Número de Tarjeta de Crédito o Débito del Plástico"/>
-	<s:Label x="901" y="341" fontSize="14" fontWeight="bold"
+	<s:Label x="901" y="390" fontSize="14" fontWeight="bold"
 			 text="Número de cupón tarjeta de credito/debito:"/>
-	<s:DataGrid id="adghistorico" x="904" y="514" width="203" height="102"
+	<s:DataGrid id="adghistorico" x="904" y="563" width="203" height="102"
 				alternatingRowColors="[#adf1f5, white]" fontFamily="Verdana" fontSize="10"
 				requestedRowCount="4">
 		<s:columns>
@@ -3143,51 +3114,55 @@
 			</s:ArrayList>
 		</s:columns>		
 	</s:DataGrid>
-	<s:Label x="904" y="499" fontSize="16" fontWeight="bold" text="HISTORICO DE ANTICIPOS"/>
-	<s:Button id="btnRegargarlistado" x="7" y="499" width="153" height="37" label="Recargar Listado"
+	<s:Label x="904" y="548" fontSize="16" fontWeight="bold" text="HISTORICO DE ANTICIPOS"/>
+	<s:Button id="btnRegargarlistado" x="7" y="548" width="153" height="37" label="Recargar Listado"
 			  click="btnRegargarlistado_clickHandler(event)" enabled="false" fontSize="16"/>
-	<controls:MaskedTextInput id="mskisearchidnota" x="264" y="432" width="232" fontSize="16"
+	<controls:MaskedTextInput id="mskisearchidnota" x="264" y="481" width="232" fontSize="16"
 							  restrict="0-9" textAlign="center"
 							  toolTip="Ingrese Número de Nota de Pedido, debe presinar la tecla Enter para realizar la Búsqueda!!!"/>
-	<s:Label x="262" y="418" fontFamily="Verdana" fontSize="16" fontWeight="normal"
+	<s:Label x="262" y="467" fontFamily="Verdana" fontSize="16" fontWeight="normal"
 			 text="BUSCAR NOTA DE PEDIDO"/>
-	<s:Button id="btnImprimir" x="7" y="539" width="153" height="35" label="Imprimir"
+	<s:Button id="btnImprimir" x="7" y="588" width="153" height="35" label="Imprimir"
 			  click="btnImprimir_clickHandler(event)" enabled="false" fontSize="16"
 			  toolTip="Imprimie una nota de pedido seleccionada del listado"/>
-	<s:Button id="btnactualizarNota" x="8" y="577" width="152" height="39" label="actualizarNota"
+	<s:Button id="btnactualizarNota" x="8" y="626" width="152" height="39" label="actualizarNota"
 			  click="btnactualizarNota_clickHandler(event)" enabled="false" fontSize="16"
 			  toolTip="Actualiza el estado de la nota de pedido"/>
 	<s:Button id="btnCloseClientComponent" x="1203" y="1" width="27" height="19" icon="assets/icon_close.png" click="btnCloseClientComponent_clickHandler(event)"/>
-	<s:RadioButton id="rdbAnuladasi" x="1025" y="157" label="Si" groupName="anulada"/>
-	<s:RadioButton id="rdbAnuladano" x="1025" y="181" label="No" groupName="anulada" selected="true"/>
-	<s:Label x="383" y="166" fontSize="16" fontWeight="normal" text="Documento:"/>
-	<controls:MaskedTextInput id="mskdocumento" x="469" y="158" fontFamily="Verdana" fontSize="20"
-							  inputMask="########" maxChars="8" restrict="0-9"/>
-	<s:Label x="382" y="188" fontSize="16" fontWeight="normal" text="Observaciones:"/>
-	<s:Label id="lblvendedoranulo" x="699" y="173" width="200" height="15" fontFamily="Verdana"
+	<s:RadioButton id="rdbAnuladasi" x="1021" y="125" label="Si" groupName="anulada"/>
+	<s:RadioButton id="rdbAnuladano" x="1021" y="149" label="No" groupName="anulada" selected="true"/>
+	<s:Label x="7" y="175" fontSize="16" fontWeight="normal" text="Documento:"/>
+	<s:TextInput id="mskdocumento" x="97" y="163" width="168"
+				 change="mskdocumento_changeHandler(event)" editable="false" fontFamily="Verdana"
+				 fontSize="20" maxChars="8" restrict="0-9"/>
+	<s:Label x="274" y="165" fontSize="16" fontWeight="normal" text="Observaciones:"/>
+	<s:Label id="lblvendedoranulo" x="808" y="131" width="87" height="15" fontFamily="Verdana"
 			 fontSize="10" verticalAlign="bottom"/>
-	<s:Label id="lblvendedorentrego" x="699" y="187" width="200" height="11" fontFamily="Verdana"
+	<s:Label id="lblvendedorentrego" x="808" y="147" width="87" height="11" fontFamily="Verdana"
 			 fontSize="10" verticalAlign="bottom"/>
-	<s:Label x="591" y="166" fontFamily="Verdana" fontSize="10" text="Vendedor Canceló:"/>
-	<s:Label x="590" y="177" fontFamily="Verdana" fontSize="10" text="Vendedor Anuló:"/>
-	<s:Label x="590" y="188" fontFamily="Verdana" fontSize="10" text="Vendedor Entregó:"/>
-	<s:Label id="lblexpidiovendedor" x="699" y="148" width="201" height="16" fontFamily="Verdana"
+	<s:Label x="413" y="146" fontFamily="Verdana" fontSize="10" text="Vendedor Canceló:"/>
+	<s:Label x="709" y="135" fontFamily="Verdana" fontSize="10" text="Vendedor Anuló:"/>
+	<s:Label x="709" y="149" fontFamily="Verdana" fontSize="10" text="Vendedor Entregó:"/>
+	<s:Label id="lblexpidiovendedor" x="511" y="128" width="87" height="16" fontFamily="Verdana"
 			 fontSize="10" verticalAlign="bottom"/>
-	<s:Label id="lblvendedocancelo" x="699" y="160" width="197" height="16" fontFamily="Verdana"
+	<s:Label id="lblvendedocancelo" x="511" y="140" width="87" height="16" fontFamily="Verdana"
 			 fontSize="10" verticalAlign="bottom"/>
-	<s:Label x="553" y="597" fontFamily="Verdana" fontSize="16" text="DESCUENTO $:" />
-	<controls:MaskedTextInput id="mskdescuentopesos" toolTip="Calcula el descuento en pesos, para poder realizar el calculo debe presionar la tecla Enter" x="680" y="590" width="74" fontFamily="Verdana" text="0.000" maxChars="5"  restrict="0-9."
+	<s:Label x="553" y="646" fontFamily="Verdana" fontSize="16" text="DESCUENTO $:" />
+	<controls:MaskedTextInput id="mskdescuentopesos" toolTip="Calcula el descuento en pesos, para poder realizar el calculo debe presionar la tecla Enter" x="680" y="639" width="74" fontFamily="Verdana" text="0.000" maxChars="5"  restrict="0-9."
 							  fontSize="16"/>
-	<s:RadioButton id="rdbcanceladanotasi" x="1023" y="93" label="Si" groupName="notaCancelada"/>
-	<s:RadioButton id="rdbcanceladanotano" x="1023" y="117" label="No" groupName="notaCancelada"
+	<s:RadioButton id="rdbcanceladanotasi" x="1020" y="67" label="Si" groupName="notaCancelada"/>
+	<s:RadioButton id="rdbcanceladanotano" x="1020" y="91" label="No" groupName="notaCancelada"
 				   selected="true"/>
-	<s:Button id="btnEliminarNota" x="297" y="459" width="139" height="38" label="Eliminar"
-			  click="button3_clickHandler(event)" enabled="false" fontFamily="Verdana" fontSize="16"
+	<s:Button id="btnEliminarNota" x="297" y="508" width="139" height="38" label="Eliminar"
+			  click="btn_delete_One_OrderForm(event)" enabled="false" fontFamily="Verdana" fontSize="16"
 			  toolTip="Elimina una Nota de Pedido, seleccionada previamente"/>
-	<s:Label id="lblUltimaActualizacion" x="184" y="597" width="319" color="#F10909"
+	<s:Label id="lblUltimaActualizacion" x="184" y="646" width="319" color="#F10909"
 			 fontFamily="Arial" fontSize="11" fontWeight="bold"/>
-	<s:CheckBox id="chkEfectivo" x="761" y="568" width="135" label="ANTICIPO EFECTIVO"
-				click="chkEfectivo_clickHandler(event)" selected="true" toolTip="Active si el anticipo es en efectivo, para anticipos pagados con tarjeta se debe desactivar!"/>
+	<s:CheckBox id="chkEfectivo" x="761" y="617" width="135" label="ANTICIPO EFECTIVO"
+				 selected="true" toolTip="Active si el anticipo es en efectivo, para anticipos pagados con tarjeta se debe desactivar!"/>
+	<s:Button id="btnCopyClipBoard" x="1116" y="322" width="113" height="29" label="Copiar"
+			  click="btnCopyClipBoard_clickHandler(event)" fontSize="16"
+			  toolTip="Copia el texto de Observaciones al portapapeles para poder ser pegado en otra aplicación!"/>
 </s:Group>
 
 

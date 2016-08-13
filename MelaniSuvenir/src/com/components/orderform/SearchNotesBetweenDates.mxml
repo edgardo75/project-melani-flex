@@ -90,11 +90,11 @@
 				if(dtfechaini.text.length>0&&dtffechafin.text.length>0){
 				
 					if(rdbfechaentrega.selected==true){
-						 source="http://192.168.1.100:8080/WebMelanie2/ShowReportEntreFechasEntrega?fstart="+dtfechaini.text+"&fend="+dtffechafin.text;
+						 source="http://192.168.1.101:8080/WebMelanie2/ShowReportEntreFechasEntrega?fstart="+dtfechaini.text+"&fend="+dtffechafin.text;
 						urlReq= new URLRequest(source);	
 					
 					}else{
-						source="http://192.168.1.100:8080/WebMelanie2/ShowReportEntreFechasCompra?fstart="+dtfechaini.text+"&fend="+dtffechafin.text;
+						source="http://192.168.1.101:8080/WebMelanie2/ShowReportEntreFechasCompra?fstart="+dtfechaini.text+"&fend="+dtffechafin.text;
 						urlReq= new URLRequest(source);
 					
 					}
