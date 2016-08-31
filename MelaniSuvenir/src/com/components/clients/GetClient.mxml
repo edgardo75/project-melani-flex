@@ -197,8 +197,8 @@
 	<s:Label x="28" y="63" fontSize="16" fontWeight="bold" text="Cliente N°:"/>
 	<s:Label id="lblnocli" x="115" y="58" width="124" fontFamily="Verdana" fontSize="18"
 			 fontWeight="bold" verticalAlign="middle"/>
-	<s:TextInput id="txtnombrecliente" x="114" y="85" width="188" fontSize="18" maxChars="40"
-				 prompt="Ingrese Nombre" restrict="a-z A-Z ñ-Ñ" />
+	<s:TextInput id="txtnombrecliente" x="114" y="85" width="188" fontSize="18" maxChars="12"
+				 prompt="Ingrese Nombre" restrict="a-z A-Zñ-Ñ" />
 	<s:Label id="lblapellido" x="40" y="125" fontSize="16" fontWeight="bold" text="Apellido:"/>
 	<s:TextInput id="txtapellidocliente" x="114" y="118" width="189" fontSize="18" maxChars="40"
 				 prompt="Ingrese Apellido" restrict="a-z A-Z ñ-Ñ"/>

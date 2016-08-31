@@ -5,6 +5,7 @@
 		 xmlns:products="com.components.products.*"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
 		 xmlns:components="com.hillelcoren.components.*"
+		 xmlns:classes="com.hillelcoren.components.autoComplete.classes.*"
 		 width="1232" height="674" initialize="group1_initializeHandler(event)">
 	<fx:Script>
 		<![CDATA[
@@ -13,6 +14,7 @@
 			import com.actions.CabeceraNota;
 			import com.actions.Historico;
 			import com.actions.detallesVerNotas;
+			import com.components.clients.PopupClienteNameSecondName;
 			import com.components.products.DatosProducto;
 			
 			import flash.desktop.Clipboard;
@@ -75,6 +77,11 @@
 			private var useranulo:int=0;
 			[Bindable]
 			private var xmlproduct:XMLList;
+			[Bindable]
+			private var xmlSearchListCli:XMLList;
+			[Bindable]
+			private var xmlSearchListCliNotas:XMLList;
+			
 			private var totalReg:int=0;
 			[Bindable]
 			private static var TOTALPAGES:int=0;
@@ -159,15 +166,9 @@
 			private function addgrid():void{
 				// agrego la cabecera de la nota de pedido al grid
 				var headerNota:CabeceraNota;
-				adgNotas.dataProvider=notas;			
-				
-				
-
+				adgNotas.dataProvider=notas;
 				if(detallenotas.length>0)
-					detallenotas.removeAll();
-				
-				
-				
+					detallenotas.removeAll();				
 				
 				if(btnImprimir.enabled==false)
 					btnImprimir.enabled=true;
@@ -1188,13 +1189,8 @@
 				}
 				arrayDg.refresh();
 				
-				//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-				//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-				/*if(int(txtdescuento.text)==0||txtdescuento.text.length==0){
-					lblTotGral.text=totGral.toFixed(3);
-					lbldescuento.text=Number(Number(-totGralDesc)).toFixed(3);
-					
-				}*/
+			
+			
 				
 				
 				var calcrecargo:Number=0;
@@ -1376,7 +1372,8 @@
 								mskAnticipo.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 								btnactualizarNota.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 								cmbTarjetasCreditoDebito.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
-								txtNumerodeCuponPagoTarjeta.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);								
+								txtNumerodeCuponPagoTarjeta.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
+								txt_buscar_cliente_por_nombre.addEventListener(KeyboardEvent.KEY_UP,transferirFocus);
 								adglistpedprod.addEventListener(AdvancedDataGridEvent.ITEM_EDIT_END,itemEditEndHandler);
 				initialiceVariables();				
 				
@@ -1426,6 +1423,11 @@
 										
 										txtpassword.setFocus();
 									}
+									if(KeyPress.currentTarget.toString().indexOf("txt_buscar_cliente_por_nombre")!=-1&&txt_buscar_cliente_por_nombre.text.length>0){
+										clientesWs.searchClientForName(txt_buscar_cliente_por_nombre.text);
+										
+									}
+									
 									if(KeyPress.currentTarget.toString().indexOf("mskcantidad")!=-1&&Number(mskcantidad.text)>0){
 										for (var i:int=0;i<arrayDg.length && !b;i++){
 											
@@ -2408,32 +2410,7 @@
 					Alert.show("Debe seleccionar una nota en la grilla");
 				}
 			}
-		/*			if(int(notas[adgNotas.selectedIndex].anulado)==1){
-						Alert.show("LA NOTA DE PEDIDO "+notas[adgNotas.selectedIndex].id+" ESTÁ ANULADA CAMBIE DE ESTADO PARA PODER CANCELAR Y/O ENTREGAR");
-					}else{						
-							if(cmbVendedores.text.length==0||txtpassword.text.length==0){
-								Alert.show("Debe seleccionar un vendedor y poner su clave!");
-							}else{
-											if(rdbcanceladanotasi.selected==true){
-														if(verificoVendedorConSuPassword()){
-																	if(Number(mskAnticipo.text)>0||anticipo>0){
-																		calculeAnticipo();	
-																	}else{
-																		wsnotas.cancelarNotaPedido(adgNotas.selectedItem.id,cmbVendedores.selectedItem.id,1,anticipo);
-																	}
-														}else{						
-															if(rdbcanceladanotano.selected==true){
-																		if(verificoVendedorConSuPassword()){
-																			wsnotas.cancelarNotaPedido(adgNotas.selectedItem.id,cmbVendedores.selectedItem.id,0,anticipo);
-																		}
-															}
-													}
-											}
-				
-				}else{
-					  Alert.show("Debe seleccionar una nota en la grilla");
-				}
-			}*/
+		
 			protected function buttonAnularHandler(event:MouseEvent):void
 			{
 				var b:Boolean=false;
@@ -2824,11 +2801,71 @@
 				event.preventDefault();
 			}
 			
+			protected function btn_refrescarProductos(event:MouseEvent):void
+			{
+				
+				productosWs.searchAllProductos();
+			}
+			
+			protected function txt_buscar_cliente_por_nombre_enterHandler(event:FlexEvent):void
+			{
+				
+			}
+			
+			protected function resultado_BuscarClientesPorNombre(event:ResultEvent):void
+			{
+				
+				
+				if((event.result.toString().indexOf("NO HAY RESULTADO"))!=-1){
+					
+					
+					Alert.show("LA CONSULTA NO ARROJÓ RESULTADOS!!!");
+				
+				
+				}else{
+					
+					xmlSearchListCli = new XMLList(event.result.toString());
+					
+					var popup:PopupClienteNameSecondName=PopupClienteNameSecondName(PopUpManager.createPopUp(this,PopupClienteNameSecondName,true));
+					
+					popup.clidata=searchResultClienteList;			
+					popup.cliNotaSelected = searchResultClienteListNotas;
+					popup.txtNroNota = mskisearchidnota;					
+					
+					PopUpManager.centerPopUp(popup);
+					
+				}
+				
+				
+				
+				
+			}
+			
+			protected function errorresultado_BuscarClientesPorNombre(event:FaultEvent):void
+			{
+				Alert.show(event.fault.toString());
+				
+			}
+			
+			protected function btn_buscarCliente_clickHandler(event:MouseEvent):void
+			{
+				buscarCliente();
+			}
+			
+			protected function buscarCliente():void{
+				if(txt_buscar_cliente_por_nombre.text.length>0){
+					clientesWs.searchClientForName(txt_buscar_cliente_por_nombre.text);
+				}
+			
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<s:XMLListCollection id="tarjetas" source="{xmltarjetas.item}"/>
 		<s:XMLListCollection id="productlist" source="{xmlproduct.producto}"/>
+		<s:XMLListCollection id="searchResultClienteList" source="{xmlSearchListCli.item}"/>
+		<s:XMLListCollection id="searchResultClienteListNotas" source="{xmlSearchListCli.item.itemNota}"/>
 		<s:XMLListCollection id="listhistoricoselected" />
 		<s:ArrayCollection id="listhistorico"  />
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
@@ -2907,6 +2944,13 @@
 						 result="operationResultSearchAllProduct(event)">
 				
 			</s:operation>
+		</s:WebService> 
+		<s:WebService id="clientesWs" wsdl="http://192.168.1.101:8080/ServiceClientes/ClientesWs?WSDL" showBusyCursor="true">
+			<s:operation name="searchClientForName"
+						 result="resultado_BuscarClientesPorNombre(event)"
+						 fault="errorresultado_BuscarClientesPorNombre(event)">
+					
+			</s:operation>
 		</s:WebService>
 		<s:XMLListCollection id="notas" source="{xmlNotas.item}"/>
 	
@@ -2977,9 +3021,9 @@
 	</s:DataGrid>
 	<s:Label x="413" y="134" fontFamily="Verdana" fontSize="10" text="Vendedor Expidio:"/>
 	<s:Label x="6" y="213" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="Cliente:"/>
-	<s:Label id="lblnombreyapecli" x="88" y="201" width="288" height="25" fontSize="16"
+	<s:Label id="lblnombreyapecli" x="88" y="201" width="320" height="25" fontSize="16"
 			 verticalAlign="bottom"/>
-	<s:TextArea id="txtobservaciones" x="384" y="166" width="845" height="156" editable="true"
+	<s:TextArea id="txtobservaciones" x="459" y="166" width="770" height="156" editable="true"
 				enabled="true" maxChars="32000" selectable="true" />
 	
 	<mx:AdvancedDataGrid id="adglistpedprod" x="7" y="332" width="886" height="129"
@@ -3052,14 +3096,14 @@
 	<s:Label x="5" y="310" fontFamily="Verdana" fontSize="16" text="Cantidad:"/>
 	<controls:MaskedTextInput id="mskcantidad" x="88" y="301" width="55" fontFamily="Verdana"
 							  tabEnabled="false" fontSize="16" fontWeight="bold" maxChars="3" restrict="0-9"/>
-	<components:AutoComplete id="cmbproduct" prompt="Ingrese un Producto..." x="88" y="234" width="233" allowDuplicates="false"
+	<components:AutoComplete id="cmbproduct" prompt="Ingrese un Producto..." x="88" y="234" width="320" allowDuplicates="false"
 							 dropDownRowCount="10" fontSize="16" fontWeight="bold"
 							 labelField="descripcion" matchType="beginning" tabEnabled="false">
 	</components:AutoComplete>
-	<s:Button id="btnRemover" x="7" y="466" width="153" height="40" label="Remover Todo"
+	<s:Button id="btnRemover" x="7" y="473" width="153" height="25" label="Remover Todo"
 			  click="btnRemover_clickHandler(event)" enabled="false" fontSize="16"
 			  toolTip="Elimina todos Los productos del Listado!!!"/>
-	<s:Button id="brncargarunproducto" x="7" y="508" width="153" height="38" label="Cargar Producto"
+	<s:Button id="brncargarunproducto" x="7" y="501" width="153" height="25" label="Cargar Producto"
 			  click="brncargarunproducto_clickHandler(event)" fontSize="16"
 			  toolTip="Muestra una Ventana para cargar un Producto"/>
 	<s:Label x="180" y="309" fontFamily="Verdana" fontSize="16" fontWeight="normal" text="% Descuento:"/>
@@ -3115,17 +3159,17 @@
 		</s:columns>		
 	</s:DataGrid>
 	<s:Label x="904" y="548" fontSize="16" fontWeight="bold" text="HISTORICO DE ANTICIPOS"/>
-	<s:Button id="btnRegargarlistado" x="7" y="548" width="153" height="37" label="Recargar Listado"
+	<s:Button id="btnRegargarlistado" x="7" y="529" width="152" height="24" label="Recargar Listado"
 			  click="btnRegargarlistado_clickHandler(event)" enabled="false" fontSize="16"/>
-	<controls:MaskedTextInput id="mskisearchidnota" x="264" y="481" width="232" fontSize="16"
+	<controls:MaskedTextInput id="mskisearchidnota" x="178" y="481" width="232" fontSize="16"
 							  restrict="0-9" textAlign="center"
 							  toolTip="Ingrese Número de Nota de Pedido, debe presinar la tecla Enter para realizar la Búsqueda!!!"/>
-	<s:Label x="262" y="467" fontFamily="Verdana" fontSize="16" fontWeight="normal"
+	<s:Label x="176" y="467" fontFamily="Verdana" fontSize="16" fontWeight="normal"
 			 text="BUSCAR NOTA DE PEDIDO"/>
-	<s:Button id="btnImprimir" x="7" y="588" width="153" height="35" label="Imprimir"
+	<s:Button id="btnImprimir" x="7" y="556" width="153" height="25" label="Imprimir"
 			  click="btnImprimir_clickHandler(event)" enabled="false" fontSize="16"
 			  toolTip="Imprimie una nota de pedido seleccionada del listado"/>
-	<s:Button id="btnactualizarNota" x="8" y="626" width="152" height="39" label="actualizarNota"
+	<s:Button id="btnactualizarNota" x="7" y="583" width="152" height="24" label="actualizarNota"
 			  click="btnactualizarNota_clickHandler(event)" enabled="false" fontSize="16"
 			  toolTip="Actualiza el estado de la nota de pedido"/>
 	<s:Button id="btnCloseClientComponent" x="1203" y="1" width="27" height="19" icon="assets/icon_close.png" click="btnCloseClientComponent_clickHandler(event)"/>
@@ -3135,7 +3179,7 @@
 	<s:TextInput id="mskdocumento" x="97" y="163" width="168"
 				 change="mskdocumento_changeHandler(event)" editable="false" fontFamily="Verdana"
 				 fontSize="20" maxChars="8" restrict="0-9"/>
-	<s:Label x="274" y="165" fontSize="16" fontWeight="normal" text="Observaciones:"/>
+	<s:Label x="349" y="165" fontSize="16" fontWeight="normal" text="Observaciones:"/>
 	<s:Label id="lblvendedoranulo" x="808" y="131" width="87" height="15" fontFamily="Verdana"
 			 fontSize="10" verticalAlign="bottom"/>
 	<s:Label id="lblvendedorentrego" x="808" y="147" width="87" height="11" fontFamily="Verdana"
@@ -3153,7 +3197,7 @@
 	<s:RadioButton id="rdbcanceladanotasi" x="1020" y="67" label="Si" groupName="notaCancelada"/>
 	<s:RadioButton id="rdbcanceladanotano" x="1020" y="91" label="No" groupName="notaCancelada"
 				   selected="true"/>
-	<s:Button id="btnEliminarNota" x="297" y="508" width="139" height="38" label="Eliminar"
+	<s:Button id="btnEliminarNota" x="8" y="610" width="149" height="26" label="Eliminar"
 			  click="btn_delete_One_OrderForm(event)" enabled="false" fontFamily="Verdana" fontSize="16"
 			  toolTip="Elimina una Nota de Pedido, seleccionada previamente"/>
 	<s:Label id="lblUltimaActualizacion" x="184" y="646" width="319" color="#F10909"
@@ -3163,6 +3207,16 @@
 	<s:Button id="btnCopyClipBoard" x="1116" y="322" width="113" height="29" label="Copiar"
 			  click="btnCopyClipBoard_clickHandler(event)" fontSize="16"
 			  toolTip="Copia el texto de Observaciones al portapapeles para poder ser pegado en otra aplicación!"/>
+	<s:Button x="411" y="231" width="35" height="35" click="btn_refrescarProductos(event)"
+			  icon="assets/refresh.png" toolTip="Refrescar listado de Productos"/>
+	<s:Button id="btn_buscarCliente" x="336" y="527" width="35" height="26" label="Button"
+			  click="btn_buscarCliente_clickHandler(event)" icon="assets/searchCli.jpg"
+			  toolTip="Buscar Cliente por Nombre y Apellido"/>
+	<s:TextInput id="txt_buscar_cliente_por_nombre" x="176" y="528" width="157" maxChars="12"
+				 enter="txt_buscar_cliente_por_nombre_enterHandler(event)" fontSize="16"
+				 prompt="Ingrese un nombre..." restrict="a-z A-Z"/>
+	<s:Label x="176" y="511" width="254" fontSize="16" text="BUSCAR CLIENTE POR NOMBRE"/>
+	<mx:VRule x="529" y="469" width="7" height="195"/>
 </s:Group>
 
 

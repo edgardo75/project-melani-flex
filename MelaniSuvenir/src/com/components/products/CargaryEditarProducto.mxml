@@ -4,7 +4,7 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:controls="com.adobe.flex.extras.controls.*"
 		 xmlns:components="com.hillelcoren.components.*"
-		 width="1130" height="418" creationComplete="group1_creationCompleteHandler(event)" xmlns:local="*">
+		 width="1130" height="450" creationComplete="group1_creationCompleteHandler(event)" xmlns:local="*">
 	
 	<fx:Script>
 		<![CDATA[
@@ -83,11 +83,12 @@
 					Alert.show("falta la cantidad disponible");
 					return;
 				}			
-				
-				if(idproducto==0)
+				Alert.show(String(idproducto));
+				if(idproducto==0){
 					servicesProducto.addProducto(getDatos());
-				else 
+				}else{ 
 					servicesProducto.actualizarProducto(getDatos());
+				}
 					
 				
 				
@@ -97,14 +98,14 @@
 				if(keyPress.keyCode==Keyboard.ENTER){
 				
 					
-					if(keyPress.currentTarget.toString().indexOf("txtdescripcion")!=-1){
+					if(keyPress.currentTarget.toString().indexOf("txtdescripcion")!=-1&&idproducto==0){
 						if(txtcodigoproducto.editable==false)
 							txtcodigoproducto.editable=true;
 						txtcodigoproducto.setFocus();
 						return;
 					
 					}
-					if(keyPress.currentTarget.toString().indexOf("txtcodigoproducto")!=-1){
+					if(keyPress.currentTarget.toString().indexOf("txtcodigoproducto")!=-1&&txtcodigoproducto.text.length>0){
 						txtprecio.setFocus();
 						return;
 						
@@ -209,9 +210,10 @@
 						
 						
 					default:
-					{						
+					{	
+						limpiarFormulario();
 						servicesProducto.searchAllProductos();
-						limpiarFormulario();						
+												
 						break;
 					}
 				}
@@ -219,10 +221,10 @@
 			
 			}
 			protected function producto_resultHandler(event:ResultEvent):void{
-				var indice:Number;
+				var indice:Number = new Number(event.result.toString());
 				
-				xmllistproducto=new XMLList(event.result);
-				indice = new Number(product[0].id);
+				
+				
 				resultado(indice);
 			
 			
@@ -280,6 +282,7 @@
 			
 			protected function adgProductos_doubleClickHandler(event:MouseEvent):void
 			{
+				limpiarFormulario();
 				addInfo();
 			}
 			
@@ -354,6 +357,13 @@
 			protected function operation3_faultHandler(event:FaultEvent):void
 			{
 				Alert.show("ERROR AL QUERER AGREGAR UN PRODUCTO, REVISE");
+			}
+			
+			protected function btn_refrescarProductos(event:MouseEvent):void
+			{
+				limpiarFormulario();
+				servicesProducto.searchAllProductos();
+				
 			}
 			
 		]]>
@@ -439,13 +449,13 @@
 	<s:TextInput id="txtcodigoproducto" x="269" y="263" width="214" fontSize="16"
 				 prompt="Ingrese un Código Interno del Producto..."/>
 	<controls:MaskedTextInput id="txtprecio" x="9" y="309" fontSize="16" restrict="0-9."/>
-	<controls:MaskedTextInput id="txtcantidadinicial" x="269" y="310" fontSize="16" restrict="0-9."/>
-	<controls:MaskedTextInput id="txtcantidaddisponible" x="9" y="351" fontSize="16" restrict="0-9."/>
-	<s:Button id="btnnuevo" x="460" y="381" width="81" height="29" label="Nuevo"
+	<controls:MaskedTextInput id="txtcantidadinicial" x="269" y="310" fontSize="16" restrict="0-9." toolTip="No se puede editar la carga inicial"/>
+	<controls:MaskedTextInput id="txtcantidaddisponible" x="9" y="351" fontSize="16" restrict="0-9." toolTip="La cantidad actual se suma al valor ingresado al editar un producto"/>
+	<s:Button id="btnnuevo" x="280" y="405" width="81" height="29" label="Nuevo"
 			  click="btnNuevo_clickHandler(event)" cornerRadius="3" fontSize="16"
 			  toolTip="Cargar Nuevo Producto"/>
-	<s:Button id="btnguardar" x="580" y="381" width="89" height="29" label="Guardar"
-			  click="btnguardar_clickHandler(event)" fontSize="16" toolTip="Guardar Datos de Producto"/>
+	<s:Button id="btnguardar" x="382" y="405" width="123" height="29" label="Guardar/Editar"
+			  click="btnguardar_clickHandler(event)" fontSize="16" toolTip="Guardar y Editar Datos de un Producto"/>
 	<s:Button id="btnCloseClientComponent" x="1104" y="10" width="16" height="19"
 			  click="btnClose_clickHandler(event)" icon="assets/icon_close.png"/>
 	<s:Label x="223" y="43" color="#3FF182" fontFamily="Verdana" fontSize="18" fontWeight="bold"
@@ -455,7 +465,7 @@
 	<s:Label id="lbltotalproductos" x="538" y="264" width="164" fontFamily="Verdana" fontSize="16"
 			 verticalAlign="middle"/>
 	<s:Label x="270" y="337" fontFamily="Arial" fontSize="16" fontWeight="bold" text="Buscar:"/>
-	<components:AutoComplete x="271" y="351" width="197" id="cmbBuscarProducto" matchType="beginning" labelField="descripcion">
+	<components:AutoComplete x="271" y="351" width="432" id="cmbBuscarProducto" matchType="beginning" labelField="descripcion">
 	</components:AutoComplete>
 	<mx:VRule x="720" y="10" width="1" height="398"/>
 	<s:BorderContainer x="729" y="39" width="391" height="308">
@@ -469,4 +479,7 @@
 				  click="btnSubirImagen_clickHandler(event)" fontWeight="bold"
 				  toolTip="Hacer click para almacenar la imagen en la base de datos"/>
 	</s:BorderContainer>
+	<s:Button id="btn_cargarListado" x="218" y="402" width="35" height="35"
+			  click="btn_refrescarProductos(event)" icon="assets/refresh.png"
+			  toolTip="Refrescar listado de Productos"/>
 </s:Group>

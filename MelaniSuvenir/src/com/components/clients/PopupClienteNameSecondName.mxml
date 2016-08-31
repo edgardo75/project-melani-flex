@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+<mx:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" showCloseButton="true"
 				xmlns:s="library://ns.adobe.com/flex/spark"
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="422" height="304" close="titlewindow1_closeHandler()" >
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="536" height="434" close="titlewindow1_closeHandler()" >
 	<fx:Script>
 		<![CDATA[
 			import com.adobe.flex.extras.controls.MaskedTextInput;
@@ -23,6 +23,10 @@
 			public var targetCodeCustomer:Label;
 			[Bindable]
 			public var targetNumCustomer:MaskedTextInput;
+			[Bindable]
+			private var xmlSearchCli:XMLList;
+			[Bindable]
+			public var txtNroNota:MaskedTextInput;
 			
 			
 			
@@ -58,25 +62,52 @@
 				PopUpManager.removePopUp(this);
 			}
 			
+			protected function adgclientes_itemClickHandler(event:ListEvent):void
+			{
+				
+				cliNotaSelected=clidata[adgclientes.selectedIndex].itemNota;
+			}
+			
+			protected function adgNotas_itemDoubleClickHandler(event:ListEvent):void
+			{
+				
+				
+				txtNroNota.text =String(cliNotaSelected[adgNotas.selectedIndex].nota);
+				txtNroNota.setFocus();
+				titlewindow1_closeHandler();
+			}
+			
+			
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:XMLListCollection id="clidata"/>
+		
+		<s:XMLListCollection id="clidata" source="{xmlSearchCli.item}"/>
+		<s:XMLListCollection id="cliNotaSelected" source="{xmlSearchCli.item.itemNota}"/>
 	</fx:Declarations>
 	
 	
-		<mx:AdvancedDataGrid id="adgclientes" width="377" height="238" dataProvider="{clidata}"
+		<mx:AdvancedDataGrid id="adgclientes" width="523" height="184" dataProvider="{clidata}" selectedIndex="0" selectionMode="singleRow"
 							 designViewDataType="flat" doubleClickEnabled="true"
-							 fontFamily="Verdana" fontSize="12"
-							 itemDoubleClick="adgclientes_itemDoubleClickHandler(event)"
+							 fontFamily="Verdana" fontSize="12" 
+							 itemDoubleClick="adgclientes_itemDoubleClickHandler(event)" itemClick="adgclientes_itemClickHandler(event)"
 							 resizableColumns="false">
 			<mx:columns>
 				<mx:AdvancedDataGridColumn dataField="nombre" headerText="Nombre"/>
-				<mx:AdvancedDataGridColumn dataField="apellido" headerText="Apellido"/>
-				<mx:AdvancedDataGridColumn dataField="nrodocu" headerText="Documento"/>
-				<mx:AdvancedDataGridColumn dataField="id" headerText="Id" visible="false"/>
+				<mx:AdvancedDataGridColumn dataField="apellido" headerText="Apellido"/>				
 			</mx:columns>
 		</mx:AdvancedDataGrid>
+	<mx:AdvancedDataGrid id="adgNotas" width="518" height="196"
+						 dataProvider="{clidata[adgclientes.selectedIndex].itemNota}"
+						 designViewDataType="tree" doubleClickEnabled="true"
+						 itemDoubleClick="adgNotas_itemDoubleClickHandler(event)" 
+						 resizableColumns="false" selectionMode="singleRow">
+		<mx:columns>
+			<mx:AdvancedDataGridColumn dataField="nota" headerText="Nota" textAlign="center" />
+			<mx:AdvancedDataGridColumn dataField="fecha" headerText="Fecha" textAlign="center"/>			
+		</mx:columns>
+	</mx:AdvancedDataGrid>
 	
 </mx:TitleWindow>
